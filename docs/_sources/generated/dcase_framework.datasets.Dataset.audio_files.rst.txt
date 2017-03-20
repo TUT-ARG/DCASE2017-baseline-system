@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.audio_files
+============================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoattribute:: Dataset.audio_files

@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.filter_time_segment
+==============================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.filter_time_segment

@@ -1,0 +1,69 @@
+dcase_framework.learners.LearnerContainer
+=========================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: LearnerContainer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LearnerContainer.__init__
+      ~LearnerContainer.clear
+      ~LearnerContainer.copy
+      ~LearnerContainer.detect_file_format
+      ~LearnerContainer.empty
+      ~LearnerContainer.exists
+      ~LearnerContainer.fromkeys
+      ~LearnerContainer.get
+      ~LearnerContainer.get_dump_content
+      ~LearnerContainer.get_file_information
+      ~LearnerContainer.get_hash
+      ~LearnerContainer.get_hash_for_path
+      ~LearnerContainer.get_path
+      ~LearnerContainer.has_key
+      ~LearnerContainer.items
+      ~LearnerContainer.iteritems
+      ~LearnerContainer.iterkeys
+      ~LearnerContainer.itervalues
+      ~LearnerContainer.keys
+      ~LearnerContainer.load
+      ~LearnerContainer.log
+      ~LearnerContainer.merge
+      ~LearnerContainer.pop
+      ~LearnerContainer.popitem
+      ~LearnerContainer.save
+      ~LearnerContainer.set_seed
+      ~LearnerContainer.setdefault
+      ~LearnerContainer.show
+      ~LearnerContainer.update
+      ~LearnerContainer.values
+      ~LearnerContainer.viewitems
+      ~LearnerContainer.viewkeys
+      ~LearnerContainer.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LearnerContainer.class_labels
+      ~LearnerContainer.feature_aggregator
+      ~LearnerContainer.feature_masker
+      ~LearnerContainer.feature_normalizer
+      ~LearnerContainer.feature_stacker
+      ~LearnerContainer.learner_params
+      ~LearnerContainer.method
+      ~LearnerContainer.model
+      ~LearnerContainer.params
+      ~LearnerContainer.valid_formats
+   
+   

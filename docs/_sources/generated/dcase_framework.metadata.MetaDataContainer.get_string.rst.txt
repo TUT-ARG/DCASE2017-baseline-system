@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.get_string
+=====================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.get_string

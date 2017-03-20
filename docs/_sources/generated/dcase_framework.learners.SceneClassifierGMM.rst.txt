@@ -1,0 +1,71 @@
+dcase_framework.learners.SceneClassifierGMM
+===========================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: SceneClassifierGMM
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SceneClassifierGMM.__init__
+      ~SceneClassifierGMM.clear
+      ~SceneClassifierGMM.copy
+      ~SceneClassifierGMM.detect_file_format
+      ~SceneClassifierGMM.empty
+      ~SceneClassifierGMM.exists
+      ~SceneClassifierGMM.fromkeys
+      ~SceneClassifierGMM.get
+      ~SceneClassifierGMM.get_dump_content
+      ~SceneClassifierGMM.get_file_information
+      ~SceneClassifierGMM.get_hash
+      ~SceneClassifierGMM.get_hash_for_path
+      ~SceneClassifierGMM.get_path
+      ~SceneClassifierGMM.has_key
+      ~SceneClassifierGMM.items
+      ~SceneClassifierGMM.iteritems
+      ~SceneClassifierGMM.iterkeys
+      ~SceneClassifierGMM.itervalues
+      ~SceneClassifierGMM.keys
+      ~SceneClassifierGMM.learn
+      ~SceneClassifierGMM.load
+      ~SceneClassifierGMM.log
+      ~SceneClassifierGMM.merge
+      ~SceneClassifierGMM.pop
+      ~SceneClassifierGMM.popitem
+      ~SceneClassifierGMM.predict
+      ~SceneClassifierGMM.save
+      ~SceneClassifierGMM.set_seed
+      ~SceneClassifierGMM.setdefault
+      ~SceneClassifierGMM.show
+      ~SceneClassifierGMM.update
+      ~SceneClassifierGMM.values
+      ~SceneClassifierGMM.viewitems
+      ~SceneClassifierGMM.viewkeys
+      ~SceneClassifierGMM.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SceneClassifierGMM.class_labels
+      ~SceneClassifierGMM.feature_aggregator
+      ~SceneClassifierGMM.feature_masker
+      ~SceneClassifierGMM.feature_normalizer
+      ~SceneClassifierGMM.feature_stacker
+      ~SceneClassifierGMM.learner_params
+      ~SceneClassifierGMM.method
+      ~SceneClassifierGMM.model
+      ~SceneClassifierGMM.params
+      ~SceneClassifierGMM.valid_formats
+   
+   

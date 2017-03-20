@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.scene_label_count
+==================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoattribute:: Dataset.scene_label_count

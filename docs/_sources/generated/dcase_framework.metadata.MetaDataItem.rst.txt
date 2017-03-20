@@ -1,0 +1,54 @@
+dcase_framework.metadata.MetaDataItem
+=====================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoclass:: MetaDataItem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MetaDataItem.__init__
+      ~MetaDataItem.clear
+      ~MetaDataItem.copy
+      ~MetaDataItem.fromkeys
+      ~MetaDataItem.get
+      ~MetaDataItem.get_header
+      ~MetaDataItem.get_list
+      ~MetaDataItem.has_key
+      ~MetaDataItem.items
+      ~MetaDataItem.iteritems
+      ~MetaDataItem.iterkeys
+      ~MetaDataItem.itervalues
+      ~MetaDataItem.keys
+      ~MetaDataItem.pop
+      ~MetaDataItem.popitem
+      ~MetaDataItem.setdefault
+      ~MetaDataItem.update
+      ~MetaDataItem.values
+      ~MetaDataItem.viewitems
+      ~MetaDataItem.viewkeys
+      ~MetaDataItem.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MetaDataItem.event_label
+      ~MetaDataItem.event_offset
+      ~MetaDataItem.event_onset
+      ~MetaDataItem.file
+      ~MetaDataItem.location_identifier
+      ~MetaDataItem.scene_label
+      ~MetaDataItem.source_label
+   
+   

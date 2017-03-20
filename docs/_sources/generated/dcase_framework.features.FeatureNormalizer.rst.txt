@@ -1,0 +1,63 @@
+dcase_framework.features.FeatureNormalizer
+==========================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoclass:: FeatureNormalizer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureNormalizer.__init__
+      ~FeatureNormalizer.accumulate
+      ~FeatureNormalizer.clear
+      ~FeatureNormalizer.copy
+      ~FeatureNormalizer.detect_file_format
+      ~FeatureNormalizer.empty
+      ~FeatureNormalizer.exists
+      ~FeatureNormalizer.finalize
+      ~FeatureNormalizer.fromkeys
+      ~FeatureNormalizer.get
+      ~FeatureNormalizer.get_dump_content
+      ~FeatureNormalizer.get_file_information
+      ~FeatureNormalizer.get_hash
+      ~FeatureNormalizer.get_hash_for_path
+      ~FeatureNormalizer.get_path
+      ~FeatureNormalizer.has_key
+      ~FeatureNormalizer.items
+      ~FeatureNormalizer.iteritems
+      ~FeatureNormalizer.iterkeys
+      ~FeatureNormalizer.itervalues
+      ~FeatureNormalizer.keys
+      ~FeatureNormalizer.load
+      ~FeatureNormalizer.log
+      ~FeatureNormalizer.merge
+      ~FeatureNormalizer.normalize
+      ~FeatureNormalizer.pop
+      ~FeatureNormalizer.popitem
+      ~FeatureNormalizer.process
+      ~FeatureNormalizer.save
+      ~FeatureNormalizer.setdefault
+      ~FeatureNormalizer.show
+      ~FeatureNormalizer.update
+      ~FeatureNormalizer.values
+      ~FeatureNormalizer.viewitems
+      ~FeatureNormalizer.viewkeys
+      ~FeatureNormalizer.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FeatureNormalizer.valid_formats
+   
+   

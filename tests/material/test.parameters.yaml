@@ -1,0 +1,233 @@
+defaults:
+  # ==========================================================
+  # Flow
+  # ==========================================================
+  flow:
+    initialize: true
+    extract_features: true
+    feature_normalizer: true
+    train_system: true
+    test_system: true
+    evaluate_system: true
+
+  # ==========================================================
+  # General
+  # ==========================================================
+  general:
+    overwrite: false                    # Overwrite previously stored data
+
+    challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
+
+    print_system_progress: true         #
+    log_system_parameters: false        #
+    log_system_progress: false          #
+    log_learner_status: false           #
+
+  # ==========================================================
+  # Logging
+  # ==========================================================
+  logging:
+    enable: true                        #
+    colored: true                       # Colored console logging
+
+    parameters:
+      version: 1
+      disable_existing_loggers: false
+      formatters:
+        simple:
+          format: "[%(levelname)-8s] %(message)s"
+
+        extended:
+          format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
+
+      handlers:
+        console:
+          class: logging.StreamHandler
+          level: DEBUG
+          formatter: simple
+          stream: ext://sys.stdout
+
+        info_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: INFO                                           # Max logging level to save
+          formatter: extended                                   # [simple, extended]
+          filename: logs/info.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+        debug_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: DEBUG                                          # Max logging level to save
+          formatter: extended                                   # [simple, extended]
+          filename: logs/debug.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+        error_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: ERROR                                          # Max logging level to save
+          formatter: extended                                   # [simple, extended]
+          filename: logs/errors.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+      loggers:
+        my_module:
+          level: ERROR
+          handlers: [console]
+          propagate: no
+
+      root:
+        level: INFO
+        handlers: [console]
+
+  # ==========================================================
+  # Paths
+  # ==========================================================
+  path:
+    data: data/
+
+    system_base: system/system1/
+    feature_extractor: feature_extractor/
+    feature_normalizer: feature_normalizer/
+    learner: learner/
+    recognizer: recognizer/
+    evaluator: evaluator/
+
+    recognizer_challenge_output: challenge_submission/system1/
+    logs: logs/
+
+  # ==========================================================
+  # Dataset
+  # ==========================================================
+  dataset:
+    method: development
+
+  dataset_method_parameters:
+    development:
+      name: development_dataset
+      fold_list: [1, 2, 3, 4]
+      evaluation_mode: folds
+
+    challenge_train:
+      name: development_dataset
+      evaluation_mode: full
+
+    challenge_test:
+      name: challenge_dataset
+      evaluation_mode: full
+
+  # ==========================================================
+  # Feature extractor
+  # ==========================================================
+  feature_extractor:
+    fs: 44100                               # Sampling frequency
+    win_length_seconds: 0.04                # Window length
+    hop_length_seconds: 0.02                # Hop length
+
+  feature_extractor_method_parameters:
+    featA:
+      param1: true
+      param2: valueB
+      param3: valueA
+      param4: 40
+      param5: false
+
+    featB:
+      param1: valueB
+      param2: false
+      param3: 123
+      param4: 400
+      param5: 1
+
+
+  # ==========================================================
+  # Feature stacker
+  # ==========================================================
+  feature_stacker:
+    # ==========================================================
+    # Valid feature vector recipe formats:
+    #  - [extractor (string)]                                                       => full vector
+    #  - [extractor (string)]=[start index (int)]-[end index (int)]                 => default channel 0 and vector [start:end]
+    #  - [extractor (string)]=[channel (int)]:[start index (int)]-[end index (int)] => specified channel and vector [start:end]
+    #  - [extractor (string)]=1,2,3,4,5                                             => vector [1,2,3,4,4]
+    #  - [extractor (string)]=0                                                     => specified channel and full vector
+    # ==========================================================
+    stacking_recipe: featA;featB
+
+  # ==========================================================
+  # Feature normalizer
+  # ==========================================================
+  feature_normalizer:
+    enable: true
+    type: global
+
+  # ==========================================================
+  # Feature aggregator
+  # ==========================================================
+  feature_aggregator:
+    enable: true
+    aggregation_recipe: mean; std
+    win_length_seconds: 1
+    hop_length_seconds: 1
+
+  # ==========================================================
+  # Learner
+  # ==========================================================
+  learner:
+    method: learner1
+
+  learner_method_parameters:
+    learner1:
+      value1: learner1
+      value2: value
+      value3: 0
+      value4: 0.001
+      value5: 0.001
+      value6: 1234
+      value7: 123
+      value8: valueA
+      value9: valueB
+
+    learner2:
+      value1: learner2
+      value2: value
+      value3: 0.123
+      value4: 0.1
+      value5: 0.1
+      value6: 100
+      value7: 100
+      value8: valueA
+      value9: valueB
+
+    learner3:
+      value1: learner3
+      value2: value
+
+  # ==========================================================
+  # Recognizer
+  # ==========================================================
+  recognizer:
+    audio_error_handling: false   # Handling audio errors (temporary microphone failure and radio signal interferences from mobile phones)
+
+  # ==========================================================
+  # Evaluator
+  # ==========================================================
+  evaluator:
+    saving:
+      enable: true                # To save evaluation results into yaml-file
+      filename: eval_d[{dataset_name}]_s[{parameter_set}]_p[{parameter_hash}].yaml
+
+sets:
+  - set_id: set1
+    learner:
+      method: learner2
+
+  - set_id: set2
+    learner:
+      method: learner3
+
+active_set: set1

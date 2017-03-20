@@ -1,0 +1,39 @@
+dcase_framework.application_core.SoundEventAppCore
+==================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. autoclass:: SoundEventAppCore
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SoundEventAppCore.__init__
+      ~SoundEventAppCore.feature_extraction
+      ~SoundEventAppCore.feature_normalization
+      ~SoundEventAppCore.initialize
+      ~SoundEventAppCore.model_information
+      ~SoundEventAppCore.show_dataset_list
+      ~SoundEventAppCore.show_eval
+      ~SoundEventAppCore.show_parameter_set_list
+      ~SoundEventAppCore.show_parameters
+      ~SoundEventAppCore.system_evaluation
+      ~SoundEventAppCore.system_testing
+      ~SoundEventAppCore.system_training
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SoundEventAppCore.valid_dataset_group
+   
+   

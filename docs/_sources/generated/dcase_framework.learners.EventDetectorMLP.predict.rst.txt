@@ -1,0 +1,6 @@
+dcase_framework.learners.EventDetectorMLP.predict
+=================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: EventDetectorMLP.predict

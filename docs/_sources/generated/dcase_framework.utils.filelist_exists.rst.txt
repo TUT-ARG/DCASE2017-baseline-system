@@ -1,0 +1,6 @@
+dcase_framework.utils.filelist_exists
+=====================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. autofunction:: filelist_exists

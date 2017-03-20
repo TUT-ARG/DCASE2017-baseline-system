@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.event_stat_counts
+============================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.event_stat_counts

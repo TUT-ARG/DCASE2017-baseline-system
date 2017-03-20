@@ -1,0 +1,6 @@
+dcase_framework.parameters.ParameterContainer.exists
+====================================================
+
+.. currentmodule:: dcase_framework.parameters
+
+.. automethod:: ParameterContainer.exists

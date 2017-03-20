@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.show_info
+==========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.show_info

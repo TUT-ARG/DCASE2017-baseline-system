@@ -1,0 +1,6 @@
+dcase_framework.datasets.SoundEventDataset.test
+===============================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: SoundEventDataset.test

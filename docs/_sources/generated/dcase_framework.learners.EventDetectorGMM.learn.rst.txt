@@ -1,0 +1,6 @@
+dcase_framework.learners.EventDetectorGMM.learn
+===============================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: EventDetectorGMM.learn

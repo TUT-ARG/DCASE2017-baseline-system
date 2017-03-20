@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureContainer.get_path
+==================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. automethod:: FeatureContainer.get_path

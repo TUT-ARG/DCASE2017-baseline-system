@@ -1,0 +1,54 @@
+dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet
+===============================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoclass:: TUTRareSoundEvents_2017_DevelopmentSet
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TUTRareSoundEvents_2017_DevelopmentSet.__init__
+      ~TUTRareSoundEvents_2017_DevelopmentSet.absolute_to_relative
+      ~TUTRareSoundEvents_2017_DevelopmentSet.check_filelist
+      ~TUTRareSoundEvents_2017_DevelopmentSet.download
+      ~TUTRareSoundEvents_2017_DevelopmentSet.error_meta_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.eval
+      ~TUTRareSoundEvents_2017_DevelopmentSet.event_label_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.extract
+      ~TUTRareSoundEvents_2017_DevelopmentSet.file_error_meta
+      ~TUTRareSoundEvents_2017_DevelopmentSet.file_meta
+      ~TUTRareSoundEvents_2017_DevelopmentSet.folds
+      ~TUTRareSoundEvents_2017_DevelopmentSet.initialize
+      ~TUTRareSoundEvents_2017_DevelopmentSet.relative_to_absolute_path
+      ~TUTRareSoundEvents_2017_DevelopmentSet.show_info
+      ~TUTRareSoundEvents_2017_DevelopmentSet.synthesize
+      ~TUTRareSoundEvents_2017_DevelopmentSet.test
+      ~TUTRareSoundEvents_2017_DevelopmentSet.train
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TUTRareSoundEvents_2017_DevelopmentSet.audio_file_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.audio_files
+      ~TUTRareSoundEvents_2017_DevelopmentSet.audio_tag_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.audio_tags
+      ~TUTRareSoundEvents_2017_DevelopmentSet.error_meta
+      ~TUTRareSoundEvents_2017_DevelopmentSet.event_labels
+      ~TUTRareSoundEvents_2017_DevelopmentSet.fold_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.meta
+      ~TUTRareSoundEvents_2017_DevelopmentSet.meta_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.scene_label_count
+      ~TUTRareSoundEvents_2017_DevelopmentSet.scene_labels
+   
+   

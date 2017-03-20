@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureContainer.vector_length
+=======================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoattribute:: FeatureContainer.vector_length

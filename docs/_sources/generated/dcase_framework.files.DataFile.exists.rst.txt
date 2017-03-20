@@ -1,0 +1,6 @@
+dcase_framework.files.DataFile.exists
+=====================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: DataFile.exists

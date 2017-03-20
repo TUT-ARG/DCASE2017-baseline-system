@@ -1,0 +1,6 @@
+dcase_framework.metadata.EventRoll.pad
+======================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: EventRoll.pad

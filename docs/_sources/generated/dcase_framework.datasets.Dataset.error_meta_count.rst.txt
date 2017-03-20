@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.error_meta_count
+=================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.error_meta_count

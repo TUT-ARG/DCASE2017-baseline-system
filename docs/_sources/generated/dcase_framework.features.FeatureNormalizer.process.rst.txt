@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureNormalizer.process
+==================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. automethod:: FeatureNormalizer.process

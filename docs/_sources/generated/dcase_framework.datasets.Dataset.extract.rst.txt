@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.extract
+========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.extract

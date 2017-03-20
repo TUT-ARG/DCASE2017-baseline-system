@@ -1,0 +1,6 @@
+dcase_framework.files.AudioFile.empty
+=====================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: AudioFile.empty

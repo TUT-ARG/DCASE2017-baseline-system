@@ -1,0 +1,6 @@
+dcase_framework.datasets.SoundEventDataset.event_labels
+=======================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: SoundEventDataset.event_labels

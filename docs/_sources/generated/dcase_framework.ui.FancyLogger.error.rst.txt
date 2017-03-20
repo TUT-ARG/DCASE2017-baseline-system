@@ -1,0 +1,6 @@
+dcase_framework.ui.FancyLogger.error
+====================================
+
+.. currentmodule:: dcase_framework.ui
+
+.. automethod:: FancyLogger.error

@@ -1,0 +1,53 @@
+dcase_framework.datasets.TUTAcousticScenes_2017_DevelopmentSet
+==============================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoclass:: TUTAcousticScenes_2017_DevelopmentSet
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TUTAcousticScenes_2017_DevelopmentSet.__init__
+      ~TUTAcousticScenes_2017_DevelopmentSet.absolute_to_relative
+      ~TUTAcousticScenes_2017_DevelopmentSet.check_filelist
+      ~TUTAcousticScenes_2017_DevelopmentSet.download
+      ~TUTAcousticScenes_2017_DevelopmentSet.error_meta_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.eval
+      ~TUTAcousticScenes_2017_DevelopmentSet.event_labels
+      ~TUTAcousticScenes_2017_DevelopmentSet.extract
+      ~TUTAcousticScenes_2017_DevelopmentSet.file_error_meta
+      ~TUTAcousticScenes_2017_DevelopmentSet.file_meta
+      ~TUTAcousticScenes_2017_DevelopmentSet.folds
+      ~TUTAcousticScenes_2017_DevelopmentSet.initialize
+      ~TUTAcousticScenes_2017_DevelopmentSet.relative_to_absolute_path
+      ~TUTAcousticScenes_2017_DevelopmentSet.show_info
+      ~TUTAcousticScenes_2017_DevelopmentSet.test
+      ~TUTAcousticScenes_2017_DevelopmentSet.train
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TUTAcousticScenes_2017_DevelopmentSet.audio_file_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.audio_files
+      ~TUTAcousticScenes_2017_DevelopmentSet.audio_tag_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.audio_tags
+      ~TUTAcousticScenes_2017_DevelopmentSet.error_meta
+      ~TUTAcousticScenes_2017_DevelopmentSet.event_label_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.fold_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.meta
+      ~TUTAcousticScenes_2017_DevelopmentSet.meta_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.scene_label_count
+      ~TUTAcousticScenes_2017_DevelopmentSet.scene_labels
+   
+   

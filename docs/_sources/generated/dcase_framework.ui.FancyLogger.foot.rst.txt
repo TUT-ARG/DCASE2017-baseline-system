@@ -1,0 +1,6 @@
+dcase_framework.ui.FancyLogger.foot
+===================================
+
+.. currentmodule:: dcase_framework.ui
+
+.. automethod:: FancyLogger.foot

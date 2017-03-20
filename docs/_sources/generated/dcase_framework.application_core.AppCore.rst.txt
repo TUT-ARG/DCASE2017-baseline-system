@@ -1,0 +1,39 @@
+dcase_framework.application_core.AppCore
+========================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. autoclass:: AppCore
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AppCore.__init__
+      ~AppCore.feature_extraction
+      ~AppCore.feature_normalization
+      ~AppCore.initialize
+      ~AppCore.model_information
+      ~AppCore.show_dataset_list
+      ~AppCore.show_eval
+      ~AppCore.show_parameter_set_list
+      ~AppCore.show_parameters
+      ~AppCore.system_evaluation
+      ~AppCore.system_testing
+      ~AppCore.system_training
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AppCore.valid_dataset_group
+   
+   

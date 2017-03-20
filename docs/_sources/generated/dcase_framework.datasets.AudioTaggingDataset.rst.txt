@@ -1,0 +1,53 @@
+dcase_framework.datasets.AudioTaggingDataset
+============================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoclass:: AudioTaggingDataset
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AudioTaggingDataset.__init__
+      ~AudioTaggingDataset.absolute_to_relative
+      ~AudioTaggingDataset.check_filelist
+      ~AudioTaggingDataset.download
+      ~AudioTaggingDataset.error_meta_count
+      ~AudioTaggingDataset.eval
+      ~AudioTaggingDataset.event_labels
+      ~AudioTaggingDataset.extract
+      ~AudioTaggingDataset.file_error_meta
+      ~AudioTaggingDataset.file_meta
+      ~AudioTaggingDataset.folds
+      ~AudioTaggingDataset.initialize
+      ~AudioTaggingDataset.relative_to_absolute_path
+      ~AudioTaggingDataset.show_info
+      ~AudioTaggingDataset.test
+      ~AudioTaggingDataset.train
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AudioTaggingDataset.audio_file_count
+      ~AudioTaggingDataset.audio_files
+      ~AudioTaggingDataset.audio_tag_count
+      ~AudioTaggingDataset.audio_tags
+      ~AudioTaggingDataset.error_meta
+      ~AudioTaggingDataset.event_label_count
+      ~AudioTaggingDataset.fold_count
+      ~AudioTaggingDataset.meta
+      ~AudioTaggingDataset.meta_count
+      ~AudioTaggingDataset.scene_label_count
+      ~AudioTaggingDataset.scene_labels
+   
+   

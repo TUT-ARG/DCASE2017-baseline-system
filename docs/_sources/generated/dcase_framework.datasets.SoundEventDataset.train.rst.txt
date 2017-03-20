@@ -1,0 +1,6 @@
+dcase_framework.datasets.SoundEventDataset.train
+================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: SoundEventDataset.train

@@ -1,0 +1,30 @@
+dcase_framework.metadata.EventRoll
+==================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoclass:: EventRoll
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventRoll.__init__
+      ~EventRoll.pad
+      ~EventRoll.plot
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventRoll.roll
+   
+   

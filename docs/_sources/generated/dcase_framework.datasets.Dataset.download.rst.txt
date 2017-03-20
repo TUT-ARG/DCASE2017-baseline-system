@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.download
+=========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.download

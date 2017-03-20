@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.save
+===============================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.save

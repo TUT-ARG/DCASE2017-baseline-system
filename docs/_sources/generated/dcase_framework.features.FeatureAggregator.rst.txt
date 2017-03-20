@@ -1,0 +1,29 @@
+dcase_framework.features.FeatureAggregator
+==========================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoclass:: FeatureAggregator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureAggregator.__init__
+      ~FeatureAggregator.process
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FeatureAggregator.valid_method
+   
+   

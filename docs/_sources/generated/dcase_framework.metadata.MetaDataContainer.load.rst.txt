@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.load
+===============================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.load

@@ -1,0 +1,25 @@
+dcase_framework.features.FeatureStacker
+=======================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoclass:: FeatureStacker
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureStacker.__init__
+      ~FeatureStacker.feature_vector
+      ~FeatureStacker.normalizer
+      ~FeatureStacker.process
+   
+   
+
+   
+   
+   

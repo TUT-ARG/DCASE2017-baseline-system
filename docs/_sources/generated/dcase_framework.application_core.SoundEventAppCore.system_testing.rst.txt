@@ -1,0 +1,6 @@
+dcase_framework.application_core.SoundEventAppCore.system_testing
+=================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: SoundEventAppCore.system_testing

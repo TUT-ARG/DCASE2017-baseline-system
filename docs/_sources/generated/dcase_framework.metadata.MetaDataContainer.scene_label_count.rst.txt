@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.scene_label_count
+============================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataContainer.scene_label_count

@@ -1,0 +1,53 @@
+dcase_framework.files.FeatureFile
+=================================
+
+.. currentmodule:: dcase_framework.files
+
+.. autoclass:: FeatureFile
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureFile.__init__
+      ~FeatureFile.clear
+      ~FeatureFile.copy
+      ~FeatureFile.detect_file_format
+      ~FeatureFile.empty
+      ~FeatureFile.exists
+      ~FeatureFile.fromkeys
+      ~FeatureFile.get
+      ~FeatureFile.get_dump_content
+      ~FeatureFile.get_file_information
+      ~FeatureFile.has_key
+      ~FeatureFile.items
+      ~FeatureFile.iteritems
+      ~FeatureFile.iterkeys
+      ~FeatureFile.itervalues
+      ~FeatureFile.keys
+      ~FeatureFile.load
+      ~FeatureFile.pop
+      ~FeatureFile.popitem
+      ~FeatureFile.save
+      ~FeatureFile.setdefault
+      ~FeatureFile.update
+      ~FeatureFile.values
+      ~FeatureFile.viewitems
+      ~FeatureFile.viewkeys
+      ~FeatureFile.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FeatureFile.valid_formats
+   
+   

@@ -1,0 +1,39 @@
+dcase_framework.application_core.BinarySoundEventAppCore
+========================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. autoclass:: BinarySoundEventAppCore
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BinarySoundEventAppCore.__init__
+      ~BinarySoundEventAppCore.feature_extraction
+      ~BinarySoundEventAppCore.feature_normalization
+      ~BinarySoundEventAppCore.initialize
+      ~BinarySoundEventAppCore.model_information
+      ~BinarySoundEventAppCore.show_dataset_list
+      ~BinarySoundEventAppCore.show_eval
+      ~BinarySoundEventAppCore.show_parameter_set_list
+      ~BinarySoundEventAppCore.show_parameters
+      ~BinarySoundEventAppCore.system_evaluation
+      ~BinarySoundEventAppCore.system_testing
+      ~BinarySoundEventAppCore.system_training
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BinarySoundEventAppCore.valid_dataset_group
+   
+   

@@ -1,0 +1,6 @@
+dcase_framework.utils.get_class_inheritors
+==========================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. autofunction:: get_class_inheritors

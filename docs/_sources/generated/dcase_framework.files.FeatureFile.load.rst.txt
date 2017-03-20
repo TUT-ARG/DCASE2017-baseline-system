@@ -1,0 +1,6 @@
+dcase_framework.files.FeatureFile.load
+======================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: FeatureFile.load

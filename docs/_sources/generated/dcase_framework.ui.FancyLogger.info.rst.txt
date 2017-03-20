@@ -1,0 +1,6 @@
+dcase_framework.ui.FancyLogger.info
+===================================
+
+.. currentmodule:: dcase_framework.ui
+
+.. automethod:: FancyLogger.info

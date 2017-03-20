@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataItem.event_offset
+==================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataItem.event_offset

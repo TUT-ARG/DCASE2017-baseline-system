@@ -1,0 +1,22 @@
+dcase_framework.utils.SuppressStdoutAndStderr
+=============================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. autoclass:: SuppressStdoutAndStderr
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SuppressStdoutAndStderr.__init__
+   
+   
+
+   
+   
+   

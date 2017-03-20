@@ -1,0 +1,74 @@
+dcase_framework.learners.SceneClassifierMLP
+===========================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: SceneClassifierMLP
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SceneClassifierMLP.__init__
+      ~SceneClassifierMLP.clear
+      ~SceneClassifierMLP.copy
+      ~SceneClassifierMLP.create_model
+      ~SceneClassifierMLP.detect_file_format
+      ~SceneClassifierMLP.empty
+      ~SceneClassifierMLP.exists
+      ~SceneClassifierMLP.fromkeys
+      ~SceneClassifierMLP.get
+      ~SceneClassifierMLP.get_dump_content
+      ~SceneClassifierMLP.get_file_information
+      ~SceneClassifierMLP.get_hash
+      ~SceneClassifierMLP.get_hash_for_path
+      ~SceneClassifierMLP.get_path
+      ~SceneClassifierMLP.has_key
+      ~SceneClassifierMLP.items
+      ~SceneClassifierMLP.iteritems
+      ~SceneClassifierMLP.iterkeys
+      ~SceneClassifierMLP.itervalues
+      ~SceneClassifierMLP.keys
+      ~SceneClassifierMLP.learn
+      ~SceneClassifierMLP.load
+      ~SceneClassifierMLP.log
+      ~SceneClassifierMLP.log_model_summary
+      ~SceneClassifierMLP.merge
+      ~SceneClassifierMLP.plot_model
+      ~SceneClassifierMLP.pop
+      ~SceneClassifierMLP.popitem
+      ~SceneClassifierMLP.predict
+      ~SceneClassifierMLP.save
+      ~SceneClassifierMLP.set_seed
+      ~SceneClassifierMLP.setdefault
+      ~SceneClassifierMLP.show
+      ~SceneClassifierMLP.update
+      ~SceneClassifierMLP.values
+      ~SceneClassifierMLP.viewitems
+      ~SceneClassifierMLP.viewkeys
+      ~SceneClassifierMLP.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SceneClassifierMLP.class_labels
+      ~SceneClassifierMLP.feature_aggregator
+      ~SceneClassifierMLP.feature_masker
+      ~SceneClassifierMLP.feature_normalizer
+      ~SceneClassifierMLP.feature_stacker
+      ~SceneClassifierMLP.learner_params
+      ~SceneClassifierMLP.method
+      ~SceneClassifierMLP.model
+      ~SceneClassifierMLP.params
+      ~SceneClassifierMLP.valid_formats
+   
+   

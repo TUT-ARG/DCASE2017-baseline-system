@@ -1,0 +1,6 @@
+dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing
+==================================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: AcousticSceneClassificationAppCore.system_testing

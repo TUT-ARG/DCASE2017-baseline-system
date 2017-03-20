@@ -1,0 +1,6 @@
+dcase_framework.learners.SceneClassifierGMM.predict
+===================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: SceneClassifierGMM.predict

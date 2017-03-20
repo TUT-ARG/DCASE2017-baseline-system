@@ -1,0 +1,6 @@
+dcase_framework.application_core.SoundEventAppCore.initialize
+=============================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: SoundEventAppCore.initialize

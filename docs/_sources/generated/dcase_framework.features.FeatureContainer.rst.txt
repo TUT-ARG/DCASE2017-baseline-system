@@ -1,0 +1,66 @@
+dcase_framework.features.FeatureContainer
+=========================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoclass:: FeatureContainer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureContainer.__init__
+      ~FeatureContainer.clear
+      ~FeatureContainer.copy
+      ~FeatureContainer.detect_file_format
+      ~FeatureContainer.empty
+      ~FeatureContainer.exists
+      ~FeatureContainer.fromkeys
+      ~FeatureContainer.get
+      ~FeatureContainer.get_dump_content
+      ~FeatureContainer.get_file_information
+      ~FeatureContainer.get_hash
+      ~FeatureContainer.get_hash_for_path
+      ~FeatureContainer.get_path
+      ~FeatureContainer.has_key
+      ~FeatureContainer.items
+      ~FeatureContainer.iteritems
+      ~FeatureContainer.iterkeys
+      ~FeatureContainer.itervalues
+      ~FeatureContainer.keys
+      ~FeatureContainer.load
+      ~FeatureContainer.log
+      ~FeatureContainer.merge
+      ~FeatureContainer.pop
+      ~FeatureContainer.popitem
+      ~FeatureContainer.save
+      ~FeatureContainer.setdefault
+      ~FeatureContainer.show
+      ~FeatureContainer.update
+      ~FeatureContainer.values
+      ~FeatureContainer.viewitems
+      ~FeatureContainer.viewkeys
+      ~FeatureContainer.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FeatureContainer.channels
+      ~FeatureContainer.feat
+      ~FeatureContainer.frames
+      ~FeatureContainer.meta
+      ~FeatureContainer.shape
+      ~FeatureContainer.stat
+      ~FeatureContainer.valid_formats
+      ~FeatureContainer.vector_length
+   
+   

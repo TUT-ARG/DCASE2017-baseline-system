@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataItem.scene_label
+=================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataItem.scene_label

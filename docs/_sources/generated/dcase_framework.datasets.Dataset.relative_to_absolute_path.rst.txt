@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.relative_to_absolute_path
+==========================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.relative_to_absolute_path

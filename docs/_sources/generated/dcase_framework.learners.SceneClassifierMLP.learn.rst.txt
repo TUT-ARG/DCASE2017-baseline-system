@@ -1,0 +1,6 @@
+dcase_framework.learners.SceneClassifierMLP.learn
+=================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: SceneClassifierMLP.learn

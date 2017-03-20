@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.fold_count
+===========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoattribute:: Dataset.fold_count

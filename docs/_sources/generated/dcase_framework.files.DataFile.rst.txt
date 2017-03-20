@@ -1,0 +1,53 @@
+dcase_framework.files.DataFile
+==============================
+
+.. currentmodule:: dcase_framework.files
+
+.. autoclass:: DataFile
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DataFile.__init__
+      ~DataFile.clear
+      ~DataFile.copy
+      ~DataFile.detect_file_format
+      ~DataFile.empty
+      ~DataFile.exists
+      ~DataFile.fromkeys
+      ~DataFile.get
+      ~DataFile.get_dump_content
+      ~DataFile.get_file_information
+      ~DataFile.has_key
+      ~DataFile.items
+      ~DataFile.iteritems
+      ~DataFile.iterkeys
+      ~DataFile.itervalues
+      ~DataFile.keys
+      ~DataFile.load
+      ~DataFile.pop
+      ~DataFile.popitem
+      ~DataFile.save
+      ~DataFile.setdefault
+      ~DataFile.update
+      ~DataFile.values
+      ~DataFile.viewitems
+      ~DataFile.viewkeys
+      ~DataFile.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DataFile.valid_formats
+   
+   

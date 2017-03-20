@@ -1,0 +1,6 @@
+dcase_framework.metadata.EventRoll.plot
+=======================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: EventRoll.plot

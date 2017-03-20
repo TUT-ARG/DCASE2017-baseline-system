@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureNormalizer.accumulate
+=====================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. automethod:: FeatureNormalizer.accumulate

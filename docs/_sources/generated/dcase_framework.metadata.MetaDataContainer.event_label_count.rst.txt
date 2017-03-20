@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.event_label_count
+============================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataContainer.event_label_count

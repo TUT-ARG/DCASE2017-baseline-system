@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.log
+==============================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.log

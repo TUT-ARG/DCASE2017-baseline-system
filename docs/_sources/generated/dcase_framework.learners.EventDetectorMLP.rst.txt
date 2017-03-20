@@ -1,0 +1,74 @@
+dcase_framework.learners.EventDetectorMLP
+=========================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: EventDetectorMLP
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventDetectorMLP.__init__
+      ~EventDetectorMLP.clear
+      ~EventDetectorMLP.copy
+      ~EventDetectorMLP.create_model
+      ~EventDetectorMLP.detect_file_format
+      ~EventDetectorMLP.empty
+      ~EventDetectorMLP.exists
+      ~EventDetectorMLP.fromkeys
+      ~EventDetectorMLP.get
+      ~EventDetectorMLP.get_dump_content
+      ~EventDetectorMLP.get_file_information
+      ~EventDetectorMLP.get_hash
+      ~EventDetectorMLP.get_hash_for_path
+      ~EventDetectorMLP.get_path
+      ~EventDetectorMLP.has_key
+      ~EventDetectorMLP.items
+      ~EventDetectorMLP.iteritems
+      ~EventDetectorMLP.iterkeys
+      ~EventDetectorMLP.itervalues
+      ~EventDetectorMLP.keys
+      ~EventDetectorMLP.learn
+      ~EventDetectorMLP.load
+      ~EventDetectorMLP.log
+      ~EventDetectorMLP.log_model_summary
+      ~EventDetectorMLP.merge
+      ~EventDetectorMLP.plot_model
+      ~EventDetectorMLP.pop
+      ~EventDetectorMLP.popitem
+      ~EventDetectorMLP.predict
+      ~EventDetectorMLP.save
+      ~EventDetectorMLP.set_seed
+      ~EventDetectorMLP.setdefault
+      ~EventDetectorMLP.show
+      ~EventDetectorMLP.update
+      ~EventDetectorMLP.values
+      ~EventDetectorMLP.viewitems
+      ~EventDetectorMLP.viewkeys
+      ~EventDetectorMLP.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventDetectorMLP.class_labels
+      ~EventDetectorMLP.feature_aggregator
+      ~EventDetectorMLP.feature_masker
+      ~EventDetectorMLP.feature_normalizer
+      ~EventDetectorMLP.feature_stacker
+      ~EventDetectorMLP.learner_params
+      ~EventDetectorMLP.method
+      ~EventDetectorMLP.model
+      ~EventDetectorMLP.params
+      ~EventDetectorMLP.valid_formats
+   
+   

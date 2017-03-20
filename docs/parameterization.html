@@ -1,0 +1,1951 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Parameterization &mdash; DCASE2017 Baseline 1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="index.html"/>
+        <link rel="next" title="Introduction" href="framework.html"/>
+        <link rel="prev" title="Usage" href="usage_tutorial.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DCASE2017 Baseline
+          
+
+          
+            
+            <img src="_static/dcase2017_baseline.png" class="logo" />
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Baseline system</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="system_description.html">System description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_description.html#gmm-based-approach">GMM based approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_description.html#processing-blocks">Processing blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="applications.html">Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="applications.html#task1-acoustic-scene-classification"> Acoustic scene classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="applications.html#task2-detection-of-rare-sound-events"> Detection of rare sound events</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications.html#id2">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="applications.html#task3-sound-event-detection-in-real-life-audio"> Sound event detection in real life audio</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="applications.html#id3">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_tutorial.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage_tutorial.html#application-arguments">Application arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage_tutorial.html#basic-usage">Basic usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameterization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-overwriting">Parameter overwriting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-file">Parameter file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-hash">Parameter hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-sections">Parameter sections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#flow">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#path">Path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset">Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-extractor">Feature extractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-stacker">Feature stacker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-normalizer">Feature normalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#feature-aggregator">Feature aggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#learner">Learner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recognizer">Recognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluator">Evaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">DCASE Framework</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="framework.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="framework.html#training-process">Training process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="framework.html#testing-process">Testing process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="extending_framework.html">Extending the framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extending_framework.html#adding-datasets">Adding datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending_framework.html#adding-features">Adding features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending_framework.html#addinng-learners">Addinng learners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending_framework.html#extending-applicationcore">Extending ApplicationCore</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="application_core.html">Application core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="application_core.html#acousticsceneclassificationappcore">AcousticSceneClassificationAppCore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.html">dcase_framework.application_core.AcousticSceneClassificationAppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="application_core.html#soundeventappcore">SoundEventAppCore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.html">dcase_framework.application_core.SoundEventAppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.show_dataset_list.html">dcase_framework.application_core.SoundEventAppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.show_parameters.html">dcase_framework.application_core.SoundEventAppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.initialize.html">dcase_framework.application_core.SoundEventAppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.feature_extraction.html">dcase_framework.application_core.SoundEventAppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.feature_normalization.html">dcase_framework.application_core.SoundEventAppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.system_training.html">dcase_framework.application_core.SoundEventAppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.system_testing.html">dcase_framework.application_core.SoundEventAppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.SoundEventAppCore.system_evaluation.html">dcase_framework.application_core.SoundEventAppCore.system_evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="application_core.html#binarysoundeventappcore">BinarySoundEventAppCore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.html">dcase_framework.application_core.BinarySoundEventAppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.show_dataset_list.html">dcase_framework.application_core.BinarySoundEventAppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.show_parameters.html">dcase_framework.application_core.BinarySoundEventAppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.initialize.html">dcase_framework.application_core.BinarySoundEventAppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.feature_extraction.html">dcase_framework.application_core.BinarySoundEventAppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.feature_normalization.html">dcase_framework.application_core.BinarySoundEventAppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.system_training.html">dcase_framework.application_core.BinarySoundEventAppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.system_testing.html">dcase_framework.application_core.BinarySoundEventAppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.BinarySoundEventAppCore.system_evaluation.html">dcase_framework.application_core.BinarySoundEventAppCore.system_evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="application_core.html#appcore-base-class">AppCore &#8211; base class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.html">dcase_framework.application_core.AppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.show_dataset_list.html">dcase_framework.application_core.AppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.show_parameters.html">dcase_framework.application_core.AppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.initialize.html">dcase_framework.application_core.AppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.feature_extraction.html">dcase_framework.application_core.AppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.feature_normalization.html">dcase_framework.application_core.AppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.system_training.html">dcase_framework.application_core.AppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.system_testing.html">dcase_framework.application_core.AppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.application_core.AppCore.system_evaluation.html">dcase_framework.application_core.AppCore.system_evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="parameters.html#recipe">Recipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameters.html#paths-and-parameter-hash">Paths and parameter hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameters.html#parametercontainer">ParameterContainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.html">dcase_framework.parameters.ParameterContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.load.html">dcase_framework.parameters.ParameterContainer.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.save.html">dcase_framework.parameters.ParameterContainer.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.exists.html">dcase_framework.parameters.ParameterContainer.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.get_path.html">dcase_framework.parameters.ParameterContainer.get_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.show.html">dcase_framework.parameters.ParameterContainer.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.log.html">dcase_framework.parameters.ParameterContainer.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.override.html">dcase_framework.parameters.ParameterContainer.override</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.process.html">dcase_framework.parameters.ParameterContainer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.process_method_parameters.html">dcase_framework.parameters.ParameterContainer.process_method_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.parameters.ParameterContainer.get_hash.html">dcase_framework.parameters.ParameterContainer.get_hash</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="files.html">Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="files.html#audiofile">AudioFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.AudioFile.html">dcase_framework.files.AudioFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.AudioFile.load.html">dcase_framework.files.AudioFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.AudioFile.save.html">dcase_framework.files.AudioFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.AudioFile.exists.html">dcase_framework.files.AudioFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.AudioFile.empty.html">dcase_framework.files.AudioFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#parameterfile">ParameterFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ParameterFile.html">dcase_framework.files.ParameterFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ParameterFile.load.html">dcase_framework.files.ParameterFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ParameterFile.save.html">dcase_framework.files.ParameterFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ParameterFile.exists.html">dcase_framework.files.ParameterFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ParameterFile.empty.html">dcase_framework.files.ParameterFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#featurefile">FeatureFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.FeatureFile.html">dcase_framework.files.FeatureFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.FeatureFile.load.html">dcase_framework.files.FeatureFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.FeatureFile.save.html">dcase_framework.files.FeatureFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.FeatureFile.exists.html">dcase_framework.files.FeatureFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.FeatureFile.empty.html">dcase_framework.files.FeatureFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#datafile">DataFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DataFile.html">dcase_framework.files.DataFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DataFile.load.html">dcase_framework.files.DataFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DataFile.save.html">dcase_framework.files.DataFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DataFile.exists.html">dcase_framework.files.DataFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DataFile.empty.html">dcase_framework.files.DataFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#repositoryfile">RepositoryFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.RepositoryFile.html">dcase_framework.files.RepositoryFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.RepositoryFile.load.html">dcase_framework.files.RepositoryFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.RepositoryFile.exists.html">dcase_framework.files.RepositoryFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.RepositoryFile.empty.html">dcase_framework.files.RepositoryFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#textfile">TextFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.TextFile.html">dcase_framework.files.TextFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.TextFile.load.html">dcase_framework.files.TextFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.TextFile.save.html">dcase_framework.files.TextFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.TextFile.exists.html">dcase_framework.files.TextFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.TextFile.empty.html">dcase_framework.files.TextFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#dictfile">DictFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DictFile.html">dcase_framework.files.DictFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DictFile.load.html">dcase_framework.files.DictFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DictFile.save.html">dcase_framework.files.DictFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DictFile.exists.html">dcase_framework.files.DictFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.DictFile.empty.html">dcase_framework.files.DictFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#listfile">ListFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ListFile.html">dcase_framework.files.ListFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ListFile.load.html">dcase_framework.files.ListFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ListFile.save.html">dcase_framework.files.ListFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ListFile.exists.html">dcase_framework.files.ListFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.ListFile.empty.html">dcase_framework.files.ListFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="files.html#mixins">Mixins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.files.FileMixin.html">dcase_framework.files.FileMixin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#dataset-base-class">Dataset - Base class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.html">dcase_framework.datasets.Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.initialize.html">dcase_framework.datasets.Dataset.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.show_info.html">dcase_framework.datasets.Dataset.show_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.audio_files.html">dcase_framework.datasets.Dataset.audio_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.audio_file_count.html">dcase_framework.datasets.Dataset.audio_file_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.meta.html">dcase_framework.datasets.Dataset.meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.meta_count.html">dcase_framework.datasets.Dataset.meta_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.error_meta.html">dcase_framework.datasets.Dataset.error_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.error_meta_count.html">dcase_framework.datasets.Dataset.error_meta_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.fold_count.html">dcase_framework.datasets.Dataset.fold_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.scene_labels.html">dcase_framework.datasets.Dataset.scene_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.scene_label_count.html">dcase_framework.datasets.Dataset.scene_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.event_labels.html">dcase_framework.datasets.Dataset.event_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.event_label_count.html">dcase_framework.datasets.Dataset.event_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.audio_tags.html">dcase_framework.datasets.Dataset.audio_tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.audio_tag_count.html">dcase_framework.datasets.Dataset.audio_tag_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.download.html">dcase_framework.datasets.Dataset.download</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.extract.html">dcase_framework.datasets.Dataset.extract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.train.html">dcase_framework.datasets.Dataset.train</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.test.html">dcase_framework.datasets.Dataset.test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.eval.html">dcase_framework.datasets.Dataset.eval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.folds.html">dcase_framework.datasets.Dataset.folds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.file_meta.html">dcase_framework.datasets.Dataset.file_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.file_error_meta.html">dcase_framework.datasets.Dataset.file_error_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.file_error_meta.html">dcase_framework.datasets.Dataset.file_error_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.relative_to_absolute_path.html">dcase_framework.datasets.Dataset.relative_to_absolute_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.absolute_to_relative.html">dcase_framework.datasets.Dataset.absolute_to_relative</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#acousticscenedataset">AcousticSceneDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.AcousticSceneDataset.html">dcase_framework.datasets.AcousticSceneDataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTAcousticScenes_2017_DevelopmentSet.html">dcase_framework.datasets.TUTAcousticScenes_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTAcousticScenes_2016_DevelopmentSet.html">dcase_framework.datasets.TUTAcousticScenes_2016_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet.html">dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#soundeventdataset">SoundEventDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.html">dcase_framework.datasets.SoundEventDataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.event_label_count.html">dcase_framework.datasets.SoundEventDataset.event_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.event_labels.html">dcase_framework.datasets.SoundEventDataset.event_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#audiotaggingdataset">AudioTaggingDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.AudioTaggingDataset.html">dcase_framework.datasets.AudioTaggingDataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html">Meta data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#metadataitem">MetaDataItem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#metadatacontainer">MetaDataContainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.html">dcase_framework.metadata.MetaDataContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.log.html">dcase_framework.metadata.MetaDataContainer.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.show.html">dcase_framework.metadata.MetaDataContainer.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.get_string.html">dcase_framework.metadata.MetaDataContainer.get_string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.update.html">dcase_framework.metadata.MetaDataContainer.update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.filter.html">dcase_framework.metadata.MetaDataContainer.filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.filter_time_segment.html">dcase_framework.metadata.MetaDataContainer.filter_time_segment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.process_events.html">dcase_framework.metadata.MetaDataContainer.process_events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.remove_field.html">dcase_framework.metadata.MetaDataContainer.remove_field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.slice_field.html">dcase_framework.metadata.MetaDataContainer.slice_field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.filter_time_segment.html">dcase_framework.metadata.MetaDataContainer.filter_time_segment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.add_time_offset.html">dcase_framework.metadata.MetaDataContainer.add_time_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.file_list.html">dcase_framework.metadata.MetaDataContainer.file_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.event_count.html">dcase_framework.metadata.MetaDataContainer.event_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.scene_label_count.html">dcase_framework.metadata.MetaDataContainer.scene_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.event_label_count.html">dcase_framework.metadata.MetaDataContainer.event_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.unique_scene_labels.html">dcase_framework.metadata.MetaDataContainer.unique_scene_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.unique_event_labels.html">dcase_framework.metadata.MetaDataContainer.unique_event_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.max_event_offset.html">dcase_framework.metadata.MetaDataContainer.max_event_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.load.html">dcase_framework.metadata.MetaDataContainer.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.save.html">dcase_framework.metadata.MetaDataContainer.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.event_stat_counts.html">dcase_framework.metadata.MetaDataContainer.event_stat_counts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataContainer.event_roll.html">dcase_framework.metadata.MetaDataContainer.event_roll</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="metadata.html#eventroll">EventRoll</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.EventRoll.html">dcase_framework.metadata.EventRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.EventRoll.roll.html">dcase_framework.metadata.EventRoll.roll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.EventRoll.pad.html">dcase_framework.metadata.EventRoll.pad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.EventRoll.plot.html">dcase_framework.metadata.EventRoll.plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featurecontainer">FeatureContainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.html">dcase_framework.features.FeatureContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.show.html">dcase_framework.features.FeatureContainer.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.log.html">dcase_framework.features.FeatureContainer.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.get_path.html">dcase_framework.features.FeatureContainer.get_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.shape.html">dcase_framework.features.FeatureContainer.shape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.channels.html">dcase_framework.features.FeatureContainer.channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.frames.html">dcase_framework.features.FeatureContainer.frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.vector_length.html">dcase_framework.features.FeatureContainer.vector_length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.feat.html">dcase_framework.features.FeatureContainer.feat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.stat.html">dcase_framework.features.FeatureContainer.stat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.meta.html">dcase_framework.features.FeatureContainer.meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureContainer.load.html">dcase_framework.features.FeatureContainer.load</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featurerepository">FeatureRepository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureRepository.html">dcase_framework.features.FeatureRepository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureRepository.show.html">dcase_framework.features.FeatureRepository.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureRepository.log.html">dcase_framework.features.FeatureRepository.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureRepository.get_path.html">dcase_framework.features.FeatureRepository.get_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureRepository.load.html">dcase_framework.features.FeatureRepository.load</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featureextractor">FeatureExtractor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureExtractor.html">dcase_framework.features.FeatureExtractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureExtractor.extract.html">dcase_framework.features.FeatureExtractor.extract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureExtractor.get_default_parameters.html">dcase_framework.features.FeatureExtractor.get_default_parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featurenormalizer">FeatureNormalizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureNormalizer.html">dcase_framework.features.FeatureNormalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureNormalizer.accumulate.html">dcase_framework.features.FeatureNormalizer.accumulate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureNormalizer.finalize.html">dcase_framework.features.FeatureNormalizer.finalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureNormalizer.normalize.html">dcase_framework.features.FeatureNormalizer.normalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureNormalizer.process.html">dcase_framework.features.FeatureNormalizer.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featurestacker">FeatureStacker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureStacker.html">dcase_framework.features.FeatureStacker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureStacker.normalizer.html">dcase_framework.features.FeatureStacker.normalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureStacker.feature_vector.html">dcase_framework.features.FeatureStacker.feature_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureStacker.process.html">dcase_framework.features.FeatureStacker.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featureaggregator">FeatureAggregator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureAggregator.html">dcase_framework.features.FeatureAggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureAggregator.process.html">dcase_framework.features.FeatureAggregator.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="features.html#featuremasker">FeatureMasker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureMasker.html">dcase_framework.features.FeatureMasker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.features.FeatureMasker.process.html">dcase_framework.features.FeatureMasker.process</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="learners.html">Learners</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="learners.html#sceneclassifier">SceneClassifier</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="learners.html#eventdetector">EventDetector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="learners.html#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.html">dcase_framework.learners.LearnerContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.class_labels.html">dcase_framework.learners.LearnerContainer.class_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.method.html">dcase_framework.learners.LearnerContainer.method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.params.html">dcase_framework.learners.LearnerContainer.params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.feature_masker.html">dcase_framework.learners.LearnerContainer.feature_masker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.feature_normalizer.html">dcase_framework.learners.LearnerContainer.feature_normalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.feature_stacker.html">dcase_framework.learners.LearnerContainer.feature_stacker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.feature_aggregator.html">dcase_framework.learners.LearnerContainer.feature_aggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ui.html">User interfacing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ui.html#fancylogger">FancyLogger</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.html">dcase_framework.ui.FancyLogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.title.html">dcase_framework.ui.FancyLogger.title</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.section_header.html">dcase_framework.ui.FancyLogger.section_header</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.foot.html">dcase_framework.ui.FancyLogger.foot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.line.html">dcase_framework.ui.FancyLogger.line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.data.html">dcase_framework.ui.FancyLogger.data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.info.html">dcase_framework.ui.FancyLogger.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.debug.html">dcase_framework.ui.FancyLogger.debug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.ui.FancyLogger.error.html">dcase_framework.ui.FancyLogger.error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#utility-functions">Utility functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.setup_logging.html">dcase_framework.utils.setup_logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_parameter_hash.html">dcase_framework.utils.get_parameter_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_class_inheritors.html">dcase_framework.utils.get_class_inheritors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#timer">Timer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.Timer.html">dcase_framework.utils.Timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.Timer.start.html">dcase_framework.utils.Timer.start</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.Timer.stop.html">dcase_framework.utils.Timer.stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.Timer.elapsed.html">dcase_framework.utils.Timer.elapsed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.Timer.get_string.html">dcase_framework.utils.Timer.get_string</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">DCASE2017 Baseline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Parameterization</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="parameterization">
+<span id="id1"></span><h1>Parameterization<a class="headerlink" href="#parameterization" title="Permalink to this headline">¶</a></h1>
+<p>The baseline system supports multi-level parameter overwriting, to enable flexible switching between different system setups.
+Parameter changes are tracked with hashes calculated from parameter sections. These parameter hashes are used in the storage file paths when saving data (features, model, or results).
+By using this approach, the system will compute features, models and results only once for the specific parameter set, and after that it will reuse this precomputed data.</p>
+<div class="section" id="parameter-overwriting">
+<h2>Parameter overwriting<a class="headerlink" href="#parameter-overwriting" title="Permalink to this headline">¶</a></h2>
+<p>Parameters are stored in YAML-formatted files, which are handled internally in the system as Dictionaries. <strong>Default parameters</strong> is the set of all possible parameters recognized by the system. These default parameters are defined in <code class="docutils literal"><span class="pre">applications/parameters/task?.defaults.yaml</span></code>.
+<strong>Parameter set</strong> is a smaller set of parameters used to overwrite values of the default parameters. This can be used to select methods for processing, or tune parameters.</p>
+</div>
+<div class="section" id="parameter-file">
+<h2>Parameter file<a class="headerlink" href="#parameter-file" title="Permalink to this headline">¶</a></h2>
+<p>Parameters files are YAML-formatted files, containing the following three blocks:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">active_set</span></code>, default parameter set id</li>
+<li><code class="docutils literal"><span class="pre">sets</span></code>, list of dictionaries</li>
+<li><code class="docutils literal"><span class="pre">defaults</span></code> dictionary containing default parameters which are overwritten by the <code class="docutils literal"><span class="pre">sets[active_set]</span></code></li>
+</ul>
+<p>At the top level of the parameter dictionary there are <code class="docutils literal"><span class="pre">parameter</span> <span class="pre">sections</span></code>; depending on the name of the section, the parameters inside it are processed sometimes differently (See below more information.)</p>
+<p>Example file:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">active_set</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">SET1</span>
+
+<span class="l l-Scalar l-Scalar-Plain">sets</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">set_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">SET1</span>
+      <span class="l l-Scalar l-Scalar-Plain">flow</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">task1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">task2</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">task3</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="l l-Scalar l-Scalar-Plain">section1</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">field1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">11025</span>
+      <span class="l l-Scalar l-Scalar-Plain">section2</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">field2</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">44100</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">set_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">SET2</span>
+      <span class="l l-Scalar l-Scalar-Plain">section1</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="l l-Scalar l-Scalar-Plain">section2</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="l l-Scalar l-Scalar-Plain">defaults</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">flow</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">task1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">task2</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">task3</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">section1</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">field1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">44100</span>
+        <span class="l l-Scalar l-Scalar-Plain">field2</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">22050</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">section2</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">field1</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">44100</span>
+        <span class="l l-Scalar l-Scalar-Plain">field2</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">22050</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parameter-hash">
+<h2>Parameter hash<a class="headerlink" href="#parameter-hash" title="Permalink to this headline">¶</a></h2>
+<p>Parameter hashes are MD5 hashes calculated for each parameter section. In order to make these hashes more robust, some pre-processing is applied before hash calculation:</p>
+<ul class="simple">
+<li>If section contains field <code class="docutils literal"><span class="pre">enable</span></code> with value <code class="docutils literal"><span class="pre">False</span></code>, all fields inside this section are excluded from the parameter hash calculation. This will avoid recalculating the hash if the section is not used but some of these unused parameters are changed.</li>
+<li>If section contains fields with value <code class="docutils literal"><span class="pre">False</span></code>, these fields are excluded from the parameter hash calculation. This will enable to add new flag parameters without changing the hash. Define the new flag such that the previous behaviour is happening when this field is set to false.</li>
+<li>All <code class="docutils literal"><span class="pre">non_hashable_fields</span></code> fields are excluded from the parameter hash calculation. These fields are set when ParameterContainer is constructed, and they usually are fields used to print various values to the console. These fields do not change the system output to be saved onto disk, and hence they are excluded from hash.</li>
+</ul>
+</div>
+<div class="section" id="parameter-sections">
+<h2>Parameter sections<a class="headerlink" href="#parameter-sections" title="Permalink to this headline">¶</a></h2>
+<p>The functionality of the parameters depending on the section name.</p>
+<div class="section" id="flow">
+<h3>Flow<a class="headerlink" href="#flow" title="Permalink to this headline">¶</a></h3>
+<p>The processing blocks of the system can be controlled through this section. Usually all of them can be kept on.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">flow</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">initialize</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">extract_features</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">feature_normalizer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">train_system</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">test_system</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">evaluate_system</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>extract_features</td>
+<td>bool</td>
+<td>Initialize the system</td>
+</tr>
+<tr class="row-odd"><td>feature_normalizer</td>
+<td>bool</td>
+<td>Extract acoustic features for all data at once.</td>
+</tr>
+<tr class="row-even"><td>train_system</td>
+<td>bool</td>
+<td>Train the system with training material</td>
+</tr>
+<tr class="row-odd"><td>test_system</td>
+<td>bool</td>
+<td>Test the system with testing material</td>
+</tr>
+<tr class="row-even"><td>evaluate_system</td>
+<td>bool</td>
+<td>Evaluate correctness of the system outputs produced in the
+<code class="docutils literal"><span class="pre">test_system</span></code> block.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h3>
+<p>This section contains general settings, mostly related to printing and logging.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">general</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">overwrite</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">challenge_submission_mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">print_system_progress</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">log_system_parameters</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="l l-Scalar l-Scalar-Plain">log_system_progress</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>overwrite</td>
+<td>bool</td>
+<td>Overwrite all pre-calculated data.
+Enable this when changing system implementation.</td>
+</tr>
+<tr class="row-odd"><td>challenge_submission_mode</td>
+<td>bool</td>
+<td>Save results to path location defined in <code class="docutils literal"><span class="pre">path-&gt;challenge_results</span></code>.
+Use this mode when preparing a submission to the challenge.</td>
+</tr>
+<tr class="row-even"><td>print_system_progress</td>
+<td>bool</td>
+<td>Print the system progress into console using carriage return.</td>
+</tr>
+<tr class="row-odd"><td>log_system_parameters</td>
+<td>bool</td>
+<td>Save system parameters into system log file.</td>
+</tr>
+<tr class="row-even"><td>log_system_progress</td>
+<td>bool</td>
+<td>Save system progress into system log file.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="path">
+<h3>Path<a class="headerlink" href="#path" title="Permalink to this headline">¶</a></h3>
+<p>This section defines all paths for the system. Paths can be defined either as absolute or relative to the application code file.
+Relative paths are converted into absolute before they are used.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">path</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">data</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">data/</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">system_base</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">system/task1/</span>
+    <span class="l l-Scalar l-Scalar-Plain">feature_extractor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">feature_extractor/</span>
+    <span class="l l-Scalar l-Scalar-Plain">feature_normalizer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">feature_normalizer/</span>
+    <span class="l l-Scalar l-Scalar-Plain">learner</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">learner/</span>
+    <span class="l l-Scalar l-Scalar-Plain">recognizer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">recognizer/</span>
+    <span class="l l-Scalar l-Scalar-Plain">evaluator</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">evaluator/</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">recognizer_challenge_output</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">challenge_submission/task1/</span>
+    <span class="l l-Scalar l-Scalar-Plain">logs</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">logs/</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>data</td>
+<td>string</td>
+<td>Path to store all audio datasets.</td>
+</tr>
+<tr class="row-odd"><td>system_base</td>
+<td>string</td>
+<td>Base path for the system to store all data.</td>
+</tr>
+<tr class="row-even"><td>feature_extractor</td>
+<td>string</td>
+<td>Directory name under system_base for extracted features</td>
+</tr>
+<tr class="row-odd"><td>feature_normalizer</td>
+<td>string</td>
+<td>Directory name under system_base for feature normalization values</td>
+</tr>
+<tr class="row-even"><td>learner</td>
+<td>string</td>
+<td>Directory name under system_base for learned acoustic models</td>
+</tr>
+<tr class="row-odd"><td>recognizer</td>
+<td>string</td>
+<td>Directory name under system_base for predicted system outputs</td>
+</tr>
+<tr class="row-even"><td>evaluator</td>
+<td>string</td>
+<td>Directory name under system_base for evaluated metric values</td>
+</tr>
+<tr class="row-odd"><td>recognizer_challenge_output</td>
+<td>string</td>
+<td>Path to store system output in challenge mode.</td>
+</tr>
+<tr class="row-even"><td>logs</td>
+<td>string</td>
+<td>Path to save system logs.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dataset">
+<h3>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the dataset use in <strong>development mode</strong> and in <strong>challenge mode</strong>.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">dataset</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">development</span>
+
+<span class="l l-Scalar l-Scalar-Plain">dataset_method_parameters</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">development</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TUTAcousticScenes_2017_DevelopmentSet</span>
+        <span class="l l-Scalar l-Scalar-Plain">fold_list</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">3</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">]</span>
+        <span class="l l-Scalar l-Scalar-Plain">evaluation_mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">folds</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">challenge_train</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TUTAcousticScenes_2017_DevelopmentSet</span>
+        <span class="l l-Scalar l-Scalar-Plain">evaluation_mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">full</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">challenge_test</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">TUTAcousticScenes_2017_EvaluationSet</span>
+        <span class="l l-Scalar l-Scalar-Plain">evaluation_mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">full</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">dataset-&gt;method</span></code> is used to select the active dataset.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="10%" />
+<col width="51%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dataset-&gt;method</td>
+<td>string</td>
+<td>Active dataset, used to select parameter set
+from dataset_method_parameters</td>
+</tr>
+<tr class="row-odd"><td>dataset_method_parameters-&gt;method-&gt;name</td>
+<td>string</td>
+<td>Dataset class name, use <code class="docutils literal"><span class="pre">./task1.py</span> <span class="pre">-show_datasets</span></code>
+to see valid ones</td>
+</tr>
+<tr class="row-even"><td>dataset_method_parameters-&gt;method-&gt;fold_list</td>
+<td>list of ints</td>
+<td>List of active folds. If nothing set, all available folds are used.
+Use this to run the system on a subset of cross-validation folds.</td>
+</tr>
+<tr class="row-odd"><td>dataset_method_parameters-&gt;method-&gt;evaluation_mode</td>
+<td>string
+{full|folds}</td>
+<td>System evalution mode. With <code class="docutils literal"><span class="pre">folds</span></code>, cross-evaluation folds are
+used. With <code class="docutils literal"><span class="pre">full</span></code> all the data is used for training and testing.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="feature-extractor">
+<h3>Feature extractor<a class="headerlink" href="#feature-extractor" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the general feature extraction parameters and extractor specific parameters.
+<code class="docutils literal"><span class="pre">feature_stacker-&gt;stacking_recipe</span></code> is used to select active feature extractors.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">feature_extractor</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">fs</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">44100</span>                               <span class="c1"># Sampling frequency</span>
+    <span class="l l-Scalar l-Scalar-Plain">win_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.04</span>                <span class="c1"># Window length</span>
+    <span class="l l-Scalar l-Scalar-Plain">hop_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.02</span>                <span class="c1"># Hop length</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>fs</td>
+<td>int</td>
+<td>Sampling frequency. If different sampling frequency is encountered
+during audio file loading, resampling is used.</td>
+</tr>
+<tr class="row-odd"><td>win_length_seconds</td>
+<td>float</td>
+<td>Analysis window length in seconds.</td>
+</tr>
+<tr class="row-even"><td>hop_length_seconds</td>
+<td>float</td>
+<td>Analysis window hop length in seconds.</td>
+</tr>
+</tbody>
+</table>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">feature_extractor_method_parameters</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">mel</span><span class="p p-Indicator">:</span>                                    <span class="c1"># Mel band energy</span>
+        <span class="l l-Scalar l-Scalar-Plain">mono</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>                          <span class="c1"># [true, false]</span>
+        <span class="l l-Scalar l-Scalar-Plain">window</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">hamming_asymmetric</span>          <span class="c1"># [hann_asymmetric, hamming_asymmetric]</span>
+        <span class="l l-Scalar l-Scalar-Plain">spectrogram_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">magnitude</span>         <span class="c1"># [magnitude, power]</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_mels</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>                          <span class="c1"># Number of MEL bands used</span>
+        <span class="l l-Scalar l-Scalar-Plain">normalize_mel_bands</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>          <span class="c1"># [true, false]</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_fft</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2048</span>                         <span class="c1"># FFT length</span>
+        <span class="l l-Scalar l-Scalar-Plain">fmin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>                             <span class="c1"># Minimum frequency when constructing MEL bands</span>
+        <span class="l l-Scalar l-Scalar-Plain">fmax</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">22050</span>                         <span class="c1"># Maximum frequency when constructing MEL band</span>
+        <span class="l l-Scalar l-Scalar-Plain">htk</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>                          <span class="c1"># Switch for HTK-styled MEL-frequency equation</span>
+        <span class="l l-Scalar l-Scalar-Plain">log</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>                           <span class="c1"># Logarithmic</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">mfcc</span><span class="p p-Indicator">:</span>                                   <span class="c1"># Mel-frequency cepstral coefficients</span>
+        <span class="l l-Scalar l-Scalar-Plain">mono</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>                          <span class="c1"># [true, false]</span>
+        <span class="l l-Scalar l-Scalar-Plain">window</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">hamming_asymmetric</span>          <span class="c1"># [hann_asymmetric, hamming_asymmetric]</span>
+        <span class="l l-Scalar l-Scalar-Plain">spectrogram_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">magnitude</span>         <span class="c1"># [magnitude, power]</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_mfcc</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>                          <span class="c1"># Number of MFCC coefficients</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_mels</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>                          <span class="c1"># Number of MEL bands used</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_fft</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2048</span>                         <span class="c1"># FFT length</span>
+        <span class="l l-Scalar l-Scalar-Plain">fmin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>                             <span class="c1"># Minimum frequency when constructing MEL bands</span>
+        <span class="l l-Scalar l-Scalar-Plain">fmax</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">22050</span>                         <span class="c1"># Maximum frequency when constructing MEL band</span>
+        <span class="l l-Scalar l-Scalar-Plain">htk</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>                          <span class="c1"># Switch for HTK-styled MEL-frequency equation</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">mfcc_delta</span><span class="p p-Indicator">:</span>                             <span class="c1"># MFCC delta coefficients</span>
+        <span class="l l-Scalar l-Scalar-Plain">width</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">9</span>                            <span class="c1">#</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">mfcc_acceleration</span><span class="p p-Indicator">:</span>                      <span class="c1"># MFCC acceleration coefficients</span>
+        <span class="l l-Scalar l-Scalar-Plain">width</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">9</span>                            <span class="c1">#</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="28%" />
+<col width="49%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3"><strong>feature_extractor_method_parameters-&gt;mel</strong></td>
+</tr>
+<tr class="row-odd"><td>mono</td>
+<td>bool</td>
+<td>If true, multi-channel audio input is averaged into single channel.</td>
+</tr>
+<tr class="row-even"><td>window</td>
+<td>string
+{hann_asymmetric | hamming_asymmetric}</td>
+<td>Analysis window function.</td>
+</tr>
+<tr class="row-odd"><td>spectrogram_type</td>
+<td>string
+{magnitude&nbsp;| power}</td>
+<td>Spectrogram type.</td>
+</tr>
+<tr class="row-even"><td>n_mels</td>
+<td>int</td>
+<td>Number of mel bands used.</td>
+</tr>
+<tr class="row-odd"><td>normalize_mel_bands</td>
+<td>bool</td>
+<td>Normalize mel bands.</td>
+</tr>
+<tr class="row-even"><td>n_fft</td>
+<td>int</td>
+<td>FFT length.</td>
+</tr>
+<tr class="row-odd"><td>fmin</td>
+<td>int</td>
+<td>Minimum frequency when constructing mel bands</td>
+</tr>
+<tr class="row-even"><td>fmax</td>
+<td>int</td>
+<td>Maximum frequency when constructing mel band</td>
+</tr>
+<tr class="row-odd"><td>htk</td>
+<td>bool</td>
+<td>Switch for HTK-style mel-frequency equation</td>
+</tr>
+<tr class="row-even"><td>log</td>
+<td>bool</td>
+<td>Logarithmic</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>feature_extractor_method_parameters-&gt;mfcc</strong></td>
+</tr>
+<tr class="row-even"><td>mono</td>
+<td>bool</td>
+<td>If true, multi-channel audio input is averaged into single channel.</td>
+</tr>
+<tr class="row-odd"><td>window</td>
+<td>string
+{hann_asymmetric | hamming_asymmetric}</td>
+<td>Analysis window function.</td>
+</tr>
+<tr class="row-even"><td>spectrogram_type</td>
+<td>string
+{magnitude&nbsp;| power}</td>
+<td>Spectrogram type.</td>
+</tr>
+<tr class="row-odd"><td>n_mfcc</td>
+<td>int</td>
+<td>Number of mfcc coefficients. Zeroth coefficient is always returned.</td>
+</tr>
+<tr class="row-even"><td>n_mels</td>
+<td>int</td>
+<td>Number of mel bands used.</td>
+</tr>
+<tr class="row-odd"><td>n_fft</td>
+<td>int</td>
+<td>FFT length.</td>
+</tr>
+<tr class="row-even"><td>fmin</td>
+<td>int</td>
+<td>Minimum frequency when constructing mel bands</td>
+</tr>
+<tr class="row-odd"><td>fmax</td>
+<td>int</td>
+<td>Maximum frequency when constructing mel band</td>
+</tr>
+<tr class="row-even"><td>htk</td>
+<td>bool</td>
+<td>Switch for HTK-style mel-frequency equation</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>feature_extractor_method_parameters-&gt;mfcc_delta</strong></td>
+</tr>
+<tr class="row-even"><td>width</td>
+<td>int</td>
+<td>Delta window length.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>feature_extractor_method_parameters-&gt;mfcc_acceleration</strong></td>
+</tr>
+<tr class="row-even"><td>width</td>
+<td>int</td>
+<td>Delta-delta window length.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="feature-stacker">
+<h3>Feature stacker<a class="headerlink" href="#feature-stacker" title="Permalink to this headline">¶</a></h3>
+<p>This section defines how the extracted features are combined to form the feature vector (and feature matrix).
+Stacking recipe is <code class="docutils literal"><span class="pre">;</span></code> limited string with stacking recipe item in specific format:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">[extractor</span> <span class="pre">(string)]</span></code>, default channel 0 and full vector</li>
+<li><code class="docutils literal"><span class="pre">[extractor</span> <span class="pre">(string)]=[start</span> <span class="pre">index</span> <span class="pre">(int)]-[end</span> <span class="pre">index</span> <span class="pre">(int)]</span></code>, default channel 0 and vector [start:end]</li>
+<li><code class="docutils literal"><span class="pre">[extractor</span> <span class="pre">(string)]=[channel</span> <span class="pre">(int)]:[start</span> <span class="pre">index</span> <span class="pre">(int)]-[end</span> <span class="pre">index</span> <span class="pre">(int)]</span></code>, specified channel and vector [start:end]</li>
+<li><code class="docutils literal"><span class="pre">[extractor</span> <span class="pre">(string)]=1,2,3,4,5</span></code>, default channel 0 and vector [1,2,3,4,5]</li>
+<li><code class="docutils literal"><span class="pre">[extractor</span> <span class="pre">(string)]=0</span></code>, specified channel and full vector</li>
+</ul>
+<p>For example to get feature vector with mfcc and omitting zeroth coefficient use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">stacking_recipe</span><span class="p">:</span> <span class="n">mfcc</span><span class="o">=</span><span class="mi">1</span><span class="o">-</span><span class="mi">19</span><span class="p">;</span><span class="n">mfcc_delta</span><span class="p">;</span><span class="n">mfcc_acceleration</span>
+</pre></div>
+</div>
+<p>For example to get features from both channels (make sure <code class="docutils literal"><span class="pre">feature_extractor_method_parameters-&gt;mel-&gt;mono</span></code> field is set to false:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">stacking_recipe</span><span class="p">:</span> <span class="n">mel</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">mel</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">feature_stacker</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">stacking_recipe</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mel</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>stacking_recipe</td>
+<td>string</td>
+<td>Stacking recipe to form feature vector.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="feature-normalizer">
+<h3>Feature normalizer<a class="headerlink" href="#feature-normalizer" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the feature normalization.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">feature_normalizer</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">global</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Switch to enable feature normalization.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string
+{global}</td>
+<td>Normalization type. Currently only global normalization
+supported.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="feature-aggregator">
+<h3>Feature aggregator<a class="headerlink" href="#feature-aggregator" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the feature aggregation.
+The feature aggregator can be used to process the feature matrix inside the processing window. It can be used for example
+to collapse features within the window by calculating mean and std per feature item, or to flatten the matrix into single longer feature vector.</p>
+<p>Supported processing methods:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">flatten</span></code></li>
+<li><code class="docutils literal"><span class="pre">mean</span></code></li>
+<li><code class="docutils literal"><span class="pre">std</span></code></li>
+<li><code class="docutils literal"><span class="pre">cov</span></code></li>
+<li><code class="docutils literal"><span class="pre">kurtosis</span></code></li>
+<li><code class="docutils literal"><span class="pre">skew</span></code></li>
+</ul>
+<p>The processing methods can combined with <code class="docutils literal"><span class="pre">;</span></code>.</p>
+<p>For example, to calculate mean and std:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">aggregation_recipe</span><span class="p">:</span> <span class="n">mean</span><span class="p">;</span><span class="n">std</span>
+</pre></div>
+</div>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">feature_aggregator</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="l l-Scalar l-Scalar-Plain">aggregation_recipe</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">flatten</span>
+    <span class="l l-Scalar l-Scalar-Plain">win_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+    <span class="l l-Scalar l-Scalar-Plain">hop_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.02</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Switch to enable feature aggregation.</td>
+</tr>
+<tr class="row-odd"><td>aggregation_recipe</td>
+<td>string</td>
+<td>Aggregation recipe. See formatting above.</td>
+</tr>
+<tr class="row-even"><td>win_length_seconds</td>
+<td>float</td>
+<td>Aggregation processing window length.</td>
+</tr>
+<tr class="row-odd"><td>hop_length_seconds</td>
+<td>float</td>
+<td>Aggregation processing window hop length.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="learner">
+<h3>Learner<a class="headerlink" href="#learner" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the learner stage of the system.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">learner</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">mlp</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">audio_error_handling</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="l l-Scalar l-Scalar-Plain">show_model_information</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>method</td>
+<td>string</td>
+<td>Learner method name. Used to select parameters
+from <code class="docutils literal"><span class="pre">learner_method_parameters</span></code>.</td>
+</tr>
+<tr class="row-odd"><td>audio_error_handling</td>
+<td>bool</td>
+<td>Switch to skip frames annotated to contain errors.
+Only used in Task1 application</td>
+</tr>
+<tr class="row-even"><td>show_model_information</td>
+<td>bool</td>
+<td>Switch to show extra information about the learned model. Used
+only with keras learners.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MLP</strong></p>
+<p>Example section for MLP based learner:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">learner_method_parameters</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">mlp</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">seed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+
+        <span class="l l-Scalar l-Scalar-Plain">keras</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">backend</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">theano</span>
+            <span class="l l-Scalar l-Scalar-Plain">backend_parameters</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">floatX</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float32</span>
+                <span class="l l-Scalar l-Scalar-Plain">device</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cpu</span>
+                <span class="l l-Scalar l-Scalar-Plain">fastmath</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+        <span class="l l-Scalar l-Scalar-Plain">validation</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="l l-Scalar l-Scalar-Plain">setup_source</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">generated_scene_balanced</span>
+            <span class="l l-Scalar l-Scalar-Plain">validation_amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.10</span>
+            <span class="l l-Scalar l-Scalar-Plain">seed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+
+        <span class="l l-Scalar l-Scalar-Plain">training</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">nb_epoch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>
+            <span class="l l-Scalar l-Scalar-Plain">batch_size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">256</span>
+            <span class="l l-Scalar l-Scalar-Plain">shuffle</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="l l-Scalar l-Scalar-Plain">callbacks</span><span class="p p-Indicator">:</span>
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">EarlyStopping</span>
+                  <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+                      <span class="l l-Scalar l-Scalar-Plain">monitor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">val_categorical_accuracy</span>
+                      <span class="l l-Scalar l-Scalar-Plain">min_delta</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.001</span>
+                      <span class="l l-Scalar l-Scalar-Plain">patience</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+                      <span class="l l-Scalar l-Scalar-Plain">verbose</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+                      <span class="l l-Scalar l-Scalar-Plain">mode</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">max</span>
+        <span class="l l-Scalar l-Scalar-Plain">model</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dense</span>
+                  <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+                    <span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">50</span>
+                    <span class="l l-Scalar l-Scalar-Plain">kernel_initializer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">uniform</span>
+                    <span class="l l-Scalar l-Scalar-Plain">activation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">relu</span>
+
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dropout</span>
+                  <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+                    <span class="l l-Scalar l-Scalar-Plain">rate</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dense</span>
+                  <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+                    <span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">50</span>
+                    <span class="l l-Scalar l-Scalar-Plain">kernel_initializer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">uniform</span>
+                    <span class="l l-Scalar l-Scalar-Plain">activation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">relu</span>
+
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dropout</span>
+                  <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+                    <span class="l l-Scalar l-Scalar-Plain">rate</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dense</span>
+                  <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+                    <span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CLASS_COUNT</span>
+                    <span class="l l-Scalar l-Scalar-Plain">kernel_initializer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">uniform</span>
+                    <span class="l l-Scalar l-Scalar-Plain">activation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">softmax</span>
+
+            <span class="l l-Scalar l-Scalar-Plain">loss</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">categorical_crossentropy</span>
+
+            <span class="l l-Scalar l-Scalar-Plain">optimizer</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Adam</span>
+
+            <span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="p p-Indicator">:</span>
+                <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">categorical_accuracy</span>
+</pre></div>
+</div>
+<p>This learner is using Keras neural network implementation. See <a class="reference external" href="https://keras.io/">documentation</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>seed</td>
+<td>int</td>
+<td>Randomization seed. Use this to make learner behaviour
+deterministic.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;keras</strong></td>
+</tr>
+<tr class="row-even"><td>backend</td>
+<td>string
+{theano |
+tensorflow}</td>
+<td>Keras backend selector.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;keras-&gt;backend_parameters</strong></td>
+</tr>
+<tr class="row-even"><td>device</td>
+<td>string
+{cpu | gpu}</td>
+<td>Device selector. <code class="docutils literal"><span class="pre">cpu</span></code> is best option to produce deterministic
+results. All baseline results are calculated in cpu mode.</td>
+</tr>
+<tr class="row-odd"><td>floatX</td>
+<td>string</td>
+<td>Float number type. Usually float32 used since that is compatible
+with GPUs. Valid only for <code class="docutils literal"><span class="pre">theano</span></code> backend.</td>
+</tr>
+<tr class="row-even"><td>fastmath</td>
+<td>bool</td>
+<td>If true, will enable fastmath mode when cuda code is compiled.
+Div and sqrt are faster, but precision is lower. This can cause
+numerical issues some in cases. Valid only for <code class="docutils literal"><span class="pre">theano</span></code> backend.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;validation</strong></td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>If true, validation set is used during the training procedure.</td>
+</tr>
+<tr class="row-odd"><td>setup_source</td>
+<td>string</td>
+<td><p class="first">Validation setup source. Valid sources:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">generated_scene_balanced</span></code>, balanced based on scene labels,
+used for Task1.</li>
+<li><code class="docutils literal"><span class="pre">generated_event_file_balanced</span></code>, balanced based on events, used
+for Task2.</li>
+<li><code class="docutils literal"><span class="pre">generated_scene_location_event_balanced</span></code>, balanced based on
+scene, location and events. Used for Task3.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>validation_amount</td>
+<td>float</td>
+<td>Percentage of training data selected for validation. Use value
+between 0.0-1.0.</td>
+</tr>
+<tr class="row-odd"><td>seed</td>
+<td>int</td>
+<td>Validation set generation seed. If Null, learner seed will be used.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>mlp-&gt;training</strong></td>
+</tr>
+<tr class="row-odd"><td>epochs</td>
+<td>int</td>
+<td>Number of epochs.</td>
+</tr>
+<tr class="row-even"><td>batch_size</td>
+<td>int</td>
+<td>Batch size.</td>
+</tr>
+<tr class="row-odd"><td>shuffle</td>
+<td>bool</td>
+<td>If true, training samples are shuffled at each epoch.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>mlp-&gt;training-&gt;callbacks</strong>, list of parameter sets in following format. Callback called during the model training.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string</td>
+<td>Callback name, use standard keras callbacks
+<a class="reference external" href="https://keras.io/callbacks/">callbacks</a>.</td>
+</tr>
+<tr class="row-even"><td>parameters</td>
+<td>dict</td>
+<td>Place inside this all parameters for the callback.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;training-&gt;model-&gt;config</strong>, list of dicts. Defining network topology.</td>
+</tr>
+<tr class="row-even"><td>class_name</td>
+<td>string</td>
+<td>Layer name. Use standard keras
+<a class="reference external" href="https://keras.io/layers/core/">core layers</a>,
+<a class="reference external" href="https://keras.io/layers/convolutional/">convolutional layers</a>,
+<a class="reference external" href="https://keras.io/layers/pooling/">pooling layers</a>,
+<a class="reference external" href="https://keras.io/layers/recurrent/">recurrent layers</a>, or
+<a class="reference external" href="https://keras.io/layers/normalization/">normalization layers</a>.</td>
+</tr>
+<tr class="row-odd"><td>config</td>
+<td>dict</td>
+<td><p class="first">Place inside this all parameters for the layer.
+See Keras documentation. Magic parameter values:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">FEATURE_VECTOR_LENGTH</span></code>, feature vector length.
+This automatically inserted for input layer.</li>
+<li><code class="docutils literal"><span class="pre">CLASS_COUNT</span></code>, number of classes.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>mlp-&gt;training-&gt;model</strong></td>
+</tr>
+<tr class="row-odd"><td>loss</td>
+<td>string</td>
+<td>Keras loss function name. See
+<a class="reference external" href="https://keras.io/losses/">Keras documentation</a>.</td>
+</tr>
+<tr class="row-even"><td>metrics</td>
+<td>list of
+strings</td>
+<td>Keras metric function name. See
+<a class="reference external" href="https://keras.io/metrics/">Keras documentation</a>.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;training-&gt;model-&gt;optimizer</strong></td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>string</td>
+<td>Keras optimizer name. See
+<a class="reference external" href="https://keras.io/optimizers/">Keras documentation</a>.</td>
+</tr>
+<tr class="row-odd"><td>parameters</td>
+<td>dict</td>
+<td>Place inside this all parameters for the optimizer.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>GMM</strong></p>
+<p>Example section for GMM based learner:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">learner_method_parameters</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">gmm</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_components</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+        <span class="l l-Scalar l-Scalar-Plain">covariance_type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">diag</span>
+        <span class="l l-Scalar l-Scalar-Plain">tol</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.001</span>
+        <span class="l l-Scalar l-Scalar-Plain">reg_covar</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+        <span class="l l-Scalar l-Scalar-Plain">max_iter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>
+        <span class="l l-Scalar l-Scalar-Plain">n_init</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+        <span class="l l-Scalar l-Scalar-Plain">init_params</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">kmeans</span>
+        <span class="l l-Scalar l-Scalar-Plain">random_state</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+</pre></div>
+</div>
+<p>This learner is using <code class="docutils literal"><span class="pre">sklearn.mixture.GaussianMixture</span></code> implementation. See <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html/">documentation</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="12%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>n_components</td>
+<td>int</td>
+<td>The number of mixture components.</td>
+</tr>
+<tr class="row-odd"><td>covariance_type</td>
+<td>string
+{ full |
+tied |
+diag |
+spherical }</td>
+<td>Covariance type.</td>
+</tr>
+<tr class="row-even"><td>tol</td>
+<td>float</td>
+<td>Covariance threshold.</td>
+</tr>
+<tr class="row-odd"><td>reg_covar</td>
+<td>float</td>
+<td>Non-negative regularization added to the diagonal of covariance.</td>
+</tr>
+<tr class="row-even"><td>max_iter</td>
+<td>int</td>
+<td>The number of EM iterations.</td>
+</tr>
+<tr class="row-odd"><td>n_init</td>
+<td>int</td>
+<td>The number of initializations.</td>
+</tr>
+<tr class="row-even"><td>init_params</td>
+<td>string
+{ kmeans |
+random }</td>
+<td>The method used to initialize model weights.</td>
+</tr>
+<tr class="row-odd"><td>random_state</td>
+<td>int</td>
+<td>Random seed.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="recognizer">
+<h3>Recognizer<a class="headerlink" href="#recognizer" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the recognizer stage of the system.</p>
+<p>Example section for Task 1:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">recognizer</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">audio_error_handling</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">frame_accumulation</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sum</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">frame_binarization</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_max</span>
+        <span class="l l-Scalar l-Scalar-Plain">threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">null</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">decision_making</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">majority_vote</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="16%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Section selector</td>
+</tr>
+<tr class="row-odd"><td>audio_error_handling</td>
+<td>bool</td>
+<td>Switch to skip frames annotated to contain errors.
+Only used in Task1 application. This used to exclude temporary
+microphone failure and radio signal interferences from mobile phones.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>frame_accumulation</strong>, Defining frame probability accumulation.</td>
+</tr>
+<tr class="row-odd"><td>enable</td>
+<td>bool</td>
+<td>Enable frame probability accumulation.</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>string
+{sum&nbsp;|
+prod |
+mean&nbsp;}</td>
+<td>Operator type used to accumulate.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>frame_binarization</strong>, Defining frame probability binarization.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable frame probability binarization.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string
+{frame_max&nbsp;|
+global_threshold }</td>
+<td><p class="first">Type of binarization:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">frame_max</span></code>, each frame is treated individually, max of each
+frame is set to one, other zero.</li>
+<li><code class="docutils literal"><span class="pre">global_threshold</span></code>, global threshold, all values over the
+threshold are set to one.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>threshold</td>
+<td>float</td>
+<td>Threshold value. Set to null if not used.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>decision_making</strong>, Defining final decision making.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable final decision making.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string
+{maximum&nbsp;|
+majority_vote }</td>
+<td><p class="first">Type of decision:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">maximum</span></code>, maximum probability is choosen.</li>
+<li><code class="docutils literal"><span class="pre">majority_vote</span></code>, majority vote among binarized frame decisions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example section for Task 2 and Task 3:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">recognizer</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">frame_accumulation</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sliding_sum</span>
+        <span class="l l-Scalar l-Scalar-Plain">window_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1.0</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">frame_binarization</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">global_threshold</span>
+        <span class="l l-Scalar l-Scalar-Plain">threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">event_activity_processing</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">median_filtering</span>
+        <span class="l l-Scalar l-Scalar-Plain">window_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.54</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">event_post_processing</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">minimum_event_length_seconds</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+        <span class="l l-Scalar l-Scalar-Plain">minimum_event_gap_second</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="16%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Section selector</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>frame_accumulation</strong>, Defining frame probability accumulation.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable frame probability accumulation.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string
+{sliding_sum&nbsp;|
+sliding_mean |
+sliding_median }</td>
+<td>Operator type used to accumulate.</td>
+</tr>
+<tr class="row-even"><td>window_length_seconds</td>
+<td>float</td>
+<td>Window length in seconds for sliding accumulation.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>frame_binarization</strong>, Defining frame probability binarization.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable frame probability binarization.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string
+{frame_max&nbsp;|
+global_threshold }</td>
+<td><p class="first">Type of binarization:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">frame_max</span></code>, each frame is treated individually, max of each
+frame is set to one, all others to zero.</li>
+<li><code class="docutils literal"><span class="pre">global_threshold</span></code>, global threshold, all values over the
+threshold are set to one.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>threshold</td>
+<td>float</td>
+<td>Threshold value. Set to null if not used.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>event_activity_processing</strong>, Event activity processing per frame.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable activity processing.</td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string
+{median_filtering}</td>
+<td><p class="first">Type of decision:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">median_filtering</span></code>, median filtering of decision inside window.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>window_length_seconds</td>
+<td>float</td>
+<td>Length of sliding window in seconds for activity processing.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>event_post_processing</strong>, Event post processing per event.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable event processing.</td>
+</tr>
+<tr class="row-odd"><td>minimum_event_length_seconds</td>
+<td>float</td>
+<td>Minimum allowed event length. Shorter events will be removed.</td>
+</tr>
+<tr class="row-even"><td>minimum_event_gap_second</td>
+<td>float</td>
+<td>Minimum allowed gap between events. Smaller gaps between events
+will cause events to be merged together.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="evaluator">
+<h3>Evaluator<a class="headerlink" href="#evaluator" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the evaluation stage of the system.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">evaluator</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">show_details</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">saving</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">filename</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">eval_[{parameter_hash}].yaml</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="16%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Section selector</td>
+</tr>
+<tr class="row-odd"><td>show_details</td>
+<td>bool</td>
+<td>Show more detailed metrics (class-wise, scene-wise, event-wise)</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>saving</strong>, Saving evaluation results</td>
+</tr>
+<tr class="row-odd"><td>enable</td>
+<td>bool</td>
+<td>Enable result saving into yaml-file.</td>
+</tr>
+<tr class="row-even"><td>filename</td>
+<td>string</td>
+<td><p class="first">Filename for the evalution results. Following magic fields can be
+used:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">{parameter_hash}</span></code></li>
+<li><code class="docutils literal"><span class="pre">{parameter_set}</span></code></li>
+<li><code class="docutils literal"><span class="pre">{dataset_name}</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="logging">
+<h3>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h3>
+<p>This section defines the system logging.</p>
+<p>Example section:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">logging</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">colored</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+        <span class="l l-Scalar l-Scalar-Plain">disable_existing_loggers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="l l-Scalar l-Scalar-Plain">formatters</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">simple</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">format</span><span class="p p-Indicator">:</span> <span class="s">&quot;[%(levelname)-8s]</span><span class="nv"> </span><span class="s">%(message)s&quot;</span>
+            <span class="l l-Scalar l-Scalar-Plain">normal</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">format</span><span class="p p-Indicator">:</span> <span class="s">&quot;%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s&quot;</span>
+            <span class="l l-Scalar l-Scalar-Plain">extended</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">format</span><span class="p p-Indicator">:</span> <span class="s">&quot;[%(asctime)s]</span><span class="nv"> </span><span class="s">[%(name)s]\t</span><span class="nv"> </span><span class="s">[%(levelname)-8s]\t</span><span class="nv"> </span><span class="s">%(message)s</span><span class="nv"> </span><span class="s">\t(%(filename)s:%(lineno)s)&quot;</span>
+        <span class="l l-Scalar l-Scalar-Plain">handlers</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">console</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">class</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">logging.StreamHandler</span>
+                <span class="l l-Scalar l-Scalar-Plain">level</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+                <span class="l l-Scalar l-Scalar-Plain">formatter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">simple</span>
+                <span class="l l-Scalar l-Scalar-Plain">stream</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ext://sys.stdout</span>
+
+            <span class="l l-Scalar l-Scalar-Plain">info_file_handler</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">class</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">logging.handlers.RotatingFileHandler</span>
+                <span class="l l-Scalar l-Scalar-Plain">level</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">INFO</span>
+                <span class="l l-Scalar l-Scalar-Plain">formatter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">normal</span>
+                <span class="l l-Scalar l-Scalar-Plain">filename</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">task1.info.log</span>
+                <span class="l l-Scalar l-Scalar-Plain">maxBytes</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10485760</span>
+                <span class="l l-Scalar l-Scalar-Plain">backupCount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+                <span class="l l-Scalar l-Scalar-Plain">encoding</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
+
+            <span class="l l-Scalar l-Scalar-Plain">debug_file_handler</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">class</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">logging.handlers.RotatingFileHandler</span>
+                <span class="l l-Scalar l-Scalar-Plain">level</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+                <span class="l l-Scalar l-Scalar-Plain">formatter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">normal</span>
+                <span class="l l-Scalar l-Scalar-Plain">filename</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">task1.debug.log</span>
+                <span class="l l-Scalar l-Scalar-Plain">maxBytes</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10485760</span>
+                <span class="l l-Scalar l-Scalar-Plain">backupCount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+                <span class="l l-Scalar l-Scalar-Plain">encoding</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
+
+            <span class="l l-Scalar l-Scalar-Plain">error_file_handler</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">class</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">logging.handlers.RotatingFileHandler</span>
+                <span class="l l-Scalar l-Scalar-Plain">level</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ERROR</span>
+                <span class="l l-Scalar l-Scalar-Plain">formatter</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">extended</span>
+                <span class="l l-Scalar l-Scalar-Plain">filename</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">task1.errors.log</span>
+                <span class="l l-Scalar l-Scalar-Plain">maxBytes</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10485760</span>
+                <span class="l l-Scalar l-Scalar-Plain">backupCount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+                <span class="l l-Scalar l-Scalar-Plain">encoding</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8</span>
+
+        <span class="l l-Scalar l-Scalar-Plain">loggers</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">my_module</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">level</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ERROR</span>
+                <span class="l l-Scalar l-Scalar-Plain">handlers</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">]</span>
+                <span class="l l-Scalar l-Scalar-Plain">propagate</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+
+        <span class="l l-Scalar l-Scalar-Plain">root</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">level</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">INFO</span>
+            <span class="l l-Scalar l-Scalar-Plain">handlers</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">console</span><span class="p p-Indicator">,</span> <span class="nv">error_file_handler</span><span class="p p-Indicator">,</span> <span class="nv">info_file_handler</span><span class="p p-Indicator">,</span> <span class="nv">debug_file_handler</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="16%" />
+<col width="57%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>Enable logging</td>
+</tr>
+<tr class="row-odd"><td>colored</td>
+<td>bool</td>
+<td>Enable colored logging when printing it on console.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>parameters</strong>, Logging parameters <code class="docutils literal"><span class="pre">logging.config.dictConfig(parameters)</span></code>, see
+<a class="reference external" href="https://docs.python.org/2/library/logging.config.html#dictionary-schema-details">documentation</a>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="framework.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="usage_tutorial.html" class="btn btn-neutral" title="Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Toni Heittola et al..
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

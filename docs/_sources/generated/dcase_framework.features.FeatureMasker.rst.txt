@@ -1,0 +1,23 @@
+dcase_framework.features.FeatureMasker
+======================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoclass:: FeatureMasker
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureMasker.__init__
+      ~FeatureMasker.process
+   
+   
+
+   
+   
+   

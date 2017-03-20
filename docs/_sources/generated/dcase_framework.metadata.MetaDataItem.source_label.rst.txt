@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataItem.source_label
+==================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataItem.source_label

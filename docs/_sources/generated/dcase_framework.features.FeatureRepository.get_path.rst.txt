@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureRepository.get_path
+===================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. automethod:: FeatureRepository.get_path

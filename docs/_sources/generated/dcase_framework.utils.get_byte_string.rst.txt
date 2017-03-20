@@ -1,0 +1,6 @@
+dcase_framework.utils.get_byte_string
+=====================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. autofunction:: get_byte_string

@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataItem.file
+==========================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataItem.file

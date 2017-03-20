@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureExtractor.get_default_parameters
+================================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. automethod:: FeatureExtractor.get_default_parameters

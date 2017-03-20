@@ -1,0 +1,6 @@
+dcase_framework.application_core.AppCore.initialize
+===================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: AppCore.initialize

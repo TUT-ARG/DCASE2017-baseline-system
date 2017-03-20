@@ -1,0 +1,6 @@
+dcase_framework.files.ListFile.empty
+====================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: ListFile.empty

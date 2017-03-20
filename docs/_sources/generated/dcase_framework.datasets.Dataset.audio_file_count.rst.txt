@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.audio_file_count
+=================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoattribute:: Dataset.audio_file_count

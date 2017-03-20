@@ -1,0 +1,6 @@
+dcase_framework.application_core.BinarySoundEventAppCore.system_evaluation
+==========================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: BinarySoundEventAppCore.system_evaluation

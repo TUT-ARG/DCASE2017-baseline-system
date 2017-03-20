@@ -1,0 +1,6 @@
+dcase_framework.parameters.ParameterContainer.override
+======================================================
+
+.. currentmodule:: dcase_framework.parameters
+
+.. automethod:: ParameterContainer.override

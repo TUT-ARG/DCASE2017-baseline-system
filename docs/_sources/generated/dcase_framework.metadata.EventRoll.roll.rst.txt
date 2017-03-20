@@ -1,0 +1,6 @@
+dcase_framework.metadata.EventRoll.roll
+=======================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: EventRoll.roll

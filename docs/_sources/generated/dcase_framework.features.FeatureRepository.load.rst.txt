@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureRepository.load
+===============================================
+
+.. currentmodule:: dcase_framework.features
+
+.. automethod:: FeatureRepository.load

@@ -1,0 +1,6 @@
+dcase_framework.parameters.ParameterContainer.load
+==================================================
+
+.. currentmodule:: dcase_framework.parameters
+
+.. automethod:: ParameterContainer.load

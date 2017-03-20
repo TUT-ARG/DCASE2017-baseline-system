@@ -1,0 +1,6 @@
+dcase_framework.application_core.BinarySoundEventAppCore.feature_normalization
+==============================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: BinarySoundEventAppCore.feature_normalization

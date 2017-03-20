@@ -1,0 +1,6 @@
+dcase_framework.utils.Timer.get_string
+======================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. automethod:: Timer.get_string

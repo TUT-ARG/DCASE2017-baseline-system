@@ -1,0 +1,53 @@
+dcase_framework.files.ParameterFile
+===================================
+
+.. currentmodule:: dcase_framework.files
+
+.. autoclass:: ParameterFile
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ParameterFile.__init__
+      ~ParameterFile.clear
+      ~ParameterFile.copy
+      ~ParameterFile.detect_file_format
+      ~ParameterFile.empty
+      ~ParameterFile.exists
+      ~ParameterFile.fromkeys
+      ~ParameterFile.get
+      ~ParameterFile.get_dump_content
+      ~ParameterFile.get_file_information
+      ~ParameterFile.has_key
+      ~ParameterFile.items
+      ~ParameterFile.iteritems
+      ~ParameterFile.iterkeys
+      ~ParameterFile.itervalues
+      ~ParameterFile.keys
+      ~ParameterFile.load
+      ~ParameterFile.pop
+      ~ParameterFile.popitem
+      ~ParameterFile.save
+      ~ParameterFile.setdefault
+      ~ParameterFile.update
+      ~ParameterFile.values
+      ~ParameterFile.viewitems
+      ~ParameterFile.viewkeys
+      ~ParameterFile.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ParameterFile.valid_formats
+   
+   

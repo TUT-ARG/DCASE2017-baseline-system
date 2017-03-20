@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.file_error_meta
+================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.file_error_meta

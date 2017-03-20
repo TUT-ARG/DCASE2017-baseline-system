@@ -1,0 +1,6 @@
+dcase_framework.parameters.ParameterContainer.process_method_parameters
+=======================================================================
+
+.. currentmodule:: dcase_framework.parameters
+
+.. automethod:: ParameterContainer.process_method_parameters

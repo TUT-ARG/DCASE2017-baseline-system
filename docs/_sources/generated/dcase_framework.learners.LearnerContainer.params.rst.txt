@@ -1,0 +1,6 @@
+dcase_framework.learners.LearnerContainer.params
+================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoattribute:: LearnerContainer.params

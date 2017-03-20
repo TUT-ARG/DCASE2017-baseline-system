@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.slice_field
+======================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: MetaDataContainer.slice_field

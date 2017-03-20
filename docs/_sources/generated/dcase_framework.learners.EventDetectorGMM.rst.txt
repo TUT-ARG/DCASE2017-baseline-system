@@ -1,0 +1,71 @@
+dcase_framework.learners.EventDetectorGMM
+=========================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: EventDetectorGMM
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventDetectorGMM.__init__
+      ~EventDetectorGMM.clear
+      ~EventDetectorGMM.copy
+      ~EventDetectorGMM.detect_file_format
+      ~EventDetectorGMM.empty
+      ~EventDetectorGMM.exists
+      ~EventDetectorGMM.fromkeys
+      ~EventDetectorGMM.get
+      ~EventDetectorGMM.get_dump_content
+      ~EventDetectorGMM.get_file_information
+      ~EventDetectorGMM.get_hash
+      ~EventDetectorGMM.get_hash_for_path
+      ~EventDetectorGMM.get_path
+      ~EventDetectorGMM.has_key
+      ~EventDetectorGMM.items
+      ~EventDetectorGMM.iteritems
+      ~EventDetectorGMM.iterkeys
+      ~EventDetectorGMM.itervalues
+      ~EventDetectorGMM.keys
+      ~EventDetectorGMM.learn
+      ~EventDetectorGMM.load
+      ~EventDetectorGMM.log
+      ~EventDetectorGMM.merge
+      ~EventDetectorGMM.pop
+      ~EventDetectorGMM.popitem
+      ~EventDetectorGMM.predict
+      ~EventDetectorGMM.save
+      ~EventDetectorGMM.set_seed
+      ~EventDetectorGMM.setdefault
+      ~EventDetectorGMM.show
+      ~EventDetectorGMM.update
+      ~EventDetectorGMM.values
+      ~EventDetectorGMM.viewitems
+      ~EventDetectorGMM.viewkeys
+      ~EventDetectorGMM.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventDetectorGMM.class_labels
+      ~EventDetectorGMM.feature_aggregator
+      ~EventDetectorGMM.feature_masker
+      ~EventDetectorGMM.feature_normalizer
+      ~EventDetectorGMM.feature_stacker
+      ~EventDetectorGMM.learner_params
+      ~EventDetectorGMM.method
+      ~EventDetectorGMM.model
+      ~EventDetectorGMM.params
+      ~EventDetectorGMM.valid_formats
+   
+   

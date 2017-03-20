@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureContainer.frames
+================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoattribute:: FeatureContainer.frames

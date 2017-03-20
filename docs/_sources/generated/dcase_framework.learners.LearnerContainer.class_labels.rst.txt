@@ -1,0 +1,6 @@
+dcase_framework.learners.LearnerContainer.class_labels
+======================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoattribute:: LearnerContainer.class_labels

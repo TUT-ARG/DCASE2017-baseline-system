@@ -1,0 +1,976 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dcase_framework.utils &mdash; DCASE2017 Baseline 1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> DCASE2017 Baseline
+          
+
+          
+            
+            <img src="../../_static/dcase2017_baseline.png" class="logo" />
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Baseline system</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../system_description.html">System description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../system_description.html#gmm-based-approach">GMM based approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../system_description.html#processing-blocks">Processing blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../applications.html#task1-acoustic-scene-classification"> Acoustic scene classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../applications.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../applications.html#task2-detection-of-rare-sound-events"> Detection of rare sound events</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../applications.html#id2">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../applications.html#task3-sound-event-detection-in-real-life-audio"> Sound event detection in real life audio</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../applications.html#id3">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage_tutorial.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_tutorial.html#application-arguments">Application arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usage_tutorial.html#basic-usage">Basic usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../parameterization.html">Parameterization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../parameterization.html#parameter-overwriting">Parameter overwriting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../parameterization.html#parameter-file">Parameter file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../parameterization.html#parameter-hash">Parameter hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../parameterization.html#parameter-sections">Parameter sections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#flow">Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#path">Path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#dataset">Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#feature-extractor">Feature extractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#feature-stacker">Feature stacker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#feature-normalizer">Feature normalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#feature-aggregator">Feature aggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#learner">Learner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#recognizer">Recognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#evaluator">Evaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../parameterization.html#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">DCASE Framework</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../framework.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../framework.html#training-process">Training process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../framework.html#testing-process">Testing process</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../extending_framework.html">Extending the framework</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../extending_framework.html#adding-datasets">Adding datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending_framework.html#adding-features">Adding features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending_framework.html#addinng-learners">Addinng learners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../extending_framework.html#extending-applicationcore">Extending ApplicationCore</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../application_core.html">Application core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../application_core.html#acousticsceneclassificationappcore">AcousticSceneClassificationAppCore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.html">dcase_framework.application_core.AcousticSceneClassificationAppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation.html">dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../application_core.html#soundeventappcore">SoundEventAppCore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.html">dcase_framework.application_core.SoundEventAppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.show_dataset_list.html">dcase_framework.application_core.SoundEventAppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.show_parameters.html">dcase_framework.application_core.SoundEventAppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.initialize.html">dcase_framework.application_core.SoundEventAppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.feature_extraction.html">dcase_framework.application_core.SoundEventAppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.feature_normalization.html">dcase_framework.application_core.SoundEventAppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.system_training.html">dcase_framework.application_core.SoundEventAppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.system_testing.html">dcase_framework.application_core.SoundEventAppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.SoundEventAppCore.system_evaluation.html">dcase_framework.application_core.SoundEventAppCore.system_evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../application_core.html#binarysoundeventappcore">BinarySoundEventAppCore</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.html">dcase_framework.application_core.BinarySoundEventAppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.show_dataset_list.html">dcase_framework.application_core.BinarySoundEventAppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.show_parameters.html">dcase_framework.application_core.BinarySoundEventAppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.initialize.html">dcase_framework.application_core.BinarySoundEventAppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.feature_extraction.html">dcase_framework.application_core.BinarySoundEventAppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.feature_normalization.html">dcase_framework.application_core.BinarySoundEventAppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.system_training.html">dcase_framework.application_core.BinarySoundEventAppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.system_testing.html">dcase_framework.application_core.BinarySoundEventAppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.system_evaluation.html">dcase_framework.application_core.BinarySoundEventAppCore.system_evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../application_core.html#appcore-base-class">AppCore &#8211; base class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.html">dcase_framework.application_core.AppCore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.show_dataset_list.html">dcase_framework.application_core.AppCore.show_dataset_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.show_parameters.html">dcase_framework.application_core.AppCore.show_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.initialize.html">dcase_framework.application_core.AppCore.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.feature_extraction.html">dcase_framework.application_core.AppCore.feature_extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.feature_normalization.html">dcase_framework.application_core.AppCore.feature_normalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.system_training.html">dcase_framework.application_core.AppCore.system_training</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.system_testing.html">dcase_framework.application_core.AppCore.system_testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.application_core.AppCore.system_evaluation.html">dcase_framework.application_core.AppCore.system_evaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../parameters.html">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../parameters.html#recipe">Recipe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../parameters.html#paths-and-parameter-hash">Paths and parameter hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../parameters.html#parametercontainer">ParameterContainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.html">dcase_framework.parameters.ParameterContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.load.html">dcase_framework.parameters.ParameterContainer.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.save.html">dcase_framework.parameters.ParameterContainer.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.exists.html">dcase_framework.parameters.ParameterContainer.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.get_path.html">dcase_framework.parameters.ParameterContainer.get_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.show.html">dcase_framework.parameters.ParameterContainer.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.log.html">dcase_framework.parameters.ParameterContainer.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.override.html">dcase_framework.parameters.ParameterContainer.override</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.process.html">dcase_framework.parameters.ParameterContainer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.process_method_parameters.html">dcase_framework.parameters.ParameterContainer.process_method_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.parameters.ParameterContainer.get_hash.html">dcase_framework.parameters.ParameterContainer.get_hash</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../files.html">Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#audiofile">AudioFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.AudioFile.html">dcase_framework.files.AudioFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.AudioFile.load.html">dcase_framework.files.AudioFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.AudioFile.save.html">dcase_framework.files.AudioFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.AudioFile.exists.html">dcase_framework.files.AudioFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.AudioFile.empty.html">dcase_framework.files.AudioFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#parameterfile">ParameterFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ParameterFile.html">dcase_framework.files.ParameterFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ParameterFile.load.html">dcase_framework.files.ParameterFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ParameterFile.save.html">dcase_framework.files.ParameterFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ParameterFile.exists.html">dcase_framework.files.ParameterFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ParameterFile.empty.html">dcase_framework.files.ParameterFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#featurefile">FeatureFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.FeatureFile.html">dcase_framework.files.FeatureFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.FeatureFile.load.html">dcase_framework.files.FeatureFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.FeatureFile.save.html">dcase_framework.files.FeatureFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.FeatureFile.exists.html">dcase_framework.files.FeatureFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.FeatureFile.empty.html">dcase_framework.files.FeatureFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#datafile">DataFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DataFile.html">dcase_framework.files.DataFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DataFile.load.html">dcase_framework.files.DataFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DataFile.save.html">dcase_framework.files.DataFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DataFile.exists.html">dcase_framework.files.DataFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DataFile.empty.html">dcase_framework.files.DataFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#repositoryfile">RepositoryFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.RepositoryFile.html">dcase_framework.files.RepositoryFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.RepositoryFile.load.html">dcase_framework.files.RepositoryFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.RepositoryFile.exists.html">dcase_framework.files.RepositoryFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.RepositoryFile.empty.html">dcase_framework.files.RepositoryFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#textfile">TextFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.TextFile.html">dcase_framework.files.TextFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.TextFile.load.html">dcase_framework.files.TextFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.TextFile.save.html">dcase_framework.files.TextFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.TextFile.exists.html">dcase_framework.files.TextFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.TextFile.empty.html">dcase_framework.files.TextFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#dictfile">DictFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DictFile.html">dcase_framework.files.DictFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DictFile.load.html">dcase_framework.files.DictFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DictFile.save.html">dcase_framework.files.DictFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DictFile.exists.html">dcase_framework.files.DictFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.DictFile.empty.html">dcase_framework.files.DictFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#listfile">ListFile</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ListFile.html">dcase_framework.files.ListFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ListFile.load.html">dcase_framework.files.ListFile.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ListFile.save.html">dcase_framework.files.ListFile.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ListFile.exists.html">dcase_framework.files.ListFile.exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.ListFile.empty.html">dcase_framework.files.ListFile.empty</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../files.html#mixins">Mixins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.files.FileMixin.html">dcase_framework.files.FileMixin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../datasets.html">Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../datasets.html#dataset-base-class">Dataset - Base class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.html">dcase_framework.datasets.Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.initialize.html">dcase_framework.datasets.Dataset.initialize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.show_info.html">dcase_framework.datasets.Dataset.show_info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.audio_files.html">dcase_framework.datasets.Dataset.audio_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.audio_file_count.html">dcase_framework.datasets.Dataset.audio_file_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.meta.html">dcase_framework.datasets.Dataset.meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.meta_count.html">dcase_framework.datasets.Dataset.meta_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.error_meta.html">dcase_framework.datasets.Dataset.error_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.error_meta_count.html">dcase_framework.datasets.Dataset.error_meta_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.fold_count.html">dcase_framework.datasets.Dataset.fold_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.scene_labels.html">dcase_framework.datasets.Dataset.scene_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.scene_label_count.html">dcase_framework.datasets.Dataset.scene_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.event_labels.html">dcase_framework.datasets.Dataset.event_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.event_label_count.html">dcase_framework.datasets.Dataset.event_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.audio_tags.html">dcase_framework.datasets.Dataset.audio_tags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.audio_tag_count.html">dcase_framework.datasets.Dataset.audio_tag_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.download.html">dcase_framework.datasets.Dataset.download</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.extract.html">dcase_framework.datasets.Dataset.extract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.train.html">dcase_framework.datasets.Dataset.train</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.test.html">dcase_framework.datasets.Dataset.test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.eval.html">dcase_framework.datasets.Dataset.eval</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.folds.html">dcase_framework.datasets.Dataset.folds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.file_meta.html">dcase_framework.datasets.Dataset.file_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.file_error_meta.html">dcase_framework.datasets.Dataset.file_error_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.file_error_meta.html">dcase_framework.datasets.Dataset.file_error_meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.relative_to_absolute_path.html">dcase_framework.datasets.Dataset.relative_to_absolute_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.Dataset.absolute_to_relative.html">dcase_framework.datasets.Dataset.absolute_to_relative</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../datasets.html#acousticscenedataset">AcousticSceneDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.AcousticSceneDataset.html">dcase_framework.datasets.AcousticSceneDataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTAcousticScenes_2017_DevelopmentSet.html">dcase_framework.datasets.TUTAcousticScenes_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTAcousticScenes_2016_DevelopmentSet.html">dcase_framework.datasets.TUTAcousticScenes_2016_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet.html">dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../datasets.html#soundeventdataset">SoundEventDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.html">dcase_framework.datasets.SoundEventDataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.event_label_count.html">dcase_framework.datasets.SoundEventDataset.event_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.event_labels.html">dcase_framework.datasets.SoundEventDataset.event_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../datasets.html#audiotaggingdataset">AudioTaggingDataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.AudioTaggingDataset.html">dcase_framework.datasets.AudioTaggingDataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../metadata.html">Meta data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../metadata.html#metadataitem">MetaDataItem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../metadata.html#metadatacontainer">MetaDataContainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.html">dcase_framework.metadata.MetaDataContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.log.html">dcase_framework.metadata.MetaDataContainer.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.show.html">dcase_framework.metadata.MetaDataContainer.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.get_string.html">dcase_framework.metadata.MetaDataContainer.get_string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.update.html">dcase_framework.metadata.MetaDataContainer.update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.filter.html">dcase_framework.metadata.MetaDataContainer.filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.filter_time_segment.html">dcase_framework.metadata.MetaDataContainer.filter_time_segment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.process_events.html">dcase_framework.metadata.MetaDataContainer.process_events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.remove_field.html">dcase_framework.metadata.MetaDataContainer.remove_field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.slice_field.html">dcase_framework.metadata.MetaDataContainer.slice_field</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.filter_time_segment.html">dcase_framework.metadata.MetaDataContainer.filter_time_segment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.add_time_offset.html">dcase_framework.metadata.MetaDataContainer.add_time_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.file_list.html">dcase_framework.metadata.MetaDataContainer.file_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.event_count.html">dcase_framework.metadata.MetaDataContainer.event_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.scene_label_count.html">dcase_framework.metadata.MetaDataContainer.scene_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.event_label_count.html">dcase_framework.metadata.MetaDataContainer.event_label_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.unique_scene_labels.html">dcase_framework.metadata.MetaDataContainer.unique_scene_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.unique_event_labels.html">dcase_framework.metadata.MetaDataContainer.unique_event_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.max_event_offset.html">dcase_framework.metadata.MetaDataContainer.max_event_offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.load.html">dcase_framework.metadata.MetaDataContainer.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.save.html">dcase_framework.metadata.MetaDataContainer.save</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.event_stat_counts.html">dcase_framework.metadata.MetaDataContainer.event_stat_counts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataContainer.event_roll.html">dcase_framework.metadata.MetaDataContainer.event_roll</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../metadata.html#eventroll">EventRoll</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.EventRoll.html">dcase_framework.metadata.EventRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.EventRoll.roll.html">dcase_framework.metadata.EventRoll.roll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.EventRoll.pad.html">dcase_framework.metadata.EventRoll.pad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.EventRoll.plot.html">dcase_framework.metadata.EventRoll.plot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../features.html">Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featurecontainer">FeatureContainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.html">dcase_framework.features.FeatureContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.show.html">dcase_framework.features.FeatureContainer.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.log.html">dcase_framework.features.FeatureContainer.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.get_path.html">dcase_framework.features.FeatureContainer.get_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.shape.html">dcase_framework.features.FeatureContainer.shape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.channels.html">dcase_framework.features.FeatureContainer.channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.frames.html">dcase_framework.features.FeatureContainer.frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.vector_length.html">dcase_framework.features.FeatureContainer.vector_length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.feat.html">dcase_framework.features.FeatureContainer.feat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.stat.html">dcase_framework.features.FeatureContainer.stat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.meta.html">dcase_framework.features.FeatureContainer.meta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureContainer.load.html">dcase_framework.features.FeatureContainer.load</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featurerepository">FeatureRepository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureRepository.html">dcase_framework.features.FeatureRepository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureRepository.show.html">dcase_framework.features.FeatureRepository.show</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureRepository.log.html">dcase_framework.features.FeatureRepository.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureRepository.get_path.html">dcase_framework.features.FeatureRepository.get_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureRepository.load.html">dcase_framework.features.FeatureRepository.load</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featureextractor">FeatureExtractor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureExtractor.html">dcase_framework.features.FeatureExtractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureExtractor.extract.html">dcase_framework.features.FeatureExtractor.extract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureExtractor.get_default_parameters.html">dcase_framework.features.FeatureExtractor.get_default_parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featurenormalizer">FeatureNormalizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureNormalizer.html">dcase_framework.features.FeatureNormalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureNormalizer.accumulate.html">dcase_framework.features.FeatureNormalizer.accumulate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureNormalizer.finalize.html">dcase_framework.features.FeatureNormalizer.finalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureNormalizer.normalize.html">dcase_framework.features.FeatureNormalizer.normalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureNormalizer.process.html">dcase_framework.features.FeatureNormalizer.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featurestacker">FeatureStacker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureStacker.html">dcase_framework.features.FeatureStacker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureStacker.normalizer.html">dcase_framework.features.FeatureStacker.normalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureStacker.feature_vector.html">dcase_framework.features.FeatureStacker.feature_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureStacker.process.html">dcase_framework.features.FeatureStacker.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featureaggregator">FeatureAggregator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureAggregator.html">dcase_framework.features.FeatureAggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureAggregator.process.html">dcase_framework.features.FeatureAggregator.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../features.html#featuremasker">FeatureMasker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureMasker.html">dcase_framework.features.FeatureMasker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.features.FeatureMasker.process.html">dcase_framework.features.FeatureMasker.process</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../learners.html">Learners</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../learners.html#sceneclassifier">SceneClassifier</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../learners.html#eventdetector">EventDetector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../learners.html#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.html">dcase_framework.learners.LearnerContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.class_labels.html">dcase_framework.learners.LearnerContainer.class_labels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.method.html">dcase_framework.learners.LearnerContainer.method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.params.html">dcase_framework.learners.LearnerContainer.params</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.feature_masker.html">dcase_framework.learners.LearnerContainer.feature_masker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.feature_normalizer.html">dcase_framework.learners.LearnerContainer.feature_normalizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.feature_stacker.html">dcase_framework.learners.LearnerContainer.feature_stacker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.feature_aggregator.html">dcase_framework.learners.LearnerContainer.feature_aggregator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../ui.html">User interfacing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ui.html#fancylogger">FancyLogger</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.html">dcase_framework.ui.FancyLogger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.title.html">dcase_framework.ui.FancyLogger.title</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.section_header.html">dcase_framework.ui.FancyLogger.section_header</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.foot.html">dcase_framework.ui.FancyLogger.foot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.line.html">dcase_framework.ui.FancyLogger.line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.data.html">dcase_framework.ui.FancyLogger.data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.info.html">dcase_framework.ui.FancyLogger.info</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.debug.html">dcase_framework.ui.FancyLogger.debug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.ui.FancyLogger.error.html">dcase_framework.ui.FancyLogger.error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utils.html">Utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html#utility-functions">Utility functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.setup_logging.html">dcase_framework.utils.setup_logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_parameter_hash.html">dcase_framework.utils.get_parameter_hash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_class_inheritors.html">dcase_framework.utils.get_class_inheritors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html#timer">Timer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.Timer.html">dcase_framework.utils.Timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.Timer.start.html">dcase_framework.utils.Timer.start</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.Timer.stop.html">dcase_framework.utils.Timer.stop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.Timer.elapsed.html">dcase_framework.utils.Timer.elapsed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.Timer.get_string.html">dcase_framework.utils.Timer.get_string</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">DCASE2017 Baseline</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>dcase_framework.utils</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dcase_framework.utils</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utils</span>
+<span class="sd">=====</span>
+
+<span class="sd">Utility functions and classes.</span>
+
+<span class="sd">Utility functions</span>
+<span class="sd">^^^^^^^^^^^^^^^^^</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    :toctree: generated/</span>
+
+<span class="sd">    setup_logging</span>
+<span class="sd">    get_parameter_hash</span>
+<span class="sd">    get_class_inheritors</span>
+<span class="sd">    get_byte_string</span>
+<span class="sd">    argument_file_exists</span>
+<span class="sd">    filelist_exists</span>
+
+<span class="sd">Timer</span>
+<span class="sd">^^^^^</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    :toctree: generated/</span>
+
+<span class="sd">    Timer</span>
+<span class="sd">    Timer.start</span>
+<span class="sd">    Timer.stop</span>
+<span class="sd">    Timer.elapsed</span>
+<span class="sd">    Timer.get_string</span>
+
+<span class="sd">SuppressStdoutAndStderr</span>
+<span class="sd">^^^^^^^^^^^^^^^^^^^^^^^</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">    :toctree: generated/</span>
+
+<span class="sd">    SuppressStdoutAndStderr</span>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">logging.config</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+
+<div class="viewcode-block" id="get_parameter_hash"><a class="viewcode-back" href="../../generated/dcase_framework.utils.get_parameter_hash.html#dcase_framework.utils.get_parameter_hash">[docs]</a><span class="k">def</span> <span class="nf">get_parameter_hash</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get unique hash string (md5) for given parameter dict</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict, list</span>
+<span class="sd">        Input parameters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Unique hash for parameter dict</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">md5</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">()</span>
+    <span class="n">md5</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">md5</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_class_inheritors"><a class="viewcode-back" href="../../generated/dcase_framework.utils.get_class_inheritors.html#dcase_framework.utils.get_class_inheritors">[docs]</a><span class="k">def</span> <span class="nf">get_class_inheritors</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get all classes inherited from given class</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    klass : class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        List of classes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sub_classes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">work</span> <span class="o">=</span> <span class="p">[</span><span class="n">klass</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">work</span><span class="p">:</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">work</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">child</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sub_classes</span><span class="p">:</span>
+                <span class="n">sub_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                <span class="n">work</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sub_classes</span></div>
+
+
+<div class="viewcode-block" id="get_byte_string"><a class="viewcode-back" href="../../generated/dcase_framework.utils.get_byte_string.html#dcase_framework.utils.get_byte_string">[docs]</a><span class="k">def</span> <span class="nf">get_byte_string</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Output number of bytes according to locale and with IEC binary prefixes</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_bytes : int &gt; 0 [scalar]</span>
+<span class="sd">        Bytes</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Human readable string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">KiB</span> <span class="o">=</span> <span class="mi">1024</span>
+    <span class="n">MiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">KiB</span>
+    <span class="n">GiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">MiB</span>
+    <span class="n">TiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">GiB</span>
+    <span class="n">PiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">TiB</span>
+    <span class="n">EiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">PiB</span>
+    <span class="n">ZiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">EiB</span>
+    <span class="n">YiB</span> <span class="o">=</span> <span class="n">KiB</span> <span class="o">*</span> <span class="n">ZiB</span>
+    <span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">locale</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">grouping</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; bytes&#39;</span>
+
+    <span class="k">if</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">YiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> YiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">YiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">ZiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> ZiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">ZiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">EiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> EiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">EiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">PiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> PiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">PiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">TiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> TiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">TiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">GiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> GiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">GiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">MiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> MiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">MiB</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">num_bytes</span> <span class="o">&gt;</span> <span class="n">KiB</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39; (</span><span class="si">%.4g</span><span class="s1"> KiB)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span> <span class="o">/</span> <span class="n">KiB</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="argument_file_exists"><a class="viewcode-back" href="../../generated/dcase_framework.utils.argument_file_exists.html#dcase_framework.utils.argument_file_exists">[docs]</a><span class="k">def</span> <span class="nf">argument_file_exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Argument file checker</span>
+
+<span class="sd">    Type for argparse. Checks that file exists but does not open.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        filename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="c1"># Argparse uses the ArgumentTypeError to give a rejection message like:</span>
+        <span class="c1"># error: argument input: x does not exist</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">filename</span></div>
+
+
+<div class="viewcode-block" id="setup_logging"><a class="viewcode-back" href="../../generated/dcase_framework.utils.setup_logging.html#dcase_framework.utils.setup_logging">[docs]</a><span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">parameter_container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">default_setup_file</span><span class="o">=</span><span class="s1">&#39;logging.yaml&#39;</span><span class="p">,</span>
+                  <span class="n">default_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                  <span class="n">environmental_variable</span><span class="o">=</span><span class="s1">&#39;LOG_CFG&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Setup logging configuration</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parameter_container : ParameterContainer</span>
+<span class="sd">        Parameters</span>
+<span class="sd">    environmental_variable : str</span>
+<span class="sd">        Environmental variable to get the logging setup filename, if set will override default_setup_file</span>
+<span class="sd">        Default value &quot;LOG_CFG&quot;</span>
+<span class="sd">    default_setup_file : str</span>
+<span class="sd">        Default logging parameter file, used if one is not set in given ParameterContainer</span>
+<span class="sd">        Default value &quot;logging.yaml&quot;</span>
+<span class="sd">    default_level : logging.level</span>
+<span class="sd">        Default logging level, used if one is not set in given ParameterContainer</span>
+<span class="sd">        Default value &quot;logging.INFO&quot;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    nothing</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">parameter_container</span><span class="p">:</span>
+        <span class="n">logging_parameter_file</span> <span class="o">=</span> <span class="n">default_setup_file</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">environmental_variable</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="c1"># If environmental variable set</span>
+            <span class="n">logging_parameter_file</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">logging_parameter_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">logging_parameter_file</span><span class="p">,</span> <span class="s1">&#39;rt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">coloredlogs</span>
+                <span class="n">coloredlogs</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;handlers&#39;</span><span class="p">][</span><span class="s1">&#39;console&#39;</span><span class="p">][</span><span class="s1">&#39;level&#39;</span><span class="p">],</span>
+                                    <span class="n">fmt</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;formatters&#39;</span><span class="p">][</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;handlers&#39;</span><span class="p">][</span><span class="s1">&#39;console&#39;</span><span class="p">][</span><span class="s1">&#39;formatter&#39;</span><span class="p">]][</span><span class="s1">&#39;format&#39;</span><span class="p">],</span>
+                                    <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">default_level</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">parameter_container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">parameter_container</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;colored&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;console&#39;</span> <span class="ow">in</span> <span class="n">parameter_container</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;parameters.handlers&#39;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">coloredlogs</span>
+                <span class="n">coloredlogs</span><span class="o">.</span><span class="n">install</span><span class="p">(</span>
+                    <span class="n">level</span><span class="o">=</span><span class="n">parameter_container</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;parameters.handlers.console.level&#39;</span><span class="p">),</span>
+                    <span class="n">fmt</span><span class="o">=</span><span class="n">parameter_container</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;parameters.formatters&#39;</span><span class="p">)[</span><span class="n">parameter_container</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;parameters.handlers.console.formatter&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;format&#39;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="filelist_exists"><a class="viewcode-back" href="../../generated/dcase_framework.utils.filelist_exists.html#dcase_framework.utils.filelist_exists">[docs]</a><span class="k">def</span> <span class="nf">filelist_exists</span><span class="p">(</span><span class="n">filelist</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check that all file in the list exists</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filelist : dict of paths</span>
+<span class="sd">        List containing paths to files</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        Returns True if all files exists, False if any of them does not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">all</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filelist</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.html#dcase_framework.utils.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Timer class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Timer.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.html#dcase_framework.utils.Timer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize internal properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elapsed</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Timer.start"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.start.html#dcase_framework.utils.Timer.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start timer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Timer.stop"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.stop.html#dcase_framework.utils.Timer.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop timer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elapsed</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Timer.elapsed"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.elapsed.html#dcase_framework.utils.Timer.elapsed">[docs]</a>    <span class="k">def</span> <span class="nf">elapsed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return elapsed time in seconds since timer was started</span>
+
+<span class="sd">        Can be used without stopping the timer</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Seconds since timer was started</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span></div>
+
+<div class="viewcode-block" id="Timer.get_string"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.get_string.html#dcase_framework.utils.Timer.get_string">[docs]</a>    <span class="k">def</span> <span class="nf">get_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get elapsed time in a string format</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            Time delta between start and stop</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_elapsed</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SuppressStdoutAndStderr"><a class="viewcode-back" href="../../generated/dcase_framework.utils.SuppressStdoutAndStderr.html#dcase_framework.utils.SuppressStdoutAndStderr">[docs]</a><span class="k">class</span> <span class="nc">SuppressStdoutAndStderr</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Context manager to suppress STDOUT and STDERR</span>
+
+<span class="sd">    A context manager for doing a &quot;deep suppression&quot; of stdout and stderr in</span>
+<span class="sd">    Python, i.e. will suppress all print, even if the print originates in a</span>
+<span class="sd">    compiled C/Fortran sub-function.</span>
+<span class="sd">       This will not suppress raised exceptions, since exceptions are printed</span>
+<span class="sd">    to stderr just before a script exits, and after the context manager has</span>
+<span class="sd">    exited (at least, I think that is why it lets exceptions through).</span>
+
+<span class="sd">    After:</span>
+<span class="sd">    http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SuppressStdoutAndStderr.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.utils.SuppressStdoutAndStderr.html#dcase_framework.utils.SuppressStdoutAndStderr.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Open a pair of null files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDWR</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+        <span class="c1"># Save the actual stdout (1) and stderr (2) file descriptors.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_fds</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign the null pointers to stdout and stderr.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Re-assign the real stdout/stderr back</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Re-assign the real stdout/stderr back to (1) and (2)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_fds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_fds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Close the null files</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Toni Heittola et al..
+
+    </p>
+  </div> 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

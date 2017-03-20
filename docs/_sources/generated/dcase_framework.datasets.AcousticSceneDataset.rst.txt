@@ -1,0 +1,53 @@
+dcase_framework.datasets.AcousticSceneDataset
+=============================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoclass:: AcousticSceneDataset
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AcousticSceneDataset.__init__
+      ~AcousticSceneDataset.absolute_to_relative
+      ~AcousticSceneDataset.check_filelist
+      ~AcousticSceneDataset.download
+      ~AcousticSceneDataset.error_meta_count
+      ~AcousticSceneDataset.eval
+      ~AcousticSceneDataset.event_labels
+      ~AcousticSceneDataset.extract
+      ~AcousticSceneDataset.file_error_meta
+      ~AcousticSceneDataset.file_meta
+      ~AcousticSceneDataset.folds
+      ~AcousticSceneDataset.initialize
+      ~AcousticSceneDataset.relative_to_absolute_path
+      ~AcousticSceneDataset.show_info
+      ~AcousticSceneDataset.test
+      ~AcousticSceneDataset.train
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AcousticSceneDataset.audio_file_count
+      ~AcousticSceneDataset.audio_files
+      ~AcousticSceneDataset.audio_tag_count
+      ~AcousticSceneDataset.audio_tags
+      ~AcousticSceneDataset.error_meta
+      ~AcousticSceneDataset.event_label_count
+      ~AcousticSceneDataset.fold_count
+      ~AcousticSceneDataset.meta
+      ~AcousticSceneDataset.meta_count
+      ~AcousticSceneDataset.scene_label_count
+      ~AcousticSceneDataset.scene_labels
+   
+   

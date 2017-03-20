@@ -1,0 +1,6 @@
+dcase_framework.files.TextFile.load
+===================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: TextFile.load

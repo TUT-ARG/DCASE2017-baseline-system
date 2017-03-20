@@ -1,0 +1,6 @@
+dcase_framework.application_core.BinarySoundEventAppCore.show_dataset_list
+==========================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: BinarySoundEventAppCore.show_dataset_list

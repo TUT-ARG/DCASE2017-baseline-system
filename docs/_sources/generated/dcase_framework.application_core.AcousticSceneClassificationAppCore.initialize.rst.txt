@@ -1,0 +1,6 @@
+dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize
+==============================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: AcousticSceneClassificationAppCore.initialize

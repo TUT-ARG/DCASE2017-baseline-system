@@ -1,0 +1,44 @@
+dcase_framework.files.TextFile
+==============================
+
+.. currentmodule:: dcase_framework.files
+
+.. autoclass:: TextFile
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TextFile.__init__
+      ~TextFile.append
+      ~TextFile.count
+      ~TextFile.detect_file_format
+      ~TextFile.empty
+      ~TextFile.exists
+      ~TextFile.extend
+      ~TextFile.get_dump_content
+      ~TextFile.get_file_information
+      ~TextFile.index
+      ~TextFile.insert
+      ~TextFile.load
+      ~TextFile.pop
+      ~TextFile.remove
+      ~TextFile.reverse
+      ~TextFile.save
+      ~TextFile.sort
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TextFile.valid_formats
+   
+   

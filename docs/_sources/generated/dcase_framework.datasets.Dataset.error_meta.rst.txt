@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.error_meta
+===========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoattribute:: Dataset.error_meta

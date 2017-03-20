@@ -1,0 +1,6 @@
+dcase_framework.learners.LearnerContainer.method
+================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoattribute:: LearnerContainer.method

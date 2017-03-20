@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.unique_scene_labels
+==============================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataContainer.unique_scene_labels

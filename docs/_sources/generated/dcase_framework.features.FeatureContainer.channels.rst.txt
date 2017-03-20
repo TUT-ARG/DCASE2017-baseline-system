@@ -1,0 +1,6 @@
+dcase_framework.features.FeatureContainer.channels
+==================================================
+
+.. currentmodule:: dcase_framework.features
+
+.. autoattribute:: FeatureContainer.channels

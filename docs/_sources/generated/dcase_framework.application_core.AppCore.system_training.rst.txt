@@ -1,0 +1,6 @@
+dcase_framework.application_core.AppCore.system_training
+========================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: AppCore.system_training

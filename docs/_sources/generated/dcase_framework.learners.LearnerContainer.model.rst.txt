@@ -1,0 +1,6 @@
+dcase_framework.learners.LearnerContainer.model
+===============================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoattribute:: LearnerContainer.model

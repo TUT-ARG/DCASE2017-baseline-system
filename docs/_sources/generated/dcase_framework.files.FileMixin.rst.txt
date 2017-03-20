@@ -1,0 +1,25 @@
+dcase_framework.files.FileMixin
+===============================
+
+.. currentmodule:: dcase_framework.files
+
+.. autoclass:: FileMixin
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FileMixin.detect_file_format
+      ~FileMixin.empty
+      ~FileMixin.exists
+      ~FileMixin.get_file_information
+   
+   
+
+   
+   
+   

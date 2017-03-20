@@ -1,0 +1,6 @@
+dcase_framework.files.DictFile.save
+===================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: DictFile.save

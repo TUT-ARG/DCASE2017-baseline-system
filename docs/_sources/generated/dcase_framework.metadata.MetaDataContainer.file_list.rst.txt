@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataContainer.file_list
+====================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataContainer.file_list

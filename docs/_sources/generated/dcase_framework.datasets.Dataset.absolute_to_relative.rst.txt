@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.absolute_to_relative
+=====================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.absolute_to_relative

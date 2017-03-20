@@ -1,0 +1,6 @@
+dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization
+=========================================================================================
+
+.. currentmodule:: dcase_framework.application_core
+
+.. automethod:: AcousticSceneClassificationAppCore.feature_normalization

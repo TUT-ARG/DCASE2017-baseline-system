@@ -1,0 +1,6 @@
+dcase_framework.files.ListFile.exists
+=====================================
+
+.. currentmodule:: dcase_framework.files
+
+.. automethod:: ListFile.exists

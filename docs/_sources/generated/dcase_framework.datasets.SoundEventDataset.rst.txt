@@ -1,0 +1,53 @@
+dcase_framework.datasets.SoundEventDataset
+==========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. autoclass:: SoundEventDataset
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SoundEventDataset.__init__
+      ~SoundEventDataset.absolute_to_relative
+      ~SoundEventDataset.check_filelist
+      ~SoundEventDataset.download
+      ~SoundEventDataset.error_meta_count
+      ~SoundEventDataset.eval
+      ~SoundEventDataset.event_label_count
+      ~SoundEventDataset.event_labels
+      ~SoundEventDataset.extract
+      ~SoundEventDataset.file_error_meta
+      ~SoundEventDataset.file_meta
+      ~SoundEventDataset.folds
+      ~SoundEventDataset.initialize
+      ~SoundEventDataset.relative_to_absolute_path
+      ~SoundEventDataset.show_info
+      ~SoundEventDataset.test
+      ~SoundEventDataset.train
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SoundEventDataset.audio_file_count
+      ~SoundEventDataset.audio_files
+      ~SoundEventDataset.audio_tag_count
+      ~SoundEventDataset.audio_tags
+      ~SoundEventDataset.error_meta
+      ~SoundEventDataset.fold_count
+      ~SoundEventDataset.meta
+      ~SoundEventDataset.meta_count
+      ~SoundEventDataset.scene_label_count
+      ~SoundEventDataset.scene_labels
+   
+   

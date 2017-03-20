@@ -1,0 +1,6 @@
+dcase_framework.learners.LearnerContainer.feature_aggregator
+============================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoattribute:: LearnerContainer.feature_aggregator

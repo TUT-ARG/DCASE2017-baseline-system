@@ -1,0 +1,6 @@
+dcase_framework.learners.EventDetectorGMM.predict
+=================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: EventDetectorGMM.predict
