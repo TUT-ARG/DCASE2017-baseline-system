@@ -15,7 +15,7 @@ DCASE2017 Baseline system
 Documentation
 =============
 
-See http://tut-arg.github.io/sed_eval for detailed instruction, manuals and tutorials.
+See https://tut-arg.github.io/DCASE2017-baseline-system/ for detailed instruction, manuals and tutorials.
 
 
 Getting started
