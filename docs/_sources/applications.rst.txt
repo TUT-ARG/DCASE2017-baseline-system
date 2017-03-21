@@ -44,6 +44,9 @@ To reproduce the results run::
 
     python task1.py -s dcase2017,gmm
 
+*Results calculated with Python 2.7.13*
+
+
 .. _task2:
 
 |task2| Detection of rare sound events
@@ -81,6 +84,7 @@ To reproduce these results run::
 
     python task2.py -s dcase2017,gmm
 
+*Results calculated with Python 2.7.13*
 
 More details on the metrics calculation can be found in:
 
@@ -123,6 +127,8 @@ Results
 To reproduce these results run::
 
     python task3.py -s dcase2017,gmm
+
+*Results calculated with Python 2.7.13*
 
 More details on the metrics calculation can be found in:
 
