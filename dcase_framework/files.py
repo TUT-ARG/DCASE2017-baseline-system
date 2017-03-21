@@ -422,7 +422,7 @@ class DictFile(dict, FileMixin):
                         self.logger.exception(message)
                         raise ImportError(message)
 
-                dict.update(self, json.load(open(self.filename, "rb")))
+                dict.update(self, json.load(open(self.filename, "r")))
 
             elif self.format == 'txt':
                 with open(self.filename, 'r') as f:
