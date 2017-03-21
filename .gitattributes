@@ -1,2 +1,2 @@
-docs/* linguist-documentation
-documentation/* linguist-documentation
+docs/* linguist-vendored
+documentation/* linguist-vendored
