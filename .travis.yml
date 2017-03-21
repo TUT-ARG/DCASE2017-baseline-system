@@ -21,7 +21,7 @@ install:
 
 # command to run tests
 script:
-    - "nosetests --with-coverage --cover-erase --cover-package=DCASE2017-baseline-system -v -w tests/"
+    - "nosetests --with-coverage --cover-erase --cover-package=dcase_framework -v -w tests/"
 
 after_success:
     - "coveralls"
