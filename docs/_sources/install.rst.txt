@@ -3,6 +3,17 @@
 Installation
 ============
 
+**Download the system**
+
+Download the `latest package <https://github.com/TUT-ARG/DCASE2017-baseline-system/archive/master.zip>`_ or clone
+the system directly from the repository. To clone repository with HTTPS::
+
+    git clone https://github.com/TUT-ARG/DCASE2017-baseline-system.git
+
+or with ssh::
+
+    git clone git@github.com:TUT-ARG/DCASE2017-baseline-system.git
+
 
 The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_.
 Currently, the baseline system is tested only with Linux operating system.
