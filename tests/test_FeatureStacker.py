@@ -4,7 +4,7 @@ import nose.tools
 import sys
 import numpy
 sys.path.append('..')
-from dcase_framework.features import FeatureStacker, FeatureRepository, FeatureNormalizer, FeatureContainer
+from dcase_framework.features import FeatureStacker, FeatureRepository, FeatureNormalizer, FeatureContainer, FeatureExtractor
 from dcase_framework.parameters import ParameterContainer
 import os
 import tempfile
@@ -12,6 +12,19 @@ from IPython import embed
 
 
 def test_process():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     # Test #1
     test_recipe = 'mfcc=0-5'
     test_recipe_parsed = ParameterContainer()._parse_recipe(recipe=test_recipe)
@@ -102,6 +115,19 @@ def test_process():
 
 
 def test_normalizer():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     # Test 1
     test_recipe = 'mfcc=0-5'
     test_recipe_parsed = ParameterContainer()._parse_recipe(recipe=test_recipe)

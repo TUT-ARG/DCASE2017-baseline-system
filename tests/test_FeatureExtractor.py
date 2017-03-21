@@ -173,6 +173,7 @@ def test_extract():
     nose.tools.eq_(feature_repository[extractor_name].shape[0], 501)
     nose.tools.eq_(feature_repository[extractor_name].shape[1], 12)
 
+
 def test_save():
     extractor_name = 'mfcc'
     feature_repository = FeatureExtractor(store=True, overwrite=True).extract(
@@ -184,9 +185,10 @@ def test_save():
             }
         },
         storage_paths={
-            'mfcc': os.path.join('material','test.mfcc.cpickle')
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
         }
     )
+
 
 @raises(ValueError)
 def test_wrong_extractor():

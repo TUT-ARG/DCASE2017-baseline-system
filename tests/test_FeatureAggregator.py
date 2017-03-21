@@ -4,13 +4,26 @@ import nose.tools
 import sys
 import numpy
 sys.path.append('..')
-from dcase_framework.features import FeatureAggregator, FeatureStacker, FeatureContainer
+from dcase_framework.features import FeatureAggregator, FeatureStacker, FeatureContainer, FeatureExtractor
 import tempfile
 import os
 from IPython import embed
 
 
 def test():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     # Test #1
     feature_aggregator = FeatureAggregator(
         recipe=['mean'],

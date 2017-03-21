@@ -5,13 +5,26 @@ import sys
 import numpy
 sys.path.append('..')
 import os
-from dcase_framework.features import FeatureContainer
+from dcase_framework.features import FeatureContainer, FeatureExtractor
 from nose.tools import *
 import tempfile
 from IPython import embed
 
 
 def test_load():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     # Test #1
     feature_container = FeatureContainer(filename=os.path.join('material', 'test.mfcc.cpickle'))
 
@@ -93,6 +106,19 @@ def test_load_wrong_type2():
 
 
 def test_save():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     feature_container = FeatureContainer().load(filename=os.path.join('material', 'test.mfcc.cpickle'))
     feature_container.save(filename=os.path.join('material', 'saved.mfcc.cpickle'))
 

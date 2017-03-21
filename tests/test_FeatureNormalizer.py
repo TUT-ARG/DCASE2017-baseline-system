@@ -4,12 +4,25 @@ import nose.tools
 import sys
 import numpy
 sys.path.append('..')
-from dcase_framework.features import FeatureNormalizer, FeatureContainer
+from dcase_framework.features import FeatureNormalizer, FeatureContainer, FeatureExtractor
 import os
 from IPython import embed
 
 
 def test_accumulate_finalize():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     # Test 1
     feature_container = FeatureContainer().load(filename=os.path.join('material', 'test.mfcc.cpickle'))
     feature_normalizer = FeatureNormalizer().accumulate(feature_container=feature_container).finalize()
@@ -41,6 +54,19 @@ def test_accumulate_finalize():
 
 
 def test_with_statement():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     feature_container = FeatureContainer().load(filename=os.path.join('material', 'test.mfcc.cpickle'))
     with FeatureNormalizer() as feature_normalizer:
         feature_normalizer.accumulate(feature_container)

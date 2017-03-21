@@ -6,7 +6,7 @@ sys.path.append('..')
 import json
 import os
 import numpy
-from dcase_framework.features import FeatureContainer
+from dcase_framework.features import FeatureContainer, FeatureExtractor
 from dcase_framework.metadata import MetaDataContainer, MetaDataItem
 from dcase_framework.learners import EventDetector
 import tempfile
@@ -14,6 +14,19 @@ from IPython import embed
 
 
 def test_get_target_matrix_dict():
+    FeatureExtractor(store=True, overwrite=True).extract(
+        audio_file=os.path.join('material', 'test.wav'),
+        extractor_name='mfcc',
+        extractor_params={
+            'mfcc': {
+                'n_mfcc': 10
+            }
+        },
+        storage_paths={
+            'mfcc': os.path.join('material', 'test.mfcc.cpickle')
+        }
+    )
+
     feature_container = FeatureContainer(filename=os.path.join('material', 'test.mfcc.cpickle'))
 
     data = {
@@ -232,10 +245,12 @@ def test_generate_validation():
              validation_type='generated_scene_location_event_balanced',
              valid_percentage=0.50, seed=0
     )
-    nose.tools.assert_list_equal(validation_set, ['file1.wav'])
+    if sys.version_info[0] < 3:
+        nose.tools.assert_list_equal(validation_set, ['file1.wav'])
+    else:
+        nose.tools.assert_list_equal(validation_set, ['file2.wav'])
 
     # Test generated_event_file_balanced
-
     annotations = {
         'file1.wav': MetaDataContainer([
                 {
@@ -261,7 +276,6 @@ def test_generate_validation():
         )
     }
 
-
     validation_set = ed._generate_validation(
              annotations=annotations,
              validation_type='generated_event_file_balanced',
@@ -271,60 +285,3 @@ def test_generate_validation():
 
     nose.tools.assert_raises(AssertionError, ed._generate_validation, annotations, 'test', 0.5)
 
-# def test_generate_validation():
-#
-#     annotations = {
-#         'file1.wav': MetaDataItem(
-#             {
-#                 'file': 'file1.wav',
-#                 'scene_label': 'scene1',
-#                 'location_identifier': 'a',
-#             }
-#         ),
-#         'file2.wav': MetaDataItem(
-#             {
-#                 'file': 'file2.wav',
-#                 'scene_label': 'scene1',
-#                 'location_identifier': 'b',
-#             }
-#         ),
-#         'file3.wav': MetaDataItem(
-#             {
-#                 'file': 'file3.wav',
-#                 'scene_label': 'scene1',
-#                 'location_identifier': 'c',
-#             }
-#         ),
-#         'file4.wav': MetaDataItem(
-#             {
-#                 'file': 'file4.wav',
-#                 'scene_label': 'scene2',
-#                 'location_identifier': 'd',
-#             }
-#         ),
-#         'file5.wav': MetaDataItem(
-#             {
-#                 'file': 'file5.wav',
-#                 'scene_label': 'scene2',
-#                 'location_identifier': 'e',
-#             }
-#         ),
-#         'file6.wav': MetaDataItem(
-#             {
-#                 'file': 'file6.wav',
-#                 'scene_label': 'scene2',
-#                 'location_identifier': 'f',
-#             }
-#         ),
-#     }
-#     sc = SceneClassifier(class_labels=['scene1', 'scene2'])
-#
-#     validation_set = sc._generate_validation(
-#         annotations=annotations,
-#         validation_type='generated_scene_balanced',
-#         valid_percentage=0.50, seed=0
-#     )
-#     nose.tools.assert_list_equal(validation_set, ['file1.wav', 'file3.wav', 'file6.wav', 'file4.wav'])
-#
-#     nose.tools.assert_raises(AssertionError, sc._generate_validation, annotations, 'test', 0.5)
-#
