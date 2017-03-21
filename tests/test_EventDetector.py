@@ -245,10 +245,7 @@ def test_generate_validation():
              validation_type='generated_scene_location_event_balanced',
              valid_percentage=0.50, seed=0
     )
-    if sys.version_info[0] < 3:
-        nose.tools.assert_list_equal(validation_set, ['file1.wav'])
-    else:
-        nose.tools.assert_list_equal(validation_set, ['file2.wav'])
+    nose.tools.eq_(len(validation_set), 1)
 
     # Test generated_event_file_balanced
     annotations = {
