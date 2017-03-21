@@ -53,18 +53,18 @@ Current version of Tensorflow only supports CUDA 3.0 compatible graphic cards.
 
 The system will automatically download the needed audio datasets, and place them under the directory specified in the parameters (see parameter ``path->data``).
 
-+----------------------------------------+-----------------+-----------------+-----------------+-----------------------+
-| Dataset                                | Type            | Audio files     | Size on disk    | License               |
-+========================================+=================+=================+=================+=======================+
-| TUT Acoustic scenes 2017, development  | Acoustic scene  | 4680            | 22Gb            | **Academic use only** |
-|                                        |                 |                 |                 | (see EULA inside      |
-|                                        |                 |                 |                 | the package)          |
-+----------------------------------------+-----------------+-----------------+-----------------+-----------------------+
-| TUT Rare sound events 2017, development| Sound events /  | 1281            | 9.2Gb           | **Academic use only** |
-|                                        | synthetic       |                 |                 | (see EULA inside      |
-|                                        |                 |                 |                 | the package)          |
-+----------------------------------------+-----------------+-----------------+-----------------+-----------------------+
-| TUT Sound events 2017, development     | Sound events    | 24              | 2.6Gb           | **Academic use only** |
-|                                        | realistic       |                 |                 | (see EULA inside      |
-|                                        |                 |                 |                 | the package)          |
-+----------------------------------------+-----------------+-----------------+-----------------+-----------------------+
++----------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+-----------------+-----------------------+
+| Dataset                                                                                                                          | Type            | Audio files     | Size on disk    | License               |
++==================================================================================================================================+=================+=================+=================+=======================+
+| `TUT Acoustic scenes 2017, development <https://zenodo.org/record/400516>`_                                                      | Acoustic scene  | 4680            | 22Gb            | **Academic use only** |
+|                                                                                                                                  |                 |                 |                 | (see EULA inside      |
+|                                                                                                                                  |                 |                 |                 | the package)          |
++----------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+-----------------+-----------------------+
+| `TUT Rare sound events 2017, development <http://www.cs.tut.fi/sgn/arg/dcase2017/challenge/task-rare-sound-event-detection>`_    | Sound events /  | 1281            | 9.2Gb           | **Academic use only** |
+|                                                                                                                                  | synthetic       |                 |                 | (see EULA inside      |
+|                                                                                                                                  |                 |                 |                 | the package)          |
++----------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+-----------------+-----------------------+
+| `TUT Sound events 2017, development <https://zenodo.org/record/400515>`_                                                         | Sound events    | 24              | 2.6Gb           | **Academic use only** |
+|                                                                                                                                  | realistic       |                 |                 | (see EULA inside      |
+|                                                                                                                                  |                 |                 |                 | the package)          |
++----------------------------------------------------------------------------------------------------------------------------------+-----------------+-----------------+-----------------+-----------------------+
