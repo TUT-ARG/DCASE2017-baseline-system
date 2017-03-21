@@ -18,6 +18,8 @@ or with ssh::
 The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_.
 Currently, the baseline system is tested only with Linux operating system.
 
+**External modules**
+
 To ensure that all external modules are installed, run command::
 
     pip install -r requirements.txt
