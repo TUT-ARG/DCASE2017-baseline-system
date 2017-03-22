@@ -1914,8 +1914,8 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                         }
                         if item['event_present']:
                             event_list_item['event_label'] = item['event_class']
-                            event_list_item['event_onset'] = float(item['event_offset_seconds'])
-                            event_list_item['event_offset'] = float(item['event_offset_seconds'] + item['event_length_seconds'])
+                            event_list_item['event_onset'] = float(item['event_start_in_mixture_seconds'])
+                            event_list_item['event_offset'] = float(item['event_start_in_mixture_seconds'] + item['event_length_seconds'])
 
                         event_list.append(MetaDataItem(event_list_item))
                     event_list.save()
@@ -2026,7 +2026,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         # For recipes, we got to provide amplitude scaling factors instead of SNRs: the latter are more ambiguous
         # so, go through files, measure levels, calculate scaling factors
         mixture_recipes = ParameterListFile()
-        for mixture_id, (bg, event_presence_flag, event_offset_seconds, ebr, event_instance_id) in tqdm(
+        for mixture_id, (bg, event_presence_flag, event_start_in_mixture_seconds, ebr, event_instance_id) in tqdm(
                 enumerate(zip(bgs, event_presence_flags, event_offsets_seconds, target_ebrs, event_instance_ids)),
                 desc="{0: <25s}".format('Generate recipe'),
                 file=sys.stdout,
@@ -2034,12 +2034,12 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 total=len(bgs)):
 
             # Read the bgs and events, measure their energies, find amplitude scaling factors
-            mixture_recipe = DottedDict({
+            mixture_recipe = {
                 'bg_path': bg['filepath'],
                 'bg_classname': bg['classname'],
                 'event_present': bool(event_presence_flag),
                 'ebr': float(ebr)
-            })
+            }
 
             if event_presence_flag:
                 # We have an event assigned
@@ -2065,7 +2065,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 event_audio = event_audio[segment_start_samples:segment_end_samples]
 
                 # Let's calculate the levels of bgs also at the location of the event only
-                eventful_part_of_bg = bg_audio[int(event_offset_seconds * fs):int(event_offset_seconds * fs + len(event_audio))]
+                eventful_part_of_bg = bg_audio[int(event_start_in_mixture_seconds * fs):int(event_start_in_mixture_seconds * fs + len(event_audio))]
 
                 if eventful_part_of_bg.shape[0] == 0:
                     embed()
@@ -2075,7 +2075,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 # Store information
                 mixture_recipe['event_path'] = events[int(event_instance_id)]['audio_filepath']
                 mixture_recipe['event_class'] = events[int(event_instance_id)]['classname']
-                mixture_recipe['event_offset_seconds'] = float(event_offset_seconds)
+                mixture_recipe['event_start_in_mixture_seconds'] = float(event_start_in_mixture_seconds)
                 mixture_recipe['event_length_seconds'] = float(events[int(event_instance_id)]['length_seconds'])
                 mixture_recipe['scaling_factor'] = float(scaling_factor)
                 mixture_recipe['segment_start_seconds'] = events[int(event_instance_id)]['segment'][0]
@@ -2088,9 +2088,11 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
             # Generate mixture annotation
             if event_presence_flag:
                 mixture_recipe['annotation_string'] = \
-                    mixture_recipe['mixture_audio_filename'] + '\t' + mixture_recipe['event_class'] + '\t' + \
-                    str(mixture_recipe['event_offset_seconds']) + '\t' + \
-                    str(mixture_recipe['event_offset_seconds'] + mixture_recipe['event_length_seconds'])
+                    mixture_recipe['mixture_audio_filename'] + '\t' + \
+                    "{0:.14f}".format(mixture_recipe['event_start_in_mixture_seconds']) + '\t' + \
+                    "{0:.14f}".format(mixture_recipe['event_start_in_mixture_seconds'] + mixture_recipe['event_length_seconds']) + '\t' + \
+                    mixture_recipe['event_class']
+
             else:
                 mixture_recipe['annotation_string'] = mixture_recipe['mixture_audio_filename'] + '\t' + 'None' + '\t0\t30'
 
@@ -2129,13 +2131,13 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
             segment_end_samples = int(mixture_recipe['segment_end_seconds'] * params['mixture']['fs'])
             event_audio_data = event_audio_data[segment_start_samples:segment_end_samples]
 
-            event_offset_samples = int(mixture_recipe['event_offset_seconds'] * params['mixture']['fs'])
+            event_start_in_mixture_samples = int(mixture_recipe['event_start_in_mixture_seconds'] * params['mixture']['fs'])
             scaling_factor = mixture_recipe['scaling_factor']
 
             # Mix event into background audio
             mixture = self._mix(bg_audio_data=bg_audio_data,
                                 event_audio_data=event_audio_data,
-                                event_offset_samples=event_offset_samples,
+                                event_start_in_mixture_samples=event_start_in_mixture_samples,
                                 scaling_factor=scaling_factor,
                                 magic_anticlipping_factor=params['mixture']['anticlipping_factor'])
         else:
@@ -2143,7 +2145,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
         return mixture
 
-    def _mix(self, bg_audio_data, event_audio_data, event_offset_samples, scaling_factor, magic_anticlipping_factor):
+    def _mix(self, bg_audio_data, event_audio_data, event_start_in_mixture_samples, scaling_factor, magic_anticlipping_factor):
         """Mix numpy arrays of background and event audio (mono, non-matching lengths supported, sampling frequency
         better be the same, no operation in terms of seconds is performed though)
 
@@ -2151,7 +2153,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         ----------
         bg_audio_data : numpy.array
         event_audio_data : numpy.array
-        event_offset_samples : float
+        event_start_in_mixture_samples : float
         scaling_factor : float
         magic_anticlipping_factor : float
 
@@ -2169,17 +2171,17 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
         # Check that the offset is not too long
         longest_possible_offset = len(bg_audio_data) - len(event_audio_data)
-        if event_offset_samples > longest_possible_offset:
+        if event_start_in_mixture_samples > longest_possible_offset:
             message = '{name}: Wrongly generated event offset: event tries to go outside the boundaries of the bg.'.format(name=self.__class__.__name__)
             self.logger.exception(message)
             raise AssertionError(message)
 
         # Measure how much to pad from the right
-        tail_length = len(bg_audio_data) - len(event_audio_data) - event_offset_samples
+        tail_length = len(bg_audio_data) - len(event_audio_data) - event_start_in_mixture_samples
 
         # Pad zeros at the beginning of event signal
         padded_event = numpy.pad(event_audio_data,
-                                 pad_width=((event_offset_samples, tail_length)),
+                                 pad_width=((event_start_in_mixture_samples, tail_length)),
                                  mode='constant',
                                  constant_values=0)
 
