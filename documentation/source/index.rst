@@ -73,8 +73,8 @@ The main baseline system implements following approach:
 
 In addition to this, Gaussian mixture model based system is included for the comparison.
 
-The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_
-under Linux environment.
+The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_.
+The system is tested to work with Linux and MacOS (10.12.) operating systems.
 
 More about the :ref:`baseline system<system_description>`.
 

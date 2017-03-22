@@ -61,7 +61,7 @@ Installation
 ============
 
 The system is developed for [Python 2.7](https://www.python.org/) and [Python 3.6](https://www.python.org/).
-Currently, the baseline system is tested only with Linux operating system.
+Currently, the baseline system is tested to work with Linux and MacOS (10.12.) operating systems.
 
 To ensure that all external modules are installed, run command:
 
