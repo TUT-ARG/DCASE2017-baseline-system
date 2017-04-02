@@ -26,8 +26,13 @@ sets:
         keras:
           backend: theano
           backend_parameters:
-            floatX: float32
+            floatX: float64
             device: cpu
+            fastmath: false
+            optimizer: None
+            openmp: false
+            threads: 1
+            CNR: true
 
         validation:
           enable: true
@@ -261,6 +266,8 @@ defaults:
     challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
 
     print_system_progress: true         #
+    use_ascii_progress_bar: false       #
+
     log_system_parameters: false        #
     log_system_progress: false          #
 
@@ -292,7 +299,7 @@ defaults:
       disable_existing_loggers: false
       formatters:
         simple:
-          format: "[%(levelname)-8s] %(message)s"
+          format: "[%(levelname).1s] %(message)s"
         normal:
           format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
         extended:
@@ -462,15 +469,19 @@ defaults:
       params: wmc
       init_params: wmc
 
-
     mlp:
       seed: 1
 
       keras:
         backend: theano
         backend_parameters:
-          floatX: float32
+          floatX: float64
           device: cpu
+          fastmath: false
+          optimizer: None
+          openmp: false
+          threads: 1
+          CNR: true
 
       validation:
         enable: true
@@ -478,7 +489,7 @@ defaults:
         validation_amount: 0.10
 
       training:
-        epochs: 100
+        epochs: 200
         batch_size: 256
         shuffle: true
         callbacks:

@@ -1,6 +1,7 @@
 active_set: dcase2017
 
 sets:
+
   - set_id: dcase2017
     description: DCASE2017 baseline (CPU) using DCASE2017 task 3 development dataset
     dataset:
@@ -10,14 +11,6 @@ sets:
         name: TUTSoundEvents_2017_DevelopmentSet
         fold_list: [1, 2, 3, 4]
         evaluation_mode: folds
-
-    flow:
-      initialize: true
-      extract_features: true
-      feature_normalizer: true
-      train_system: true
-      test_system: true
-      evaluate_system: true
 
     feature_stacker:
       stacking_recipe: mel
@@ -36,12 +29,17 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 1
+        seed: 0
         keras:
           backend: theano
           backend_parameters:
-            floatX: float32
+            floatX: float64
             device: cpu
+            fastmath: false
+            optimizer: None
+            openmp: false
+            threads: 1
+            CNR: true
 
         validation:
           enable: true
@@ -125,14 +123,6 @@ sets:
         name: TUTSoundEvents_2017_DevelopmentSet
         fold_list: [1, 2, 3, 4]
         evaluation_mode: folds
-
-    flow:
-      initialize: true
-      extract_features: true
-      feature_normalizer: true
-      train_system: true
-      test_system: true
-      evaluate_system: true
 
     feature_stacker:
       stacking_recipe: mel
@@ -317,6 +307,8 @@ defaults:
     challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
 
     print_system_progress: true         #
+    use_ascii_progress_bar: false       #
+
     log_system_parameters: false        #
     log_system_progress: false          #
 
@@ -350,7 +342,7 @@ defaults:
       disable_existing_loggers: false
       formatters:
         simple:
-          format: "[%(levelname)-8s] %(message)s"
+          format: "[%(levelname).1s] %(message)s"
         normal:
           format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
         extended:
@@ -523,8 +515,13 @@ defaults:
       keras:
         backend: theano
         backend_parameters:
-          floatX: float32
+          floatX: float64
           device: cpu
+          fastmath: false
+          optimizer: None
+          openmp: false
+          threads: 1
+          CNR: true
 
       validation:
         enable: true

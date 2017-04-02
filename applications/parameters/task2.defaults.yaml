@@ -18,17 +18,23 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 1
+        seed: 0
         keras:
           backend: theano
           backend_parameters:
-            floatX: float32
+            floatX: float64
             device: cpu
+            fastmath: false
+            optimizer: None
+            openmp: false
+            threads: 1
+            CNR: true
 
         validation:
           enable: true
           setup_source: generated_event_file_balanced
           validation_amount: 0.10
+          seed: 123
 
         training:
           epochs: 200
@@ -112,7 +118,7 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 1
+        seed: 0
         keras:
           backend: theano
           backend_parameters:
@@ -124,6 +130,7 @@ sets:
           enable: true
           setup_source: generated_event_file_balanced
           validation_amount: 0.10
+          seed: 123
 
         training:
           epochs: 200
@@ -275,6 +282,8 @@ defaults:
     challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
 
     print_system_progress: true         #
+    use_ascii_progress_bar: false       #
+
     log_system_parameters: false        #
     log_system_progress: false          #
 
@@ -308,7 +317,7 @@ defaults:
       disable_existing_loggers: false
       formatters:
         simple:
-          format: "[%(levelname)-8s] %(message)s"
+          format: "[%(levelname).1s] %(message)s"
         normal:
           format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
         extended:
@@ -498,19 +507,24 @@ defaults:
       init_params: wmc
 
     mlp:
-      seed: 1
+      seed: 0
 
       keras:
         backend: theano
         backend_parameters:
-          floatX: float32
+          floatX: float64
           device: cpu
           fastmath: false
+          optimizer: None
+          openmp: false
+          threads: 1
+          CNR: true
 
       validation:
         enable: true
         setup_source: generated_event_file_balanced     # [generated_event_file_balanced]
-        validation_amount: 0.20                         # [0.0-1.0]
+        validation_amount: 0.10                         # [0.0-1.0]
+        seed: 123
 
       training:
         epochs: 100
