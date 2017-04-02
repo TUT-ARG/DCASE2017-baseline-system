@@ -352,11 +352,11 @@ def main(argv):
                         action='store_true',
                         required=False)
 
-    parser.add_argument("-eval_path",
-                        help="path to save evaluation results",
-                        dest="eval_path",
-                        required=False,
-                        metavar="DIR")
+    parser.add_argument("-show_eval",
+                        help="Show evaluated setups",
+                        dest="show_eval",
+                        action='store_true',
+                        required=False)
 
     parser.add_argument("-o", "--overwrite",
                         help="Overwrite mode",
@@ -401,12 +401,18 @@ def main(argv):
 
         # Override dataset mode from arguments
         if args.mode == 'dev':
-            params['dataset']['method'] = 'development'               # Set dataset to development
-            params.process_method_parameters(section='dataset')       # Process dataset again, move correct parameters from dataset_parameters
+            # Set dataset to development
+            params['dataset']['method'] = 'development'
+
+            # Process dataset again, move correct parameters from dataset_parameters
+            params.process_method_parameters(section='dataset')
 
         elif args.mode == 'challenge':
-            params['dataset']['method'] = 'challenge_train'           # Set dataset to training set for challenge
-            params.process_method_parameters(section='dataset')       # Process dataset again, move correct parameters from dataset_parameters
+            # Set dataset to training set for challenge
+            params['dataset']['method'] = 'challenge_train'
+            params['general']['challenge_submission_mode'] = True
+            # Process dataset again, move correct parameters from dataset_parameters
+            params.process_method_parameters(section='dataset')
 
         if args.node_mode:
             params['general']['log_system_progress'] = True
@@ -422,11 +428,15 @@ def main(argv):
                             setup_label='Development setup',
                             log_system_progress=params.get_path('general.log_system_progress'),
                             show_progress_in_console=params.get_path('general.print_system_progress'),
+                            use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
                             )
 
         # Show parameter set list and exit
         if args.show_set_list:
-            params_ = ParameterContainer(project_base=os.path.dirname(os.path.realpath(__file__))).load(filename=default_parameters_filename)
+            params_ = ParameterContainer(
+                project_base=os.path.dirname(os.path.realpath(__file__))
+            ).load(filename=default_parameters_filename)
+
             if args.parameter_override:
                 # Override parameters from a file
                 params_.override(override=args.parameter_override)
@@ -443,6 +453,11 @@ def main(argv):
         # Show system parameters
         if params.get_path('general.log_system_parameters') or args.show_parameters:
             app.show_parameters()
+
+        # Show evaluated systems
+        if args.show_eval:
+            app.show_eval()
+            return
 
         # Initialize application
         # ==================================================
@@ -491,10 +506,14 @@ def main(argv):
 
             challenge_app = CustomAppCore(name='DCASE 2017::Acoustic Scene Classification / Baseline System',
                                           params=params,
-                                          setup_label='Evaluation setup'
+                                          system_desc=params.get('description'),
+                                          system_parameter_set_id=params.get('active_set'),
+                                          setup_label='Evaluation setup',
+                                          log_system_progress=params.get_path('general.log_system_progress'),
+                                          show_progress_in_console=params.get_path('general.print_system_progress'),
+                                          use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
                                           )
             # Initialize application
-            # ==================================================
             if params['flow']['initialize']:
                 challenge_app.initialize()
 
