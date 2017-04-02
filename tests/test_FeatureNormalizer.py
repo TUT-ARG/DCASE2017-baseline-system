@@ -6,7 +6,6 @@ import numpy
 sys.path.append('..')
 from dcase_framework.features import FeatureNormalizer, FeatureContainer, FeatureExtractor
 import os
-from IPython import embed
 
 
 def test_accumulate_finalize():

@@ -8,7 +8,6 @@ from dcase_framework.files import AudioFile
 from nose.tools import *
 import tempfile
 import os
-from IPython import embed
 
 
 def test_load():

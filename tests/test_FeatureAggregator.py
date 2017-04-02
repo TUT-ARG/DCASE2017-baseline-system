@@ -7,7 +7,6 @@ sys.path.append('..')
 from dcase_framework.features import FeatureAggregator, FeatureStacker, FeatureContainer, FeatureExtractor
 import tempfile
 import os
-from IPython import embed
 
 
 def test():

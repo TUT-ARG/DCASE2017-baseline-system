@@ -8,7 +8,6 @@ from dcase_framework.utils import get_parameter_hash
 from nose.tools import *
 import tempfile
 import os
-from IPython import embed
 
 
 def test_get_parameter_hash():

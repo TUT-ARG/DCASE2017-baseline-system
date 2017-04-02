@@ -5,7 +5,6 @@ import sys
 import numpy
 sys.path.append('..')
 from dcase_framework.metadata import MetaDataContainer
-from IPython import embed
 import tempfile
 
 content = [

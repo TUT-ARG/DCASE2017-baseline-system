@@ -8,7 +8,6 @@ from dcase_framework.files import ListFile
 from nose.tools import *
 import tempfile
 import os
-from IPython import embed
 
 
 def test_load():

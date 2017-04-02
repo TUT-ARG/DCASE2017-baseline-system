@@ -8,7 +8,6 @@ from dcase_framework.features import FeatureMasker, FeatureRepository, FeatureEx
 from dcase_framework.metadata import MetaDataContainer
 import tempfile
 import os
-from IPython import embed
 
 
 def test():

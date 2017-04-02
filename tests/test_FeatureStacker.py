@@ -8,7 +8,6 @@ from dcase_framework.features import FeatureStacker, FeatureRepository, FeatureN
 from dcase_framework.parameters import ParameterContainer
 import os
 import tempfile
-from IPython import embed
 
 
 def test_process():

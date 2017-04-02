@@ -11,8 +11,6 @@ import tempfile
 import pickle
 import msgpack
 
-from IPython import embed
-
 
 def test_load():
     # YAML

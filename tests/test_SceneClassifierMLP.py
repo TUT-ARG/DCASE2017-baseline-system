@@ -9,7 +9,6 @@ from dcase_framework.features import FeatureContainer, FeatureExtractor
 from dcase_framework.metadata import MetaDataItem
 from dcase_framework.learners import SceneClassifierMLP
 import tempfile
-from IPython import embed
 
 learner_params = {
     'seed': 1234,

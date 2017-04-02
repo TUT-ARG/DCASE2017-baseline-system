@@ -8,7 +8,6 @@ import os
 from dcase_framework.features import FeatureContainer, FeatureExtractor
 from nose.tools import *
 import tempfile
-from IPython import embed
 
 
 def test_load():

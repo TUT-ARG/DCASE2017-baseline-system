@@ -9,7 +9,6 @@ from dcase_framework.features import FeatureContainer, FeatureExtractor
 from dcase_framework.metadata import MetaDataItem
 from dcase_framework.learners import SceneClassifierGMM
 import tempfile
-from IPython import embed
 
 
 def test_learn():

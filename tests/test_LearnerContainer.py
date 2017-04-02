@@ -7,7 +7,6 @@ import json
 import os
 from dcase_framework.learners import LearnerContainer
 import tempfile
-from IPython import embed
 
 
 def test_init():

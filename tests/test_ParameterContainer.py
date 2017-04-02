@@ -7,7 +7,6 @@ import json
 import os
 from dcase_framework.parameters import ParameterContainer, ParameterFile
 import tempfile
-from IPython import embed
 
 
 def test_hash():

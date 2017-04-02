@@ -6,7 +6,6 @@ import os
 sys.path.append('..')
 from dcase_framework.features import FeatureRepository
 import tempfile
-from IPython import embed
 
 
 def test_load():
