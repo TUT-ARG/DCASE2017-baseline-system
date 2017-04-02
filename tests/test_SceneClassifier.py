@@ -99,42 +99,42 @@ def test_generate_validation():
             {
                 'file': 'file1.wav',
                 'scene_label': 'scene1',
-                'location_identifier': 'a',
+                'identifier': 'a',
             }
         ),
         'file2.wav': MetaDataItem(
             {
                 'file': 'file2.wav',
                 'scene_label': 'scene1',
-                'location_identifier': 'b',
+                'identifier': 'b',
             }
         ),
         'file3.wav': MetaDataItem(
             {
                 'file': 'file3.wav',
                 'scene_label': 'scene1',
-                'location_identifier': 'c',
+                'identifier': 'c',
             }
         ),
         'file4.wav': MetaDataItem(
             {
                 'file': 'file4.wav',
                 'scene_label': 'scene2',
-                'location_identifier': 'd',
+                'identifier': 'd',
             }
         ),
         'file5.wav': MetaDataItem(
             {
                 'file': 'file5.wav',
                 'scene_label': 'scene2',
-                'location_identifier': 'e',
+                'identifier': 'e',
             }
         ),
         'file6.wav': MetaDataItem(
             {
                 'file': 'file6.wav',
                 'scene_label': 'scene2',
-                'location_identifier': 'f',
+                'identifier': 'f',
             }
         ),
     }

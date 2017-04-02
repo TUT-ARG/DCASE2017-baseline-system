@@ -127,7 +127,7 @@ def test_formats():
                                           'event_offset': 0.7,
                                           'event_onset': 0.5,
                                           'event_label': 'event',
-                                          'location_identifier': 'a1',
+                                          'identifier': 'a1',
                                           'source_label': 'm',
                                           })
         finally:

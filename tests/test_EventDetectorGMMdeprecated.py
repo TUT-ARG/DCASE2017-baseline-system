@@ -39,7 +39,7 @@ def test_learn():
                     'event_onset': 0.0,
                     'event_offset': 1.0,
                     'event_label': 'event1',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -47,7 +47,7 @@ def test_learn():
                     'event_onset': 1.0,
                     'event_offset': 2.0,
                     'event_label': 'event2',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -55,7 +55,7 @@ def test_learn():
                     'event_onset': 2.0,
                     'event_offset': 3.0,
                     'event_label': 'event2',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -63,7 +63,7 @@ def test_learn():
                     'event_onset': 4.0,
                     'event_offset': 5.0,
                     'event_label': 'event1',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -71,7 +71,7 @@ def test_learn():
                     'event_onset': 1.0,
                     'event_offset': 2.0,
                     'event_label': 'event1',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 }
             ]
         ),
@@ -82,7 +82,7 @@ def test_learn():
                     'event_onset': 0.0,
                     'event_offset': 1.0,
                     'event_label': 'event2',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 },
                 {
                     'file': 'file2.wav',
@@ -90,7 +90,7 @@ def test_learn():
                     'event_onset': 1.0,
                     'event_offset': 2.0,
                     'event_label': 'event1',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 },
                 {
                     'file': 'file2.wav',
@@ -98,7 +98,7 @@ def test_learn():
                     'event_onset': 2.0,
                     'event_offset': 3.0,
                     'event_label': 'event2',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 },
                 {
                     'file': 'file2.wav',
@@ -106,7 +106,7 @@ def test_learn():
                     'event_onset': 3.0,
                     'event_offset': 4.0,
                     'event_label': 'event2',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 }
             ]
         )
@@ -169,7 +169,7 @@ def test_predict():
                     'event_onset': 0.0,
                     'event_offset': 1.0,
                     'event_label': 'event1',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -177,7 +177,7 @@ def test_predict():
                     'event_onset': 1.0,
                     'event_offset': 2.0,
                     'event_label': 'event2',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -185,7 +185,7 @@ def test_predict():
                     'event_onset': 2.0,
                     'event_offset': 3.0,
                     'event_label': 'event2',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -193,7 +193,7 @@ def test_predict():
                     'event_onset': 4.0,
                     'event_offset': 5.0,
                     'event_label': 'event1',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 },
                 {
                     'file': 'file1.wav',
@@ -201,7 +201,7 @@ def test_predict():
                     'event_onset': 1.0,
                     'event_offset': 2.0,
                     'event_label': 'event1',
-                    'location_identifier': 'a',
+                    'identifier': 'a',
                 }
             ]
         ),
@@ -212,7 +212,7 @@ def test_predict():
                     'event_onset': 0.0,
                     'event_offset': 1.0,
                     'event_label': 'event2',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 },
                 {
                     'file': 'file2.wav',
@@ -220,7 +220,7 @@ def test_predict():
                     'event_onset': 1.0,
                     'event_offset': 2.0,
                     'event_label': 'event1',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 },
                 {
                     'file': 'file2.wav',
@@ -228,7 +228,7 @@ def test_predict():
                     'event_onset': 2.0,
                     'event_offset': 3.0,
                     'event_label': 'event2',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 },
                 {
                     'file': 'file2.wav',
@@ -236,7 +236,7 @@ def test_predict():
                     'event_onset': 3.0,
                     'event_offset': 4.0,
                     'event_label': 'event2',
-                    'location_identifier': 'b',
+                    'identifier': 'b',
                 }
             ]
         )
