@@ -18,6 +18,7 @@ Utility functions
     get_byte_string
     argument_file_exists
     filelist_exists
+    posix_path
 
 Timer
 ^^^^^
@@ -39,8 +40,6 @@ SuppressStdoutAndStderr
 
     SuppressStdoutAndStderr
 
-
-
 """
 
 import os
@@ -53,6 +52,7 @@ import argparse
 import logging
 import logging.config
 import yaml
+import pkg_resources
 
 
 def get_parameter_hash(params):
@@ -235,6 +235,7 @@ def filelist_exists(filelist):
     ----------
     filelist : dict of paths
         List containing paths to files
+
     Returns
     -------
     bool
@@ -244,9 +245,48 @@ def filelist_exists(filelist):
     return all({k: os.path.isfile(v) for k, v in filelist.items()}.values())
 
 
-class Timer(object):
-    """Timer class
+def posix_path(path):
+    """Converts path to POSIX format
+
+    Parameters
+    ----------
+    path : str
+        Path
+
+    Returns
+    -------
+    str
+
     """
+
+    return os.path.normpath(path).replace('\\','/')
+
+def check_pkg_resources(package_requirement, logger=None):
+    working_set = pkg_resources.WorkingSet()
+    if logger is None:
+        logger = logging.getLogger(__name__)
+
+    try:
+        working_set.require(package_requirement)
+    except pkg_resources.VersionConflict:
+        message = '{name}: Version conflict, update package [pip install {package_requirement}]'.format(
+            name=__name__,
+            package_requirement=package_requirement
+        )
+        logger.exception(message)
+        raise
+    except pkg_resources.DistributionNotFound:
+        message = '{name}: Package not found, install package [pip install {package_requirement}]'.format(
+            name=__name__,
+            package_requirement=package_requirement
+        )
+        logger.exception(message)
+        raise
+
+
+class Timer(object):
+    """Timer class"""
+
     def __init__(self):
         # Initialize internal properties
         self._start = None
@@ -310,8 +350,7 @@ class SuppressStdoutAndStderr(object):
 
     A context manager for doing a "deep suppression" of stdout and stderr in
     Python, i.e. will suppress all print, even if the print originates in a
-    compiled C/Fortran sub-function.
-       This will not suppress raised exceptions, since exceptions are printed
+    compiled C/Fortran sub-function. This will not suppress raised exceptions, since exceptions are printed
     to stderr just before a script exits, and after the context manager has
     exited (at least, I think that is why it lets exceptions through).
 
@@ -319,6 +358,7 @@ class SuppressStdoutAndStderr(object):
     http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
 
     """
+
     def __init__(self):
         # Open a pair of null files
         self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
