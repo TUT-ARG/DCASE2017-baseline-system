@@ -17,6 +17,7 @@ import hashlib
 import json
 import copy
 
+
 class ContainerMixin(object):
     def get_path(self, dotted_path, default=None, data=None):
         """Get value from nested dict with dotted path
