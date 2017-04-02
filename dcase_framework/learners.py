@@ -527,7 +527,7 @@ class KerasMixin(object):
         if numpy.__config__.blas_opt_info:
             blas_libraries = numpy.__config__.blas_opt_info['libraries']
         else:
-            blas_libraries = []
+            blas_libraries = ['']
 
         blas_extra_info = []
 
