@@ -16,8 +16,6 @@ import logging
 import hashlib
 import json
 import copy
-from IPython import embed
-
 
 class ContainerMixin(object):
     def get_path(self, dotted_path, default=None, data=None):
