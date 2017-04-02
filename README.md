@@ -48,6 +48,7 @@ The main approach implemented in the baseline system:
     ├── applications            # Task specific applications (task1.py, task2.py, and task3.py) 
     │   └── parameters          # Default parameters for the applications
     ├── dcase_framework         # DCASE Framework code
+    ├── docker                  # Docker container to reproduce baseline results
     ├── docs                    # Docs in HTML format
     ├── documentation           # Documentation sources (Sphinx)  
     ├── examples                # Examples how to extend the DCASE Framework
@@ -61,20 +62,21 @@ Installation
 ============
 
 The system is developed for [Python 2.7](https://www.python.org/) and [Python 3.6](https://www.python.org/).
-Currently, the baseline system is tested only with Linux operating system.
+The baseline system is tested to work with Linux, Windows and MacOS operating systems.
 
 To ensure that all external modules are installed, run command:
 
 ``pip install -r requirements.txt``
 
 
-There is currently a bug in the latest version of Theano (neural network backend) which available through pip, fortunately this is fixed in main branch. The bug will affect task 2 system (when using GPU and binary_crossentropy as loss function). To fix this run command:
-
-``pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git``
-
-
 Changelog
 =========
+
+#### 1.1 / 2017-04-02
+
+* Added Docker container to reproduce baseline results 
+* Fixed training data ordering (might have been different on different computer setups)
+* Added Windows compatibility
 
 #### 1.0 / 2017-03-20
 
