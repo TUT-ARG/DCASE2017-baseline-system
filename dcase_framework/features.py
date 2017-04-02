@@ -287,7 +287,6 @@ from .files import FeatureFile, AudioFile, DataFile, RepositoryFile
 from .containers import ContainerMixin, DottedDict
 from .parameters import ParameterContainer
 from .utils import filelist_exists
-from IPython import embed
 
 
 class FeatureContainer(FeatureFile, ContainerMixin):
