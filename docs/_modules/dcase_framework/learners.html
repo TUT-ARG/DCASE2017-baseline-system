@@ -133,6 +133,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -351,7 +359,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -507,6 +515,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#timer">Timer</a><ul>
@@ -652,7 +661,6 @@
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">Timer</span>
 
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">embed</span>
 
 
 <span class="k">def</span> <span class="nf">scene_classifier_factory</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -742,7 +750,9 @@
         <span class="k">elif</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seed&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seed&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">bigint</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span><span class="p">)</span>
+            <span class="n">epoch</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">unix_now</span> <span class="o">=</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">epoch</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1000.0</span>
+            <span class="n">bigint</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">unix_now</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">mod</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span>  <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">))</span>
@@ -759,7 +769,7 @@
 <span class="sd">        list of strings</span>
 <span class="sd">            List of class labels in the model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_labels&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_labels&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
     <span class="nd">@class_labels</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">class_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -938,24 +948,26 @@
         <span class="kn">from</span> <span class="nn">keras.utils.layer_utils</span> <span class="k">import</span> <span class="n">count_total_params</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Model summary&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{type:&lt;12s}</span><span class="s1"> | </span><span class="si">{out:10s}</span><span class="s1"> | </span><span class="si">{param:6s}</span><span class="s1">  | </span><span class="si">{name:20s}</span><span class="s1">  | </span><span class="si">{conn:27s}</span><span class="s1"> | </span><span class="si">{act:10s}</span><span class="s1"> | </span><span class="si">{init:9s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Layer type&#39;</span><span class="p">,</span>
-            <span class="n">out</span><span class="o">=</span><span class="s1">&#39;Output&#39;</span><span class="p">,</span>
-            <span class="n">param</span><span class="o">=</span><span class="s1">&#39;Param&#39;</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span>
-            <span class="n">conn</span><span class="o">=</span><span class="s1">&#39;Connected to&#39;</span><span class="p">,</span>
-            <span class="n">act</span><span class="o">=</span><span class="s1">&#39;Activation&#39;</span><span class="p">,</span>
-            <span class="n">init</span><span class="o">=</span><span class="s1">&#39;Init&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s1">&#39;  </span><span class="si">{type:&lt;12s}</span><span class="s1"> | </span><span class="si">{out:10s}</span><span class="s1"> | </span><span class="si">{param:6s}</span><span class="s1">  | </span><span class="si">{name:20s}</span><span class="s1">  | </span><span class="si">{conn:27s}</span><span class="s1"> | </span><span class="si">{act:10s}</span><span class="s1"> | </span><span class="si">{init:9s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;Layer type&#39;</span><span class="p">,</span>
+                <span class="n">out</span><span class="o">=</span><span class="s1">&#39;Output&#39;</span><span class="p">,</span>
+                <span class="n">param</span><span class="o">=</span><span class="s1">&#39;Param&#39;</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span>
+                <span class="n">conn</span><span class="o">=</span><span class="s1">&#39;Connected to&#39;</span><span class="p">,</span>
+                <span class="n">act</span><span class="o">=</span><span class="s1">&#39;Activation&#39;</span><span class="p">,</span>
+                <span class="n">init</span><span class="o">=</span><span class="s1">&#39;Init&#39;</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{name:&lt;12s}</span><span class="s1"> + </span><span class="si">{out:10s}</span><span class="s1"> + </span><span class="si">{param:6s}</span><span class="s1">  + </span><span class="si">{name:20s}</span><span class="s1">  + </span><span class="si">{conn:27s}</span><span class="s1"> + </span><span class="si">{act:10s}</span><span class="s1"> + </span><span class="si">{init:9s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">12</span><span class="p">,</span>
-            <span class="n">out</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span>
-            <span class="n">param</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span>
-            <span class="n">conn</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">27</span><span class="p">,</span>
-            <span class="n">act</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span>
-            <span class="n">init</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">9</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s1">&#39;  </span><span class="si">{type:&lt;12s}</span><span class="s1"> + </span><span class="si">{out:10s}</span><span class="s1"> + </span><span class="si">{param:6s}</span><span class="s1">  + </span><span class="si">{name:20s}</span><span class="s1">  + </span><span class="si">{conn:27s}</span><span class="s1"> + </span><span class="si">{act:10s}</span><span class="s1"> + </span><span class="si">{init:9s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">12</span><span class="p">,</span>
+                <span class="n">out</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span>
+                <span class="n">param</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span>
+                <span class="n">conn</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">27</span><span class="p">,</span>
+                <span class="n">act</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span>
+                <span class="n">init</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">9</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
@@ -988,7 +1000,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Total params         : </span><span class="si">{:,}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trainable_count</span> <span class="o">+</span> <span class="n">non_trainable_count</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Trainable params     : </span><span class="si">{:,}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trainable_count</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Non-trainable params : </span><span class="si">{:,}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">non_trainable_count</span><span class="p">))</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
+        
     <span class="k">def</span> <span class="nf">plot_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;model.png&#39;</span><span class="p">,</span> <span class="n">show_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_layer_names</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">keras.utils.visualize_util</span> <span class="k">import</span> <span class="n">plot</span>
         <span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">to_file</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">show_shapes</span><span class="o">=</span><span class="n">show_shapes</span><span class="p">,</span> <span class="n">show_layer_names</span><span class="o">=</span><span class="n">show_layer_names</span><span class="p">)</span>
@@ -1065,10 +1078,7 @@
         <span class="k">with</span> <span class="n">SuppressStdoutAndStderr</span><span class="p">():</span>
             <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">load_model</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">keras_model_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">keras_model_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.model.hdf5&#39;</span>
+        <span class="n">keras_model_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.model.hdf5&#39;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">keras_model_filename</span><span class="p">):</span>
             <span class="k">with</span> <span class="n">SuppressStdoutAndStderr</span><span class="p">():</span>
@@ -1091,6 +1101,15 @@
 
     <span class="k">def</span> <span class="nf">_setup_keras</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Setup keras backend and parameters&quot;&quot;&quot;</span>
+
+        <span class="c1"># Get BLAS library associated to numpy</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">:</span>
+            <span class="n">blas_libraries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">[</span><span class="s1">&#39;libraries&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">blas_libraries</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">blas_extra_info</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="c1"># Set backend and parameters before importing keras</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
@@ -1098,10 +1117,48 @@
                 <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">))</span>
             <span class="p">)</span>
 
+        <span class="c1"># Threading</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.threads&#39;</span><span class="p">):</span>
+            <span class="n">thread_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.threads&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;GOTO_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
+            <span class="n">blas_extra_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Threads[</span><span class="si">{threads}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">threads</span><span class="o">=</span><span class="n">thread_count</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">thread_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;False&#39;</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;False&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;True&#39;</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;True&#39;</span>
+
+        <span class="c1"># Conditional Numerical Reproducibility (CNR) for MKL BLAS library</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.CNR&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mkl&#39;</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_CBWR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;COMPATIBLE&#39;</span>
+            <span class="n">blas_extra_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;MKL_CBWR[</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;COMPATIBLE&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Show BLAS info</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">:</span>
+                <span class="n">blas_libraries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">[</span><span class="s1">&#39;libraries&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;openblas&#39;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  BLAS library</span><span class="se">\t</span><span class="s1">[OpenBLAS]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">)))</span>
+                <span class="k">elif</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;blas&#39;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  BLAS library</span><span class="se">\t</span><span class="s1">[BLAS/Atlas]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">)))</span>
+                <span class="k">elif</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mkl&#39;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  BLAS library</span><span class="se">\t</span><span class="s1">[MKL]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">)))</span>
+
+        <span class="c1"># Select Keras backend</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KERAS_BACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span>
+
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;theano&#39;</span><span class="p">:</span>
+            <span class="c1"># Theano setup</span>
+
             <span class="c1"># Default flags</span>
             <span class="n">flags</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s1">&#39;warn.round=False&#39;</span>
+                <span class="c1">#&#39;ldflags=&#39;,</span>
+                <span class="s1">&#39;warn.round=False&#39;</span><span class="p">,</span>
             <span class="p">]</span>
 
             <span class="c1"># Set device</span>
@@ -1122,8 +1179,19 @@
                         <span class="nb">float</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">,</span> <span class="s1">&#39;float32&#39;</span><span class="p">))</span>
                     <span class="p">)</span>
 
-            <span class="c1"># Set fastmath</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set optimizer</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fast_run&#39;</span><span class="p">,</span> <span class="s1">&#39;merge&#39;</span><span class="p">,</span> <span class="s1">&#39;fast_compile&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">]:</span>
+                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;optimizer=&#39;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;optimizer=None&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Theano optimizer </span><span class="se">\t</span><span class="s1">[</span><span class="si">{optimizer}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">))</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Set fastmath for GPU mode only</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                     <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;nvcc.fastmath=True&#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1134,10 +1202,24 @@
                         <span class="n">flag</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)))</span>
                     <span class="p">)</span>
 
+            <span class="c1"># Set OpenMP</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;openmp=True&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;openmp=False&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  OpenMP</span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{flag}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">flag</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)))</span>
+                    <span class="p">)</span>
+
             <span class="c1"># Set environmental variable for Theano</span>
             <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;THEANO_FLAGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;tensorflow&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;tensorflow&#39;</span><span class="p">:</span>
+            <span class="c1"># Tensorflow setup</span>
+
             <span class="c1"># Set device</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
 
@@ -1157,8 +1239,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="c1"># Select Keras backend</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KERAS_BACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span>
+
 
 
 <div class="viewcode-block" id="SceneClassifier"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifier.html#dcase_framework.learners.SceneClassifier">[docs]</a><span class="k">class</span> <span class="nc">SceneClassifier</span><span class="p">(</span><span class="n">LearnerContainer</span><span class="p">):</span>
@@ -1238,7 +1319,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;class_labels&#39;</span><span class="p">][</span><span class="n">classification_result_id</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">[</span><span class="n">classification_result_id</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_generate_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotations</span><span class="p">,</span> <span class="n">validation_type</span><span class="o">=</span><span class="s1">&#39;generated_scene_balanced&#39;</span><span class="p">,</span>
                              <span class="n">valid_percentage</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1248,9 +1329,9 @@
         <span class="k">if</span> <span class="n">validation_type</span> <span class="o">==</span> <span class="s1">&#39;generated_scene_balanced&#39;</span><span class="p">:</span>
             <span class="c1"># Get training data per scene label</span>
             <span class="n">annotation_data</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
                 <span class="n">scene_label</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="s1">&#39;scene_label&#39;</span><span class="p">]</span>
-                <span class="n">location_id</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="s1">&#39;location_identifier&#39;</span><span class="p">]</span>
+                <span class="n">location_id</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="s1">&#39;identifier&#39;</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">scene_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annotation_data</span><span class="p">:</span>
                     <span class="n">annotation_data</span><span class="p">[</span><span class="n">scene_label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">if</span> <span class="n">location_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annotation_data</span><span class="p">[</span><span class="n">scene_label</span><span class="p">]:</span>
@@ -1334,7 +1415,7 @@
 
     <span class="k">def</span> <span class="nf">_get_target_matrix_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
         <span class="n">activity_matrix_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
             <span class="n">frame_count</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="s1">&#39;scene_label&#39;</span><span class="p">])</span>
             <span class="n">roll</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">frame_count</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">)))</span>
@@ -1377,12 +1458,12 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
         <span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">mixture</span>
 
-        <span class="n">training_files</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  <span class="c1"># Collect training files</span>
+        <span class="n">training_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>  <span class="c1"># Collect training files</span>
         <span class="n">activity_matrix_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target_matrix_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">)</span>
         <span class="n">X_training</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">training_files</span><span class="p">])</span>
         <span class="n">Y_training</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">activity_matrix_dict</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">training_files</span><span class="p">])</span>
 
-        <span class="n">class_progress</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;class_labels&#39;</span><span class="p">],</span>
+        <span class="n">class_progress</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">,</span>
                               <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
                               <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                               <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;           </span><span class="si">{0:&gt;15s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Learn &#39;</span><span class="p">),</span>
@@ -1412,7 +1493,7 @@
 
         <span class="n">logls</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]),</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
 
-        <span class="k">for</span> <span class="n">label_id</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;class_labels&#39;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">label_id</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">):</span>
             <span class="n">logls</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">feature_data</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">logls</span>
@@ -1442,12 +1523,12 @@
 
         <span class="kn">from</span> <span class="nn">sklearn.mixture</span> <span class="k">import</span> <span class="n">GaussianMixture</span>
 
-        <span class="n">training_files</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  <span class="c1"># Collect training files</span>
+        <span class="n">training_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>  <span class="c1"># Collect training files</span>
         <span class="n">activity_matrix_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target_matrix_dict</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">)</span>
         <span class="n">X_training</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">training_files</span><span class="p">])</span>
         <span class="n">Y_training</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">activity_matrix_dict</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">training_files</span><span class="p">])</span>
 
-        <span class="n">class_progress</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;class_labels&#39;</span><span class="p">],</span>
+        <span class="n">class_progress</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">,</span>
                               <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
                               <span class="n">leave</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                               <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;           </span><span class="si">{0:&gt;15s}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Learn &#39;</span><span class="p">),</span>
@@ -1472,7 +1553,7 @@
     <span class="k">def</span> <span class="nf">_frame_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
         <span class="n">logls</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]),</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
 
-        <span class="k">for</span> <span class="n">label_id</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;class_labels&#39;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">label_id</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">):</span>
             <span class="n">logls</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">feature_data</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">logls</span></div>
@@ -1500,7 +1581,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">training_files</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>  <span class="c1"># Collect training files</span>
+        <span class="n">training_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>  <span class="c1"># Collect training files</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.enable&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
             <span class="n">validation_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_validation</span><span class="p">(</span>
                 <span class="n">annotations</span><span class="o">=</span><span class="n">annotations</span><span class="p">,</span>
@@ -1508,7 +1589,7 @@
                 <span class="n">valid_percentage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.validation_amount&#39;</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">),</span>
                 <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.seed&#39;</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="n">training_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">training_files</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">validation_files</span><span class="p">))</span>
+            <span class="n">training_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">training_files</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">validation_files</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">validation_files</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1763,7 +1844,7 @@
     <span class="k">def</span> <span class="nf">_get_target_matrix_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
 
         <span class="n">activity_matrix_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="n">annotations</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
             <span class="c1"># Create event roll</span>
             <span class="n">event_roll</span> <span class="o">=</span> <span class="n">EventRoll</span><span class="p">(</span><span class="n">metadata_container</span><span class="o">=</span><span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">],</span>
                                    <span class="n">label_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_labels</span><span class="p">,</span>
@@ -1783,9 +1864,9 @@
         <span class="k">if</span> <span class="n">validation_type</span> <span class="o">==</span> <span class="s1">&#39;generated_scene_location_event_balanced&#39;</span><span class="p">:</span>
             <span class="c1"># Get training data per scene label</span>
             <span class="n">annotation_data</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
                 <span class="n">scene_label</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scene_label</span>
-                <span class="n">location_id</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">location_identifier</span>
+                <span class="n">location_id</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">identifier</span>
                 <span class="k">if</span> <span class="n">scene_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annotation_data</span><span class="p">:</span>
                     <span class="n">annotation_data</span><span class="p">[</span><span class="n">scene_label</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">if</span> <span class="n">location_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">annotation_data</span><span class="p">[</span><span class="n">scene_label</span><span class="p">]:</span>
@@ -1899,7 +1980,7 @@
         <span class="k">elif</span> <span class="n">validation_type</span> <span class="o">==</span> <span class="s1">&#39;generated_event_file_balanced&#39;</span><span class="p">:</span>
             <span class="c1"># Get event amounts</span>
             <span class="n">event_amounts</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
                 <span class="n">event_label</span> <span class="o">=</span> <span class="n">annotations</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">event_label</span>
                 <span class="k">if</span> <span class="n">event_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">event_amounts</span><span class="p">:</span>
                     <span class="n">event_amounts</span><span class="p">[</span><span class="n">event_label</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1939,7 +2020,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">validation_files</span></div>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">validation_files</span><span class="p">)</span></div>
 
 
 <span class="k">class</span> <span class="nc">EventDetectorGMMdeprecated</span><span class="p">(</span><span class="n">EventDetector</span><span class="p">):</span>
@@ -1997,7 +2078,8 @@
             <span class="n">data_positive</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">data_negative</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="k">for</span> <span class="n">audio_filename</span><span class="p">,</span> <span class="n">activity_matrix</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">activity_matrix_dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">activity_matrix_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
+                <span class="n">activity_matrix</span> <span class="o">=</span> <span class="n">activity_matrix_dict</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">]</span>
 
                 <span class="n">positive_mask</span> <span class="o">=</span> <span class="n">activity_matrix</span><span class="p">[:,</span> <span class="n">event_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
                 <span class="c1"># Store positive examples</span>
@@ -2117,7 +2199,8 @@
             <span class="n">data_positive</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">data_negative</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="k">for</span> <span class="n">audio_filename</span><span class="p">,</span> <span class="n">activity_matrix</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">activity_matrix_dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">audio_filename</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">activity_matrix_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
+                <span class="n">activity_matrix</span> <span class="o">=</span> <span class="n">activity_matrix_dict</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">]</span>
 
                 <span class="n">positive_mask</span> <span class="o">=</span> <span class="n">activity_matrix</span><span class="p">[:,</span> <span class="n">event_id</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
                 <span class="c1"># Store positive examples</span>
@@ -2215,7 +2298,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Collect training files</span>
-        <span class="n">training_files</span> <span class="o">=</span> <span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">training_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">annotations</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
         <span class="c1"># Validation files</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.enable&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
@@ -2226,7 +2309,7 @@
                                                              <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.seed&#39;</span><span class="p">),</span>
                                                              <span class="p">)</span>
 
-            <span class="n">training_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">training_files</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">validation_files</span><span class="p">))</span>
+            <span class="n">training_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">training_files</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">validation_files</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">validation_files</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -2405,12 +2488,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Validation items </span><span class="se">\t</span><span class="s1">[</span><span class="si">{validation:d}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">validation</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_validation</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">validation</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="c1">#embed()#</span>
-        <span class="c1">#</span>
-        <span class="c1">#import matplotlib.pyplot as plt</span>
-        <span class="c1">#plt.plot(Y_training)</span>
-        <span class="c1">#plt.show()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Feature vector </span><span class="se">\t</span><span class="s1">[</span><span class="si">{vector:d}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_input_size</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)))</span>

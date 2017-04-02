@@ -133,6 +133,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -351,7 +359,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -507,6 +515,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#timer">Timer</a><ul>
@@ -612,8 +621,8 @@ tasks during system development.</p>
 <li><em>Machine learning</em>: neural network approach using multilayer perceptron (MLP) type of network (2 layers with 50 neurons each, and 20% dropout between layers).</li>
 </ul>
 <p>In addition to this, Gaussian mixture model based system is included for the comparison.</p>
-<p>The system is developed for <a class="reference external" href="https://www.python.org/">Python 2.7</a> and <a class="reference external" href="https://www.python.org/">Python 3.6</a>
-under Linux environment.</p>
+<p>The system is developed for <a class="reference external" href="https://www.python.org/">Python 2.7</a> and <a class="reference external" href="https://www.python.org/">Python 3.6</a>,
+and it can be used in Linux, Windows and Mac platforms.</p>
 <p>More about the <a class="reference internal" href="system_description.html#system-description"><span class="std std-ref">baseline system</span></a>.</p>
 </div>
 <div class="section" id="applications">
@@ -628,8 +637,8 @@ applications tailored for <a class="reference external" href="http://www.cs.tut.
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Install requirements with command: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></li>
-<li>Run the application with default settings: <code class="docutils literal"><span class="pre">python</span> <span class="pre">applications/task1.py</span></code>, <code class="docutils literal"><span class="pre">python</span> <span class="pre">applications/task2.py</span></code>, and <code class="docutils literal"><span class="pre">python</span> <span class="pre">applications/task3.py</span></code></li>
+<li>Install requirements with command: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code>, <a class="reference internal" href="install.html#install"><span class="std std-ref">installation details</span></a>.</li>
+<li>Run the application with default settings: <code class="docutils literal"><span class="pre">python</span> <span class="pre">applications/task1.py</span></code>, <code class="docutils literal"><span class="pre">python</span> <span class="pre">applications/task2.py</span></code>, and <code class="docutils literal"><span class="pre">python</span> <span class="pre">applications/task3.py</span></code>,  <a class="reference internal" href="usage_tutorial.html#usage-tutorial"><span class="std std-ref">usage details</span></a>.</li>
 </ol>
 </div>
 <div class="section" id="dcase-framework">
@@ -657,6 +666,7 @@ These application classes can be extended easily to accommodate different resear
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_tutorial.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameterization.html">Parameterization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound" id="frameworktoc">

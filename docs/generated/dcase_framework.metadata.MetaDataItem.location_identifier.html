@@ -37,10 +37,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="../index.html"/>
-        <link rel="up" title="Meta data" href="../metadata.html"/>
-        <link rel="next" title="dcase_framework.metadata.MetaDataItem.source_label" href="dcase_framework.metadata.MetaDataItem.source_label.html"/>
-        <link rel="prev" title="dcase_framework.metadata.MetaDataItem.event_offset" href="dcase_framework.metadata.MetaDataItem.event_offset.html"/> 
+    <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -135,9 +132,17 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../framework.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../framework.html#training-process">Training process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../framework.html#testing-process">Testing process</a></li>
@@ -345,15 +350,15 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="../metadata.html">Meta data</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../metadata.html#metadataitem">MetaDataItem</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../metadata.html">Meta data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../metadata.html#metadataitem">MetaDataItem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -509,6 +514,7 @@
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utils.html#timer">Timer</a><ul>
@@ -555,8 +561,6 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="../metadata.html">Meta data</a> &raquo;</li>
-      
     <li>dcase_framework.metadata.MetaDataItem.location_identifier</li>
       <li class="wy-breadcrumbs-aside">
         
@@ -571,39 +575,12 @@
             
   <div class="section" id="dcase-framework-metadata-metadataitem-location-identifier">
 <h1>dcase_framework.metadata.MetaDataItem.location_identifier<a class="headerlink" href="#dcase-framework-metadata-metadataitem-location-identifier" title="Permalink to this headline">¶</a></h1>
-<dl class="attribute">
-<dt id="dcase_framework.metadata.MetaDataItem.location_identifier">
-<code class="descclassname">MetaDataItem.</code><code class="descname">location_identifier</code><a class="headerlink" href="#dcase_framework.metadata.MetaDataItem.location_identifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Location identifier</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">str or None</p>
-<blockquote class="last">
-<div><p>location identifier</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
            </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="dcase_framework.metadata.MetaDataItem.source_label.html" class="btn btn-neutral float-right" title="dcase_framework.metadata.MetaDataItem.source_label" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="dcase_framework.metadata.MetaDataItem.event_offset.html" class="btn btn-neutral" title="dcase_framework.metadata.MetaDataItem.event_offset" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>

@@ -133,6 +133,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -351,7 +359,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -507,6 +515,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#timer">Timer</a><ul>
@@ -760,13 +769,11 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">librosa</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">soundfile</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="k">import</span> <span class="n">before_and_after_function_wrapper</span>
 <span class="kn">from</span> <span class="nn">.containers</span> <span class="k">import</span> <span class="n">DottedDict</span>
-<span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">embed</span>
 
 
 <div class="viewcode-block" id="FileMixin"><a class="viewcode-back" href="../../generated/dcase_framework.files.FileMixin.html#dcase_framework.files.FileMixin">[docs]</a><span class="k">class</span> <span class="nc">FileMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -838,6 +845,10 @@
             <span class="n">file_format</span> <span class="o">=</span> <span class="s1">&#39;flac&#39;</span>
         <span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">:</span>
             <span class="n">file_format</span> <span class="o">=</span> <span class="s1">&#39;mp3&#39;</span>
+        <span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.m4a&#39;</span><span class="p">:</span>
+            <span class="n">file_format</span> <span class="o">=</span> <span class="s1">&#39;m4a&#39;</span>
+        <span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.webm&#39;</span><span class="p">:</span>
+            <span class="n">file_format</span> <span class="o">=</span> <span class="s1">&#39;webm&#39;</span>
 
         <span class="k">if</span> <span class="n">file_format</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_formats</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">file_format</span>
@@ -1144,7 +1155,7 @@
 
 <div class="viewcode-block" id="ListFile"><a class="viewcode-back" href="../../generated/dcase_framework.files.ListFile.html#dcase_framework.files.ListFile">[docs]</a><span class="k">class</span> <span class="nc">ListFile</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">FileMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;File class inherited from list, valid file formats [txt]&quot;&quot;&quot;</span>
-    <span class="n">valid_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;txt&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">]</span>
+    <span class="n">valid_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;txt&#39;</span><span class="p">,</span> <span class="s1">&#39;yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;csv&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ListFile.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.files.ListFile.html#dcase_framework.files.ListFile.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
@@ -1229,7 +1240,16 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Something went wrong while parsing yaml file [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
                     <span class="k">return</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                    <span class="c1"># Remove line breaks</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+                        <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">)</span>
 
+                <span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">embed</span>
+                <span class="n">embed</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown format [</span><span class="si">{format}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1324,7 +1344,7 @@
 
 <div class="viewcode-block" id="AudioFile"><a class="viewcode-back" href="../../generated/dcase_framework.files.AudioFile.html#dcase_framework.files.AudioFile">[docs]</a><span class="k">class</span> <span class="nc">AudioFile</span><span class="p">(</span><span class="n">FileMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;File class for audio files, valid file formats  [wav, flac]&quot;&quot;&quot;</span>
-    <span class="n">valid_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;wav&#39;</span><span class="p">,</span> <span class="s1">&#39;flac&#39;</span><span class="p">]</span>
+    <span class="n">valid_formats</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;wav&#39;</span><span class="p">,</span> <span class="s1">&#39;flac&#39;</span><span class="p">,</span> <span class="s1">&#39;m4a&#39;</span><span class="p">,</span> <span class="s1">&#39;webm&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="AudioFile.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.files.AudioFile.html#dcase_framework.files.AudioFile.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
@@ -1356,7 +1376,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mono</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mono&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
 
     <span class="nd">@before_and_after_function_wrapper</span>
-<div class="viewcode-block" id="AudioFile.load"><a class="viewcode-back" href="../../generated/dcase_framework.files.AudioFile.load.html#dcase_framework.files.AudioFile.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioFile.load"><a class="viewcode-back" href="../../generated/dcase_framework.files.AudioFile.load.html#dcase_framework.files.AudioFile.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">res_type</span><span class="o">=</span><span class="s1">&#39;kaiser_best&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load file</span>
 
 <span class="sd">        Parameters</span>
@@ -1370,7 +1390,9 @@
 <span class="sd">        mono : bool</span>
 <span class="sd">            Monophonic target, multi-channel audio will be down-mixed.</span>
 <span class="sd">            Default value one given to class constructor</span>
-
+<span class="sd">        res_type : str</span>
+<span class="sd">            Resample type, defined by Librosa</span>
+<span class="sd">            Default value &quot;kaiser_best&quot;</span>
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        IOError:</span>
@@ -1403,10 +1425,12 @@
 
                 <span class="c1"># Resample</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs</span> <span class="o">!=</span> <span class="n">source_fs</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">source_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span>
+                    <span class="kn">import</span> <span class="nn">librosa</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">source_fs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">res_type</span><span class="o">=</span><span class="n">res_type</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;flac&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mono</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;flac&#39;</span><span class="p">,</span> <span class="s1">&#39;m4a&#39;</span><span class="p">,</span> <span class="s1">&#39;webm&#39;</span><span class="p">]:</span>
+                <span class="kn">import</span> <span class="nn">librosa</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fs</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mono</span><span class="p">,</span> <span class="n">res_type</span><span class="o">=</span><span class="n">res_type</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown format [</span><span class="si">{format}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
@@ -1448,31 +1472,39 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect_file_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;wav&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">bitdepth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">soundfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
-                                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
-                                <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span>  <span class="c1"># whatever is default in soundfile</span>
-            <span class="k">elif</span> <span class="n">bitdepth</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bitdepth</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
                 <span class="n">soundfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
                                 <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
                                 <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span>
-                                <span class="n">subtype</span><span class="o">=</span><span class="s1">&#39;PCM16&#39;</span><span class="p">)</span>
+                                <span class="n">subtype</span><span class="o">=</span><span class="s1">&#39;PCM_16&#39;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">bitdepth</span> <span class="o">==</span> <span class="mi">24</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">bitdepth</span> <span class="o">==</span> <span class="mi">24</span><span class="p">:</span>
                 <span class="n">soundfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
                                 <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
                                 <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span>
                                 <span class="n">subtype</span><span class="o">=</span><span class="s1">&#39;PCM_24&#39;</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">bitdepth</span> <span class="o">==</span> <span class="mi">32</span><span class="p">:</span>
                 <span class="n">soundfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
                                 <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
                                 <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">,</span>
                                 <span class="n">subtype</span><span class="o">=</span><span class="s1">&#39;PCM_32&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">bitdepth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">soundfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+                                <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                                <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unexpected bit depth [</span><span class="si">{bitdepth}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                                                                              <span class="n">bitdepth</span><span class="o">=</span><span class="n">bitdepth</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s1">&#39;flac&#39;</span><span class="p">:</span>
+            <span class="n">soundfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+                            <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                            <span class="n">samplerate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fs</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown format for saving [</span><span class="si">{format}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>

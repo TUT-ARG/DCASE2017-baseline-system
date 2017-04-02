@@ -134,6 +134,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -352,7 +360,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -508,6 +516,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#timer">Timer</a><ul>
@@ -578,8 +587,9 @@ the system directly from the repository. To clone repository with HTTPS:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">TUT</span><span class="o">-</span><span class="n">ARG</span><span class="o">/</span><span class="n">DCASE2017</span><span class="o">-</span><span class="n">baseline</span><span class="o">-</span><span class="n">system</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
-<p>The system is developed for <a class="reference external" href="https://www.python.org/">Python 2.7</a> and <a class="reference external" href="https://www.python.org/">Python 3.6</a>.
-Currently, the baseline system is tested only with Linux operating system.</p>
+<p>The system is developed for <a class="reference external" href="https://www.python.org/">Python 2.7</a>, <a class="reference external" href="https://www.python.org/">Python 3.5</a> and <a class="reference external" href="https://www.python.org/">Python 3.6</a>.
+The system is tested to work on Linux, Windows and MacOS platforms.</p>
+<p>One can install either the official <a class="reference external" href="https://www.python.org/">CPython</a> or use some Python distribution based on it. New users are recommended to use <a class="reference external" href="https://www.continuum.io/">Anaconda Python distribution</a>.</p>
 <p><strong>External modules</strong></p>
 <p>To ensure that all external modules are installed, run command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
@@ -587,13 +597,11 @@ Currently, the baseline system is tested only with Linux operating system.</p>
 </div>
 <p><strong>Theano</strong></p>
 <p>The system uses by default <a class="reference external" href="http://deeplearning.net/software/theano/">Theano</a> as <a class="reference external" href="https://keras.io/">Keras</a> backend.</p>
-<p>There is currently a bug in the latest release version of Theano 0.8.2 which is available through pip, fortunately this is will be fixed in 0.9.0 release.
-The bug will affect task 2 system (when using GPU and binary_crossentropy as loss function).
-To fix this, make sure you have installed the release candidate version of Theano:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">theano</span><span class="o">==</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span><span class="n">rc4</span>
+<p>There was a bug in Theano 0.8.2 version, so make sure to use 0.9.0 release. The bug will affect Task 2 system (when using GPU and binary_crossentropy as loss function). To fix this, make sure you have installed correct version of Theano:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">theano</span><span class="o">==</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">0</span>
 </pre></div>
 </div>
-<p>Or latest from git with command:</p>
+<p>Or use latest from git with command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">deps</span> <span class="n">git</span><span class="o">+</span><span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Theano</span><span class="o">/</span><span class="n">Theano</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>

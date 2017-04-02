@@ -133,6 +133,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -351,7 +359,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -507,6 +515,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#timer">Timer</a><ul>
@@ -626,7 +635,7 @@
 <span class="sd">    MetaDataItem.event_label</span>
 <span class="sd">    MetaDataItem.event_onset</span>
 <span class="sd">    MetaDataItem.event_offset</span>
-<span class="sd">    MetaDataItem.location_identifier</span>
+<span class="sd">    MetaDataItem.identifier</span>
 <span class="sd">    MetaDataItem.source_label</span>
 
 <span class="sd">MetaDataContainer</span>
@@ -641,7 +650,7 @@
 <span class="sd">- [file(string)]</span>
 <span class="sd">- [event_onset (float)][tab][event_offset (float)]</span>
 <span class="sd">- [file(string)][scene_label(string)]</span>
-<span class="sd">- [file(string)][scene_label(string)][location_identifier(string)]</span>
+<span class="sd">- [file(string)][scene_label(string)][identifier(string)]</span>
 <span class="sd">- [event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</span>
 <span class="sd">- [file(string)][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</span>
 <span class="sd">- [file(string)[tab][scene_label][tab][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</span>
@@ -692,14 +701,13 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 
 <span class="kn">from</span> <span class="nn">.files</span> <span class="k">import</span> <span class="n">ListFile</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">posix_path</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-
-<span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">embed</span>
 
 
 <div class="viewcode-block" id="MetaDataItem"><a class="viewcode-back" href="../../generated/dcase_framework.metadata.MetaDataItem.html#dcase_framework.metadata.MetaDataItem">[docs]</a><span class="k">class</span> <span class="nc">MetaDataItem</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
@@ -715,6 +723,10 @@
         <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
         <span class="c1"># Process fields</span>
+        <span class="k">if</span> <span class="s1">&#39;file&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="c1"># Keep file paths in unix format even under Windows</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">posix_path</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">])</span>
+
         <span class="k">if</span> <span class="s1">&#39;event_onset&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;event_onset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;event_onset&#39;</span><span class="p">])</span>
 
@@ -748,7 +760,7 @@
             <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">{:&gt;8s}</span><span class="s1"> |&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;---&#39;</span><span class="p">)</span>
 
         <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">{:&lt;20s}</span><span class="s1"> |&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event_label</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;---&#39;</span><span class="p">)</span>
-        <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">{:&lt;8s}</span><span class="s1"> |&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">location_identifier</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_identifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;---&#39;</span><span class="p">)</span>
+        <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">{:&lt;8s}</span><span class="s1"> |&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;---&#39;</span><span class="p">)</span>
         <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">{:&lt;8s}</span><span class="s1"> |&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_label</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;---&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">string_data</span>
@@ -800,20 +812,20 @@
         <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_label</span><span class="p">]</span>
 
-        <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;location_identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_identifier</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span>
 
         <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;event_label&#39;</span><span class="p">,</span> <span class="s1">&#39;event_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;event_onset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_onset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_label</span><span class="p">]</span>
 
-        <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;event_label&#39;</span><span class="p">,</span> <span class="s1">&#39;event_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;event_onset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;location_identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;event_label&#39;</span><span class="p">,</span> <span class="s1">&#39;event_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;event_onset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_onset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_offset</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">event_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_identifier</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">event_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span>
 
-        <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;event_label&#39;</span><span class="p">,</span> <span class="s1">&#39;event_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;event_onset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;location_identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">,</span>
+        <span class="k">elif</span> <span class="n">fields</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;event_label&#39;</span><span class="p">,</span> <span class="s1">&#39;event_offset&#39;</span><span class="p">,</span> <span class="s1">&#39;event_onset&#39;</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="s1">&#39;identifier&#39;</span><span class="p">,</span> <span class="s1">&#39;scene_label&#39;</span><span class="p">,</span>
                         <span class="s1">&#39;source_label&#39;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_onset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_offset</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">event_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">location_identifier</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">event_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown format (get_list) [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fields</span><span class="p">)))</span>
@@ -836,7 +848,8 @@
 
     <span class="nd">@file</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="c1"># Keep file paths in unix format even under Windows</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">posix_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">scene_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -919,8 +932,8 @@
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;event_offset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">location_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Location identifier</span>
+    <span class="k">def</span> <span class="nf">identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Identifier</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -929,14 +942,14 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="s1">&#39;location_identifier&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;location_identifier&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;identifier&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="nd">@location_identifier</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">location_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;location_identifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="nd">@identifier</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;identifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">source_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1040,32 +1053,32 @@
         <span class="k">if</span> <span class="n">show_stats</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;scenes&#39;</span> <span class="ow">in</span> <span class="n">stats</span> <span class="ow">and</span> <span class="s1">&#39;scene_label_list&#39;</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;scenes&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;scenes&#39;</span><span class="p">][</span><span class="s1">&#39;scene_label_list&#39;</span><span class="p">]:</span>
                 <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  === Scene statistics ===</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> | </span><span class="si">{1:&lt;5s}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Scene label&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">)</span>
-                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> + </span><span class="si">{1:&lt;5s}</span><span class="s1"> +</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;40s}</span><span class="s1"> | </span><span class="si">{1:&lt;5s}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Scene label&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">)</span>
+                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;40s}</span><span class="s1"> + </span><span class="si">{1:&lt;5s}</span><span class="s1"> +</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">scene_id</span><span class="p">,</span> <span class="n">scene_label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;scenes&#39;</span><span class="p">][</span><span class="s1">&#39;scene_label_list&#39;</span><span class="p">]):</span>
-                    <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> | </span><span class="si">{1:5d}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scene_label</span><span class="p">,</span>
+                    <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;40s}</span><span class="s1"> | </span><span class="si">{1:5d}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scene_label</span><span class="p">,</span>
                                                                     <span class="nb">int</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;scenes&#39;</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="n">scene_id</span><span class="p">]))</span>
 
             <span class="k">if</span> <span class="s1">&#39;events&#39;</span> <span class="ow">in</span> <span class="n">stats</span> <span class="ow">and</span> <span class="s1">&#39;event_label_list&#39;</span> <span class="ow">in</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="s1">&#39;event_label_list&#39;</span><span class="p">]:</span>
                 <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  === Event statistics ===</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> | </span><span class="si">{1:&lt;5s}</span><span class="s1"> | </span><span class="si">{2:&lt;10s}</span><span class="s1"> | </span><span class="si">{3:&lt;10s}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;40s}</span><span class="s1"> | </span><span class="si">{1:&lt;5s}</span><span class="s1"> | </span><span class="si">{2:&lt;10s}</span><span class="s1"> | </span><span class="si">{3:&lt;10s}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="s1">&#39;Event label&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Count&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Total Len&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;Avg Len&#39;</span>
                 <span class="p">)</span>
 
-                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> + </span><span class="si">{1:&lt;5s}</span><span class="s1"> + </span><span class="si">{2:10s}</span><span class="s1"> + </span><span class="si">{3:10s}</span><span class="s1"> +</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">20</span><span class="p">,</span>
+                <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;40s}</span><span class="s1"> + </span><span class="si">{1:&lt;5s}</span><span class="s1"> + </span><span class="si">{2:10s}</span><span class="s1"> + </span><span class="si">{3:10s}</span><span class="s1"> +</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">40</span><span class="p">,</span>
                     <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span>
                     <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span>
                     <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">10</span>
                 <span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">event_id</span><span class="p">,</span> <span class="n">event_label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="s1">&#39;event_label_list&#39;</span><span class="p">]):</span>
-                    <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> | </span><span class="si">{1:5d}</span><span class="s1"> | </span><span class="si">{2:10.2f}</span><span class="s1"> | </span><span class="si">{3:10.2f}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">event_label</span><span class="p">,</span>
+                    <span class="n">string_data</span> <span class="o">+=</span> <span class="s1">&#39;  </span><span class="si">{0:&lt;40s}</span><span class="s1"> | </span><span class="si">{1:5d}</span><span class="s1"> | </span><span class="si">{2:10.2f}</span><span class="s1"> | </span><span class="si">{3:10.2f}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">event_label</span><span class="p">[:</span><span class="mi">38</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;..&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event_label</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">38</span> <span class="k">else</span> <span class="n">event_label</span><span class="p">,</span>
                         <span class="nb">int</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">][</span><span class="n">event_id</span><span class="p">]),</span>
                         <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">][</span><span class="n">event_id</span><span class="p">],</span>
                         <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">][</span><span class="s1">&#39;avg_length&#39;</span><span class="p">][</span><span class="n">event_id</span><span class="p">]</span>
@@ -1517,7 +1530,7 @@
 <span class="sd">            - [file(string)]</span>
 <span class="sd">            - [event_onset (float)][tab][event_offset (float)]</span>
 <span class="sd">            - [file(string)][scene_label(string)]</span>
-<span class="sd">            - [file(string)][scene_label(string)][location_identifier(string)]</span>
+<span class="sd">            - [file(string)][scene_label(string)][identifier(string)]</span>
 <span class="sd">            - [event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</span>
 <span class="sd">            - [file(string)][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</span>
 <span class="sd">            - [file(string)[tab][scene_label][tab][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</span>
@@ -1576,12 +1589,12 @@
                         <span class="p">)</span>
 
                     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">row_format</span> <span class="o">==</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
-                        <span class="c1"># Format: [file scene_label location_identifier]</span>
+                        <span class="c1"># Format: [file scene_label identifier]</span>
                         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                             <span class="n">MetaDataItem</span><span class="p">({</span>
                                 <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                 <span class="s1">&#39;scene_label&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                                <span class="s1">&#39;location_identifier&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                <span class="s1">&#39;identifier&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                             <span class="p">})</span>
                         <span class="p">)</span>
 
@@ -1605,6 +1618,7 @@
                                 <span class="s1">&#39;event_label&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
                             <span class="p">})</span>
                         <span class="p">)</span>
+
                     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">row_format</span> <span class="o">==</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">]:</span>
                         <span class="c1"># Format: [file event_label event_onset  event_offset]</span>
                         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1615,6 +1629,20 @@
                                 <span class="s1">&#39;event_label&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                             <span class="p">})</span>
                         <span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">row_format</span> <span class="o">==</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+                        <span class="c1"># Format: [file event_onset  event_offset    event_label identifier]</span>
+                        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="n">MetaDataItem</span><span class="p">({</span>
+                                <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                <span class="s1">&#39;event_onset&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                                <span class="s1">&#39;event_offset&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                                <span class="s1">&#39;event_label&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                                <span class="s1">&#39;identifier&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                            <span class="p">})</span>
+                        <span class="p">)</span>
+
+
                     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="n">row_format</span> <span class="o">==</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
                         <span class="c1"># Format: [file scene_label event_onset  event_offset    event_label]</span>
                         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1641,7 +1669,7 @@
                         <span class="p">)</span>
 
                     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span> <span class="ow">and</span> <span class="n">row_format</span> <span class="o">==</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
-                        <span class="c1"># Format: [file scene_label event_onset event_offset event_label source_label location_identifier]</span>
+                        <span class="c1"># Format: [file scene_label event_onset event_offset event_label source_label identifier]</span>
                         <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                             <span class="n">MetaDataItem</span><span class="p">({</span>
                                 <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -1650,7 +1678,7 @@
                                 <span class="s1">&#39;event_offset&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
                                 <span class="s1">&#39;event_label&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
                                 <span class="s1">&#39;source_label&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-                                <span class="s1">&#39;location_identifier&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                                <span class="s1">&#39;identifier&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
                             <span class="p">})</span>
                         <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>

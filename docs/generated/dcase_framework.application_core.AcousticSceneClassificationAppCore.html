@@ -135,6 +135,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul class="current">
@@ -353,7 +361,7 @@
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -509,6 +517,7 @@
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utils.html#timer">Timer</a><ul>
@@ -785,37 +794,40 @@ Default value &#8220;FancyLogger&#8221;</p>
 <tr class="row-odd"><td><a class="reference internal" href="#dcase_framework.application_core.AcousticSceneClassificationAppCore.__init__" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Constructor</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">check_resources</span></code>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction"><code class="xref py py-obj docutils literal"><span class="pre">feature_extraction</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Feature extraction stage</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization"><code class="xref py py-obj docutils literal"><span class="pre">feature_normalization</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization"><code class="xref py py-obj docutils literal"><span class="pre">feature_normalization</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Feature normalization stage</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize"><code class="xref py py-obj docutils literal"><span class="pre">initialize</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize"><code class="xref py py-obj docutils literal"><span class="pre">initialize</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Initialize application</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">model_information</span></code>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">model_information</span></code>(*args,&nbsp;**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list"><code class="xref py py-obj docutils literal"><span class="pre">show_dataset_list</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_dataset_list"><code class="xref py py-obj docutils literal"><span class="pre">show_dataset_list</span></code></a>()</td>
 <td>List of datasets available</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">show_eval</span></code>()</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">show_eval</span></code>()</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">show_parameter_set_list</span></code>(set_list)</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">show_parameter_set_list</span></code>(set_list)</td>
 <td>List of datasets available</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters"><code class="xref py py-obj docutils literal"><span class="pre">show_parameters</span></code></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.show_parameters"><code class="xref py py-obj docutils literal"><span class="pre">show_parameters</span></code></a>()</td>
 <td>Show parameters</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation"><code class="xref py py-obj docutils literal"><span class="pre">system_evaluation</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation"><code class="xref py py-obj docutils literal"><span class="pre">system_evaluation</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>System evaluation stage.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing"><code class="xref py py-obj docutils literal"><span class="pre">system_testing</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing"><code class="xref py py-obj docutils literal"><span class="pre">system_testing</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>System testing stage</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training"><code class="xref py py-obj docutils literal"><span class="pre">system_training</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training"><code class="xref py py-obj docutils literal"><span class="pre">system_training</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>System training stage</td>
 </tr>
 </tbody>

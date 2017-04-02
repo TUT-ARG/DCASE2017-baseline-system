@@ -73,8 +73,8 @@ The main baseline system implements following approach:
 
 In addition to this, Gaussian mixture model based system is included for the comparison.
 
-The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_
-under Linux environment.
+The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_,
+and it can be used in Linux, Windows and Mac platforms.
 
 More about the :ref:`baseline system<system_description>`.
 
@@ -96,8 +96,8 @@ More about :ref:`applications<applications>`.
 Getting started
 ---------------
 
-1. Install requirements with command: ``pip install -r requirements.txt``
-2. Run the application with default settings: ``python applications/task1.py``, ``python applications/task2.py``, and ``python applications/task3.py``
+1. Install requirements with command: ``pip install -r requirements.txt``, :ref:`installation details<install>`.
+2. Run the application with default settings: ``python applications/task1.py``, ``python applications/task2.py``, and ``python applications/task3.py``,  :ref:`usage details<usage_tutorial>`.
 
 DCASE Framework
 ---------------
@@ -132,6 +132,8 @@ Contents
     install
     usage_tutorial
     parameterization
+
+    reproducibility
 
 .. toctree::
     :caption: DCASE Framework

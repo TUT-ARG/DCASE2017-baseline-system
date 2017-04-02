@@ -133,6 +133,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -351,7 +359,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -507,6 +515,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#timer">Timer</a><ul>
@@ -588,6 +597,7 @@
 <span class="sd">    get_byte_string</span>
 <span class="sd">    argument_file_exists</span>
 <span class="sd">    filelist_exists</span>
+<span class="sd">    posix_path</span>
 
 <span class="sd">Timer</span>
 <span class="sd">^^^^^</span>
@@ -609,8 +619,6 @@
 
 <span class="sd">    SuppressStdoutAndStderr</span>
 
-
-
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -623,6 +631,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">logging.config</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
 
 
 <div class="viewcode-block" id="get_parameter_hash"><a class="viewcode-back" href="../../generated/dcase_framework.utils.get_parameter_hash.html#dcase_framework.utils.get_parameter_hash">[docs]</a><span class="k">def</span> <span class="nf">get_parameter_hash</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
@@ -805,6 +814,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    filelist : dict of paths</span>
 <span class="sd">        List containing paths to files</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    bool</span>
@@ -814,9 +824,48 @@
     <span class="k">return</span> <span class="nb">all</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filelist</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.html#dcase_framework.utils.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Timer class</span>
+<div class="viewcode-block" id="posix_path"><a class="viewcode-back" href="../../generated/dcase_framework.utils.posix_path.html#dcase_framework.utils.posix_path">[docs]</a><span class="k">def</span> <span class="nf">posix_path</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts path to POSIX format</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Path</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;/&#39;</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">check_pkg_resources</span><span class="p">(</span><span class="n">package_requirement</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">working_set</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">WorkingSet</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">working_set</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">package_requirement</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">VersionConflict</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Version conflict, update package [pip install </span><span class="si">{package_requirement}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">package_requirement</span><span class="o">=</span><span class="n">package_requirement</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">raise</span>
+    <span class="k">except</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">DistributionNotFound</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Package not found, install package [pip install </span><span class="si">{package_requirement}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">package_requirement</span><span class="o">=</span><span class="n">package_requirement</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.html#dcase_framework.utils.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Timer class&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Timer.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.utils.Timer.html#dcase_framework.utils.Timer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Initialize internal properties</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="kc">None</span>
@@ -880,8 +929,7 @@
 
 <span class="sd">    A context manager for doing a &quot;deep suppression&quot; of stdout and stderr in</span>
 <span class="sd">    Python, i.e. will suppress all print, even if the print originates in a</span>
-<span class="sd">    compiled C/Fortran sub-function.</span>
-<span class="sd">       This will not suppress raised exceptions, since exceptions are printed</span>
+<span class="sd">    compiled C/Fortran sub-function. This will not suppress raised exceptions, since exceptions are printed</span>
 <span class="sd">    to stderr just before a script exits, and after the context manager has</span>
 <span class="sd">    exited (at least, I think that is why it lets exceptions through).</span>
 
@@ -889,6 +937,7 @@
 <span class="sd">    http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="SuppressStdoutAndStderr.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.utils.SuppressStdoutAndStderr.html#dcase_framework.utils.SuppressStdoutAndStderr.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Open a pair of null files</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDWR</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>

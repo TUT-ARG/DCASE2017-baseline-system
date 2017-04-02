@@ -14,6 +14,7 @@ dcase_framework.application_core.AcousticSceneClassificationAppCore
    .. autosummary::
    
       ~AcousticSceneClassificationAppCore.__init__
+      ~AcousticSceneClassificationAppCore.check_resources
       ~AcousticSceneClassificationAppCore.feature_extraction
       ~AcousticSceneClassificationAppCore.feature_normalization
       ~AcousticSceneClassificationAppCore.initialize

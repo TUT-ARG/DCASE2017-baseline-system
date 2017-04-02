@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>System description &mdash; DCASE2017 Baseline 1.0 documentation</title>
+  <title>Reproducibility &mdash; DCASE2017 Baseline 1.0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="index.html"/>
-        <link rel="next" title="Applications" href="applications.html"/>
-        <link rel="prev" title="Introduction" href="index.html"/> 
+        <link rel="next" title="Introduction" href="framework.html"/>
+        <link rel="prev" title="Parameterization" href="parameterization.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -86,10 +86,10 @@
             
                 <p class="caption"><span class="caption-text">Baseline system</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">System description</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gmm-based-approach">GMM based approach</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#processing-blocks">Processing blocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_description.html">System description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_description.html#gmm-based-approach">GMM based approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_description.html#processing-blocks">Processing blocks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Applications</a><ul>
@@ -134,12 +134,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#blas-libraries">BLAS libraries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#intel-math-kernel">Intel Math Kernel</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-baseline-system">Running the baseline system</a></li>
 </ul>
 </li>
 </ul>
@@ -563,7 +563,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>System description</li>
+    <li>Reproducibility</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -575,334 +575,56 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="system-description">
-<span id="id1"></span><h1>System description<a class="headerlink" href="#system-description" title="Permalink to this headline">¶</a></h1>
-<div class="figure" id="id4">
-<a class="reference internal image-reference" href="_images/system_approach.svg"><img alt="_images/system_approach.svg" src="_images/system_approach.svg" width="100%" /></a>
-<p class="caption"><span class="caption-text">System block diagram.</span></p>
-</div>
-<div class="section" id="mlp-based-system-dcase2017-baseline">
-<h2>MLP based system, DCASE2017 baseline<a class="headerlink" href="#mlp-based-system-dcase2017-baseline" title="Permalink to this headline">¶</a></h2>
-<p>A multilayer perceptron based system is selected as baseline system for DCASE2017. The main structure of the system is
-close to the current state-of-art systems which are based on recurrent neural networks (RNN) and
-convolutional neural networks (CNN), and therefore it provides a good starting point for further development. The system is
-implemented around <a class="reference external" href="https://keras.io/">Keras</a>, a high-level neural networks API written in Python. Keras works on top
-of multiple computation backends, of which <a class="reference external" href="http://deeplearning.net/software/theano/">Theano</a> was chosen for this system.</p>
-<p>System details:</p>
+  <div class="section" id="reproducibility">
+<span id="id1"></span><h1>Reproducibility<a class="headerlink" href="#reproducibility" title="Permalink to this headline">¶</a></h1>
+<p>The baseline system is based on <a class="reference external" href="https://keras.io/">Keras</a> while using <a class="reference external" href="http://deeplearning.net/software/theano/">Theano</a> as backend.
+Theano can be used seamlessly either on CPU or on GPU, however, the learned neural networks from these two modes will not be exactly the same.
+Theano can produce consistent results on <strong>same computer</strong> when used in CPU mode, if numpy random seed is fixed prior to importing Keras. In GPU mode, consistent randomization values are generally hard to achieve due to the heavy usage of parallel computing. Fortunately, results are usually very close each other and within acceptable limits to enable informed system development. However, the role of a baseline system is to have results which are reproducible on most of the normal computer setups.</p>
+<p>In order to get consistent results across <strong>different computer setups</strong> when using Keras and Theano, the following aspects should be taken into account:</p>
 <ul class="simple">
-<li><em>Acoustic features</em>: Log mel-band energies extracted in 40ms windows with 20ms hop size.</li>
-<li><em>Machine learning</em>: neural network approach using multilayer perceptron (MLP) type of network (2 layers with 50 neurons each, and 20% dropout between layers).</li>
+<li>Use exactly the same Python version, and Python library versions. Use pip freeze command and <code class="docutils literal"><span class="pre">requirements.txt</span></code> to document the libraries.</li>
+<li>Do not rely on dictionary keys to be in fixed order. Sort keys before usage to ensure consistent data processing order, or use <a class="reference external" href="https://docs.python.org/2/library/collections.html#collections.OrderedDict">OrderedDict</a> data type.</li>
+<li>Set <code class="docutils literal"><span class="pre">random.seed</span></code> at the beginning of the application.</li>
+<li>Set <code class="docutils literal"><span class="pre">numpy.random.seed</span></code> before Keras is imported.</li>
+<li>Use Theano in CPU mode.</li>
+<li>Use same BLAS library for the CPU computation, use either ATLAS or Inter Math Kernel (in compatibile mode) library to get same results regardless of underlying CPU architecture.</li>
+<li>Run the system in single thread mode to avoid inconsistencies caused by threading.</li>
 </ul>
-<p><strong>System hyperparameters</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="19%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="35%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Application</th>
-<th class="head">Scene
-Classification
-(Task 1)</th>
-<th class="head">Binary
-SED
-(Task 2)</th>
-<th class="head">Multiclass
-SED
-(Task 3)</th>
-<th class="head">&#160;</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="5"><strong>Audio input</strong></td>
-</tr>
-<tr class="row-odd"><td>Channels</td>
-<td colspan="4">1, in case of multiple audio channels, they are averaged into one channel.</td>
-</tr>
-<tr class="row-even"><td>Normalization</td>
-<td colspan="4">No audio normalization</td>
-</tr>
-<tr class="row-odd"><td colspan="5"><strong>Acoustic features</strong>  (<a class="reference external" href="https://librosa.github.io/librosa/">Librosa 0.5</a>)</td>
-</tr>
-<tr class="row-even"><td>Type</td>
-<td colspan="4">Log mel energies</td>
-</tr>
-<tr class="row-odd"><td>Window length</td>
-<td colspan="4">40 ms</td>
-</tr>
-<tr class="row-even"><td>Hop length</td>
-<td colspan="4">20 ms</td>
-</tr>
-<tr class="row-odd"><td>Mel bands</td>
-<td colspan="4">40</td>
-</tr>
-<tr class="row-even"><td colspan="5"><strong>Feature vector</strong></td>
-</tr>
-<tr class="row-odd"><td>Aggregation</td>
-<td colspan="4">5 frame context</td>
-</tr>
-<tr class="row-even"><td>Length</td>
-<td colspan="4">200</td>
-</tr>
-<tr class="row-odd"><td colspan="5"><strong>Neural Network</strong> (<a class="reference external" href="https://keras.io">Keras 2.0</a> +
-<a class="reference external" href="http://deeplearning.net/software/theano/">Theano</a> with CPU device)</td>
-</tr>
-<tr class="row-even"><td>Layers</td>
-<td colspan="4">2 <a class="reference external" href="https://keras.io/layers/core/">Dense layers</a>
-with 20% <a class="reference external" href="https://keras.io/layers/core/">Dropout layers</a> between.</td>
-</tr>
-<tr class="row-odd"><td>Hidden units per
-layer</td>
-<td colspan="4">50</td>
-</tr>
-<tr class="row-even"><td>Initialization</td>
-<td colspan="4"><a class="reference external" href="https://keras.io/initializers/">Uniform</a></td>
-</tr>
-<tr class="row-odd"><td>Activation</td>
-<td colspan="4"><a class="reference external" href="https://keras.io/activations/">ReLU</a></td>
-</tr>
-<tr class="row-even"><td>Output layer type</td>
-<td>Softmax</td>
-<td>Sigmoid</td>
-<td>Sigmoid</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Optimizer</td>
-<td colspan="4"><a class="reference external" href="https://keras.io/optimizers/">Adam</a></td>
-</tr>
-<tr class="row-even"><td>Learning rate</td>
-<td colspan="3">0.001</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Epochs</td>
-<td colspan="4">200</td>
-</tr>
-<tr class="row-even"><td>Batch size</td>
-<td colspan="4">256</td>
-</tr>
-<tr class="row-odd"><td>Number of parameters</td>
-<td colspan="4">12906</td>
-</tr>
-<tr class="row-even"><td>Decision</td>
-<td>Binarization per
-frame + majority
-vote</td>
-<td colspan="2">Binarization per frame +
-sliding median filtering</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Median filter window</td>
-<td>&#160;</td>
-<td>0.54 sec</td>
-<td>0.54 sec</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>Binarization
-threshold</td>
-<td colspan="3">0.5</td>
-<td>&#160;</td>
-</tr>
-</tbody>
-</table>
+<div class="section" id="blas-libraries">
+<span id="blas"></span><h2>BLAS libraries<a class="headerlink" href="#blas-libraries" title="Permalink to this headline">¶</a></h2>
+<p>When running Theano in CPU mode, the computation relies on system level <a class="reference external" href="https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms">BLAS</a> library (this is not a Python library).
+BLAS libraries usually have implementations for mathematical operations which are optimized for speed, not for accuracy, and the particular implementation is selected based on the CPU architecture the library is run. This approach can produce slightly deviating results from CPU to CPU.</p>
+<p>Theano supports three common BLAS libraries: <a class="reference external" href="http://math-atlas.sourceforge.net/">ATLAS</a>, <a class="reference external" href="http://www.openblas.net/">OpenBLAS</a>, and <a class="reference external" href="https://software.intel.com/en-us/intel-mkl">Intel Math Kernel Library (MKL)</a>. In our tests, we found that these libraries can produce deviating results when run, for example, on Intel processors or on AMD processors. The ATLAS and MKL (with correct flags) libraries were found to give consistent results across different computers supporting SSE2 processor instruction set, whereas OpenBLAS failed to produce consistent results.</p>
+<div class="section" id="intel-math-kernel">
+<h3>Intel Math Kernel<a class="headerlink" href="#intel-math-kernel" title="Permalink to this headline">¶</a></h3>
+<p>Intel Math Kernel (MKL) is usually faster than ATLAS, and therefore it was selected to be used for the baseline system. MKL is a commercial library which can be downloaded for free with <a class="reference external" href="https://registrationcenter.intel.com/en/forms/?productid=2558&amp;licensetype=2">Named-User Licence from Intel</a>. Easiest way to get access to MKL for Python development is to use <a class="reference external" href="https://www.continuum.io/why-anaconda">Anaconda Python distribution</a> which comes readily with MKL <a class="reference external" href="https://www.continuum.io/blog/developer-blog/anaconda-25-release-now-mkl-optimizations">installation</a>.</p>
+<p>To get MKL to behave consistently across computer setups, conditional numerical reproducibility should be set into compatible mode with <code class="docutils literal"><span class="pre">MKL_CBWR=COMPATIBLE</span></code> environmental variable (see more <a class="reference external" href="https://software.intel.com/en-us/node/528408">here</a>). Furthermore, threading should be disabled by using <code class="docutils literal"><span class="pre">MKL_NUM_THREADS=1</span></code> and <code class="docutils literal"><span class="pre">MKL_DYNAMIC=FALSE</span></code> environmental variables.</p>
 </div>
-<div class="section" id="gmm-based-approach">
-<h2>GMM based approach<a class="headerlink" href="#gmm-based-approach" title="Permalink to this headline">¶</a></h2>
-<p>A secondary system based on Gaussian mixture models is also included in the baseline system
-in order to enable comparison to the traditional systems presented in the literature.
-The implementation of the GMM-based system is very similar to the baseline system used in
-DCASE2016 Challenge for Task 1 and Task 3. See more details about the system used for DCASE2016:</p>
-<p>Annamaria Mesaros, Toni Heittola, and Tuomas Virtanen, &#8220;<em>TUT database for acoustic scene classification and sound event detection</em>&#8221;. In 24th European Signal Processing Conference 2016 (EUSIPCO 2016). Budapest, Hungary, 2016. [<a class="reference external" href="http://www.cs.tut.fi/~mesaros/pubs/mesaros_eusipco2016-dcase.pdf">PDF</a>]</p>
-<p>System details:</p>
-<ul class="simple">
-<li><em>Acoustic features</em>:  20 MFCC static coefficients (including 0th) + 20 delta MFCC coefficients + 20 acceleration MFCC coefficients = 60 values, calculated in 40 ms analysis window with 50% hop size</li>
-<li><em>Machine learning</em>: Gaussian mixture models, 16 Gaussians per class model</li>
-</ul>
-<p><strong>System hyperparameters</strong></p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="19%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="35%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Application</th>
-<th class="head">Scene
-Classification
-(Task 1)</th>
-<th class="head">Binary
-SED
-(Task 2)</th>
-<th class="head">Multiclass
-SED
-(Task 3)</th>
-<th class="head">&#160;</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="5"><strong>Audio input</strong></td>
-</tr>
-<tr class="row-odd"><td>Channels</td>
-<td colspan="4">1, in case of multiple audio channels, they are averaged into one channel.</td>
-</tr>
-<tr class="row-even"><td>Normalization</td>
-<td colspan="4">No audio normalization</td>
-</tr>
-<tr class="row-odd"><td colspan="5"><strong>Acoustic features</strong>  (<a class="reference external" href="https://librosa.github.io/librosa/">Librosa 0.5</a>)</td>
-</tr>
-<tr class="row-even"><td>Type</td>
-<td colspan="3">MFCC (static, delta, acceleration)</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Window length</td>
-<td colspan="3">40 ms</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>Hop length</td>
-<td colspan="3">20 ms</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Mel bands</td>
-<td colspan="4">40</td>
-</tr>
-<tr class="row-even"><td>Number of
-coefficients</td>
-<td colspan="3">20</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Delta window</td>
-<td colspan="3">9</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td colspan="4"><strong>Feature vector</strong></td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Aggregation</td>
-<td>mfcc+delta+acc</td>
-<td colspan="2">mfcc (0th omitted) + delta+acc</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>Length</td>
-<td>60</td>
-<td colspan="2">59</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td colspan="5"><strong>Gaussian Mixtures</strong> (<a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html">Sklearn GaussianMixture</a>)</td>
-</tr>
-<tr class="row-even"><td>Number of Gaussians</td>
-<td colspan="3">16</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Covariance</td>
-<td colspan="3">diagonal</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>Number of parameters</td>
-<td>1936</td>
-<td colspan="2">1904</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Modelling</td>
-<td>One model
-per scene
-class</td>
-<td colspan="2">Model pair per event class,
-negative model and positive model.</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>Decision</td>
-<td>Likelihood
-accumulation +
-maximum</td>
-<td colspan="2">Sliding likelihood accumulation +
-likelihood ratio + thresholding</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>Accumulation window</td>
-<td>Signal length</td>
-<td>0.5 sec</td>
-<td>1.0 sec</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>Decision threshold</td>
-<td>&#160;</td>
-<td>200</td>
-<td>100</td>
-<td>&#160;</td>
-</tr>
-</tbody>
-</table>
 </div>
-<div class="section" id="processing-blocks">
-<h2>Processing blocks<a class="headerlink" href="#processing-blocks" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-left" id="id5">
-<a class="reference internal image-reference" href="_images/system_processing_blocks.svg"><img alt="_images/system_processing_blocks.svg" src="_images/system_processing_blocks.svg" width="90%" /></a>
-<p class="caption"><span class="caption-text">Processing blocks of the system.</span></p>
+<div class="section" id="running-the-baseline-system">
+<h2>Running the baseline system<a class="headerlink" href="#running-the-baseline-system" title="Permalink to this headline">¶</a></h2>
+<p>The baseline system is delivered with <a class="reference external" href="https://www.docker.com/">Docker</a> software container which will allow the system to run inside a virtual operating system environment to produce consistent system output. Docker provides operating system level virtualization on Linux and Windows platforms, and the provided Docker container contains a minimal linux OS, additional system libraries, and minimal Anaconda Python installation with required Python libraries.</p>
+<p>To install Docker Community Edition (Docker CE), follow the instructions from <a class="reference external" href="https://docs.docker.com/engine/installation/">Docker documentation</a>.</p>
+<p>There is a <code class="docutils literal"><span class="pre">Makefile</span></code> in <code class="docutils literal"><span class="pre">docker</span></code> directory to help usage of the Docker container.
+When container is launched first time, Docker will create the container image by downloading and installing the needed libraries (defined in <code class="docutils literal"><span class="pre">Dockerfile</span></code>).</p>
+<p>To generate the baseline system results shown in <a class="reference internal" href="applications.html#applications"><span class="std std-ref">applications page</span></a> run (example given for Task 1):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docker</span><span class="o">/</span> <span class="n">task1</span>
+</pre></div>
 </div>
-<p>The system implements the following basic processing blocks:</p>
-<ol class="arabic simple">
-<li><strong>Initialization</strong>, see <a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize"><code class="xref py py-meth docutils literal"><span class="pre">initialize()</span></code></a></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li>Prepares the dataset:<ul>
-<li>Downloads the dataset from the Internet if needed</li>
-<li>Extracts the dataset package if needed</li>
-<li>Makes sure that the meta files are appropriately formatted</li>
-</ul>
-</li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="2">
-<li><strong>Feature extraction</strong>, see <a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_extraction"><code class="xref py py-meth docutils literal"><span class="pre">feature_extraction()</span></code></a></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li>Goes through all the training material and extracts the acoustic features</li>
-<li>Features are stored file-by-file on the local disk (pickle files)</li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="3">
-<li><strong>Feature normalization</strong>, see <a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.feature_normalization"><code class="xref py py-meth docutils literal"><span class="pre">feature_normalization()</span></code></a></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li>Goes through the training material in evaluation folds, and calculates global mean and std of the data per fold.</li>
-<li>Stores the normalization factors per fold(pickle files)</li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="4">
-<li><strong>System training</strong>, see <a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_training"><code class="xref py py-meth docutils literal"><span class="pre">system_training()</span></code></a></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li>Loads normalizers</li>
-<li>Loads training material file-by-file and forms the feature matrix, normalizes the matrix and optionally aggregates features</li>
-<li>Trains the system with the features and metadata</li>
-<li>Stores the trained acoustic models on the local disk (pickle files)</li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="5">
-<li><strong>System testing</strong>, see <a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_testing"><code class="xref py py-meth docutils literal"><span class="pre">system_testing()</span></code></a></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li>Goes through the testing material and does the classification / detection</li>
-<li>Stores the results (text files)</li>
-</ul>
-</div></blockquote>
-<ol class="arabic simple" start="6">
-<li><strong>System evaluation</strong>, see <a class="reference internal" href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation" title="dcase_framework.application_core.AcousticSceneClassificationAppCore.system_evaluation"><code class="xref py py-meth docutils literal"><span class="pre">system_evaluation()</span></code></a></li>
-</ol>
-<blockquote>
-<div><ul class="simple">
-<li>Reads the ground truth and the output of the system and calculates evaluation metrics</li>
-</ul>
-</div></blockquote>
+<p>or:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docker</span>
+<span class="n">make</span> <span class="n">task1</span>
+</pre></div>
+</div>
+<p>To open bash shell inside the container environment:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docker</span><span class="o">/</span> <span class="n">bash</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docker</span>
+<span class="n">make</span> <span class="n">bash</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -913,10 +635,10 @@ likelihood ratio + thresholding</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="applications.html" class="btn btn-neutral float-right" title="Applications" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="framework.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Introduction" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="parameterization.html" class="btn btn-neutral" title="Parameterization" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

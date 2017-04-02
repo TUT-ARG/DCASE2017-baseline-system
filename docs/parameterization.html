@@ -38,7 +38,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="index.html"/>
-        <link rel="next" title="Introduction" href="framework.html"/>
+        <link rel="next" title="Reproducibility" href="reproducibility.html"/>
         <link rel="prev" title="Usage" href="usage_tutorial.html"/> 
 
   
@@ -132,6 +132,14 @@
 <li class="toctree-l3"><a class="reference internal" href="#logging">Logging</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
 </ul>
 </li>
 </ul>
@@ -352,7 +360,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -508,6 +516,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#timer">Timer</a><ul>
@@ -727,11 +736,16 @@ Use this mode when preparing a submission to the challenge.</td>
 <td>bool</td>
 <td>Print the system progress into console using carriage return.</td>
 </tr>
-<tr class="row-odd"><td>log_system_parameters</td>
+<tr class="row-odd"><td>use_ascii_progress_bar</td>
+<td>bool</td>
+<td>Force ASCII progres bars, use this if your console does not support
+UTF-8 character set.</td>
+</tr>
+<tr class="row-even"><td>log_system_parameters</td>
 <td>bool</td>
 <td>Save system parameters into system log file.</td>
 </tr>
-<tr class="row-even"><td>log_system_progress</td>
+<tr class="row-odd"><td>log_system_progress</td>
 <td>bool</td>
 <td>Save system progress into system log file.</td>
 </tr>
@@ -1302,9 +1316,9 @@ only with keras learners.</td>
 <p>This learner is using Keras neural network implementation. See <a class="reference external" href="https://keras.io/">documentation</a>.</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="28%" />
-<col width="12%" />
-<col width="60%" />
+<col width="26%" />
+<col width="11%" />
+<col width="63%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Field name</th>
@@ -1341,9 +1355,33 @@ with GPUs. Valid only for <code class="docutils literal"><span class="pre">thean
 </tr>
 <tr class="row-even"><td>fastmath</td>
 <td>bool</td>
-<td>If true, will enable fastmath mode when cuda code is compiled.
+<td>If true, will enable fastmath mode when CUDA code is compiled.
 Div and sqrt are faster, but precision is lower. This can cause
-numerical issues some in cases. Valid only for <code class="docutils literal"><span class="pre">theano</span></code> backend.</td>
+numerical issues some in cases. Valid only for <code class="docutils literal"><span class="pre">theano</span></code> backend
+and GPU mode.</td>
+</tr>
+<tr class="row-odd"><td>optimizer</td>
+<td>string
+{fast_run |
+merge |
+fast_compile
+None}</td>
+<td>Compilation mode for theano functions.</td>
+</tr>
+<tr class="row-even"><td>openmp</td>
+<td>bool</td>
+<td>If true, Theano will use multiple cores, see
+<a class="reference external" href="http://deeplearning.net/software/theano/tutorial/multi_cores.html">more</a>.</td>
+</tr>
+<tr class="row-odd"><td>threads</td>
+<td>int</td>
+<td>Number of threads used. Use one to disable threading.</td>
+</tr>
+<tr class="row-even"><td>CNR</td>
+<td>bool</td>
+<td>Conditional numerical reproducibility for MKL BLAS. When set to True,
+compatible mode used.
+See <a class="reference external" href="https://software.intel.com/en-us/node/528408">more</a>.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><strong>mlp-&gt;validation</strong></td>
 </tr>
@@ -1888,7 +1926,7 @@ used:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="framework.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="reproducibility.html" class="btn btn-neutral float-right" title="Reproducibility" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="usage_tutorial.html" class="btn btn-neutral" title="Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

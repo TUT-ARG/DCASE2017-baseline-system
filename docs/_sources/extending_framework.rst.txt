@@ -6,6 +6,9 @@ Extending the framework
 The Framework is designed to be expandable while doing system development with it. The hierarchical class structure enables
 easy class extensions, and application cores can be injected with extended classes.
 
+To see working example how to extend the framework, check ``examples/custom.py``.
+Below detailed instructions how to extend framework with new datasets, features, and learners.
+
 Adding datasets
 ---------------
 

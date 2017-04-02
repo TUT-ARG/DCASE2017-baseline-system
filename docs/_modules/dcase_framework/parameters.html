@@ -133,6 +133,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul>
@@ -351,7 +359,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -507,6 +515,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#timer">Timer</a><ul>
@@ -796,9 +805,11 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+
 <span class="kn">from</span> <span class="nn">.files</span> <span class="k">import</span> <span class="n">ParameterFile</span>
 <span class="kn">from</span> <span class="nn">.containers</span> <span class="k">import</span> <span class="n">ContainerMixin</span><span class="p">,</span> <span class="n">DottedDict</span>
-<span class="kn">from</span> <span class="nn">IPython</span> <span class="k">import</span> <span class="n">embed</span>
+
 
 
 <div class="viewcode-block" id="ParameterContainer"><a class="viewcode-back" href="../../generated/dcase_framework.parameters.ParameterContainer.html#dcase_framework.parameters.ParameterContainer">[docs]</a><span class="k">class</span> <span class="nc">ParameterContainer</span><span class="p">(</span><span class="n">ParameterFile</span><span class="p">,</span> <span class="n">ContainerMixin</span><span class="p">):</span>
@@ -934,6 +945,7 @@
             <span class="s1">&#39;log_system_progress&#39;</span><span class="p">,</span>
             <span class="s1">&#39;log_learner_status&#39;</span><span class="p">,</span>
             <span class="s1">&#39;show_model_information&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;use_ascii_progress_bar&#39;</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;non_hashable_fields&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">non_hashable_fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;non_hashable_fields&#39;</span><span class="p">))</span>
@@ -1230,6 +1242,11 @@
                     <span class="n">make_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_preprocess_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Translate separators if in Windows</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">path_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="n">path_field</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="n">path_field</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+
         <span class="c1"># If given path is relative, make it absolute</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;path.data&#39;</span><span class="p">)):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_base</span><span class="p">,</span>
@@ -1322,7 +1339,7 @@
                     <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">param_hash</span><span class="p">:</span>
                         <span class="n">directory_name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">h</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">directory_name</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">param_hash</span>
+                    <span class="n">directory_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_directory_name</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param_hash</span><span class="o">=</span><span class="n">param_hash</span><span class="p">)</span>
 
                 <span class="n">path_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">directory_name</span><span class="p">)</span>
 
@@ -1335,6 +1352,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="s1">&#39;system_base&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="n">path_label</span><span class="p">])</span>
 
+    <span class="k">def</span> <span class="nf">_get_directory_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">param_hash</span><span class="p">):</span>
+        <span class="c1"># Use short directory names for Windows 7, as it has path length restricted to 255</span>
+        <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">and</span> <span class="n">platform</span><span class="o">.</span><span class="n">release</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;7&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">param_hash</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">param_hash</span>
+
+
     <span class="k">def</span> <span class="nf">_save_path_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">parameter_filename</span><span class="o">=</span><span class="s1">&#39;parameters.yaml&#39;</span><span class="p">):</span>
         <span class="n">path_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
         <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">structure</span><span class="p">:</span>
@@ -1344,7 +1369,7 @@
                 <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">param_hash</span><span class="p">:</span>
                     <span class="n">directory_name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">directory_name</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">param_hash</span>
+                <span class="n">directory_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_directory_name</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param_hash</span><span class="o">=</span><span class="n">param_hash</span><span class="p">)</span>
 
             <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">dotted_path</span><span class="o">=</span><span class="n">part</span><span class="p">)</span>
             <span class="n">path_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">directory_name</span><span class="p">)</span>

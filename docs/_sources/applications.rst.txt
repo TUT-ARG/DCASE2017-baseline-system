@@ -34,17 +34,19 @@ Results
 +------------------------+------------+--------+--------+--------+--------+
 | System                 | Accuracy   | 1      | 2      | 3      | 4      |
 +========================+============+========+========+========+========+
-| MLP based system,      | 73.3 %     | 74.1 % | 73.7 % | 72.6 % | 72.9 % |
+| MLP based system,      | 73.8 %     | 74.9%  | 77.6 % | 72.5 % | 70.2 % |
 | **DCASE2017 baseline** |            |        |        |        |        |
 +------------------------+------------+--------+--------+--------+--------+
-| GMM based system       | 73.5 %     | 74.6 % | 75.0 % | 73.3 % | 72.5 % |
+| GMM based system       | 74.1 %     | 74.0 % | 76.0 % | 73.1 % | 73.2 % |
 +------------------------+------------+--------+--------+--------+--------+
 
 To reproduce the results run::
 
-    python task1.py -s dcase2017,gmm
+    make -C docker/ task1
 
-*Results calculated with Python 2.7.13*
+See more about :ref:`reproducibility <reproducibility>`.
+
+*Results calculated with Python 2.7.13, Keras 2.0.2, and Theano 0.9.0*
 
 
 .. _task2:
@@ -74,17 +76,19 @@ Results
 +------------------------+------------+---------+
 | System                 | ER         | F-score |
 +========================+============+=========+
-| MLP based system,      | 0.57       | 71.1 %  |
+| MLP based system,      | 0.57       | 70.7 %  |
 | **DCASE2017 baseline** |            |         |
 +------------------------+------------+---------+
-| GMM based system       | 0.61       | 70.6 %  |
+| GMM based system       | 0.56       | 72.4 %  |
 +------------------------+------------+---------+
 
 To reproduce these results run::
 
-    python task2.py -s dcase2017,gmm
+    make -C docker/ task2
 
-*Results calculated with Python 2.7.13*
+See more about :ref:`reproducibility <reproducibility>`.
+
+*Results calculated with Python 2.7.13, Keras 2.0.2, and Theano 0.9.0*
 
 More details on the metrics calculation can be found in:
 
@@ -117,18 +121,20 @@ Results
 +------------------------+------------+----------+
 | System                 | ER         | F-score  |
 +========================+============+==========+
-| MLP based system,      | 0.76       | 51.8 %   |
+| MLP based system,      | 0.73       | 50.9 %   |
 | **DCASE2017 baseline** |            |          |
 +------------------------+------------+----------+
-| GMM based system       | 0.71       | 51.9 %   |
+| GMM based system       | 0.71       | 52.1 %   |
 +------------------------+------------+----------+
 
 
 To reproduce these results run::
 
-    python task3.py -s dcase2017,gmm
+    make -C docker/ task3
 
-*Results calculated with Python 2.7.13*
+See more about :ref:`reproducibility <reproducibility>`.
+
+*Results calculated with Python 2.7.13, Keras 2.0.2, and Theano 0.9.0*
 
 More details on the metrics calculation can be found in:
 

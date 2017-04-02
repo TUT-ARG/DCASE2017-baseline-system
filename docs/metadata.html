@@ -134,6 +134,14 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#blas-libraries">BLAS libraries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reproducibility.html#intel-math-kernel">Intel Math Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reproducibility.html#running-the-baseline-system">Running the baseline system</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">DCASE Framework</span></p>
 <ul class="current">
@@ -352,7 +360,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_onset.html">dcase_framework.metadata.MetaDataItem.event_onset</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_offset.html">dcase_framework.metadata.MetaDataItem.event_offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.location_identifier.html">dcase_framework.metadata.MetaDataItem.location_identifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.identifier.html">dcase_framework.metadata.MetaDataItem.identifier</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.source_label.html">dcase_framework.metadata.MetaDataItem.source_label</a></li>
 </ul>
 </li>
@@ -508,6 +516,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.get_byte_string.html">dcase_framework.utils.get_byte_string</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.argument_file_exists.html">dcase_framework.utils.argument_file_exists</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.filelist_exists.html">dcase_framework.utils.filelist_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.posix_path.html">dcase_framework.utils.posix_path</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#timer">Timer</a><ul>
@@ -658,8 +667,8 @@
 <tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_offset.html#dcase_framework.metadata.MetaDataItem.event_offset" title="dcase_framework.metadata.MetaDataItem.event_offset"><code class="xref py py-obj docutils literal"><span class="pre">MetaDataItem.event_offset</span></code></a></td>
 <td>Event offset</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.location_identifier.html#dcase_framework.metadata.MetaDataItem.location_identifier" title="dcase_framework.metadata.MetaDataItem.location_identifier"><code class="xref py py-obj docutils literal"><span class="pre">MetaDataItem.location_identifier</span></code></a></td>
-<td>Location identifier</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.identifier.html#dcase_framework.metadata.MetaDataItem.identifier" title="dcase_framework.metadata.MetaDataItem.identifier"><code class="xref py py-obj docutils literal"><span class="pre">MetaDataItem.identifier</span></code></a></td>
+<td>Identifier</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.source_label.html#dcase_framework.metadata.MetaDataItem.source_label" title="dcase_framework.metadata.MetaDataItem.source_label"><code class="xref py py-obj docutils literal"><span class="pre">MetaDataItem.source_label</span></code></a></td>
 <td>Source label</td>
@@ -676,7 +685,7 @@
 <li>[file(string)]</li>
 <li>[event_onset (float)][tab][event_offset (float)]</li>
 <li>[file(string)][scene_label(string)]</li>
-<li>[file(string)][scene_label(string)][location_identifier(string)]</li>
+<li>[file(string)][scene_label(string)][identifier(string)]</li>
 <li>[event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</li>
 <li>[file(string)][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</li>
 <li>[file(string)[tab][scene_label][tab][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]</li>
