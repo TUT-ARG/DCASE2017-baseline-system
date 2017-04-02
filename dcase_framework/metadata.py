@@ -56,7 +56,7 @@ Dict based class for storing meta data item (i.e. one row in meta data file).
     MetaDataItem.event_label
     MetaDataItem.event_onset
     MetaDataItem.event_offset
-    MetaDataItem.location_identifier
+    MetaDataItem.identifier
     MetaDataItem.source_label
 
 MetaDataContainer
@@ -71,9 +71,10 @@ Supported input formats:
 - [file(string)]
 - [event_onset (float)][tab][event_offset (float)]
 - [file(string)][scene_label(string)]
-- [file(string)][scene_label(string)][location_identifier(string)]
+- [file(string)][scene_label(string)][identifier(string)]
 - [event_onset (float)][tab][event_offset (float)][tab][event_label (string)]
 - [file(string)][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]
+- [file(string)][event_onset (float)][tab][event_offset (float)][tab][event_label (string)][tab][identifier(string)]
 - [file(string)[tab][scene_label][tab][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]
 - [file(string)[tab][scene_label][tab][event_onset (float)][tab][event_offset (float)][tab][event_label (string)][tab][source_label(string)]
 
@@ -122,14 +123,13 @@ Class to convert MetaDataContainer to binary matrix indicating event activity wi
 from __future__ import print_function, absolute_import
 
 from .files import ListFile
+from .utils import posix_path
 import os
 import numpy
 import csv
 import math
 import logging
 import copy
-
-from IPython import embed
 
 
 class MetaDataItem(dict):
@@ -145,6 +145,10 @@ class MetaDataItem(dict):
         dict.__init__(self, *args)
 
         # Process fields
+        if 'file' in self:
+            # Keep file paths in unix format even under Windows
+            self['file'] = posix_path(self['file'])
+
         if 'event_onset' in self:
             self['event_onset'] = float(self['event_onset'])
 
@@ -178,7 +182,7 @@ class MetaDataItem(dict):
             string_data += ' {:>8s} |'.format('---')
 
         string_data += ' {:<20s} |'.format(self.event_label if self.event_label is not None else '---')
-        string_data += ' {:<8s} |'.format(self.location_identifier if self.location_identifier is not None else '---')
+        string_data += ' {:<8s} |'.format(self.identifier if self.identifier is not None else '---')
         string_data += ' {:<8s} |'.format(self.source_label if self.source_label is not None else '---')
 
         return string_data
@@ -230,20 +234,20 @@ class MetaDataItem(dict):
         elif fields == ['file', 'scene_label']:
             return [self.file, self.scene_label]
 
-        elif fields == ['file', 'location_identifier', 'scene_label']:
-            return [self.file, self.scene_label, self.location_identifier]
+        elif fields == ['file', 'identifier', 'scene_label']:
+            return [self.file, self.scene_label, self.identifier]
 
         elif fields == ['event_label', 'event_offset', 'event_onset', 'file']:
             return [self.file, self.event_onset, self.event_offset, self.event_label]
 
-        elif fields == ['event_label', 'event_offset', 'event_onset', 'file', 'location_identifier', 'scene_label']:
+        elif fields == ['event_label', 'event_offset', 'event_onset', 'file', 'identifier', 'scene_label']:
             return [self.file, self.scene_label, self.event_onset, self.event_offset,
-                    self.event_label, self.location_identifier]
+                    self.event_label, self.identifier]
 
-        elif fields == ['event_label', 'event_offset', 'event_onset', 'file', 'location_identifier', 'scene_label',
+        elif fields == ['event_label', 'event_offset', 'event_onset', 'file', 'identifier', 'scene_label',
                         'source_label']:
             return [self.file, self.scene_label, self.event_onset, self.event_offset,
-                    self.event_label, self.source_label, self.location_identifier]
+                    self.event_label, self.source_label, self.identifier]
 
         else:
             raise ValueError('Unknown format (get_list) [{}]'.format(str(fields)))
@@ -266,7 +270,8 @@ class MetaDataItem(dict):
 
     @file.setter
     def file(self, value):
-        self['file'] = value
+        # Keep file paths in unix format even under Windows
+        self['file'] = posix_path(value)
 
     @property
     def scene_label(self):
@@ -349,8 +354,8 @@ class MetaDataItem(dict):
         self['event_offset'] = value
 
     @property
-    def location_identifier(self):
-        """Location identifier
+    def identifier(self):
+        """Identifier
 
         Returns
         -------
@@ -359,14 +364,14 @@ class MetaDataItem(dict):
 
         """
 
-        if 'location_identifier' in self:
-            return self['location_identifier']
+        if 'identifier' in self:
+            return self['identifier']
         else:
             return None
 
-    @location_identifier.setter
-    def location_identifier(self, value):
-        self['location_identifier'] = value
+    @identifier.setter
+    def identifier(self, value):
+        self['identifier'] = value
 
     @property
     def source_label(self):
@@ -470,32 +475,32 @@ class MetaDataContainer(ListFile):
         if show_stats:
             if 'scenes' in stats and 'scene_label_list' in stats['scenes'] and stats['scenes']['scene_label_list']:
                 string_data += '\n  === Scene statistics ===\n'
-                string_data += '  {0:<20s} | {1:<5s} |\n'.format('Scene label', 'Count')
-                string_data += '  {0:<20s} + {1:<5s} +\n'.format('-' * 20, '-' * 5)
+                string_data += '  {0:<40s} | {1:<5s} |\n'.format('Scene label', 'Count')
+                string_data += '  {0:<40s} + {1:<5s} +\n'.format('-' * 40, '-' * 5)
 
                 for scene_id, scene_label in enumerate(stats['scenes']['scene_label_list']):
-                    string_data += '  {0:<20s} | {1:5d} |\n'.format(scene_label,
+                    string_data += '  {0:<40s} | {1:5d} |\n'.format(scene_label,
                                                                     int(stats['scenes']['count'][scene_id]))
 
             if 'events' in stats and 'event_label_list' in stats['events'] and stats['events']['event_label_list']:
                 string_data += '\n  === Event statistics ===\n'
-                string_data += '  {0:<20s} | {1:<5s} | {2:<10s} | {3:<10s} |\n'.format(
+                string_data += '  {0:<40s} | {1:<5s} | {2:<10s} | {3:<10s} |\n'.format(
                     'Event label',
                     'Count',
                     'Total Len',
                     'Avg Len'
                 )
 
-                string_data += '  {0:<20s} + {1:<5s} + {2:10s} + {3:10s} +\n'.format(
-                    '-'*20,
+                string_data += '  {0:<40s} + {1:<5s} + {2:10s} + {3:10s} +\n'.format(
+                    '-'*40,
                     '-'*5,
                     '-'*10,
                     '-'*10
                 )
 
                 for event_id, event_label in enumerate(stats['events']['event_label_list']):
-                    string_data += '  {0:<20s} | {1:5d} | {2:10.2f} | {3:10.2f} |\n'.format(
-                        event_label,
+                    string_data += '  {0:<40s} | {1:5d} | {2:10.2f} | {3:10.2f} |\n'.format(
+                        (event_label[:38] + '..') if len(event_label) > 38 else event_label,
                         int(stats['events']['count'][event_id]),
                         stats['events']['length'][event_id],
                         stats['events']['avg_length'][event_id]
@@ -947,7 +952,7 @@ class MetaDataContainer(ListFile):
             - [file(string)]
             - [event_onset (float)][tab][event_offset (float)]
             - [file(string)][scene_label(string)]
-            - [file(string)][scene_label(string)][location_identifier(string)]
+            - [file(string)][scene_label(string)][identifier(string)]
             - [event_onset (float)][tab][event_offset (float)][tab][event_label (string)]
             - [file(string)][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]
             - [file(string)[tab][scene_label][tab][event_onset (float)][tab][event_offset (float)][tab][event_label (string)]
@@ -1006,12 +1011,12 @@ class MetaDataContainer(ListFile):
                         )
 
                     elif len(row) == 3 and row_format == [False, False, False]:
-                        # Format: [file scene_label location_identifier]
+                        # Format: [file scene_label identifier]
                         data.append(
                             MetaDataItem({
                                 'file': row[0],
                                 'scene_label': row[1],
-                                'location_identifier': row[2],
+                                'identifier': row[2],
                             })
                         )
 
@@ -1035,6 +1040,7 @@ class MetaDataContainer(ListFile):
                                 'event_label': row[3]
                             })
                         )
+
                     elif len(row) == 4 and row_format == [False, False, True, True]:
                         # Format: [file event_label event_onset  event_offset]
                         data.append(
@@ -1045,6 +1051,20 @@ class MetaDataContainer(ListFile):
                                 'event_label': row[1]
                             })
                         )
+
+                    elif len(row) == 5 and row_format == [False, True, True, False, False]:
+                        # Format: [file event_onset  event_offset    event_label identifier]
+                        data.append(
+                            MetaDataItem({
+                                'file': row[0],
+                                'event_onset': float(row[1]),
+                                'event_offset': float(row[2]),
+                                'event_label': row[3],
+                                'identifier': row[4],
+                            })
+                        )
+
+
                     elif len(row) == 5 and row_format == [False, False, True, True, False]:
                         # Format: [file scene_label event_onset  event_offset    event_label]
                         data.append(
@@ -1071,7 +1091,7 @@ class MetaDataContainer(ListFile):
                         )
 
                     elif len(row) == 7 and row_format == [False, False, True, True, False, False, False]:
-                        # Format: [file scene_label event_onset event_offset event_label source_label location_identifier]
+                        # Format: [file scene_label event_onset event_offset event_label source_label identifier]
                         data.append(
                             MetaDataItem({
                                 'file': row[0],
@@ -1080,7 +1100,7 @@ class MetaDataContainer(ListFile):
                                 'event_offset': float(row[3]),
                                 'event_label': row[4],
                                 'source_label': row[5],
-                                'location_identifier': row[6]
+                                'identifier': row[6]
                             })
                         )
                     else:
