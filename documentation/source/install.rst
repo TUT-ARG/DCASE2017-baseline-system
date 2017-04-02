@@ -15,8 +15,11 @@ or with ssh::
     git clone git@github.com:TUT-ARG/DCASE2017-baseline-system.git
 
 
-The system is developed for `Python 2.7 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_.
-Currently, the baseline system is tested only with Linux operating system.
+The system is developed for `Python 2.7 <https://www.python.org/>`_, `Python 3.5 <https://www.python.org/>`_ and `Python 3.6 <https://www.python.org/>`_.
+The system is tested to work on Linux, Windows and MacOS platforms.
+
+One can install either the official `CPython <https://www.python.org/>`_ or use some Python distribution based on it. New users are recommended to use `Anaconda Python distribution <https://www.continuum.io/>`_.
+
 
 **External modules**
 
@@ -28,13 +31,11 @@ To ensure that all external modules are installed, run command::
 
 The system uses by default `Theano <http://deeplearning.net/software/theano/>`_ as `Keras <https://keras.io/>`_ backend.
 
-There is currently a bug in the latest release version of Theano 0.8.2 which is available through pip, fortunately this is will be fixed in 0.9.0 release.
-The bug will affect task 2 system (when using GPU and binary_crossentropy as loss function).
-To fix this, make sure you have installed the release candidate version of Theano::
+There was a bug in Theano 0.8.2 version, so make sure to use 0.9.0 release. The bug will affect Task 2 system (when using GPU and binary_crossentropy as loss function). To fix this, make sure you have installed correct version of Theano::
 
-    pip install theano==0.9.0rc4
+    pip install theano==0.9.0
 
-Or latest from git with command::
+Or use latest from git with command::
 
     pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
 
