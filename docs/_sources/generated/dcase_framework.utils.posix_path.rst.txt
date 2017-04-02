@@ -1,0 +1,6 @@
+dcase_framework.utils.posix_path
+================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. autofunction:: posix_path
