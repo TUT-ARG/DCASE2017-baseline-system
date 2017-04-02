@@ -576,7 +576,7 @@ class DictFile(dict, FileMixin):
 
 class ListFile(list, FileMixin):
     """File class inherited from list, valid file formats [txt]"""
-    valid_formats = ['txt', 'yaml', 'csv']
+    valid_formats = ['txt', 'yaml']
 
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -661,16 +661,7 @@ class ListFile(list, FileMixin):
                     else:
                         self.logger.error("Something went wrong while parsing yaml file [%s]" % self.filename)
                     return
-            elif self.format == 'csv':
-                with open(self.filename, 'r') as f:
-                    lines = f.readlines()
-                    # Remove line breaks
-                    for i in range(0, len(lines)):
-                        lines[i] = lines[i].replace('\n', '')
-                    list.__init__(self, lines)
 
-                from IPython import embed
-                embed()
             else:
                 message = '{name}: Unknown format [{format}]'.format(name=self.__class__.__name__, format=self.filename)
                 self.logger.exception(message)
