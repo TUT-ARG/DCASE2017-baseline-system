@@ -226,9 +226,11 @@ import json
 import copy
 import numpy
 import itertools
+import platform
+
 from .files import ParameterFile
 from .containers import ContainerMixin, DottedDict
-from IPython import embed
+
 
 
 class ParameterContainer(ParameterFile, ContainerMixin):
@@ -364,6 +366,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             'log_system_progress',
             'log_learner_status',
             'show_model_information',
+            'use_ascii_progress_bar',
         ]
         if kwargs.get('non_hashable_fields'):
             self.non_hashable_fields.update(kwargs.get('non_hashable_fields'))
@@ -660,6 +663,11 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                     make_path(value)
 
     def _preprocess_paths(self):
+        # Translate separators if in Windows
+        if platform.system() == 'Windows':
+            for path_field in self['path']:
+                self['path'][path_field] = self['path'][path_field].replace('/', os.path.sep)
+
         # If given path is relative, make it absolute
         if not os.path.isabs(self.get_path('path.data')):
             self['path']['data'] = os.path.join(self.project_base,
@@ -752,7 +760,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                     for h in param_hash:
                         directory_name.append(part.split('.')[0]+'_'+h)
                 else:
-                    directory_name = part.split('.')[0] + '_' + param_hash
+                    directory_name = self._get_directory_name(prefix=part.split('.')[0], param_hash=param_hash)
 
                 path_parts.append(directory_name)
 
@@ -765,6 +773,14 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         else:
             return os.path.join(self['path']['system_base'], self['path'][path_label])
 
+    def _get_directory_name(self, prefix, param_hash):
+        # Use short directory names for Windows 7, as it has path length restricted to 255
+        if platform.system() == 'Windows' and platform.release() == '7':
+            return param_hash
+        else:
+            return prefix + '_' + param_hash
+
+
     def _save_path_parameters(self, base, structure, parameter_filename='parameters.yaml'):
         path_parts = [os.path.join(base[0])]
         for part in structure:
@@ -774,7 +790,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                 for h in param_hash:
                     directory_name.append(part.split('.')[0] + '_' + h)
             else:
-                directory_name = part.split('.')[0] + '_' + param_hash
+                directory_name = self._get_directory_name(prefix=part.split('.')[0], param_hash=param_hash)
 
             parameters = self.get_path(data=self, dotted_path=part)
             path_parts.append(directory_name)
