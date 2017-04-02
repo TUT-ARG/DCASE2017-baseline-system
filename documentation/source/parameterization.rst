@@ -141,6 +141,9 @@ Example section:
 +--------------------------------+--------------+----------------------------------------------------------------------+
 | print_system_progress          | bool         | Print the system progress into console using carriage return.        |
 +--------------------------------+--------------+----------------------------------------------------------------------+
+| use_ascii_progress_bar         | bool         | Force ASCII progres bars, use this if your console does not support  |
+|                                |              | UTF-8 character set.                                                 |
++--------------------------------+--------------+----------------------------------------------------------------------+
 | log_system_parameters          | bool         | Save system parameters into system log file.                         |
 +--------------------------------+--------------+----------------------------------------------------------------------+
 | log_system_progress            | bool         | Save system progress into system log file.                           |
@@ -561,96 +564,112 @@ Example section for MLP based learner:
 
 This learner is using Keras neural network implementation. See `documentation <https://keras.io/>`_.
 
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| Field name                     | Value type   | Description                                                          |
-+================================+==============+======================================================================+
-| seed                           | int          | Randomization seed. Use this to make learner behaviour               |
-|                                |              | deterministic.                                                       |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->keras**                                                                                                       |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| backend                        | string       | Keras backend selector.                                              |
-|                                | {theano |    |                                                                      |
-|                                | tensorflow}  |                                                                      |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->keras->backend_parameters**                                                                                   |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| device                         | string       | Device selector. ``cpu`` is best option to produce deterministic     |
-|                                | {cpu | gpu}  | results. All baseline results are calculated in cpu mode.            |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| floatX                         | string       | Float number type. Usually float32 used since that is compatible     |
-|                                |              | with GPUs. Valid only for ``theano`` backend.                        |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| fastmath                       | bool         | If true, will enable fastmath mode when cuda code is compiled.       |
-|                                |              | Div and sqrt are faster, but precision is lower. This can cause      |
-|                                |              | numerical issues some in cases. Valid only for ``theano`` backend.   |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->validation**                                                                                                  |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| enable                         | bool         | If true, validation set is used during the training procedure.       |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| setup_source                   | string       | Validation setup source. Valid sources:                              |
-|                                |              |                                                                      |
-|                                |              | - ``generated_scene_balanced``, balanced based on scene labels,      |
-|                                |              |   used for Task1.                                                    |
-|                                |              | - ``generated_event_file_balanced``, balanced based on events, used  |
-|                                |              |   for Task2.                                                         |
-|                                |              | - ``generated_scene_location_event_balanced``, balanced based on     |
-|                                |              |   scene, location and events. Used for Task3.                        |
-|                                |              |                                                                      |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| validation_amount              | float        | Percentage of training data selected for validation. Use value       |
-|                                |              | between 0.0-1.0.                                                     |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| seed                           | int          | Validation set generation seed. If Null, learner seed will be used.  |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->training**                                                                                                    |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| epochs                         | int          | Number of epochs.                                                    |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| batch_size                     | int          | Batch size.                                                          |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| shuffle                        | bool         | If true, training samples are shuffled at each epoch.                |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->training->callbacks**, list of parameter sets in following format. Callback called during the model training. |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| type                           | string       | Callback name, use standard keras callbacks                          |
-|                                |              | `callbacks <https://keras.io/callbacks/>`_.                          |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| parameters                     | dict         | Place inside this all parameters for the callback.                   |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->training->model->config**, list of dicts. Defining network topology.                                          |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| class_name                     | string       | Layer name. Use standard keras                                       |
-|                                |              | `core layers <https://keras.io/layers/core/>`_,                      |
-|                                |              | `convolutional layers <https://keras.io/layers/convolutional/>`_,    |
-|                                |              | `pooling layers <https://keras.io/layers/pooling/>`_,                |
-|                                |              | `recurrent layers <https://keras.io/layers/recurrent/>`_, or         |
-|                                |              | `normalization layers <https://keras.io/layers/normalization/>`_.    |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| config                         | dict         | Place inside this all parameters for the layer.                      |
-|                                |              | See Keras documentation. Magic parameter values:                     |
-|                                |              |                                                                      |
-|                                |              | - ``FEATURE_VECTOR_LENGTH``, feature vector length.                  |
-|                                |              |   This automatically inserted for input layer.                       |
-|                                |              | - ``CLASS_COUNT``, number of classes.                                |
-|                                |              |                                                                      |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->training->model**                                                                                             |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| loss                           | string       | Keras loss function name. See                                        |
-|                                |              | `Keras documentation <https://keras.io/losses/>`_.                   |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| metrics                        | list of      | Keras metric function name. See                                      |
-|                                | strings      | `Keras documentation <https://keras.io/metrics/>`_.                  |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| **mlp->training->model->optimizer**                                                                                  |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| type                           | string       | Keras optimizer name. See                                            |
-|                                |              | `Keras documentation <https://keras.io/optimizers/>`_.               |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| parameters                     | dict         | Place inside this all parameters for the optimizer.                  |
-+--------------------------------+--------------+----------------------------------------------------------------------+
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| Field name                     | Value type   | Description                                                                  |
++================================+==============+==============================================================================+
+| seed                           | int          | Randomization seed. Use this to make learner behaviour                       |
+|                                |              | deterministic.                                                               |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->keras**                                                                                                               |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| backend                        | string       | Keras backend selector.                                                      |
+|                                | {theano |    |                                                                              |
+|                                | tensorflow}  |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->keras->backend_parameters**                                                                                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| device                         | string       | Device selector. ``cpu`` is best option to produce deterministic             |
+|                                | {cpu | gpu}  | results. All baseline results are calculated in cpu mode.                    |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| floatX                         | string       | Float number type. Usually float32 used since that is compatible             |
+|                                |              | with GPUs. Valid only for ``theano`` backend.                                |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| fastmath                       | bool         | If true, will enable fastmath mode when CUDA code is compiled.               |
+|                                |              | Div and sqrt are faster, but precision is lower. This can cause              |
+|                                |              | numerical issues some in cases. Valid only for ``theano`` backend            |
+|                                |              | and GPU mode.                                                                |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| optimizer                      | string       | Compilation mode for theano functions.                                       |
+|                                | {fast_run |  |                                                                              |
+|                                | merge |      |                                                                              |
+|                                | fast_compile |                                                                              |
+|                                | None}        |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| openmp                         | bool         | If true, Theano will use multiple cores, see                                 |
+|                                |              | `more <http://deeplearning.net/software/theano/tutorial/multi_cores.html>`_. |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| threads                        | int          | Number of threads used. Use one to disable threading.                        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| CNR                            | bool         | Conditional numerical reproducibility for MKL BLAS. When set to True,        |
+|                                |              | compatible mode used.                                                        |
+|                                |              | See `more <https://software.intel.com/en-us/node/528408>`_.                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->validation**                                                                                                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, validation set is used during the training procedure.               |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| setup_source                   | string       | Validation setup source. Valid sources:                                      |
+|                                |              |                                                                              |
+|                                |              | - ``generated_scene_balanced``, balanced based on scene labels,              |
+|                                |              |   used for Task1.                                                            |
+|                                |              | - ``generated_event_file_balanced``, balanced based on events, used          |
+|                                |              |   for Task2.                                                                 |
+|                                |              | - ``generated_scene_location_event_balanced``, balanced based on             |
+|                                |              |   scene, location and events. Used for Task3.                                |
+|                                |              |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| validation_amount              | float        | Percentage of training data selected for validation. Use value               |
+|                                |              | between 0.0-1.0.                                                             |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| seed                           | int          | Validation set generation seed. If Null, learner seed will be used.          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->training**                                                                                                            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| epochs                         | int          | Number of epochs.                                                            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| batch_size                     | int          | Batch size.                                                                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| shuffle                        | bool         | If true, training samples are shuffled at each epoch.                        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->training->callbacks**, list of parameter sets in following format. Callback called during the model training.         |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| type                           | string       | Callback name, use standard keras callbacks                                  |
+|                                |              | `callbacks <https://keras.io/callbacks/>`_.                                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| parameters                     | dict         | Place inside this all parameters for the callback.                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->training->model->config**, list of dicts. Defining network topology.                                                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| class_name                     | string       | Layer name. Use standard keras                                               |
+|                                |              | `core layers <https://keras.io/layers/core/>`_,                              |
+|                                |              | `convolutional layers <https://keras.io/layers/convolutional/>`_,            |
+|                                |              | `pooling layers <https://keras.io/layers/pooling/>`_,                        |
+|                                |              | `recurrent layers <https://keras.io/layers/recurrent/>`_, or                 |
+|                                |              | `normalization layers <https://keras.io/layers/normalization/>`_.            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| config                         | dict         | Place inside this all parameters for the layer.                              |
+|                                |              | See Keras documentation. Magic parameter values:                             |
+|                                |              |                                                                              |
+|                                |              | - ``FEATURE_VECTOR_LENGTH``, feature vector length.                          |
+|                                |              |   This automatically inserted for input layer.                               |
+|                                |              | - ``CLASS_COUNT``, number of classes.                                        |
+|                                |              |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->training->model**                                                                                                     |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| loss                           | string       | Keras loss function name. See                                                |
+|                                |              | `Keras documentation <https://keras.io/losses/>`_.                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| metrics                        | list of      | Keras metric function name. See                                              |
+|                                | strings      | `Keras documentation <https://keras.io/metrics/>`_.                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **mlp->training->model->optimizer**                                                                                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| type                           | string       | Keras optimizer name. See                                                    |
+|                                |              | `Keras documentation <https://keras.io/optimizers/>`_.                       |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| parameters                     | dict         | Place inside this all parameters for the optimizer.                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
 
 **GMM**
 
