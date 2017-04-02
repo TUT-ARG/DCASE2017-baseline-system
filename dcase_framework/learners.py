@@ -82,7 +82,6 @@ from .metadata import MetaDataContainer, MetaDataItem, EventRoll
 from .utils import Timer
 
 from tqdm import tqdm
-from IPython import embed
 
 
 def scene_classifier_factory(*args, **kwargs):
@@ -172,7 +171,9 @@ class LearnerContainer(DataFile, ContainerMixin):
         elif kwargs.get('seed', None):
             self.seed = kwargs.get('seed')
         else:
-            bigint, mod = divmod(int(datetime.now().strftime("%s")) * 1000, 2**32)
+            epoch = datetime.utcfromtimestamp(0)
+            unix_now = (datetime.now() - epoch).total_seconds() * 1000.0
+            bigint, mod = divmod(int(unix_now) * 1000, 2**32)
             self.seed = mod
 
         self.logger = kwargs.get('logger',  logging.getLogger(__name__))
@@ -189,7 +190,7 @@ class LearnerContainer(DataFile, ContainerMixin):
         list of strings
             List of class labels in the model
         """
-        return self.get('class_labels', None)
+        return sorted(self.get('class_labels', None))
 
     @class_labels.setter
     def class_labels(self, value):
@@ -368,24 +369,26 @@ class KerasMixin(object):
         from keras.utils.layer_utils import count_total_params
         self.logger.debug('  ')
         self.logger.debug('  Model summary')
-        self.logger.debug('  {type:<12s} | {out:10s} | {param:6s}  | {name:20s}  | {conn:27s} | {act:10s} | {init:9s}'.format(
-            type='Layer type',
-            out='Output',
-            param='Param',
-            name='Name',
-            conn='Connected to',
-            act='Activation',
-            init='Init')
+        self.logger.debug(
+            '  {type:<12s} | {out:10s} | {param:6s}  | {name:20s}  | {conn:27s} | {act:10s} | {init:9s}'.format(
+                type='Layer type',
+                out='Output',
+                param='Param',
+                name='Name',
+                conn='Connected to',
+                act='Activation',
+                init='Init')
         )
 
-        self.logger.debug('  {name:<12s} + {out:10s} + {param:6s}  + {name:20s}  + {conn:27s} + {act:10s} + {init:9s}'.format(
-            type='-'*12,
-            out='-'*10,
-            param='-'*6,
-            name='-'*20,
-            conn='-'*27,
-            act='-'*10,
-            init='-'*9)
+        self.logger.debug(
+            '  {type:<12s} + {out:10s} + {param:6s}  + {name:20s}  + {conn:27s} + {act:10s} + {init:9s}'.format(
+                type='-'*12,
+                out='-'*10,
+                param='-'*6,
+                name='-'*20,
+                conn='-'*27,
+                act='-'*10,
+                init='-'*9)
         )
 
         for layer in self.model.layers:
@@ -418,7 +421,8 @@ class KerasMixin(object):
         self.logger.debug('  Total params         : {:,}'.format(trainable_count + non_trainable_count))
         self.logger.debug('  Trainable params     : {:,}'.format(trainable_count))
         self.logger.debug('  Non-trainable params : {:,}'.format(non_trainable_count))
-
+        self.logger.debug('  ')
+        
     def plot_model(self, filename='model.png', show_shapes=True, show_layer_names=True):
         from keras.utils.visualize_util import plot
         plot(self.model, to_file=filename, show_shapes=show_shapes, show_layer_names=show_layer_names)
@@ -495,10 +499,7 @@ class KerasMixin(object):
         with SuppressStdoutAndStderr():
             from keras.models import Sequential, load_model
 
-        if isinstance(self.model, str):
-            keras_model_filename = self.model
-        else:
-            keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
+        keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
 
         if os.path.isfile(keras_model_filename):
             with SuppressStdoutAndStderr():
@@ -521,6 +522,15 @@ class KerasMixin(object):
 
     def _setup_keras(self):
         """Setup keras backend and parameters"""
+
+        # Get BLAS library associated to numpy
+        if numpy.__config__.blas_opt_info:
+            blas_libraries = numpy.__config__.blas_opt_info['libraries']
+        else:
+            blas_libraries = []
+
+        blas_extra_info = []
+
         # Set backend and parameters before importing keras
         if self.show_extra_debug:
             self.logger.debug('  ')
@@ -528,10 +538,48 @@ class KerasMixin(object):
                 backend=self.learner_params.get_path('keras.backend', 'theano'))
             )
 
+        # Threading
+        if self.learner_params.get_path('keras.backend_parameters.threads'):
+            thread_count = self.learner_params.get_path('keras.backend_parameters.threads', 1)
+            os.environ['GOTO_NUM_THREADS'] = str(thread_count)
+            os.environ['OMP_NUM_THREADS'] = str(thread_count)
+            os.environ['MKL_NUM_THREADS'] = str(thread_count)
+            blas_extra_info.append('Threads[{threads}]'.format(threads=thread_count))
+
+            if thread_count > 1:
+                os.environ['OMP_DYNAMIC'] = 'False'
+                os.environ['MKL_DYNAMIC'] = 'False'
+            else:
+                os.environ['OMP_DYNAMIC'] = 'True'
+                os.environ['MKL_DYNAMIC'] = 'True'
+
+        # Conditional Numerical Reproducibility (CNR) for MKL BLAS library
+        if self.learner_params.get_path('keras.backend_parameters.CNR', True) and blas_libraries[0].startswith('mkl'):
+            os.environ['MKL_CBWR'] = 'COMPATIBLE'
+            blas_extra_info.append('MKL_CBWR[{mode}]'.format(mode='COMPATIBLE'))
+
+        # Show BLAS info
+        if self.show_extra_debug:
+            if numpy.__config__.blas_opt_info:
+                blas_libraries = numpy.__config__.blas_opt_info['libraries']
+                if blas_libraries[0].startswith('openblas'):
+                    self.logger.debug('  BLAS library\t[OpenBLAS]\t\t({info})'.format(info=', '.join(blas_extra_info)))
+                elif blas_libraries[0].startswith('blas'):
+                    self.logger.debug('  BLAS library\t[BLAS/Atlas]\t\t({info})'.format(info=', '.join(blas_extra_info)))
+                elif blas_libraries[0].startswith('mkl'):
+                    self.logger.debug('  BLAS library\t[MKL]\t\t({info})'.format(info=', '.join(blas_extra_info)))
+
+        # Select Keras backend
+        os.environ["KERAS_BACKEND"] = self.learner_params.get_path('keras.backend', 'theano')
+
+
         if self.learner_params.get_path('keras.backend', 'theano') == 'theano':
+            # Theano setup
+
             # Default flags
             flags = [
-                'warn.round=False'
+                #'ldflags=',
+                'warn.round=False',
             ]
 
             # Set device
@@ -552,8 +600,19 @@ class KerasMixin(object):
                         float=self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
                     )
 
-            # Set fastmath
-            if self.learner_params.get_path('keras.backend_parameters.fastmath') is not None:
+            # Set optimizer
+            if self.learner_params.get_path('keras.backend_parameters.optimizer') is not None:
+                if self.learner_params.get_path('keras.backend_parameters.optimizer') in ['fast_run', 'merge', 'fast_compile', 'None']:
+                    flags.append('optimizer='+self.learner_params.get_path('keras.backend_parameters.optimizer'))
+            else:
+                flags.append('optimizer=None')
+            if self.show_extra_debug:
+                self.logger.debug('  Theano optimizer \t[{optimizer}]'.format(
+                    optimizer=self.learner_params.get_path('keras.backend_parameters.optimizer', 'None'))
+                )
+
+            # Set fastmath for GPU mode only
+            if self.learner_params.get_path('keras.backend_parameters.fastmath') is not None and self.learner_params.get_path('keras.backend_parameters.device', 'cpu') != 'cpu':
                 if self.learner_params.get_path('keras.backend_parameters.fastmath', False):
                     flags.append('nvcc.fastmath=True')
                 else:
@@ -564,10 +623,24 @@ class KerasMixin(object):
                         flag=str(self.learner_params.get_path('keras.backend_parameters.fastmath', False)))
                     )
 
+            # Set OpenMP
+            if self.learner_params.get_path('keras.backend_parameters.openmp') is not None:
+                if self.learner_params.get_path('keras.backend_parameters.openmp', False):
+                    flags.append('openmp=True')
+                else:
+                    flags.append('openmp=False')
+
+                if self.show_extra_debug:
+                    self.logger.debug('  OpenMP\t\t[{flag}]'.format(
+                        flag=str(self.learner_params.get_path('keras.backend_parameters.openmp', False)))
+                    )
+
             # Set environmental variable for Theano
             os.environ["THEANO_FLAGS"] = ','.join(flags)
 
         elif self.learner_params.get_path('keras.backend', 'tensorflow') == 'tensorflow':
+            # Tensorflow setup
+
             # Set device
             if self.learner_params.get_path('keras.backend_parameters.device', 'cpu'):
 
@@ -587,8 +660,7 @@ class KerasMixin(object):
             self.logger.exception(message)
             raise AssertionError(message)
 
-        # Select Keras backend
-        os.environ["KERAS_BACKEND"] = self.learner_params.get_path('keras.backend', 'theano')
+
 
 
 class SceneClassifier(LearnerContainer):
@@ -668,7 +740,7 @@ class SceneClassifier(LearnerContainer):
                 self.logger.exception(message)
                 raise AssertionError(message)
 
-        return self['class_labels'][classification_result_id]
+        return self.class_labels[classification_result_id]
 
     def _generate_validation(self, annotations, validation_type='generated_scene_balanced',
                              valid_percentage=0.20, seed=None):
@@ -678,9 +750,9 @@ class SceneClassifier(LearnerContainer):
         if validation_type == 'generated_scene_balanced':
             # Get training data per scene label
             annotation_data = {}
-            for audio_filename in sorted(annotations.keys()):
+            for audio_filename in sorted(list(annotations.keys())):
                 scene_label = annotations[audio_filename]['scene_label']
-                location_id = annotations[audio_filename]['location_identifier']
+                location_id = annotations[audio_filename]['identifier']
                 if scene_label not in annotation_data:
                     annotation_data[scene_label] = {}
                 if location_id not in annotation_data[scene_label]:
@@ -764,7 +836,7 @@ class SceneClassifier(LearnerContainer):
 
     def _get_target_matrix_dict(self, data, annotations):
         activity_matrix_dict = {}
-        for audio_filename in annotations:
+        for audio_filename in sorted(list(annotations.keys())):
             frame_count = data[audio_filename].feat[0].shape[0]
             pos = self.class_labels.index(annotations[audio_filename]['scene_label'])
             roll = numpy.zeros((frame_count, len(self.class_labels)))
@@ -807,12 +879,12 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
         warnings.simplefilter("ignore", DeprecationWarning)
         from sklearn import mixture
 
-        training_files = annotations.keys()  # Collect training files
+        training_files = sorted(list(annotations.keys()))  # Collect training files
         activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
         X_training = numpy.vstack([data[x].feat[0] for x in training_files])
         Y_training = numpy.vstack([activity_matrix_dict[x] for x in training_files])
 
-        class_progress = tqdm(self['class_labels'],
+        class_progress = tqdm(self.class_labels,
                               file=sys.stdout,
                               leave=False,
                               desc='           {0:>15s}'.format('Learn '),
@@ -842,7 +914,7 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
 
         logls = numpy.ones((len(self['model']), feature_data.shape[0])) * -numpy.inf
 
-        for label_id, label in enumerate(self['class_labels']):
+        for label_id, label in enumerate(self.class_labels):
             logls[label_id] = self['model'][label].score(feature_data)
 
         return logls
@@ -872,12 +944,12 @@ class SceneClassifierGMM(SceneClassifier):
 
         from sklearn.mixture import GaussianMixture
 
-        training_files = annotations.keys()  # Collect training files
+        training_files = sorted(list(annotations.keys()))  # Collect training files
         activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
         X_training = numpy.vstack([data[x].feat[0] for x in training_files])
         Y_training = numpy.vstack([activity_matrix_dict[x] for x in training_files])
 
-        class_progress = tqdm(self['class_labels'],
+        class_progress = tqdm(self.class_labels,
                               file=sys.stdout,
                               leave=False,
                               desc='           {0:>15s}'.format('Learn '),
@@ -902,7 +974,7 @@ class SceneClassifierGMM(SceneClassifier):
     def _frame_probabilities(self, feature_data):
         logls = numpy.ones((len(self['model']), feature_data.shape[0])) * -numpy.inf
 
-        for label_id, label in enumerate(self['class_labels']):
+        for label_id, label in enumerate(self.class_labels):
             logls[label_id] = self['model'][label].score(feature_data)
 
         return logls
@@ -930,7 +1002,7 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
 
         """
 
-        training_files = annotations.keys()  # Collect training files
+        training_files = sorted(list(annotations.keys()))  # Collect training files
         if self.learner_params.get_path('validation.enable', False):
             validation_files = self._generate_validation(
                 annotations=annotations,
@@ -938,7 +1010,7 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
                 valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
                 seed=self.learner_params.get_path('validation.seed')
             )
-            training_files = list(set(training_files) - set(validation_files))
+            training_files = sorted(list(set(training_files) - set(validation_files)))
         else:
             validation_files = []
 
@@ -1193,7 +1265,7 @@ class EventDetector(LearnerContainer):
     def _get_target_matrix_dict(self, data, annotations):
 
         activity_matrix_dict = {}
-        for audio_filename in annotations:
+        for audio_filename in sorted(list(annotations.keys())):
             # Create event roll
             event_roll = EventRoll(metadata_container=annotations[audio_filename],
                                    label_list=self.class_labels,
@@ -1213,9 +1285,9 @@ class EventDetector(LearnerContainer):
         if validation_type == 'generated_scene_location_event_balanced':
             # Get training data per scene label
             annotation_data = {}
-            for audio_filename in sorted(annotations.keys()):
+            for audio_filename in sorted(list(annotations.keys())):
                 scene_label = annotations[audio_filename][0].scene_label
-                location_id = annotations[audio_filename][0].location_identifier
+                location_id = annotations[audio_filename][0].identifier
                 if scene_label not in annotation_data:
                     annotation_data[scene_label] = {}
                 if location_id not in annotation_data[scene_label]:
@@ -1329,7 +1401,7 @@ class EventDetector(LearnerContainer):
         elif validation_type == 'generated_event_file_balanced':
             # Get event amounts
             event_amounts = {}
-            for audio_filename in sorted(annotations.keys()):
+            for audio_filename in sorted(list(annotations.keys())):
                 event_label = annotations[audio_filename][0].event_label
                 if event_label not in event_amounts:
                     event_amounts[event_label] = []
@@ -1369,7 +1441,7 @@ class EventDetector(LearnerContainer):
             self.logger.exception(message)
             raise AssertionError(message)
 
-        return validation_files
+        return sorted(validation_files)
 
 
 class EventDetectorGMMdeprecated(EventDetector):
@@ -1427,7 +1499,8 @@ class EventDetectorGMMdeprecated(EventDetector):
             data_positive = []
             data_negative = []
 
-            for audio_filename, activity_matrix in iteritems(activity_matrix_dict):
+            for audio_filename in sorted(list(activity_matrix_dict.keys())):
+                activity_matrix = activity_matrix_dict[audio_filename]
 
                 positive_mask = activity_matrix[:, event_id].astype(bool)
                 # Store positive examples
@@ -1547,7 +1620,8 @@ class EventDetectorGMM(EventDetector):
             data_positive = []
             data_negative = []
 
-            for audio_filename, activity_matrix in iteritems(activity_matrix_dict):
+            for audio_filename in sorted(list(activity_matrix_dict.keys())):
+                activity_matrix = activity_matrix_dict[audio_filename]
 
                 positive_mask = activity_matrix[:, event_id].astype(bool)
                 # Store positive examples
@@ -1645,7 +1719,7 @@ class EventDetectorMLP(EventDetector, KerasMixin):
         """
 
         # Collect training files
-        training_files = annotations.keys()
+        training_files = sorted(list(annotations.keys()))
 
         # Validation files
         if self.learner_params.get_path('validation.enable', False):
@@ -1656,7 +1730,7 @@ class EventDetectorMLP(EventDetector, KerasMixin):
                                                              seed=self.learner_params.get_path('validation.seed'),
                                                              )
 
-            training_files = list(set(training_files) - set(validation_files))
+            training_files = sorted(list(set(training_files) - set(validation_files)))
         else:
             validation_files = []
 
@@ -1835,12 +1909,6 @@ class EventDetectorMLP(EventDetector, KerasMixin):
                 self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
         else:
             validation = None
-
-        #embed()#
-        #
-        #import matplotlib.pyplot as plt
-        #plt.plot(Y_training)
-        #plt.show()
 
         if self.show_extra_debug:
             self.logger.debug('  Feature vector \t[{vector:d}]'.format(vector=self._get_input_size(data=data)))
