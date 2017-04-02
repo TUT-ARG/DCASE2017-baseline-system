@@ -2,7 +2,7 @@ active_set: custom
 
 sets:
   - set_id: custom
-    description: Custom system using DCASE2017 task 1 development dataset
+    description: Custom system using DCASE2013 task 1 evaluation dataset
     general:
       overwrite: true
     dataset:
@@ -36,7 +36,7 @@ sets:
       win_length_seconds: 1
       hop_length_seconds: 1
     learner:
-      method: gmm2
+      method: svm
     learner_method_parameters:
       svm:
         C: 1
@@ -51,17 +51,6 @@ sets:
         max_iter: -1
         decision_function_shape: null
         random_state: null
-      gmm2:
-        n_components: 8                       # Number of Gaussian components
-        covariance_type: diag                 # [diag|tied|full|spherical]
-        tol: 0.001
-        reg_covar: 0
-        max_iter: 40
-        n_init: 1
-        init_params: kmeans
-        random_state: 0
-      gmm:
-        n_components: 8                       # Number of Gaussian components
     recognizer:
       frame_accumulation:
         enable: true
@@ -72,6 +61,35 @@ sets:
         enable: true
         type: maximum
 
+  - set_id: minimal
+    description: Minimal GMM based system to test that everything works
+    dataset:
+      method: development
+    dataset_method_parameters:
+      development:
+        name: TUTAcousticScenes_2017_DevelopmentSet
+        fold_list: [1]
+        evaluation_mode: folds
+    feature_stacker:
+      stacking_recipe: mfcc
+    feature_normalizer:
+      enable: true
+    feature_aggregator:
+      enable: false
+    learner:
+      method: gmm
+    learner_method_parameters:
+      gmm:
+        n_components: 1
+    recognizer:
+      frame_accumulation:
+        enable: true
+        type: sum
+      frame_binarization:
+        enable: false
+      decision_making:
+        enable: true
+        type: maximum
 
 defaults:
   # ==========================================================
@@ -94,9 +112,27 @@ defaults:
     challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
 
     print_system_progress: true         #
+    use_ascii_progress_bar: false       #
+
     log_system_parameters: false        #
     log_system_progress: false          #
     log_learner_status: false           #
+
+  # ==========================================================
+  # Paths
+  # ==========================================================
+  path:
+    data: data/
+
+    system_base: system/custom/
+    feature_extractor: feature_extractor/
+    feature_normalizer: feature_normalizer/
+    learner: learner/
+    recognizer: recognizer/
+    evaluator: evaluator/
+
+    recognizer_challenge_output: challenge_submission/custom/
+    logs: logs/
 
   # ==========================================================
   # Logging
@@ -110,12 +146,11 @@ defaults:
       disable_existing_loggers: false
       formatters:
         simple:
-          #format: "[%(asctime)s] [%(name)s]\t [%(levelname)-8s]\t %(message)s (%(filename)s:%(lineno)s)"
-          format: "[%(levelname)-8s] %(message)s"
-
-        extended:
-          #format: "[%(asctime)s] [%(name)s]\t [%(levelname)-8s]\t %(message)s \t(%(filename)s:%(lineno)s)"
+          format: "[%(levelname).1s] %(message)s"
+        normal:
           format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
+        extended:
+          format: "[%(asctime)s] [%(name)s]\t [%(levelname)-8s]\t %(message)s \t(%(filename)s:%(lineno)s)"
 
       handlers:
         console:
@@ -127,8 +162,8 @@ defaults:
         info_file_handler:
           class: logging.handlers.RotatingFileHandler
           level: INFO                                           # Max logging level to save
-          formatter: extended                                   # [simple, extended]
-          filename: ../logs/custom.info.log
+          formatter: normal                                     # [simple, extended]
+          filename: custom.info.log
           maxBytes: 10485760                                    # 10MB
           backupCount: 20
           encoding: utf8
@@ -136,8 +171,8 @@ defaults:
         debug_file_handler:
           class: logging.handlers.RotatingFileHandler
           level: DEBUG                                          # Max logging level to save
-          formatter: extended                                   # [simple, extended]
-          filename: ../logs/custom.debug.log
+          formatter: normal                                     # [simple, extended]
+          filename: custom.debug.log
           maxBytes: 10485760                                    # 10MB
           backupCount: 20
           encoding: utf8
@@ -146,7 +181,7 @@ defaults:
           class: logging.handlers.RotatingFileHandler
           level: ERROR                                          # Max logging level to save
           formatter: extended                                   # [simple, extended]
-          filename: ../logs/custom.errors.log
+          filename: custom.errors.log
           maxBytes: 10485760                                    # 10MB
           backupCount: 20
           encoding: utf8
@@ -159,23 +194,7 @@ defaults:
 
       root:
         level: INFO
-        handlers: [console, info_file_handler, debug_file_handler, error_file_handler]
-
-  # ==========================================================
-  # Paths
-  # ==========================================================
-  path:
-    data: ../data/
-
-    system_base: ../system/custom/
-    feature_extractor: feature_extractor/
-    feature_normalizer: feature_normalizer/
-    learner: learner/
-    recognizer: recognizer/
-    evaluator: evaluator/
-
-    recognizer_challenge_output: challenge_submission/custom/
-    logs: logs/
+        handlers: [console, error_file_handler, info_file_handler, debug_file_handler]
 
   # ==========================================================
   # Dataset
@@ -210,12 +229,12 @@ defaults:
       mono: true                            # [true, false]
       window: hamming_asymmetric            # [hann_asymmetric, hamming_asymmetric]
       spectrogram_type: magnitude           # [magnitude, power]
-      n_mels: 40                            # Number of MEL bands used
+      n_mels: 40                            # Number of mel bands used
       normalize_mel_bands: false            # [true, false]
-      n_fft: 1024                           # FFT length
-      fmin: 0                               # Minimum frequency when constructing MEL bands
-      fmax: 22050                           # Maximum frequency when constructing MEL band
-      htk: false                            # Switch for HTK-styled MEL-frequency equation
+      n_fft: 2048                           # FFT length
+      fmin: 0                               # Minimum frequency when constructing mel bands
+      fmax: 22050                           # Maximum frequency when constructing mel band
+      htk: false                            # Switch for HTK-styled mel-frequency equation
       log: true                             # Logarithmic
 
     mfcc:                                   # Mel-frequency cepstral coefficients
@@ -223,11 +242,11 @@ defaults:
       window: hamming_asymmetric            # [hann_asymmetric, hamming_asymmetric]
       spectrogram_type: magnitude           # [magnitude, power]
       n_mfcc: 20                            # Number of MFCC coefficients
-      n_mels: 40                            # Number of MEL bands used
+      n_mels: 40                            # Number of mel bands used
       n_fft: 2048                           # FFT length
-      fmin: 0                               # Minimum frequency when constructing MEL bands
-      fmax: 22050                           # Maximum frequency when constructing MEL band
-      htk: false                            # Switch for HTK-styled MEL-frequency equation
+      fmin: 0                               # Minimum frequency when constructing mel bands
+      fmax: 22050                           # Maximum frequency when constructing mel band
+      htk: false                            # Switch for HTK-styled mel-frequency equation
 
     mfcc_delta:                             # MFCC delta coefficients
       width: 9                              #
@@ -248,29 +267,23 @@ defaults:
     #  - [extractor (string)]=1,2,3,4,5                                             => vector [1,2,3,4,4]
     #  - [extractor (string)]=0                                                     => specified channel and full vector
     # ==========================================================
-    stacking_recipe: mel #mfcc;mfcc_delta;mfcc_acceleration
+    stacking_recipe: mel
 
   # ==========================================================
   # Feature normalizer
   # ==========================================================
   feature_normalizer:
     enable: true
-    type: global                          # [global]
+    type: global                                        # [global]
 
   # ==========================================================
   # Feature aggregator
   # ==========================================================
   feature_aggregator:
     enable: false
-    aggregation_recipe: mean; std                       # [mean, std,cov, kurtosis, skew, flatten, single_gaussian]
-    win_length_seconds: 1
-    hop_length_seconds: 1 #0.25 #0.02
-
-  # ==========================================================
-  # Feature augmentor
-  # ==========================================================
-  feature_augmentor:
-    enable: false
+    aggregation_recipe: flatten                         # [mean, std,cov, kurtosis, skew, flatten]
+    win_length_seconds: 0.1
+    hop_length_seconds: 0.02
 
   # ==========================================================
   # Learner
@@ -279,15 +292,23 @@ defaults:
     method: mlp                             #
 
     audio_error_handling: false             # Handling audio errors (temporary microphone failure and radio signal interferences from mobile phones)
-
-    show_model_information: false
+    show_model_information: false           # Show extra model information after model is ready
 
   learner_method_parameters:
     gmm:
-      n_components: 1                       # Number of Gaussian components
+      n_components: 16                      # Number of Gaussian components
+      covariance_type: diag                 # [diag|tied|full|spherical]
+      tol: 0.001
+      reg_covar: 0
+      max_iter: 40
+      n_init: 1
+      init_params: kmeans
+      random_state: 0
+
+    gmm_deprecated:
+      n_components: 16                      # Number of Gaussian components
       covariance_type: diag                 # [diag|full] Diagonal or full covariance matrix
       random_state: 0
-      #thresh: !!null
       tol: 0.001
       min_covar: 0.001
       n_iter: 40
@@ -296,67 +317,65 @@ defaults:
       init_params: wmc
 
     mlp:
-      seed: 1234
+      seed: 1
+
+      keras:
+        backend: theano
+        backend_parameters:
+          floatX: float64
+          device: cpu
+          fastmath: false
+          optimizer: None
+          openmp: false
+          threads: 1
+          CNR: true
+
       validation:
         enable: true
-        setup_source: generate_balanced     # [dataset, generate_balanced]
-        validation_amount: 0.20             # [0.0-1.0]
+        setup_source: generated_scene_balanced
+        validation_amount: 0.10
 
       training:
-        nb_epoch: 200
-        batch_size: 1000
+        epochs: 200
+        batch_size: 256
         shuffle: true
-        #verbose: 2
         callbacks:
-          #- type: LossHistory
-          #- type: ProgbarLogger
-          #- type: ModelCheckpoint
-          #  parameters:
-          #    monitor: val_categorical_accuracy
-          #    verbose: 0
-          #    save_best_only: true
-          #    mode: max
-
           - type: EarlyStopping
             parameters:
               monitor: val_categorical_accuracy         # quantity to be monitored.
               min_delta: 0.001                          # minimum change in the monitored quantity to qualify as an improvement, i.e. an absolute change of less than min_delta, will count as no improvement.
               patience: 10                              # number of epochs with no improvement after which training will be stopped.
               verbose: 0                                # verbosity mode.
-              mode: auto                                # {auto, min, max}. In min mode, training will stop when the quantity monitored has stopped decreasing; in max mode it will stop when the quantity monitored has stopped increasing; in auto mode, the direction is automatically inferred from the name of the monitored quantity.
+              mode: max                                 # {auto, min, max}. In min mode, training will stop when the quantity monitored has stopped decreasing; in max mode it will stop when the quantity monitored has stopped increasing; in auto mode, the direction is automatically inferred from the name of the monitored quantity.
 
       model:
-        # Layer Types:
-        # Core Layers: Dense, Activation, Dropout, Flatten, Reshape, Permute, RepeateVector, Merge, Lambda, ActivityRegularization, Masking, Highway, MaxoutDense
-        # Convolutional Layers: Convolution1D, AtrousConvolution1D, Convolution2D, AtrousConvolution2D, SeparableConvolution2D, Deconvolution2D, Convolution3D, Cropping1D, Cropping 2D, Cropping3D, UpSampling1D, UpSampling2D, UpSampling3D, ZeroPadding1D, ZeroPadding2D, ZeroPadding3D
-        # Pooling Layers: MaxPooling1D, MaxPooling2D, MaxPooling3D, AveragePooling1D, AveragePooling2D, AveragePooling3D, GlobalMaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling2D, GlobalAveragePooling2D
-        # Locally-connected Layers: LocallyConnected1D, LocallyConnected2D
-        # Recurrent Layers: Recurrent, SimpleRNN, GRU, LSTM
-        # Embedding Layers: Embedding
-        # Advanced Activations Layers: LeakyReLU, PReLU, ELU, ParametricSoftplus, ThresholdedReLU, SReLU
-        # Normalization Layers: BatchNormalization
-        # Noise Layers: GaussianNoise, GaussianDropout
-        # Layer wrapper: TimeDistributed, Bidirectional
-        # Magic values: FEATURE_VECTOR_LENGTH, CLASS_COUNT
-
+        # class_nam can be any standard Keras layer, e.g. Dense, Activation, Dropout
+        # Magic parameter values: FEATURE_VECTOR_LENGTH, CLASS_COUNT
         config:
           - class_name: Dense
             config:
-              output_dim: 200
-              init: uniform
+              units: 50
+              kernel_initializer: uniform
+              activation: relu
+
+          - class_name: Dropout
+            config:
+              rate: 0.2
 
           - class_name: Dense
             config:
-              output_dim: 200
-              init: uniform
+              units: 50
+              kernel_initializer: uniform
+              activation: relu
+
+          - class_name: Dropout
+            config:
+              rate: 0.2
 
           - class_name: Dense
             config:
-              output_dim: CLASS_COUNT
-              init: uniform
-
-          - class_name: Activation
-            config:
+              units: CLASS_COUNT
+              kernel_initializer: uniform
               activation: softmax
 
         loss: categorical_crossentropy
@@ -364,32 +383,36 @@ defaults:
         optimizer:
           type: Adam
 
-        # Keras metrics: binary_accuracy, categorical_accuracy, sparse_categorical_accuracy, top_k_categorical_accuracy, mean_squared_error, mean_absolute_error, mean_absolute_percentage_error, mean_squared_logarithmic_error, hinge, squared_hinge, categorical_crossentropy, sparse_categorical_crossentropy, binary_crossentropy, kullback_leibler_divergence, poisson, cosine_proximity, matthews_correlation, precision, recall, fbeta_score, fmeasure
-        metrics: [categorical_accuracy]
+        metrics:
+          - categorical_accuracy
 
   # ==========================================================
   # Recognizer
   # ==========================================================
   recognizer:
-    audio_error_handling: false   # Handling audio errors (temporary microphone failure and radio signal interferences from mobile phones)
+    enable: true
+
+    audio_error_handling: false
 
     frame_accumulation:
       enable: false
-      type: sum                   # [sum, prod, mean]
+      type: sum                       # [sum, prod, mean]
 
     frame_binarization:
       enable: false
-      type: global_threshold      # [frame_max, global_threshold]
-      threshold: 0.5              #
+      type: frame_max                 # [frame_max, global_threshold]
+      threshold: null
 
     decision_making:
       enable: true
-      type: maximum               # [maximum, majority_vote]
+      type: majority_vote             # [maximum, majority_vote]
 
   # ==========================================================
   # Evaluator
   # ==========================================================
   evaluator:
+    enable: true
+
     saving:
       enable: true                # To save evaluation results into yaml-file
 
@@ -399,5 +422,5 @@ defaults:
       # - {parameter_hash}
       # - {dataset_name}
       # ==========================================================
-      filename: eval_d[{dataset_name}]_s[{parameter_set}]_p[{parameter_hash}].yaml
+      filename: eval_[{parameter_hash}].yaml
 
