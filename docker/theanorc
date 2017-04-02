@@ -1,0 +1,10 @@
+
+[global]
+floatX = float64
+device = cpu
+optimizer = None
+exception_verbosity = high
+openmp = False
+
+[blas]
+ldflags =
