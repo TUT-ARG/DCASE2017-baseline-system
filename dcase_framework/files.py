@@ -190,13 +190,11 @@ from six import iteritems
 
 import os
 import numpy
-import librosa
 import logging
 import soundfile
 import copy
 from .decorators import before_and_after_function_wrapper
 from .containers import DottedDict
-from IPython import embed
 
 
 class FileMixin(object):
@@ -268,6 +266,10 @@ class FileMixin(object):
             file_format = 'flac'
         elif extension == '.mp3':
             file_format = 'mp3'
+        elif extension == '.m4a':
+            file_format = 'm4a'
+        elif extension == '.webm':
+            file_format = 'webm'
 
         if file_format in self.valid_formats:
             return file_format
@@ -574,7 +576,7 @@ class DictFile(dict, FileMixin):
 
 class ListFile(list, FileMixin):
     """File class inherited from list, valid file formats [txt]"""
-    valid_formats = ['txt', 'yaml']
+    valid_formats = ['txt', 'yaml', 'csv']
 
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -659,7 +661,16 @@ class ListFile(list, FileMixin):
                     else:
                         self.logger.error("Something went wrong while parsing yaml file [%s]" % self.filename)
                     return
+            elif self.format == 'csv':
+                with open(self.filename, 'r') as f:
+                    lines = f.readlines()
+                    # Remove line breaks
+                    for i in range(0, len(lines)):
+                        lines[i] = lines[i].replace('\n', '')
+                    list.__init__(self, lines)
 
+                from IPython import embed
+                embed()
             else:
                 message = '{name}: Unknown format [{format}]'.format(name=self.__class__.__name__, format=self.filename)
                 self.logger.exception(message)
@@ -754,7 +765,7 @@ class ListFile(list, FileMixin):
 
 class AudioFile(FileMixin):
     """File class for audio files, valid file formats  [wav, flac]"""
-    valid_formats = ['wav', 'flac']
+    valid_formats = ['wav', 'flac', 'm4a', 'webm']
 
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -786,7 +797,7 @@ class AudioFile(FileMixin):
         self.mono = kwargs.get('mono', True)
 
     @before_and_after_function_wrapper
-    def load(self, filename=None, fs=None, mono=None):
+    def load(self, filename=None, fs=None, mono=None, res_type='kaiser_best'):
         """Load file
 
         Parameters
@@ -800,7 +811,9 @@ class AudioFile(FileMixin):
         mono : bool
             Monophonic target, multi-channel audio will be down-mixed.
             Default value one given to class constructor
-
+        res_type : str
+            Resample type, defined by Librosa
+            Default value "kaiser_best"
         Raises
         ------
         IOError:
@@ -833,10 +846,12 @@ class AudioFile(FileMixin):
 
                 # Resample
                 if self.fs != source_fs:
-                    self.data = librosa.core.resample(self.data, source_fs, self.fs)
+                    import librosa
+                    self.data = librosa.core.resample(self.data, source_fs, self.fs, res_type=res_type)
 
-            elif self.format == 'flac':
-                self.data, self.fs = librosa.load(self.filename, sr=self.fs, mono=self.mono)
+            elif self.format in ['flac', 'm4a', 'webm']:
+                import librosa
+                self.data, self.fs = librosa.load(self.filename, sr=self.fs, mono=self.mono, res_type=res_type)
 
             else:
                 message = '{name}: Unknown format [{format}]'.format(name=self.__class__.__name__, format=self.filename)
@@ -878,31 +893,39 @@ class AudioFile(FileMixin):
             self.format = self.detect_file_format(self.filename)
 
         if self.format == 'wav':
-            if bitdepth is None:
-                soundfile.write(file=self.filename,
-                                data=self.data,
-                                samplerate=self.fs)  # whatever is default in soundfile
-            elif bitdepth == 16:
+            if bitdepth == 16:
                 soundfile.write(file=self.filename,
                                 data=self.data,
                                 samplerate=self.fs,
-                                subtype='PCM16')
+                                subtype='PCM_16')
 
-            if bitdepth == 24:
+            elif bitdepth == 24:
                 soundfile.write(file=self.filename,
                                 data=self.data,
                                 samplerate=self.fs,
                                 subtype='PCM_24')
+
             elif bitdepth == 32:
                 soundfile.write(file=self.filename,
                                 data=self.data,
                                 samplerate=self.fs,
                                 subtype='PCM_32')
+
+            elif bitdepth is None:
+                soundfile.write(file=self.filename,
+                                data=self.data,
+                                samplerate=self.fs)
+
             else:
                 message = '{name}: Unexpected bit depth [{bitdepth}]'.format(name=self.__class__.__name__,
                                                                              bitdepth=bitdepth)
                 self.logger.exception(message)
                 raise IOError(message)
+
+        elif self.format == 'flac':
+            soundfile.write(file=self.filename,
+                            data=self.data,
+                            samplerate=self.fs)
 
         else:
             message = '{name}: Unknown format for saving [{format}]'.format(name=self.__class__.__name__,
