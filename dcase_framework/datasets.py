@@ -130,8 +130,6 @@ from .files import TextFile, ParameterFile, ParameterListFile, AudioFile
 from .containers import DottedDict
 from .metadata import MetaDataContainer, MetaDataItem
 
-from IPython import embed
-
 
 def dataset_list(data_path, group=None):
     """List of datasets available
@@ -254,10 +252,24 @@ class Dataset(object):
             Basepath where the dataset is stored.
             (Default value='data')
         logger : logger
-
+            Instance of logging
+            Default value "none"
+        show_progress_in_console : bool
+            Show progress in console.
+            Default value "True"
+        log_system_progress : bool
+            Show progress in log.
+            Default value "False"
+        use_ascii_progress_bar : bool
+            Show progress bar using ASCII characters. Use this if your console does not support UTF-8 characters.
+            Default value "False"
         """
 
         self.logger = kwargs.get('logger') or logging.getLogger(__name__)
+
+        self.disable_progress_bar = not kwargs.get('show_progress_in_console', True)
+        self.log_system_progress = kwargs.get('log_system_progress', False)
+        self.use_ascii_progress_bar = kwargs.get('use_ascii_progress_bar', True)
 
         # Dataset name
         self.name = kwargs.get('name', 'dataset')
@@ -671,7 +683,9 @@ class Dataset(object):
         item_progress = tqdm(self.package_list,
                              desc="{0: <25s}".format('Download package list'),
                              file=sys.stdout,
-                             leave=False)
+                             leave=False,
+                             disable=self.disable_progress_bar,
+                             ascii=self.use_ascii_progress_bar)
         for item in item_progress:
             try:
                 if item['remote_package'] and not os.path.isfile(item['local_package']):
@@ -707,16 +721,25 @@ class Dataset(object):
                               unit='B',
                               unit_scale=True,
                               miniters=1,
-                              leave=False) as t:
-                        local_filename, headers = urllib.urlretrieve(remote_file,
-                                                                     filename=tmp_file,
-                                                                     reporthook=progress_hook(t),
-                                                                     data=None)
+                              leave=False,
+                              disable=self.disable_progress_bar,
+                              ascii=self.use_ascii_progress_bar) as t:
+
+                        local_filename, headers = urllib.urlretrieve(
+                            remote_file,
+                            filename=tmp_file,
+                            reporthook=progress_hook(t),
+                            data=None
+                        )
+
                     os.rename(tmp_file, item['local_package'])
 
             except (urllib.URLError, socket.timeout) as e:
-                message = '{name}: Download failed [{filename}]'.format(name=self.__class__.__name__,
-                                                                        filename=item['remote_package'])
+                message = '{name}: Download failed [{filename}]'.format(
+                    name=self.__class__.__name__,
+                    filename=item['remote_package']
+                )
+
                 self.logger.exception(message)
                 raise IOError(message)
 
@@ -736,10 +759,20 @@ class Dataset(object):
         item_progress = tqdm(self.package_list,
                              desc="{0: <25s}".format('Extract packages'),
                              file=sys.stdout,
-                             leave=False)
+                             leave=False,
+                             disable=self.disable_progress_bar,
+                             ascii=self.use_ascii_progress_bar)
 
         for item_id, item in enumerate(item_progress):
-            if item['local_package']:
+            if self.log_system_progress:
+                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {package:<30s}'.format(
+                    title='Extract packages ',
+                    item_id=item_id,
+                    total=len(item_progress),
+                    package=item['local_package'])
+                )
+
+            if item['local_package'] and os.path.isfile(item['local_package']):
                 if item['local_package'].endswith('.zip'):
 
                     with zipfile.ZipFile(item['local_package'], "r") as z:
@@ -765,8 +798,18 @@ class Dataset(object):
                         progress = tqdm(members,
                                         desc="{0: <25s}".format('Extract'),
                                         file=sys.stdout,
-                                        leave=False)
+                                        leave=False,
+                                        disable=self.disable_progress_bar,
+                                        ascii=self.use_ascii_progress_bar)
                         for i, member in enumerate(progress):
+                            if self.log_system_progress:
+                                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {file:<30s}'.format(
+                                    title='Extract ',
+                                    item_id=i,
+                                    total=len(progress),
+                                    file=member.filename)
+                                )
+
                             if len(member.filename) > offset:
                                 member.filename = member.filename[offset:]
                                 progress.set_description("{0: >35s}".format(member.filename.split('/')[-1]))
@@ -788,8 +831,18 @@ class Dataset(object):
                     progress = tqdm(tar,
                                     desc="{0: <25s}".format('Extract'),
                                     file=sys.stdout,
-                                    leave=False)
+                                    leave=False,
+                                    disable=self.disable_progress_bar,
+                                    ascii=self.use_ascii_progress_bar)
                     for i, tar_info in enumerate(progress):
+                        if self.log_system_progress:
+                            self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {file:<30s}'.format(
+                                title='Extract ',
+                                item_id=i,
+                                total=len(progress),
+                                file=tar_info.name)
+                            )
+
                         if not os.path.isfile(os.path.join(self.local_path, tar_info.name)):
                             tar.extract(tar_info, self.local_path)
                         tar.members = []
@@ -1028,7 +1081,7 @@ class Dataset(object):
 
         """
 
-        return os.path.abspath(os.path.join(self.local_path, path))
+        return os.path.abspath(os.path.expanduser(os.path.join(self.local_path, path)))
 
     def absolute_to_relative(self, path):
         """Converts absolute path into relative path.
@@ -1372,7 +1425,7 @@ class TUTAcousticScenes_2017_DevelopmentSet(AcousticSceneDataset):
                         relative_path = self.absolute_to_relative(raw_path)
                         location_id = raw_filename.split('_')[0]
                         item['file'] = os.path.join(relative_path, raw_filename)
-                        item['location_identifier'] = location_id
+                        item['identifier'] = location_id
                         meta_data[item['file']] = item
 
             self.meta_container.update(meta_data.values())
@@ -1406,7 +1459,7 @@ class TUTAcousticScenes_2017_DevelopmentSet(AcousticSceneDataset):
                     item['file'] = self.relative_to_absolute_path(item['file'])
                     raw_path, raw_filename = os.path.split(item['file'])
                     location_id = raw_filename.split('_')[0]
-                    item['location_identifier'] = location_id
+                    item['identifier'] = location_id
             else:
                 self.crossvalidation_data_train[0] = self.meta_container
 
@@ -1817,9 +1870,17 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         set_progress = tqdm(['train', 'test'],
                             desc="{0: <25s}".format('Set'),
                             file=sys.stdout,
-                            leave=False)
+                            leave=False,
+                            disable=self.disable_progress_bar,
+                            ascii=self.use_ascii_progress_bar)
 
         for subset_label in set_progress:
+            if self.log_system_progress:
+                self.logger.info('  {title:<15s} [{subset_label:<30s}]'.format(
+                    title='Set ',
+                    subset_label=subset_label)
+                )
+
             subset_name_on_disk = subset_map[subset_label]
 
             background_meta = ParameterListFile().load(filename=os.path.join(cv_setup_path, 'bgs_' + subset_name_on_disk + '.yaml'))
@@ -1832,27 +1893,50 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
             r = numpy.random.RandomState(params.get('seed', 42))
 
-            mixture_path = os.path.join(self.local_path, 'generated_data',
-                                        'mixtures_' + subset_name_on_disk + '_' + params_hash)
-            mixture_audio_path = os.path.join(self.local_path, 'generated_data',
-                                              'mixtures_' + subset_name_on_disk + '_' + params_hash, 'audio')
-            mixture_meta_path = os.path.join(self.local_path, 'generated_data',
-                                             'mixtures_' + subset_name_on_disk + '_' + params_hash, 'meta')
+            mixture_path = os.path.join(
+                self.local_path,
+                'generated_data',
+                'mixtures_' + subset_name_on_disk + '_' + params_hash
+            )
+
+            mixture_audio_path = os.path.join(
+                self.local_path,
+                'generated_data',
+                'mixtures_' + subset_name_on_disk + '_' + params_hash,
+                'audio'
+            )
+
+            mixture_meta_path = os.path.join(
+                self.local_path,
+                'generated_data',
+                'mixtures_' + subset_name_on_disk + '_' + params_hash,
+                'meta'
+            )
 
             # Make sure folder exists
             if not os.path.isdir(mixture_path):
                 os.makedirs(mixture_path)
+
             if not os.path.isdir(mixture_audio_path):
                 os.makedirs(mixture_audio_path)
+
             if not os.path.isdir(mixture_meta_path):
                 os.makedirs(mixture_meta_path)
 
             class_progress = tqdm(self.event_labels,
                                   desc="{0: <25s}".format('Class'),
                                   file=sys.stdout,
-                                  leave=False)
+                                  leave=False,
+                                  disable=self.disable_progress_bar,
+                                  ascii=self.use_ascii_progress_bar)
 
             for class_label in class_progress:
+                if self.log_system_progress:
+                    self.logger.info('  {title:<15s} [{class_label:<30s}]'.format(
+                        title='Class ',
+                        class_label=class_label)
+                    )
+
                 mixture_recipes_filename = os.path.join(
                     mixture_meta_path,
                     'mixture_recipes_' + subset_name_on_disk + '_' + class_label + '.yaml'
@@ -1860,16 +1944,17 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
                 # Generate recipes if not exists
                 if not os.path.isfile(mixture_recipes_filename):
-                    self._generate_mixture_recipes(params=params,
-                                                   class_label=class_label,
-                                                   subset=subset_name_on_disk,
-                                                   mixture_recipes_filename=mixture_recipes_filename,
-                                                   background_meta=background_meta,
-                                                   event_meta=event_meta[class_label],
-                                                   background_audio_path=background_audio_path,
-                                                   event_audio_path=event_audio_path,
-                                                   r=r
-                                                   )
+                    self._generate_mixture_recipes(
+                        params=params,
+                        class_label=class_label,
+                        subset=subset_name_on_disk,
+                        mixture_recipes_filename=mixture_recipes_filename,
+                        background_meta=background_meta,
+                        event_meta=event_meta[class_label],
+                        background_audio_path=background_audio_path,
+                        event_audio_path=event_audio_path,
+                        r=r
+                    )
 
                 mixture_meta = ParameterListFile().load(filename=mixture_recipes_filename)
 
@@ -1877,19 +1962,38 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 item_progress = tqdm(mixture_meta,
                                      desc="{0: <25s}".format('Generate mixture'),
                                      file=sys.stdout,
-                                     leave=False)
-                for item in item_progress:
+                                     leave=False,
+                                     disable=self.disable_progress_bar,
+                                     ascii=self.use_ascii_progress_bar)
+
+                for item_id, item in enumerate(item_progress):
+                    if self.log_system_progress:
+                        self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {file:<30s}'.format(
+                            title='Generate mixture ',
+                            item_id=item_id,
+                            total=len(item_progress),
+                            file=item['mixture_audio_filename'])
+                        )
+
                     mixture_file = os.path.join(mixture_audio_path, item['mixture_audio_filename'])
 
                     if not os.path.isfile(mixture_file):
-                        mixture = self._synthesize_mixture(mixture_recipe=item,
-                                                           params=params,
-                                                           background_audio_path=background_audio_path,
-                                                           event_audio_path=event_audio_path)
-                        audio_container = AudioFile(data=mixture,
-                                                    fs=params['mixture']['fs'])
-                        audio_container.save(filename=mixture_file,
-                                             bitdepth=params['mixture']['bitdepth'])
+                        mixture = self._synthesize_mixture(
+                            mixture_recipe=item,
+                            params=params,
+                            background_audio_path=background_audio_path,
+                            event_audio_path=event_audio_path
+                        )
+
+                        audio_container = AudioFile(
+                            data=mixture,
+                            fs=params['mixture']['fs']
+                        )
+
+                        audio_container.save(
+                            filename=mixture_file,
+                            bitdepth=params['mixture']['bitdepth']
+                        )
 
                 # Generate event lists
                 event_list_filename = os.path.join(
@@ -1902,8 +2006,18 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                     item_progress = tqdm(mixture_meta,
                                          desc="{0: <25s}".format('Event list'),
                                          file=sys.stdout,
-                                         leave=False)
-                    for item in item_progress:
+                                         leave=False,
+                                         disable=self.disable_progress_bar,
+                                         ascii=self.use_ascii_progress_bar)
+                    for item_id, item in enumerate(item_progress):
+                        if self.log_system_progress:
+                            self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {file:<30s}'.format(
+                                title='Event list ',
+                                item_id=item_id,
+                                total=len(item_progress),
+                                file=item['mixture_audio_filename'])
+                            )
+
                         event_list_item = {
                             'file': os.path.join(
                                 'generated_data',
@@ -1914,8 +2028,8 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                         }
                         if item['event_present']:
                             event_list_item['event_label'] = item['event_class']
-                            event_list_item['event_onset'] = float(item['event_offset_seconds'])
-                            event_list_item['event_offset'] = float(item['event_offset_seconds'] + item['event_length_seconds'])
+                            event_list_item['event_onset'] = float(item['event_start_in_mixture_seconds'])
+                            event_list_item['event_offset'] = float(item['event_start_in_mixture_seconds'] + item['event_length_seconds'])
 
                         event_list.append(MetaDataItem(event_list_item))
                     event_list.save()
@@ -2026,20 +2140,22 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         # For recipes, we got to provide amplitude scaling factors instead of SNRs: the latter are more ambiguous
         # so, go through files, measure levels, calculate scaling factors
         mixture_recipes = ParameterListFile()
-        for mixture_id, (bg, event_presence_flag, event_offset_seconds, ebr, event_instance_id) in tqdm(
+        for mixture_id, (bg, event_presence_flag, event_start_in_mixture_seconds, ebr, event_instance_id) in tqdm(
                 enumerate(zip(bgs, event_presence_flags, event_offsets_seconds, target_ebrs, event_instance_ids)),
                 desc="{0: <25s}".format('Generate recipe'),
                 file=sys.stdout,
                 leave=False,
-                total=len(bgs)):
+                total=len(bgs),
+                disable=self.disable_progress_bar,
+                ascii=self.use_ascii_progress_bar):
 
             # Read the bgs and events, measure their energies, find amplitude scaling factors
-            mixture_recipe = DottedDict({
+            mixture_recipe = {
                 'bg_path': bg['filepath'],
                 'bg_classname': bg['classname'],
                 'event_present': bool(event_presence_flag),
                 'ebr': float(ebr)
-            })
+            }
 
             if event_presence_flag:
                 # We have an event assigned
@@ -2065,17 +2181,21 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 event_audio = event_audio[segment_start_samples:segment_end_samples]
 
                 # Let's calculate the levels of bgs also at the location of the event only
-                eventful_part_of_bg = bg_audio[int(event_offset_seconds * fs):int(event_offset_seconds * fs + len(event_audio))]
+                eventful_part_of_bg = bg_audio[int(event_start_in_mixture_seconds * fs):int(event_start_in_mixture_seconds * fs + len(event_audio))]
 
                 if eventful_part_of_bg.shape[0] == 0:
-                    embed()
+                    message = '{name}: Background segment having an event has zero length.'.format(
+                        name=self.__class__.__name__
+                    )
+                    self.logger.exception(message)
+                    raise ValueError(message)
 
                 scaling_factor = get_event_amplitude_scaling_factor(event_audio, eventful_part_of_bg, target_snr_db=ebr)
 
                 # Store information
                 mixture_recipe['event_path'] = events[int(event_instance_id)]['audio_filepath']
                 mixture_recipe['event_class'] = events[int(event_instance_id)]['classname']
-                mixture_recipe['event_offset_seconds'] = float(event_offset_seconds)
+                mixture_recipe['event_start_in_mixture_seconds'] = float(event_start_in_mixture_seconds)
                 mixture_recipe['event_length_seconds'] = float(events[int(event_instance_id)]['length_seconds'])
                 mixture_recipe['scaling_factor'] = float(scaling_factor)
                 mixture_recipe['segment_start_seconds'] = events[int(event_instance_id)]['segment'][0]
@@ -2088,9 +2208,11 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
             # Generate mixture annotation
             if event_presence_flag:
                 mixture_recipe['annotation_string'] = \
-                    mixture_recipe['mixture_audio_filename'] + '\t' + mixture_recipe['event_class'] + '\t' + \
-                    str(mixture_recipe['event_offset_seconds']) + '\t' + \
-                    str(mixture_recipe['event_offset_seconds'] + mixture_recipe['event_length_seconds'])
+                    mixture_recipe['mixture_audio_filename'] + '\t' + \
+                    "{0:.14f}".format(mixture_recipe['event_start_in_mixture_seconds']) + '\t' + \
+                    "{0:.14f}".format(mixture_recipe['event_start_in_mixture_seconds'] + mixture_recipe['event_length_seconds']) + '\t' + \
+                    mixture_recipe['event_class']
+
             else:
                 mixture_recipe['annotation_string'] = mixture_recipe['mixture_audio_filename'] + '\t' + 'None' + '\t0\t30'
 
@@ -2129,13 +2251,13 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
             segment_end_samples = int(mixture_recipe['segment_end_seconds'] * params['mixture']['fs'])
             event_audio_data = event_audio_data[segment_start_samples:segment_end_samples]
 
-            event_offset_samples = int(mixture_recipe['event_offset_seconds'] * params['mixture']['fs'])
+            event_start_in_mixture_samples = int(mixture_recipe['event_start_in_mixture_seconds'] * params['mixture']['fs'])
             scaling_factor = mixture_recipe['scaling_factor']
 
             # Mix event into background audio
             mixture = self._mix(bg_audio_data=bg_audio_data,
                                 event_audio_data=event_audio_data,
-                                event_offset_samples=event_offset_samples,
+                                event_start_in_mixture_samples=event_start_in_mixture_samples,
                                 scaling_factor=scaling_factor,
                                 magic_anticlipping_factor=params['mixture']['anticlipping_factor'])
         else:
@@ -2143,7 +2265,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
         return mixture
 
-    def _mix(self, bg_audio_data, event_audio_data, event_offset_samples, scaling_factor, magic_anticlipping_factor):
+    def _mix(self, bg_audio_data, event_audio_data, event_start_in_mixture_samples, scaling_factor, magic_anticlipping_factor):
         """Mix numpy arrays of background and event audio (mono, non-matching lengths supported, sampling frequency
         better be the same, no operation in terms of seconds is performed though)
 
@@ -2151,7 +2273,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         ----------
         bg_audio_data : numpy.array
         event_audio_data : numpy.array
-        event_offset_samples : float
+        event_start_in_mixture_samples : float
         scaling_factor : float
         magic_anticlipping_factor : float
 
@@ -2169,17 +2291,17 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
         # Check that the offset is not too long
         longest_possible_offset = len(bg_audio_data) - len(event_audio_data)
-        if event_offset_samples > longest_possible_offset:
+        if event_start_in_mixture_samples > longest_possible_offset:
             message = '{name}: Wrongly generated event offset: event tries to go outside the boundaries of the bg.'.format(name=self.__class__.__name__)
             self.logger.exception(message)
             raise AssertionError(message)
 
         # Measure how much to pad from the right
-        tail_length = len(bg_audio_data) - len(event_audio_data) - event_offset_samples
+        tail_length = len(bg_audio_data) - len(event_audio_data) - event_start_in_mixture_samples
 
         # Pad zeros at the beginning of event signal
         padded_event = numpy.pad(event_audio_data,
-                                 pad_width=((event_offset_samples, tail_length)),
+                                 pad_width=((event_start_in_mixture_samples, tail_length)),
                                  mode='constant',
                                  constant_values=0)
 
@@ -2459,7 +2581,7 @@ class TUTSoundEvents_2017_DevelopmentSet(SoundEventDataset):
                 for item in data:
                     item['file'] = os.path.join(relative_path, raw_filename)
                     item['scene_label'] = scene_label
-                    item['location_identifier'] = os.path.splitext(raw_filename)[0]
+                    item['identifier'] = os.path.splitext(raw_filename)[0]
                     item['source_label'] = 'mixture'
 
                 meta_data += data
@@ -2507,7 +2629,7 @@ class TUTSoundEvents_2017_DevelopmentSet(SoundEventDataset):
                 for item in self.crossvalidation_data_train[fold][scene_label_]:
                     item['file'] = self.relative_to_absolute_path(item['file'])
                     raw_path, raw_filename = os.path.split(item['file'])
-                    item['location_identifier'] = os.path.splitext(raw_filename)[0]
+                    item['identifier'] = os.path.splitext(raw_filename)[0]
                     item['source_label'] = 'mixture'
 
         if scene_label:
@@ -2591,7 +2713,7 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
                 for item in data:
                     item['file'] = os.path.join(relative_path, raw_filename)
                     item['scene_label'] = scene_label
-                    item['location_identifier'] = os.path.splitext(raw_filename)[0]
+                    item['identifier'] = os.path.splitext(raw_filename)[0]
                     item['source_label'] = 'mixture'
 
                 meta_data += data
@@ -2747,7 +2869,7 @@ class TUTAcousticScenes_2016_DevelopmentSet(AcousticSceneDataset):
                         relative_path = self.absolute_to_relative(raw_path)
                         location_id = raw_filename.split('_')[0]
                         item['file'] = os.path.join(relative_path, raw_filename)
-                        item['location_identifier'] = location_id
+                        item['identifier'] = location_id
                         meta_data[item['file']] = item
 
             self.meta_container.update(meta_data.values())
@@ -2778,7 +2900,7 @@ class TUTAcousticScenes_2016_DevelopmentSet(AcousticSceneDataset):
                     item['file'] = self.relative_to_absolute_path(item['file'])
                     raw_path, raw_filename = os.path.split(item['file'])
                     location_id = raw_filename.split('_')[0]
-                    item['location_identifier'] = location_id
+                    item['identifier'] = location_id
             else:
                 self.crossvalidation_data_train[0] = self.meta_container
 
@@ -2993,7 +3115,7 @@ class TUTSoundEvents_2016_DevelopmentSet(SoundEventDataset):
                 for item in data:
                     item['file'] = os.path.join(relative_path, raw_filename)
                     item['scene_label'] = scene_label
-                    item['location_identifier'] = os.path.splitext(raw_filename)[0]
+                    item['identifier'] = os.path.splitext(raw_filename)[0]
                     item['source_label'] = 'mixture'
 
                 meta_data += data
@@ -3036,7 +3158,7 @@ class TUTSoundEvents_2016_DevelopmentSet(SoundEventDataset):
                 for item in self.crossvalidation_data_train[fold][scene_label_]:
                     item['file'] = self.relative_to_absolute_path(item['file'])
                     raw_path, raw_filename = os.path.split(item['file'])
-                    item['location_identifier'] = os.path.splitext(raw_filename)[0]
+                    item['identifier'] = os.path.splitext(raw_filename)[0]
                     item['source_label'] = 'mixture'
 
         if scene_label:
