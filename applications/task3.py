@@ -8,6 +8,14 @@ from __future__ import print_function, absolute_import
 import sys
 import os
 sys.path.append(os.path.split(os.path.dirname(os.path.realpath(__file__)))[0])
+
+#os.environ['OMP_NUM_THREADS'] = '1'
+#os.environ['OMP_DYNAMIC'] = 'False'
+#os.environ['MKL_NUM_THREADS'] = '1'
+#os.environ['MKL_DYNAMIC'] = 'False'
+#os.environ['KMP_DETERMINISTIC_REDUCTION'] = '1'
+#os.environ['MKL_CBWR'] = 'COMPATIBLE'
+
 import numpy
 import argparse
 import textwrap
@@ -15,8 +23,6 @@ import textwrap
 from dcase_framework.application_core import SoundEventAppCore
 from dcase_framework.parameters import ParameterContainer
 from dcase_framework.utils import *
-
-from IPython import embed
 
 __version_info__ = ('1', '0', '0')
 __version__ = '.'.join(__version_info__)
@@ -94,6 +100,12 @@ def main(argv):
                         action='store_true',
                         required=False)
 
+    parser.add_argument("-show_eval",
+                        help="Show evaluated setups",
+                        dest="show_eval",
+                        action='store_true',
+                        required=False)
+
     parser.add_argument("-o", "--overwrite",
                         help="Overwrite mode",
                         dest="overwrite",
@@ -165,6 +177,7 @@ def main(argv):
                            setup_label='Development setup',
                            log_system_progress=params.get_path('general.log_system_progress'),
                            show_progress_in_console=params.get_path('general.print_system_progress'),
+                           use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
                            )
 
         # Show parameter set list and exit
@@ -189,6 +202,11 @@ def main(argv):
         # Show system parameters
         if params.get_path('general.log_system_parameters') or args.show_parameters:
             app.show_parameters()
+
+        # Show evaluated systems
+        if args.show_eval:
+            app.show_eval()
+            return
 
         # Initialize application
         # ==================================================
@@ -239,7 +257,10 @@ def main(argv):
                                          params=params,
                                          system_desc=params.get('description'),
                                          system_parameter_set_id=params.get('active_set'),
-                                         setup_label='Evaluation setup'
+                                         setup_label='Evaluation setup',
+                                         log_system_progress=params.get_path('general.log_system_progress'),
+                                         show_progress_in_console=params.get_path('general.print_system_progress'),
+                                         use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
                                          )
             # Initialize application
             if params['flow']['initialize']:

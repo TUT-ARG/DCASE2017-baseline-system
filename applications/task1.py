@@ -16,7 +16,6 @@ from dcase_framework.utils import *
 
 __version_info__ = ('1', '0', '0')
 __version__ = '.'.join(__version_info__)
-from IPython import embed
 
 
 class Task1AppCore(AcousticSceneClassificationAppCore):
@@ -166,6 +165,7 @@ def main(argv):
                            setup_label='Development setup',
                            log_system_progress=params.get_path('general.log_system_progress'),
                            show_progress_in_console=params.get_path('general.print_system_progress'),
+                           use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
                            )
 
         # Show parameter set list and exit
@@ -245,7 +245,10 @@ def main(argv):
                                          params=params,
                                          system_desc=params.get('description'),
                                          system_parameter_set_id=params.get('active_set'),
-                                         setup_label='Evaluation setup'
+                                         setup_label='Evaluation setup',
+                                         log_system_progress=params.get_path('general.log_system_progress'),
+                                         show_progress_in_console=params.get_path('general.print_system_progress'),
+                                         use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
                                          )
             # Initialize application
             if params['flow']['initialize']:
