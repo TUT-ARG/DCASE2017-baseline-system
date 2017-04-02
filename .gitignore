@@ -68,3 +68,7 @@ applications/logs/
 applications/challenge_submission/
 documentation/source/generated/
 documentation/build/
+examples/challenge_submission/*
+examples/data/*
+examples/logs/*
+examples/system/*
