@@ -127,6 +127,8 @@ import sys
 import os
 import logging
 import sed_eval
+import platform
+import pkg_resources
 import warnings
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -141,10 +143,9 @@ from .decorators import before_and_after_function_wrapper
 from .learners import *
 from .metadata import MetaDataContainer, MetaDataItem
 from .ui import FancyLogger
-from .utils import get_class_inheritors
+from .utils import get_class_inheritors, posix_path, check_pkg_resources
 from .parameters import ParameterContainer
 from .files import ParameterFile
-from IPython import embed
 
 
 class AppCore(object):
@@ -181,6 +182,9 @@ class AppCore(object):
             Default value "True"
         log_system_progress : bool
             Show progress in log.
+            Default value "False"
+        use_ascii_progress_bar : bool
+            Show progress bar using ASCII characters. Use this if your console does not support UTF-8 characters.
             Default value "False"
         logger : logging
             Instance of logging
@@ -219,6 +223,10 @@ class AppCore(object):
         """
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
+
+        self.disable_progress_bar = not kwargs.get('show_progress_in_console', True)
+        self.log_system_progress = kwargs.get('log_system_progress', False)
+        self.use_ascii_progress_bar = kwargs.get('use_ascii_progress_bar', True)
 
         # Fetch all datasets
         self.Datasets = {}
@@ -274,9 +282,6 @@ class AppCore(object):
         else:
             self.dataset_evaluation_mode = self.params.get_path('dataset.parameters.evaluation_mode', 'folds')
 
-        self.disable_progress_bar = not kwargs.get('show_progress_in_console', True)
-        self.log_system_progress = kwargs.get('log_system_progress', False)
-
         # Timer class
         self.timer = Timer()
 
@@ -313,8 +318,12 @@ class AppCore(object):
             # If not dataset name given, dig name from parameters and use it.
             dataset_class_name = self.params.get_path('dataset.parameters.name')
             if dataset_class_name and dataset_class_name in self.Datasets:
-                return self.Datasets[dataset_class_name](data_path=self.params.get_path('path.data'),
-                                                         **self.params.get_path('dataset.parameters'))
+                return self.Datasets[dataset_class_name](
+                    data_path=self.params.get_path('path.data'),
+                    log_system_progress=self.log_system_progress,
+                    show_progress_in_console=not self.disable_progress_bar,
+                    use_ascii_progress_bar=self.use_ascii_progress_bar,
+                    **self.params.get_path('dataset.parameters'))
             else:
                 message = '{name}: No valid dataset given [{dataset}]'.format(
                     name=self.__class__.__name__,
@@ -445,6 +454,14 @@ class AppCore(object):
     def show_eval(self):
         pass
 
+    def check_resources(self):
+        # Check key libraries
+        check_pkg_resources(package_requirement='numpy>=1.9.2', logger=self.logger)
+        check_pkg_resources(package_requirement='scikit-learn>=0.18.1', logger=self.logger)
+        check_pkg_resources(package_requirement='keras>=2.0.2', logger=self.logger)
+        check_pkg_resources(package_requirement='theano>=0.9.0', logger=self.logger)
+        check_pkg_resources(package_requirement='librosa>=0.5.0', logger=self.logger)
+
     def _before_initialize(self, *args, **kwargs):
         self.ui.section_header('Initialize [{setup_label}][{dataset_evaluation_mode}]'.format(
             setup_label=self.setup_label,
@@ -458,6 +475,12 @@ class AppCore(object):
     @before_and_after_function_wrapper
     def initialize(self):
         """Initialize application"""
+        # Check that key libraries are installed with correct versions
+        self.check_resources()
+
+        # Log information
+
+        # System information
         self.ui.data(field='System')
         if self.name:
             self.ui.data(field='Name',
@@ -474,6 +497,17 @@ class AppCore(object):
                          value=self.system_parameter_set_id,
                          indent=4)
 
+        self.ui.data(field='Setup',
+                     value='Python[{python}], Numpy[{numpy}], sklearn[{sklearn}], Keras[{keras}], Theano[{theano}], Librosa[{librosa}]'.format(
+                         python=platform.python_version(),
+                         numpy=pkg_resources.get_distribution("numpy").version,
+                         sklearn=pkg_resources.get_distribution("scikit-learn").version,
+                         keras=pkg_resources.get_distribution("keras").version,
+                         theano=pkg_resources.get_distribution("theano").version,
+                         librosa=pkg_resources.get_distribution("librosa").version),
+                     indent=4)
+
+        # Other information
         self.ui.data(field='Dataset')
         if self.dataset.storage_name:
             self.ui.data(field='Name',
@@ -542,10 +576,13 @@ class AppCore(object):
 
         feature_files = []
         feature_extractor = self.FeatureExtractor(overwrite=overwrite, store=True)
-        for file_id, audio_filename in enumerate(tqdm(files, desc='           {0:<15s}'.format('Extracting features '),
+        for file_id, audio_filename in enumerate(tqdm(files,
+                                                      desc='           {0:<15s}'.format('Extracting features '),
                                                       file=sys.stdout,
                                                       leave=False,
-                                                      disable=self.disable_progress_bar)):
+                                                      disable=self.disable_progress_bar,
+                                                      ascii=self.use_ascii_progress_bar
+                                                      )):
 
             if self.log_system_progress:
                 self.logger.info('  {title:<15s} [{file_id:d}/{total:d}] {file:<30s}'.format(
@@ -943,7 +980,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 desc = data.get_path('parameters.description')
                 output += '  {set_id:<15s} | {accuracy:<8s} | {desc:46s} | {hash:32s} |\n'.format(
                     set_id=set_id,
-                    desc=(desc[:44] + '..') if len(desc) > 44 else desc,
+                    desc=(desc[:29] + '..') if len(desc) > 29 else desc,
                     hash=params_hash,
                     accuracy='{0:4.2f} %'.format(data.get_path('overall_results.overall.accuracy')*100)
                 )
@@ -983,7 +1020,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                                  file=sys.stdout,
                                  leave=False,
                                  miniters=1,
-                                 disable=self.disable_progress_bar)
+                                 disable=self.disable_progress_bar,
+                                 ascii=self.use_ascii_progress_bar)
 
             for fold in fold_progress:
                 if self.log_system_progress:
@@ -1001,7 +1039,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                                        file=sys.stdout,
                                        leave=False,
                                        miniters=1,
-                                       disable=self.disable_progress_bar)
+                                       disable=self.disable_progress_bar,
+                                       ascii=self.use_ascii_progress_bar)
 
                 for method in method_progress:
                     current_normalizer_file = current_normalizer_files[method]
@@ -1012,8 +1051,10 @@ class AcousticSceneClassificationAppCore(AppCore):
                                              file=sys.stdout,
                                              leave=False,
                                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                             disable=self.disable_progress_bar
+                                             disable=self.disable_progress_bar,
+                                             ascii=self.use_ascii_progress_bar
                                              )
+
                         for item_id, item in enumerate(item_progress):
                             feature_filename = self._get_feature_filename(
                                 audio_file=item['file'],
@@ -1032,9 +1073,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                             else:
                                 message = '{name}: Features not found [{file}]'.format(
                                     name=self.__class__.__name__,
-                                    method=item['file']
+                                    file=item['file']
                                 )
-
                                 self.logger.exception(message)
                                 raise IOError(message)
 
@@ -1075,7 +1115,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                              file=sys.stdout,
                              leave=False,
                              miniters=1,
-                             disable=self.disable_progress_bar)
+                             disable=self.disable_progress_bar,
+                             ascii=self.use_ascii_progress_bar)
 
         for fold in fold_progress:
             if self.log_system_progress:
@@ -1120,7 +1161,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                         else:
                             message = '{name}: Feature normalizer not found [{file}]'.format(
                                 name=self.__class__.__name__,
-                                method=feature_normalizer_filename
+                                file=feature_normalizer_filename
                             )
 
                             self.logger.exception(message)
@@ -1138,8 +1179,10 @@ class AcousticSceneClassificationAppCore(AppCore):
                                      file=sys.stdout,
                                      leave=False,
                                      bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                     disable=self.disable_progress_bar
+                                     disable=self.disable_progress_bar,
+                                     ascii=self.use_ascii_progress_bar
                                      )
+
                 for item_id, item in enumerate(item_progress):
                     if self.log_system_progress:
                         self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
@@ -1162,7 +1205,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                         else:
                             message = '{name}: Features not found [{file}]'.format(
                                 name=self.__class__.__name__,
-                                method=item['file']
+                                file=item['file']
                             )
 
                             self.logger.exception(message)
@@ -1211,7 +1254,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 else:
                     message = '{name}: Model file not found [{file}]'.format(
                         name=self.__class__.__name__,
-                        method=model_filename
+                        file=model_filename
                     )
 
                     self.logger.exception(message)
@@ -1286,7 +1329,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                              file=sys.stdout,
                              leave=False,
                              miniters=1,
-                             disable=self.disable_progress_bar)
+                             disable=self.disable_progress_bar,
+                             ascii=self.use_ascii_progress_bar)
 
         for fold in fold_progress:
             if self.log_system_progress:
@@ -1307,7 +1351,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 else:
                     message = '{name}: Model file not found [{file}]'.format(
                         name=self.__class__.__name__,
-                        method=model_filename
+                        file=model_filename
                     )
 
                     self.logger.exception(message)
@@ -1318,21 +1362,24 @@ class AcousticSceneClassificationAppCore(AppCore):
                                      file=sys.stdout,
                                      leave=False,
                                      bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                     disable=self.disable_progress_bar
+                                     disable=self.disable_progress_bar,
+                                     ascii=self.use_ascii_progress_bar
                                      )
                 for item_id, item in enumerate(item_progress):
                     if self.log_system_progress:
-                        self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(title='Testing',
-                                                                                                     item_id=item_id,
-                                                                                                     total=len(
-                                                                                                         item_progress),
-                                                                                                     item=os.path.split(
-                                                                                                         item['file'])[
-                                                                                                         -1])
-                                         )
+                        self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
+                            title='Testing',
+                            item_id=item_id,
+                            total=len(item_progress),
+                            item=os.path.split(item['file'])[-1])
+                        )
+
                     # Load features
-                    feature_filenames = self._get_feature_filename(audio_file=item['file'],
-                                                                   path=self.params.get_path('path.feature_extractor'))
+                    feature_filenames = self._get_feature_filename(
+                        audio_file=item['file'],
+                        path=self.params.get_path('path.feature_extractor')
+                    )
+
                     feature_repository = FeatureRepository()
                     for method, feature_filename in iteritems(feature_filenames):
                         if os.path.isfile(feature_filename):
@@ -1340,7 +1387,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                         else:
                             message = '{name}: Features not found [{file}]'.format(
                                 name=self.__class__.__name__,
-                                method=item['file']
+                                file=item['file']
                             )
 
                             self.logger.exception(message)
@@ -1410,7 +1457,9 @@ class AcousticSceneClassificationAppCore(AppCore):
                                  file=sys.stdout,
                                  leave=False,
                                  miniters=1,
-                                 disable=self.disable_progress_bar)
+                                 disable=self.disable_progress_bar,
+                                 ascii=self.use_ascii_progress_bar)
+
             for fold in fold_progress:
                 scene_metric_fold = sed_eval.scene.SceneClassificationMetrics(scene_labels=self.dataset.scene_labels)
 
@@ -1581,6 +1630,58 @@ class SoundEventAppCore(AppCore):
         if kwargs.get('Learners'):
             self.Learners.update(kwargs.get('Learners'))
 
+    def show_eval(self):
+
+        eval_path = self.params.get_path('path.evaluator')
+
+        eval_files = []
+        for filename in os.listdir(eval_path):
+            if filename.endswith('.yaml'):
+                eval_files.append(os.path.join(eval_path, filename))
+
+        eval_data = {}
+        for filename in eval_files:
+            data = DottedDict(ParameterFile().load(filename=filename))
+            set_id = data.get_path('parameters.set_id')
+            if set_id not in eval_data:
+                eval_data[set_id] = {}
+            params_hash = data.get_path('parameters._hash')
+
+            if params_hash not in eval_data[set_id]:
+                eval_data[set_id][params_hash] = data
+
+        output = ''
+        output += '  Evaluated systems\n'
+        output += '  {set_id:<20s} | {er:8s} | {f1:8s} | {desc:32s} | {hash:32s} |\n'.format(
+            set_id='Set id',
+            desc='Description',
+            hash='Hash',
+            er='Seg ER',
+            f1='Seg F1'
+        )
+
+        output += '  {set_id:<20s} + {er:8s} + {f1:8s} + {desc:32s} + {hash:32s} +\n'.format(
+            set_id='-' * 20,
+            desc='-' * 32,
+            hash='-' * 32,
+            er='-' * 8,
+            f1='-' * 8
+        )
+
+        for set_id in sorted(list(eval_data.keys())):
+            for params_hash in eval_data[set_id]:
+                data = eval_data[set_id][params_hash]
+                desc = data.get_path('parameters.description')
+                output += '  {set_id:<20s} | {er:<8s} | {f1:<8s} | {desc:32s} | {hash:32s} |\n'.format(
+                    set_id=set_id,
+                    desc=(desc[:29] + '..') if len(desc) > 29 else desc,
+                    hash=params_hash,
+                    er='{0:2.2f} %'.format(data.get_path('average.segment_based_er')),
+                    f1='{0:4.2f} %'.format(data.get_path('average.segment_based_fscore'))
+                )
+        self.ui.line(output)
+
+
     @before_and_after_function_wrapper
     def feature_normalization(self, overwrite=None):
         """Feature normalization stage
@@ -1617,7 +1718,8 @@ class SoundEventAppCore(AppCore):
                                      file=sys.stdout,
                                      leave=False,
                                      miniters=1,
-                                     disable=self.disable_progress_bar)
+                                     disable=self.disable_progress_bar,
+                                     ascii=self.use_ascii_progress_bar)
 
                 for fold in fold_progress:
                     if self.log_system_progress:
@@ -1639,22 +1741,24 @@ class SoundEventAppCore(AppCore):
                                                file=sys.stdout,
                                                leave=False,
                                                miniters=1,
-                                               disable=self.disable_progress_bar)
+                                               disable=self.disable_progress_bar,
+                                               ascii=self.use_ascii_progress_bar)
 
                         for method in method_progress:
                             current_normalizer_file = current_normalizer_files[method]
                             if not os.path.isfile(current_normalizer_file) or overwrite:
                                 normalizer = FeatureNormalizer()
-                                item_progress = tqdm(self.dataset.train(fold, scene_label=scene_label),
+                                item_progress = tqdm(self.dataset.train(fold, scene_label=scene_label).file_list,
                                                      desc="           {0: >15s}".format('Collect data '),
                                                      file=sys.stdout,
                                                      leave=False,
                                                      bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                                     disable=self.disable_progress_bar
-                                                     )
-                                for item_id, item in enumerate(item_progress):
+                                                     disable=self.disable_progress_bar,
+                                                     ascii=self.use_ascii_progress_bar)
+
+                                for item_id, audio_filename in enumerate(item_progress):
                                     feature_filename = self._get_feature_filename(
-                                        audio_file=item['file'],
+                                        audio_file=audio_filename,
                                         path=self.params.get_path('path.feature_extractor', {})[method]
                                     )
 
@@ -1672,7 +1776,7 @@ class SoundEventAppCore(AppCore):
                                     else:
                                         message = '{name}: Features not found [{file}]'.format(
                                             name=self.__class__.__name__,
-                                            method=item['file']
+                                            file=audio_filename
                                         )
 
                                         self.logger.exception(message)
@@ -1736,7 +1840,8 @@ class SoundEventAppCore(AppCore):
                                  file=sys.stdout,
                                  leave=False,
                                  miniters=1,
-                                 disable=self.disable_progress_bar)
+                                 disable=self.disable_progress_bar,
+                                 ascii=self.use_ascii_progress_bar)
 
             for fold in fold_progress:
                 if self.log_system_progress:
@@ -1748,11 +1853,15 @@ class SoundEventAppCore(AppCore):
                                       file=sys.stdout,
                                       leave=False,
                                       miniters=1,
-                                      disable=self.disable_progress_bar)
+                                      disable=self.disable_progress_bar,
+                                      ascii=self.use_ascii_progress_bar)
                 for scene_label in scene_progress:
-                    current_model_file = self._get_model_filename(fold=fold,
-                                                                  path=self.params.get_path('path.learner'),
-                                                                  scene_label=scene_label)
+                    current_model_file = self._get_model_filename(
+                        fold=fold,
+                        path=self.params.get_path('path.learner'),
+                        scene_label=scene_label
+                    )
+
                     if not os.path.isfile(current_model_file) or overwrite:
                         # Feature stacker
                         feature_stacker = FeatureStacker(recipe=self.params.get_path('feature_extractor.recipe'))
@@ -1781,7 +1890,7 @@ class SoundEventAppCore(AppCore):
                                 else:
                                     message = '{name}: Feature normalizer not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        method=feature_normalizer_filename
+                                        file=feature_normalizer_filename
                                     )
 
                                     self.logger.exception(message)
@@ -1799,8 +1908,9 @@ class SoundEventAppCore(AppCore):
                                              file=sys.stdout,
                                              leave=False,
                                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                             disable=self.disable_progress_bar
-                                             )
+                                             disable=self.disable_progress_bar,
+                                             ascii=self.use_ascii_progress_bar)
+
                         for item_id, audio_filename in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
@@ -1827,7 +1937,7 @@ class SoundEventAppCore(AppCore):
                                 else:
                                     message = '{name}: Features not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        method=feature_filename
+                                        file=feature_filename
                                     )
 
                                     self.logger.exception(message)
@@ -1913,25 +2023,32 @@ class SoundEventAppCore(AppCore):
                                  file=sys.stdout,
                                  leave=False,
                                  miniters=1,
-                                 disable=self.disable_progress_bar)
+                                 disable=self.disable_progress_bar,
+                                 ascii=self.use_ascii_progress_bar)
 
             for fold in fold_progress:
                 if self.log_system_progress:
-                    self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(title='Fold',
-                                                                                  fold=fold,
-                                                                                  total=len(fold_progress)))
+                    self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(
+                        title='Fold',
+                        fold=fold,
+                        total=len(fold_progress))
+                    )
 
                 scene_progress = tqdm(self.dataset.scene_labels,
                                       desc="           {0: >15s}".format('Scene '),
                                       file=sys.stdout,
                                       leave=False,
                                       miniters=1,
-                                      disable=self.disable_progress_bar)
+                                      disable=self.disable_progress_bar,
+                                      ascii=self.use_ascii_progress_bar)
+
                 for scene_label in scene_progress:
-                    current_result_file = self._get_result_filename(fold=fold,
-                                                                    path=self.params.get_path('path.recognizer'),
-                                                                    scene_label=scene_label
-                                                                    )
+                    current_result_file = self._get_result_filename(
+                        fold=fold,
+                        path=self.params.get_path('path.recognizer'),
+                        scene_label=scene_label
+                    )
+
                     if not os.path.isfile(current_result_file) or overwrite:
                         results = MetaDataContainer(filename=current_result_file)
 
@@ -1947,7 +2064,7 @@ class SoundEventAppCore(AppCore):
                         else:
                             message = '{name}: Model file not found [{file}]'.format(
                                 name=self.__class__.__name__,
-                                method=model_filename
+                                file=model_filename
                             )
 
                             self.logger.exception(message)
@@ -1958,7 +2075,8 @@ class SoundEventAppCore(AppCore):
                                              file=sys.stdout,
                                              leave=False,
                                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                             disable=self.disable_progress_bar
+                                             disable=self.disable_progress_bar,
+                                             ascii=self.use_ascii_progress_bar
                                              )
                         for item_id, item in enumerate(item_progress):
                             if self.log_system_progress:
@@ -1983,7 +2101,7 @@ class SoundEventAppCore(AppCore):
                                 else:
                                     message = '{name}: Features not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        method=item['file']
+                                        file=item['file']
                                     )
 
                                     self.logger.exception(message)
@@ -2091,12 +2209,16 @@ class SoundEventAppCore(AppCore):
 
                             # Select only row which are from current file and contains only detected event
                             current_file_results = []
-                            for result_item in results.filter(filename=self.dataset.absolute_to_relative(item['file'])):
+                            for result_item in results.filter(
+                                    filename=posix_path(self.dataset.absolute_to_relative(item['file']))
+                            ):
                                 if 'event_label' in result_item and result_item.event_label:
                                     current_file_results.append(result_item)
 
                             meta = []
-                            for meta_item in self.dataset.file_meta(self.dataset.absolute_to_relative(item['file'])):
+                            for meta_item in self.dataset.file_meta(
+                                    filename=posix_path(self.dataset.absolute_to_relative(item['file']))
+                            ):
                                 if 'event_label' in meta_item and meta_item.event_label:
                                     meta.append(meta_item)
 
@@ -2385,7 +2507,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                 desc = data.get_path('parameters.description')
                 output += '  {set_id:<20s} | {er:<8s} | {f1:<8s} | {desc:32s} | {hash:32s} |\n'.format(
                     set_id=set_id,
-                    desc=(desc[:44] + '..') if len(desc) > 44 else desc,
+                    desc=(desc[:29] + '..') if len(desc) > 29 else desc,
                     hash=params_hash,
                     er='{0:2.2f} %'.format(data.get_path('average.event_based_er')),
                     f1='{0:4.2f} %'.format(data.get_path('average.event_based_fscore'))
@@ -2428,10 +2550,12 @@ class BinarySoundEventAppCore(SoundEventAppCore):
 
         feature_files = []
         feature_extractor = self.FeatureExtractor(overwrite=overwrite, store=True)
-        for file_id, audio_filename in enumerate(tqdm(files, desc='           {0:<15s}'.format('Extracting features '),
+        for file_id, audio_filename in enumerate(tqdm(files,
+                                                      desc='           {0:<15s}'.format('Extracting features '),
                                                       file=sys.stdout,
                                                       leave=False,
-                                                      disable=self.disable_progress_bar)):
+                                                      disable=self.disable_progress_bar,
+                                                      ascii=self.use_ascii_progress_bar)):
 
             if self.log_system_progress:
                 self.logger.info('  {title:<15s} [{file_id:d}/{total:d}] {file:<30s}'.format(
@@ -2493,42 +2617,51 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                      file=sys.stdout,
                                      leave=False,
                                      miniters=1,
-                                     disable=self.disable_progress_bar)
+                                     disable=self.disable_progress_bar,
+                                     ascii=self.use_ascii_progress_bar)
 
                 for fold in fold_progress:
                     if self.log_system_progress:
-                        self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(title='Fold',
-                                                                                      fold=fold,
-                                                                                      total=len(fold_progress)))
+                        self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(
+                            title='Fold',
+                            fold=fold,
+                            total=len(fold_progress))
+                        )
+
                     for event_label in self.dataset.event_labels:
-                        current_normalizer_files = self._get_feature_normalizer_filename(fold=fold,
-                                                                                         path=self.params.get_path(
-                                                                                            'path.feature_normalizer'),
-                                                                                         event_label=event_label
-                                                                                         )
+                        current_normalizer_files = self._get_feature_normalizer_filename(
+                            fold=fold,
+                            path=self.params.get_path('path.feature_normalizer'),
+                            event_label=event_label
+                        )
 
                         method_progress = tqdm(current_normalizer_files,
                                                desc='           {0: >15s}'.format('Feature method '),
                                                file=sys.stdout,
                                                leave=False,
                                                miniters=1,
-                                               disable=self.disable_progress_bar)
+                                               disable=self.disable_progress_bar,
+                                               ascii=self.use_ascii_progress_bar)
 
                         for method in method_progress:
                             current_normalizer_file = current_normalizer_files[method]
                             if not os.path.isfile(current_normalizer_file) or overwrite:
                                 normalizer = FeatureNormalizer()
-                                item_progress = tqdm(self.dataset.train(fold, event_label=event_label),
+                                item_progress = tqdm(self.dataset.train(fold, event_label=event_label).file_list,
                                                      desc="           {0: >15s}".format('Collect data '),
                                                      file=sys.stdout,
                                                      leave=False,
                                                      bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                                     disable=self.disable_progress_bar
+                                                     disable=self.disable_progress_bar,
+                                                     ascii=self.use_ascii_progress_bar
                                                      )
-                                for item_id, item in enumerate(item_progress):
-                                    feature_filename = self._get_feature_filename(audio_file=item['file'],
-                                                                                  path=self.params.get_path(
-                                                                                     'path.feature_extractor', {})[method])
+
+                                for item_id, audio_filename in enumerate(item_progress):
+                                    feature_filename = self._get_feature_filename(
+                                        audio_file=audio_filename,
+                                        path=self.params.get_path('path.feature_extractor', {})[method]
+                                    )
+
                                     if self.log_system_progress:
                                         self.logger.info(
                                             '  {title:<15s} [{item_id:d}/{total:d}] {file:<30s}'.format(
@@ -2543,7 +2676,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                     else:
                                         message = '{name}: Features not found [{file}]'.format(
                                             name=self.__class__.__name__,
-                                            method=feature_filename
+                                            file=audio_filename
                                         )
 
                                         self.logger.exception(message)
@@ -2606,7 +2739,8 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                  file=sys.stdout,
                                  leave=False,
                                  miniters=1,
-                                 disable=self.disable_progress_bar)
+                                 disable=self.disable_progress_bar,
+                                 ascii=self.use_ascii_progress_bar)
 
             for fold in fold_progress:
                 if self.log_system_progress:
@@ -2618,7 +2752,9 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                       file=sys.stdout,
                                       leave=False,
                                       miniters=1,
-                                      disable=self.disable_progress_bar)
+                                      disable=self.disable_progress_bar,
+                                      ascii=self.use_ascii_progress_bar)
+
                 for event_label in event_progress:
                     current_model_file = self._get_model_filename(fold=fold,
                                                                   path=self.params.get_path('path.learner'),
@@ -2654,7 +2790,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                 else:
                                     message = '{name}: Feature normalizer not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        method=feature_normalizer_filename
+                                        file=feature_normalizer_filename
                                     )
 
                                     self.logger.exception(message)
@@ -2674,8 +2810,9 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                              file=sys.stdout,
                                              leave=False,
                                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                             disable=self.disable_progress_bar
-                                             )
+                                             disable=self.disable_progress_bar,
+                                             ascii=self.use_ascii_progress_bar)
+
                         for item_id, audio_filename in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
@@ -2702,7 +2839,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                 else:
                                     message = '{name}: Features not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        method=feature_filename
+                                        file=feature_filename
                                     )
 
                                     self.logger.exception(message)
@@ -2748,7 +2885,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                         else:
                             message = '{name}: Model file not found [{file}]'.format(
                                 name=self.__class__.__name__,
-                                method=model_filename
+                                file=model_filename
                             )
 
                             self.logger.exception(message)
@@ -2864,7 +3001,8 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                  file=sys.stdout,
                                  leave=False,
                                  miniters=1,
-                                 disable=self.disable_progress_bar)
+                                 disable=self.disable_progress_bar,
+                                 ascii=self.use_ascii_progress_bar)
 
             for fold in fold_progress:
                 if self.log_system_progress:
@@ -2877,20 +3015,25 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                       file=sys.stdout,
                                       leave=False,
                                       miniters=1,
-                                      disable=self.disable_progress_bar)
+                                      disable=self.disable_progress_bar,
+                                      ascii=self.use_ascii_progress_bar)
+
                 for event_label in event_progress:
-                    current_result_file = self._get_result_filename(fold=fold,
-                                                                    path=self.params.get_path('path.recognizer'),
-                                                                    event_label=event_label
-                                                                    )
+                    current_result_file = self._get_result_filename(
+                        fold=fold,
+                        path=self.params.get_path('path.recognizer'),
+                        event_label=event_label
+                    )
+
                     if not os.path.isfile(current_result_file) or overwrite:
                         results = MetaDataContainer(filename=current_result_file)
 
                         # Load class model container
-                        model_filename = self._get_model_filename(fold=fold,
-                                                                  path=self.params.get_path('path.learner'),
-                                                                  event_label=event_label
-                                                                  )
+                        model_filename = self._get_model_filename(
+                            fold=fold,
+                            path=self.params.get_path('path.learner'),
+                            event_label=event_label
+                        )
 
                         if os.path.isfile(model_filename):
                             model_container = self._get_learner(method=self.params.get_path('learner.method')).load(
@@ -2898,7 +3041,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                         else:
                             message = '{name}: Model file not found [{file}]'.format(
                                 name=self.__class__.__name__,
-                                method=model_filename
+                                file=model_filename
                             )
 
                             self.logger.exception(message)
@@ -2909,8 +3052,9 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                              file=sys.stdout,
                                              leave=False,
                                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
-                                             disable=self.disable_progress_bar
-                                             )
+                                             disable=self.disable_progress_bar,
+                                             ascii=self.use_ascii_progress_bar)
+
                         for item_id, item in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
@@ -2934,7 +3078,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                 else:
                                     message = '{name}: Features not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        method=item['file']
+                                        file=item['file']
                                     )
 
                                     self.logger.exception(message)
@@ -3043,7 +3187,9 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                         for file_id, item in enumerate(self.dataset.test(fold, event_label=event_label)):
                             # Select only row which are from current file and contains only detected event
                             current_file_results = []
-                            for result_item in results.filter(filename=self.dataset.absolute_to_relative(item['file'])):
+                            for result_item in results.filter(
+                                    filename=posix_path(self.dataset.absolute_to_relative(item['file']))
+                            ):
                                 if 'event_label' in result_item and result_item.event_label:
                                     current_file_results.append(result_item)
 
