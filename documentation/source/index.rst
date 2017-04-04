@@ -96,8 +96,9 @@ More about :ref:`applications<applications>`.
 Getting started
 ---------------
 
-1. Install requirements with command: ``pip install -r requirements.txt``, :ref:`installation details<install>`.
-2. Run the application with default settings: ``python applications/task1.py``, ``python applications/task2.py``, and ``python applications/task3.py``,  :ref:`usage details<usage_tutorial>`.
+1. Clone repository from `Github <https://github.com/TUT-ARG/DCASE2017-baseline-system>`_ or download `latest release <https://github.com/TUT-ARG/DCASE2017-baseline-system/releases/latest>`_.
+2. Install requirements with command: ``pip install -r requirements.txt``, :ref:`installation details<install>`.
+3. Run the application with default settings: ``python applications/task1.py``, ``python applications/task2.py``, and ``python applications/task3.py``,  :ref:`usage details<usage_tutorial>`.
 
 DCASE Framework
 ---------------
