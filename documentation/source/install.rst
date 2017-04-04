@@ -27,6 +27,13 @@ To ensure that all external modules are installed, run command::
 
     pip install -r requirements.txt
 
+**PySoundFile**
+
+`PySoundFile <https://github.com/bastibe/PySoundFile>`_ is used to read and write audio files in the system. The library depends on system level library `libsndfile <http://www.mega-nerd.com/libsndfile/>`. Under Linux (Debian/Ubuntu) you can install this with command::
+
+    sudo apt-get install libsndfile1
+
+
 **Theano**
 
 The system uses by default `Theano <http://deeplearning.net/software/theano/>`_ as `Keras <https://keras.io/>`_ backend.
