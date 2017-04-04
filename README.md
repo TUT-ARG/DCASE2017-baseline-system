@@ -21,8 +21,10 @@ See https://tut-arg.github.io/DCASE2017-baseline-system/ for detailed instructio
 Getting started
 ===============
 
-1. Install requirements with command: ``pip install -r requirements.txt``
-2. Run the application with default settings: ``python applications/task1.py``
+
+1. Clone repository from [Github](https://github.com/TUT-ARG/DCASE2017-baseline-system) or download [latest release](https://github.com/TUT-ARG/DCASE2017-baseline-system/releases/latest).
+2. Install requirements with command: ``pip install -r requirements.txt``
+3. Run the application with default settings: ``python applications/task1.py``
 
 System description
 ==================
