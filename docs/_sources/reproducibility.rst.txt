@@ -5,7 +5,7 @@ Reproducibility
 
 The baseline system is based on `Keras <https://keras.io/>`_ while using `Theano <http://deeplearning.net/software/theano/>`_ as backend.
 Theano can be used seamlessly either on CPU or on GPU, however, the learned neural networks from these two modes will not be exactly the same.
-Theano can produce consistent results on **same computer** when used in CPU mode, if numpy random seed is fixed prior to importing Keras. In GPU mode, consistent randomization values are generally hard to achieve due to the heavy usage of parallel computing. Fortunately, results are usually very close each other and within acceptable limits to enable informed system development. However, the role of a baseline system is to have results which are reproducible on most of the normal computer setups.
+Theano can produce consistent results on **same computer setup** when used in CPU mode, if numpy random seed is fixed prior to importing Keras. In GPU mode, consistent randomization values are generally hard to achieve due to the heavy usage of parallel computing. Fortunately, results are usually very close each other and within acceptable limits to enable informed system development. However, the role of a baseline system is to have results which are reproducible on most of the normal computer setups.
 
 In order to get consistent results across **different computer setups** when using Keras and Theano, the following aspects should be taken into account:
 
