@@ -29,7 +29,7 @@ To ensure that all external modules are installed, run command::
 
 **PySoundFile**
 
-`PySoundFile <https://github.com/bastibe/PySoundFile>`_ is used to read and write audio files in the system. The library depends on system level library `libsndfile <http://www.mega-nerd.com/libsndfile/>`. Under Linux (Debian/Ubuntu) you can install this with command::
+`PySoundFile <https://github.com/bastibe/PySoundFile>`_ is used to read and write audio files in the system. The library depends on system level library `libsndfile <http://www.mega-nerd.com/libsndfile/>`_. Under Linux (Debian/Ubuntu) you can install this with command::
 
     sudo apt-get install libsndfile1
 
