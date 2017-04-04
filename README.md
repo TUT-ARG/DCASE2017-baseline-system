@@ -68,6 +68,7 @@ To ensure that all external modules are installed, run command:
 
 ``pip install -r requirements.txt``
 
+See more detailed instructions from [documentation](https://tut-arg.github.io/DCASE2017-baseline-system/install.html).
 
 Changelog
 =========
