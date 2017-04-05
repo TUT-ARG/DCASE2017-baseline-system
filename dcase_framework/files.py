@@ -788,7 +788,7 @@ class AudioFile(FileMixin):
         self.mono = kwargs.get('mono', True)
 
     @before_and_after_function_wrapper
-    def load(self, filename=None, fs=None, mono=None, res_type='kaiser_best'):
+    def load(self, filename=None, fs=None, mono=None, res_type='kaiser_best', start=None, stop=None):
         """Load file
 
         Parameters
@@ -805,6 +805,13 @@ class AudioFile(FileMixin):
         res_type : str
             Resample type, defined by Librosa
             Default value "kaiser_best"
+        start : float, optional
+            Segment start time in seconds
+            Default value "None"
+        stop : float, optional
+            Segment stop time in seconds
+            Default value "None"
+
         Raises
         ------
         IOError:
@@ -828,7 +835,19 @@ class AudioFile(FileMixin):
                 self.mono = mono
 
             if self.format == 'wav':
-                self.data, source_fs = soundfile.read(self.filename)
+                info = soundfile.info(file=self.filename)
+
+                # Handle segment start and stop
+                if start is not None and stop is not None:
+                    start_sample = int(start * info.samplerate)
+                    stop_sample = int(stop * info.samplerate)
+                    if stop_sample > info.frames:
+                        stop_sample = info.frames
+                else:
+                    start_sample = None
+                    stop_sample = None
+
+                self.data, source_fs = soundfile.read(file=self.filename, start=start_sample, stop=stop_sample)
                 self.data = self.data.T
 
                 # Down-mix audio
@@ -842,7 +861,13 @@ class AudioFile(FileMixin):
 
             elif self.format in ['flac', 'm4a', 'webm']:
                 import librosa
-                self.data, self.fs = librosa.load(self.filename, sr=self.fs, mono=self.mono, res_type=res_type)
+                if start is not None and stop is not None:
+                    offset = start
+                    duration = stop - start
+                else:
+                    offset = 0.0
+                    duration = None
+                self.data, self.fs = librosa.load(self.filename, sr=self.fs, mono=self.mono, res_type=res_type, offset=offset, duration=duration)
 
             else:
                 message = '{name}: Unknown format [{format}]'.format(name=self.__class__.__name__, format=self.filename)
