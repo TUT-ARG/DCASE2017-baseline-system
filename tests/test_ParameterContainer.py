@@ -87,9 +87,9 @@ def test_path():
     nose.tools.assert_list_equal(sorted(list(params.get_path('path.feature_extractor').keys())), ['featA', 'featB'])
     nose.tools.assert_list_equal(sorted(list(params.get_path('path.feature_normalizer').keys())), ['featA', 'featB'])
 
-    nose.tools.eq_(len(params.get_path('path.learner').replace(params.get_path('path.system_base'), '').split('/')),
+    nose.tools.eq_(len(params.get_path('path.learner').replace(params.get_path('path.system_base'), '').split(os.path.sep)),
                    len(params.path_structure['learner'])+1)
-    nose.tools.eq_(len(params.get_path('path.recognizer').replace(params.get_path('path.system_base'), '').split('/')),
+    nose.tools.eq_(len(params.get_path('path.recognizer').replace(params.get_path('path.system_base'), '').split(os.path.sep)),
                    len(params.path_structure['recognizer'])+1)
 
 

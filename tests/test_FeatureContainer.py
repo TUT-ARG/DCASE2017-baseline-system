@@ -57,7 +57,7 @@ def test_load():
     # Meta
     nose.tools.assert_list_equal(sorted(list(feature_container.keys())), ['feat', 'meta', 'stat'])
 
-    nose.tools.eq_(feature_container.meta['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_container.meta['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_container.meta['parameters']['n_mels'], 40)
     nose.tools.eq_(feature_container.meta['parameters']['n_mfcc'], 10)
 
