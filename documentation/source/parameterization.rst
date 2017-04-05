@@ -142,7 +142,7 @@ Example section:
 | print_system_progress          | bool         | Print the system progress into console using carriage return.        |
 +--------------------------------+--------------+----------------------------------------------------------------------+
 | use_ascii_progress_bar         | bool         | Force ASCII progres bars, use this if your console does not support  |
-|                                |              | UTF-8 character set.                                                 |
+|                                |              | UTF-8 character set. Under Windows this is set automatically True.   |
 +--------------------------------+--------------+----------------------------------------------------------------------+
 | log_system_parameters          | bool         | Save system parameters into system log file.                         |
 +--------------------------------+--------------+----------------------------------------------------------------------+
