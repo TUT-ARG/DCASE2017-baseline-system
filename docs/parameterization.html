@@ -15,6 +15,8 @@
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
   
+  
+  
 
   
 
@@ -48,6 +50,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -84,7 +87,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Baseline system</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Baseline system</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="system_description.html">System description</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
@@ -545,8 +551,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">DCASE2017 Baseline</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DCASE2017 Baseline</a>
+        
       </nav>
 
 
@@ -555,21 +563,38 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Parameterization</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Parameterization</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -739,7 +764,7 @@ Use this mode when preparing a submission to the challenge.</td>
 <tr class="row-odd"><td>use_ascii_progress_bar</td>
 <td>bool</td>
 <td>Force ASCII progres bars, use this if your console does not support
-UTF-8 character set.</td>
+UTF-8 character set. Under Windows this is set automatically True.</td>
 </tr>
 <tr class="row-even"><td>log_system_parameters</td>
 <td>bool</td>
@@ -1921,15 +1946,18 @@ used:</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="reproducibility.html" class="btn btn-neutral float-right" title="Reproducibility" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="reproducibility.html" class="btn btn-neutral float-right" title="Reproducibility" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="usage_tutorial.html" class="btn btn-neutral" title="Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="usage_tutorial.html" class="btn btn-neutral" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1962,7 +1990,8 @@ used:</p>
             VERSION:'1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

@@ -15,6 +15,8 @@
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
+  
+  
 
   
 
@@ -47,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -83,7 +86,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Baseline system</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Baseline system</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../system_description.html">System description</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
@@ -544,8 +550,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">DCASE2017 Baseline</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DCASE2017 Baseline</a>
+        
       </nav>
 
 
@@ -558,19 +566,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>dcase_framework.application_core</li>
+        
+      <li>dcase_framework.application_core</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -801,7 +826,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">disable_progress_bar</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;show_progress_in_console&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_system_progress</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;log_system_progress&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -811,7 +836,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">dataset_item</span> <span class="ow">in</span> <span class="n">get_class_inheritors</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="p">[</span><span class="n">dataset_item</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_item</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="p">[</span><span class="n">dataset_item</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_item</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Datasets&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Datasets&#39;</span><span class="p">))</span>
@@ -840,7 +865,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">ParameterContainer</span><span class="p">):</span>
             <span class="c1"># Parameters are empty or not ParameterContainer</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No valid ParameterContainer given.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -905,7 +930,7 @@
                     <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;dataset.parameters&#39;</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No valid dataset given [</span><span class="si">{dataset}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">dataset</span><span class="o">=</span><span class="n">dataset_class_name</span>
                 <span class="p">)</span>
 
@@ -919,7 +944,7 @@
             <span class="k">return</span> <span class="n">dataset</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No valid dataset given [</span><span class="si">{dataset}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -931,7 +956,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Learners</span><span class="p">[</span><span class="n">method</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No valid learner method given [</span><span class="si">{method}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">method</span><span class="o">=</span><span class="n">method</span>
             <span class="p">)</span>
 
@@ -1014,7 +1039,7 @@
                 <span class="n">file_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">meta</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="s1">&#39;  </span><span class="si">{class_name:&lt;45s}</span><span class="s1"> | </span><span class="si">{group:20s}</span><span class="s1"> | </span><span class="si">{valid:5s}</span><span class="s1"> | </span><span class="si">{files:10s}</span><span class="s1"> |</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">class_name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">class_name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">group</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dataset_group</span><span class="p">,</span>
                 <span class="n">valid</span><span class="o">=</span><span class="s1">&#39;Yes&#39;</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">check_filelist</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;No&#39;</span><span class="p">,</span>
                 <span class="n">files</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">file_count</span><span class="p">)</span> <span class="k">if</span> <span class="n">file_count</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
@@ -1492,13 +1517,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">AcousticSceneClassificationAppCore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AcousticSceneClassificationAppCore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># Fetch datasets</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">dataset_item</span> <span class="ow">in</span> <span class="n">get_class_inheritors</span><span class="p">(</span><span class="n">AcousticSceneDataset</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="p">[</span><span class="n">dataset_item</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_item</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="p">[</span><span class="n">dataset_item</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_item</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Datasets&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Datasets&#39;</span><span class="p">))</span>
@@ -1651,7 +1676,7 @@
                                 <span class="n">feature_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FeatureContainer</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                     <span class="n">file</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
                                 <span class="p">)</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1739,7 +1764,7 @@
 
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Feature normalizer not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                 <span class="n">file</span><span class="o">=</span><span class="n">feature_normalizer_filename</span>
                             <span class="p">)</span>
 
@@ -1783,7 +1808,7 @@
                             <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                 <span class="n">file</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
                             <span class="p">)</span>
 
@@ -1832,7 +1857,7 @@
                     <span class="n">model_container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_learner</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.method&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">model_filename</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Model file not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="n">file</span><span class="o">=</span><span class="n">model_filename</span>
                     <span class="p">)</span>
 
@@ -1929,7 +1954,7 @@
                         <span class="n">filename</span><span class="o">=</span><span class="n">model_filename</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Model file not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="n">file</span><span class="o">=</span><span class="n">model_filename</span>
                     <span class="p">)</span>
 
@@ -1965,7 +1990,7 @@
                             <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                 <span class="n">file</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
                             <span class="p">)</span>
 
@@ -2184,13 +2209,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">SoundEventAppCore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SoundEventAppCore</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># Fetch datasets</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">dataset_item</span> <span class="ow">in</span> <span class="n">get_class_inheritors</span><span class="p">(</span><span class="n">SoundEventDataset</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="p">[</span><span class="n">dataset_item</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_item</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="p">[</span><span class="n">dataset_item</span><span class="o">.</span><span class="n">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataset_item</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Datasets&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Datasets</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Datasets&#39;</span><span class="p">))</span>
@@ -2354,7 +2379,7 @@
                                         <span class="n">feature_stats</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                                     <span class="k">else</span><span class="p">:</span>
                                         <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                             <span class="n">file</span><span class="o">=</span><span class="n">audio_filename</span>
                                         <span class="p">)</span>
 
@@ -2369,7 +2394,7 @@
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_normalizer.scene_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;scene-independent&#39;</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Scene handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_normalizer.scene_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -2378,7 +2403,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown scene handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_normalizer.scene_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -2468,7 +2493,7 @@
                                     <span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureNormalizer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_normalizer_filename</span><span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Feature normalizer not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                         <span class="n">file</span><span class="o">=</span><span class="n">feature_normalizer_filename</span>
                                     <span class="p">)</span>
 
@@ -2515,7 +2540,7 @@
                                     <span class="n">feature_list</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                         <span class="n">file</span><span class="o">=</span><span class="n">feature_filename</span>
                                     <span class="p">)</span>
 
@@ -2550,7 +2575,7 @@
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.scene_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;scene-independent&#39;</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Scene handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.scene_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -2559,7 +2584,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown scene handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.scene_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -2642,7 +2667,7 @@
                                 <span class="n">filename</span><span class="o">=</span><span class="n">model_filename</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Model file not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                 <span class="n">file</span><span class="o">=</span><span class="n">model_filename</span>
                             <span class="p">)</span>
 
@@ -2679,7 +2704,7 @@
                                     <span class="n">feature_list</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                         <span class="n">file</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
                                     <span class="p">)</span>
 
@@ -2718,7 +2743,7 @@
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.scene_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;scene-independent&#39;</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Scene handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.scene_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -2727,7 +2752,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown scene handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.scene_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -2878,7 +2903,7 @@
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;evaluator.scene_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;scene-independent&#39;</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Scene handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;evaluator.scene_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -2887,7 +2912,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown scene handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;evaluator.scene_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -3254,7 +3279,7 @@
                                         <span class="n">feature_stats</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                                     <span class="k">else</span><span class="p">:</span>
                                         <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                             <span class="n">file</span><span class="o">=</span><span class="n">audio_filename</span>
                                         <span class="p">)</span>
 
@@ -3268,7 +3293,7 @@
                                 <span class="n">normalizer</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">current_normalizer_file</span><span class="p">)</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_normalizer.event_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;event-independent&#39;</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Event handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_normalizer.event_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -3277,7 +3302,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown event handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_normalizer.event_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -3368,7 +3393,7 @@
 
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Feature normalizer not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                         <span class="n">file</span><span class="o">=</span><span class="n">feature_normalizer_filename</span>
                                     <span class="p">)</span>
 
@@ -3417,7 +3442,7 @@
                                     <span class="n">feature_list</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                         <span class="n">file</span><span class="o">=</span><span class="n">feature_filename</span>
                                     <span class="p">)</span>
 
@@ -3463,7 +3488,7 @@
 
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Model file not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                 <span class="n">file</span><span class="o">=</span><span class="n">model_filename</span>
                             <span class="p">)</span>
 
@@ -3527,7 +3552,7 @@
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.event_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;event-independent&#39;</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Event handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.event_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -3536,7 +3561,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown event handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.event_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -3619,7 +3644,7 @@
                                 <span class="n">filename</span><span class="o">=</span><span class="n">model_filename</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Model file not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                 <span class="n">file</span><span class="o">=</span><span class="n">model_filename</span>
                             <span class="p">)</span>
 
@@ -3656,7 +3681,7 @@
                                     <span class="n">feature_list</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">feature_filename</span><span class="p">)</span>
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Features not found [</span><span class="si">{file}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                                         <span class="n">file</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
                                     <span class="p">)</span>
 
@@ -3698,7 +3723,7 @@
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;event-independent&#39;</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Event handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -3707,7 +3732,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown event handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_handling&#39;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -3858,7 +3883,7 @@
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;evaluator.event_handling&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;event-independent&#39;</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Event handling mode not implemented yet [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;evaluator.event_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -3867,7 +3892,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown event handling mode [</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;evaluator.event_handling&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -4021,6 +4046,9 @@
 </pre></div>
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -4053,7 +4081,8 @@
             VERSION:'1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

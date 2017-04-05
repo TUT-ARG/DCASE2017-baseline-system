@@ -15,6 +15,8 @@
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
+  
+  
 
   
 
@@ -47,6 +49,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -83,7 +86,10 @@
           
             
             
-                <p class="caption"><span class="caption-text">Baseline system</span></p>
+              
+            
+            
+              <p class="caption"><span class="caption-text">Baseline system</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../system_description.html">System description</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
@@ -544,8 +550,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../index.html">DCASE2017 Baseline</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DCASE2017 Baseline</a>
+        
       </nav>
 
 
@@ -558,19 +566,36 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      
-    <li>dcase_framework.learners</li>
+        
+      <li>dcase_framework.learners</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -730,7 +755,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">LearnerContainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">({</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LearnerContainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">({</span>
             <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
             <span class="s1">&#39;class_labels&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_labels&#39;</span><span class="p">,</span> <span class="p">[]),</span>
             <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">DottedDict</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="p">{})),</span>
@@ -755,7 +780,7 @@
             <span class="n">bigint</span><span class="p">,</span> <span class="n">mod</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">unix_now</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">mod</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span>  <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span>  <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">disable_progress_bar</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;disable_progress_bar&#39;</span><span class="p">,</span>  <span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_progress</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;log_progress&#39;</span><span class="p">,</span>  <span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;show_extra_debug&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
@@ -926,7 +951,7 @@
                 <span class="n">input_shape</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">input_shape</span> <span class="o">!=</span> <span class="n">data</span><span class="p">[</span><span class="n">audio_filename</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Input size not coherent.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -981,7 +1006,7 @@
                                        <span class="s1">&#39;][&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">inbound_tensor_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">)</span>
 
             <span class="n">config</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-            <span class="n">layer_name</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">layer_name</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">in</span> <span class="n">layer_name_map</span><span class="p">:</span>
                 <span class="n">layer_name</span> <span class="o">=</span> <span class="n">layer_name_map</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span>
 
@@ -1016,7 +1041,7 @@
                 <span class="n">LayerClass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;keras.layers&quot;</span><span class="p">),</span> <span class="n">layer_setup</span><span class="p">[</span><span class="s1">&#39;class_name&#39;</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Invalid Keras layer type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="nb">type</span><span class="o">=</span><span class="n">layer_setup</span><span class="p">[</span><span class="s1">&#39;class_name&#39;</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1052,7 +1077,7 @@
 
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Invalid Keras optimizer type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;model.optimizer.type&#39;</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1085,7 +1110,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">keras_model_filename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Keras model not found [</span><span class="si">{filename}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">filename</span><span class="o">=</span><span class="n">keras_model_filename</span>
             <span class="p">)</span>
 
@@ -1233,7 +1258,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Keras backend not supported [backend].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1294,7 +1319,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown frame_binarization type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="nb">type</span><span class="o">=</span><span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.type&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -1312,7 +1337,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown decision_making type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="nb">type</span><span class="o">=</span><span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;decision_making.type&#39;</span><span class="p">)</span>
                 <span class="p">)</span>
 
@@ -1384,7 +1409,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{0:&lt;20s}</span><span class="s1"> | </span><span class="si">{1:4.2f}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">scene_label</span><span class="p">,</span> <span class="n">validation_amounts</span><span class="p">[</span><span class="n">scene_label</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown validation_type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">validation_type</span>
             <span class="p">)</span>
 
@@ -1404,7 +1429,7 @@
                 <span class="n">accumulated</span><span class="p">[</span><span class="n">row_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[</span><span class="n">row_id</span><span class="p">,</span> <span class="p">:])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown accumulation type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                     <span class="nb">type</span><span class="o">=</span><span class="n">accumulation_type</span>
                 <span class="p">)</span>
 
@@ -1425,7 +1450,7 @@
 
     <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
         <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Implement learn function.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1435,7 +1460,7 @@
 <span class="k">class</span> <span class="nc">SceneClassifierGMMdeprecated</span><span class="p">(</span><span class="n">SceneClassifier</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Scene classifier with GMM&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SceneClassifierGMMdeprecated</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SceneClassifierGMMdeprecated</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;gmm_deprecated&#39;</span>
 
     <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
@@ -1502,7 +1527,7 @@
 <div class="viewcode-block" id="SceneClassifierGMM"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM">[docs]</a><span class="k">class</span> <span class="nc">SceneClassifierGMM</span><span class="p">(</span><span class="n">SceneClassifier</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Scene classifier with GMM&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SceneClassifierGMM.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SceneClassifierGMM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SceneClassifierGMM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;gmm&#39;</span></div>
 
 <div class="viewcode-block" id="SceneClassifierGMM.learn"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierGMM.learn.html#dcase_framework.learners.SceneClassifierGMM.learn">[docs]</a>    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
@@ -1562,7 +1587,7 @@
 <div class="viewcode-block" id="SceneClassifierMLP"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html#dcase_framework.learners.SceneClassifierMLP">[docs]</a><span class="k">class</span> <span class="nc">SceneClassifierMLP</span><span class="p">(</span><span class="n">SceneClassifier</span><span class="p">,</span> <span class="n">KerasMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Scene classifier with MLP&quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SceneClassifierMLP.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html#dcase_framework.learners.SceneClassifierMLP.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SceneClassifierMLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SceneClassifierMLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;mlp&#39;</span></div>
 
 <div class="viewcode-block" id="SceneClassifierMLP.learn"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierMLP.learn.html#dcase_framework.learners.SceneClassifierMLP.learn">[docs]</a>    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
@@ -1596,7 +1621,7 @@
         <span class="c1"># Double check that training and validation files are not overlapping.</span>
         <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">training_files</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">validation_files</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Training and validation file lists are overlapping!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1633,7 +1658,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
 
             <span class="k">def</span> <span class="nf">on_train_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;epochs&#39;</span><span class="p">]</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_progress</span><span class="p">:</span>
@@ -1709,7 +1734,7 @@
 
                 <span class="k">if</span> <span class="n">cp</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;EarlyStopping&#39;</span> <span class="ow">and</span> <span class="n">cp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monitor&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;val_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.enable&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Cannot use callback type [</span><span class="si">{type}</span><span class="s1">] with monitor parameter [</span><span class="si">{monitor}</span><span class="s1">] as there is no validation set.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
                         <span class="n">monitor</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monitor&#39;</span><span class="p">)</span>
                     <span class="p">)</span>
@@ -1726,7 +1751,7 @@
 
                 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Invalid Keras callback type [</span><span class="si">{type}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
                     <span class="p">)</span>
 
@@ -1817,7 +1842,7 @@
                     <span class="n">output_probabilities</span><span class="p">[</span><span class="n">start_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">input_probabilities</span><span class="p">[</span><span class="n">start_id</span><span class="p">:</span><span class="n">stop_id</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown slide and accumulate type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">accumulation_type</span>
                     <span class="p">)</span>
 
@@ -1834,7 +1859,7 @@
             <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">medfilt</span><span class="p">(</span><span class="n">volume</span><span class="o">=</span><span class="n">activity_vector</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown activity processing type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">processing_type</span>
             <span class="p">)</span>
 
@@ -1971,7 +1996,7 @@
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Validation setup creation was not successful! Could not find a set with examples for each event class in both training and validation.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
                     <span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -2013,7 +2038,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown validation_type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">validation_type</span>
             <span class="p">)</span>
 
@@ -2025,7 +2050,7 @@
 
 <span class="k">class</span> <span class="nc">EventDetectorGMMdeprecated</span><span class="p">(</span><span class="n">EventDetector</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EventDetectorGMMdeprecated</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EventDetectorGMMdeprecated</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;gmm_deprecated&#39;</span>
 
     <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
@@ -2050,7 +2075,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No hop length set.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -2129,13 +2154,13 @@
                     <span class="n">event_activity</span> <span class="o">=</span> <span class="n">frame_probabilities</span><span class="p">[</span><span class="n">event_id</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&gt;</span> <span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.threshold&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown frame_binarization type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.type&#39;</span><span class="p">)</span>
                     <span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No frame_binarization enabled.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No frame_binarization enabled.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
@@ -2148,7 +2173,7 @@
 
 <div class="viewcode-block" id="EventDetectorGMM"><a class="viewcode-back" href="../../generated/dcase_framework.learners.EventDetectorGMM.html#dcase_framework.learners.EventDetectorGMM">[docs]</a><span class="k">class</span> <span class="nc">EventDetectorGMM</span><span class="p">(</span><span class="n">EventDetector</span><span class="p">):</span>
 <div class="viewcode-block" id="EventDetectorGMM.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.learners.EventDetectorGMM.html#dcase_framework.learners.EventDetectorGMM.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EventDetectorGMM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EventDetectorGMM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;gmm&#39;</span></div>
 
 <div class="viewcode-block" id="EventDetectorGMM.learn"><a class="viewcode-back" href="../../generated/dcase_framework.learners.EventDetectorGMM.learn.html#dcase_framework.learners.EventDetectorGMM.learn">[docs]</a>    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
@@ -2171,7 +2196,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No hop length set.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -2252,7 +2277,7 @@
                     <span class="n">event_activity</span> <span class="o">=</span> <span class="n">frame_probabilities</span> <span class="o">&gt;</span> <span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.threshold&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown frame_binarization type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.type&#39;</span><span class="p">)</span>
                     <span class="p">)</span>
 
@@ -2260,7 +2285,7 @@
                     <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No frame_binarization enabled.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No frame_binarization enabled.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
@@ -2278,7 +2303,7 @@
 
 <div class="viewcode-block" id="EventDetectorMLP"><a class="viewcode-back" href="../../generated/dcase_framework.learners.EventDetectorMLP.html#dcase_framework.learners.EventDetectorMLP">[docs]</a><span class="k">class</span> <span class="nc">EventDetectorMLP</span><span class="p">(</span><span class="n">EventDetector</span><span class="p">,</span> <span class="n">KerasMixin</span><span class="p">):</span>
 <div class="viewcode-block" id="EventDetectorMLP.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.learners.EventDetectorMLP.html#dcase_framework.learners.EventDetectorMLP.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EventDetectorMLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EventDetectorMLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;mlp&#39;</span></div>
 
 <div class="viewcode-block" id="EventDetectorMLP.learn"><a class="viewcode-back" href="../../generated/dcase_framework.learners.EventDetectorMLP.learn.html#dcase_framework.learners.EventDetectorMLP.learn">[docs]</a>    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
@@ -2316,7 +2341,7 @@
         <span class="c1"># Double check that training and validation files are not overlapping.</span>
         <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">training_files</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">validation_files</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Training and validation file lists are overlapping!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -2372,13 +2397,13 @@
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
                 <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">metric</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="vm">__name__</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">__name__</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">disable_progress_bar</span> <span class="o">=</span> <span class="n">disable_progress_bar</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log_progress</span> <span class="o">=</span> <span class="n">log_progress</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
 
             <span class="k">def</span> <span class="nf">on_train_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;verbose&#39;</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">epochs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;epochs&#39;</span><span class="p">]</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_progress</span><span class="p">:</span>
@@ -2454,7 +2479,7 @@
 
                 <span class="k">if</span> <span class="n">cp</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;EarlyStopping&#39;</span> <span class="ow">and</span> <span class="n">cp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monitor&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;val_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;validation.enable&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Cannot use callback type [</span><span class="si">{type}</span><span class="s1">] with monitor parameter [</span><span class="si">{monitor}</span><span class="s1">] as there is no validation set.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
                         <span class="n">monitor</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monitor&#39;</span><span class="p">)</span>
                     <span class="p">)</span>
@@ -2468,7 +2493,7 @@
 
                 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Invalid Keras callback type [</span><span class="si">{type}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">cp</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
                     <span class="p">)</span>
 
@@ -2534,7 +2559,7 @@
                     <span class="n">event_activity</span> <span class="o">=</span> <span class="n">frame_probabilities</span><span class="p">[</span><span class="n">event_id</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&gt;</span> <span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.threshold&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Unknown frame_binarization type [</span><span class="si">{type}</span><span class="s1">].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">recognizer_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;frame_binarization.type&#39;</span><span class="p">)</span>
                     <span class="p">)</span>
 
@@ -2543,7 +2568,7 @@
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: No frame_binarization enabled.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
                 <span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -2561,6 +2586,9 @@
 
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -2594,7 +2622,8 @@
             VERSION:'1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
