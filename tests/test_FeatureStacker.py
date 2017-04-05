@@ -69,7 +69,7 @@ def test_process():
     nose.tools.eq_(feature_container.frames, 501)
     nose.tools.eq_(feature_container.vector_length, 4)
 
-    nose.tools.eq_(feature_container.meta['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_container.meta['audio_file']), 'material/test.wav')
 
     # Stat
     nose.tools.eq_(feature_container.stat[0]['N'], 501)
@@ -99,7 +99,7 @@ def test_process():
     nose.tools.eq_(feature_container.frames, 501)
     nose.tools.eq_(feature_container.vector_length, 10)
 
-    nose.tools.eq_(feature_container.meta['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_container.meta['audio_file']), 'material/test.wav')
 
     # Stat
     nose.tools.eq_(feature_container.stat[0]['N'], 501)
