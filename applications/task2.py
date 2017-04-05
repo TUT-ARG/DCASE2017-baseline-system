@@ -9,17 +9,10 @@ import sys
 import os
 sys.path.append(os.path.split(os.path.dirname(os.path.realpath(__file__)))[0])
 
-os.environ['OMP_NUM_THREADS'] = '1'
-os.environ['OMP_DYNAMIC'] = 'False'
-os.environ['MKL_NUM_THREADS'] = '1'
-os.environ['MKL_DYNAMIC'] = 'False'
-os.environ['KMP_DETERMINISTIC_REDUCTION'] = '1'
-os.environ['MKL_CBWR'] = 'COMPATIBLE'
-
 import numpy
 import argparse
 import textwrap
-
+import platform
 
 from dcase_framework.application_core import BinarySoundEventAppCore
 from dcase_framework.parameters import ParameterContainer
@@ -190,6 +183,10 @@ def main(argv):
         if args.node_mode:
             params['general']['log_system_progress'] = True
             params['general']['print_system_progress'] = False
+
+        # Force ascii progress bar under Windows console
+        if platform.system() == 'Windows':
+            params['general']['use_ascii_progress_bar'] = True
 
         # Setup logging
         setup_logging(parameter_container=params['logging'])
