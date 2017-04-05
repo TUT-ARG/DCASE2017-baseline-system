@@ -27,6 +27,15 @@ def test_load():
 
     # Resampling
     audio_data_mono, fs = AudioFile(filename=os.path.join('material', 'test.wav'), fs=16000, mono=True).load()
+
     nose.tools.eq_(fs, 16000)
     nose.tools.eq_(len(audio_data_mono.shape), 1)
     nose.tools.eq_(audio_data_mono.shape[0], 160001)
+
+
+    # Segment
+    audio_data_mono, fs = AudioFile(filename=os.path.join('material', 'test.wav'), mono=True).load(start=4.0, stop=6.0)
+
+    nose.tools.eq_(fs, 44100)
+    nose.tools.eq_(len(audio_data_mono.shape), 1)
+    nose.tools.eq_(audio_data_mono.shape[0], 88200)
