@@ -6,6 +6,7 @@ import numpy
 sys.path.append('..')
 import os
 from dcase_framework.features import FeatureContainer, FeatureExtractor
+from dcase_framework.utils import posix_path
 from nose.tools import *
 import tempfile
 
@@ -34,7 +35,7 @@ def test_load():
     nose.tools.eq_(feature_container.frames, 501)
     nose.tools.eq_(feature_container.vector_length, 10)
 
-    nose.tools.eq_(feature_container.meta['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_container.meta['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_container.meta['parameters']['n_mels'], 40)
     nose.tools.eq_(feature_container.meta['parameters']['n_mfcc'], 10)
 

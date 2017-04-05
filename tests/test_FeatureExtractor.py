@@ -6,6 +6,7 @@ import numpy
 sys.path.append('..')
 from nose.tools import *
 from dcase_framework.features import FeatureExtractor
+from dcase_framework.utils import posix_path
 import os
 import tempfile
 
@@ -28,7 +29,7 @@ def test_extract():
 
     # Meta
     nose.tools.assert_list_equal(sorted(list(feature_repository[extractor_name].keys())), ['feat', 'meta', 'stat'])
-    nose.tools.eq_(feature_repository[extractor_name]['meta']['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_repository[extractor_name]['meta']['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['n_mfcc'], 12)
 
     # Stat
@@ -60,7 +61,7 @@ def test_extract():
 
     # Meta
     nose.tools.assert_list_equal(sorted(list(feature_repository[extractor_name].keys())), ['feat', 'meta', 'stat'])
-    nose.tools.eq_(feature_repository[extractor_name]['meta']['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_repository[extractor_name]['meta']['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['dependency_method'], 'mfcc')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['dependency_parameters']['n_mfcc'], 12)
 
@@ -93,7 +94,7 @@ def test_extract():
 
     # Meta
     nose.tools.assert_list_equal(sorted(list(feature_repository[extractor_name].keys())), ['feat', 'meta', 'stat'])
-    nose.tools.eq_(feature_repository[extractor_name]['meta']['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_repository[extractor_name]['meta']['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['dependency_method'], 'mfcc')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['dependency_parameters']['n_mfcc'], 12)
 
@@ -126,7 +127,7 @@ def test_extract():
 
     # Meta
     nose.tools.assert_list_equal(sorted(list(feature_repository[extractor_name].keys())), ['feat', 'meta', 'stat'])
-    nose.tools.eq_(feature_repository[extractor_name]['meta']['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_repository[extractor_name]['meta']['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['n_mels'], 10)
 
     # Stat
@@ -157,7 +158,7 @@ def test_extract():
 
     # Meta
     nose.tools.assert_list_equal(sorted(list(feature_repository[extractor_name].keys())), ['feat', 'meta', 'stat'])
-    nose.tools.eq_(feature_repository[extractor_name]['meta']['audio_file'], 'material/test.wav')
+    nose.tools.eq_(posix_path(feature_repository[extractor_name]['meta']['audio_file']), 'material/test.wav')
     nose.tools.eq_(feature_repository[extractor_name]['meta']['parameters']['n_mfcc'], 12)
 
     # Stat

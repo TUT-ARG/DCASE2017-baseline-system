@@ -3,6 +3,7 @@
 import nose.tools
 import sys
 import numpy
+import os
 sys.path.append('..')
 from dcase_framework.metadata import MetaDataContainer
 import tempfile
@@ -80,33 +81,33 @@ content2 = [
 def test_formats():
     delimiters = [',', ';', '\t']
     for delimiter in delimiters:
-        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp')
+        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp', delete=False)
         try:
             tmp.write('0.5' + delimiter + '0.7\n')
             tmp.write('2.5' + delimiter + '2.7\n')
-            tmp.seek(0)
+            tmp.close()
             nose.tools.assert_dict_equal(MetaDataContainer().load(filename=tmp.name)[0], {'event_offset': 0.7,
                                                                                      'event_onset': 0.5})
         finally:
-            tmp.close()
+            os.unlink(tmp.name)
 
-        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt',  dir='/tmp')
+        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt',  dir='/tmp', delete=False)
         try:
             tmp.write('0.5' + delimiter + '0.7' + delimiter + 'event\n')
             tmp.write('2.5' + delimiter + '2.7' + delimiter + 'event\n')
-            tmp.seek(0)
+            tmp.close()
             nose.tools.assert_dict_equal(MetaDataContainer().load(filename=tmp.name)[0],
                                          {'event_offset': 0.7,
                                           'event_onset': 0.5,
                                           'event_label': 'event'})
         finally:
-            tmp.close()
+            os.unlink(tmp.name)
 
-        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp')
+        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp', delete=False)
         try:
             tmp.write('file' + delimiter + 'scene' + delimiter + '0.5' + delimiter + '0.7' + delimiter + 'event\n')
             tmp.write('file' + delimiter + 'scene' + delimiter + '0.5' + delimiter + '0.7' + delimiter + 'event\n')
-            tmp.seek(0)
+            tmp.close()
             nose.tools.assert_dict_equal(MetaDataContainer().load(filename=tmp.name)[0],
                                          {'file': 'file',
                                           'scene_label': 'scene',
@@ -114,13 +115,13 @@ def test_formats():
                                           'event_onset': 0.5,
                                           'event_label': 'event'})
         finally:
-            tmp.close()
+            os.unlink(tmp.name)
 
-        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp')
+        tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp', delete=False)
         try:
             tmp.write('file' + delimiter + 'scene' + delimiter + '0.5' + delimiter + '0.7' + delimiter + 'event' + delimiter + 'm' + delimiter + 'a1\n')
             tmp.write('file' + delimiter + 'scene' + delimiter + '0.5' + delimiter + '0.7' + delimiter + 'event' + delimiter + 'm' + delimiter + 'a2\n')
-            tmp.seek(0)
+            tmp.close()
             nose.tools.assert_dict_equal(MetaDataContainer().load(filename=tmp.name)[0],
                                          {'file': 'file',
                                           'scene_label': 'scene',
@@ -131,7 +132,7 @@ def test_formats():
                                           'source_label': 'm',
                                           })
         finally:
-            tmp.close()
+            os.unlink(tmp.name)
 
 
 def test_content():

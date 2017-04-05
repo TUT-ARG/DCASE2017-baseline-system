@@ -173,13 +173,13 @@ def test_override():
             'field2': 100,
         }
     })
-    tmp = tempfile.NamedTemporaryFile('r+', suffix='.yaml', dir='/tmp')
+    tmp = tempfile.NamedTemporaryFile('r+', suffix='.yaml', dir='/tmp', delete=False)
     try:
         tmp.write('field1: 10\n')
         tmp.write('field2: 20\n')
         tmp.write('field3: 30\n')
         tmp.write('field4: 40\n')
-        tmp.seek(0)
+        tmp.close()
 
         params.override(tmp.name)
 
@@ -188,7 +188,7 @@ def test_override():
         nose.tools.eq_(params['field3'], 30)
         nose.tools.eq_(params['field4'], 40)
     finally:
-        tmp.close()
+        os.unlink(tmp.name)
 
 
 def test_recipe_parse():
