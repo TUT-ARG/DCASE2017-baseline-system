@@ -14,33 +14,33 @@ import msgpack
 
 def test_load():
     # YAML
-    tmp = tempfile.NamedTemporaryFile('r+', suffix='.yaml',  dir='/tmp')
+    tmp = tempfile.NamedTemporaryFile('r+', suffix='.yaml',  dir='/tmp', delete=False)
     try:
         tmp.write('section:\n')
         tmp.write('  field1: 1\n')
         tmp.write('  field2: 2\n')
-        tmp.seek(0)
+        tmp.close()
 
         m = DictFile().load(filename=tmp.name)
 
         nose.tools.assert_dict_equal(m, {'section': {'field1': 1, 'field2': 2}})
     finally:
-        tmp.close()
+        os.unlink(tmp.name)
 
     # Json
-    tmp = tempfile.NamedTemporaryFile('r+', suffix='.json', dir='/tmp')
+    tmp = tempfile.NamedTemporaryFile('r+', suffix='.json', dir='/tmp', delete=False)
     try:
         tmp.write('{"section":{"field1":1,"field2":2}}\n')
-        tmp.seek(0)
+        tmp.close()
 
         m = DictFile().load(filename=tmp.name)
 
         nose.tools.assert_dict_equal(m, {'section': {'field1': 1, 'field2': 2}})
     finally:
-        tmp.close()
+        os.unlink(tmp.name)
 
     # pickle
-    tmp = tempfile.NamedTemporaryFile('rb+', suffix='.pickle', dir='/tmp')
+    tmp = tempfile.NamedTemporaryFile('rb+', suffix='.pickle', dir='/tmp', delete=False)
     try:
         data = {
             'section': {
@@ -49,16 +49,16 @@ def test_load():
             }
         }
         pickle.dump(data, tmp, protocol=pickle.HIGHEST_PROTOCOL)
-        tmp.seek(0)
+        tmp.close()
 
         m = DictFile().load(filename=tmp.name)
 
         nose.tools.assert_dict_equal(m, {'section': {'field1': 1, 'field2': 2}})
     finally:
-        tmp.close()
+        os.unlink(tmp.name)
 
     # msgpack
-    tmp = tempfile.NamedTemporaryFile('rb+', suffix='.msgpack', dir='/tmp')
+    tmp = tempfile.NamedTemporaryFile('rb+', suffix='.msgpack', dir='/tmp', delete=False)
     try:
         data = {
             'section': {
@@ -67,27 +67,27 @@ def test_load():
             }
         }
         msgpack.dump(data, tmp)
-        tmp.seek(0)
+        tmp.close()
 
         m = DictFile().load(filename=tmp.name)
 
         nose.tools.assert_dict_equal(m, {b'section': {b'field1': 1, b'field2': 2}})
     finally:
-        tmp.close()
+        os.unlink(tmp.name)
 
     # Txt
-    tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp')
+    tmp = tempfile.NamedTemporaryFile('r+', suffix='.txt', dir='/tmp', delete=False)
     try:
         tmp.write('line1\n')
         tmp.write('line2\n')
         tmp.write('line3\n')
-        tmp.seek(0)
+        tmp.close()
 
         m = DictFile().load(filename=tmp.name)
 
         nose.tools.assert_dict_equal(m, {0: 'line1\n', 1: 'line2\n', 2: 'line3\n'})
     finally:
-        tmp.close()
+        os.unlink(tmp.name)
 
 
 def test_save():
