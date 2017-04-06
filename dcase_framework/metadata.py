@@ -219,7 +219,7 @@ class MetaDataItem(dict):
         list
         """
 
-        fields = self.keys()
+        fields = list(self.keys())
         fields.sort()
 
         if fields == ['file']:
@@ -250,7 +250,11 @@ class MetaDataItem(dict):
                     self.event_label, self.source_label, self.identifier]
 
         else:
-            raise ValueError('Unknown format (get_list) [{}]'.format(str(fields)))
+            message = '{name}: Invalid meta data format [{format}]'.format(
+                name=self.__class__.__name__,
+                format=str(fields)
+            )
+            raise ValueError(message)
 
     @property
     def file(self):
