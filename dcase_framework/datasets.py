@@ -681,7 +681,7 @@ class Dataset(object):
         """
 
         # Set socket timeout
-        socket.setdefaulttimeout(60)
+        socket.setdefaulttimeout(120)
 
         item_progress = tqdm(self.package_list,
                              desc="{0: <25s}".format('Download package list'),
@@ -746,7 +746,7 @@ class Dataset(object):
                     strerror=e.strerror,
                 )
                 self.logger.exception(message)
-                raise IOError(message)
+                raise
 
     @before_and_after_function_wrapper
     def extract(self):
