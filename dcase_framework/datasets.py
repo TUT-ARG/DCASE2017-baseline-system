@@ -680,12 +680,16 @@ class Dataset(object):
 
         """
 
+        # Set socket timeout
+        socket.setdefaulttimeout(60)
+
         item_progress = tqdm(self.package_list,
                              desc="{0: <25s}".format('Download package list'),
                              file=sys.stdout,
                              leave=False,
                              disable=self.disable_progress_bar,
                              ascii=self.use_ascii_progress_bar)
+
         for item in item_progress:
             try:
                 if item['remote_package'] and not os.path.isfile(item['local_package']):
@@ -734,12 +738,13 @@ class Dataset(object):
 
                     os.rename(tmp_file, item['local_package'])
 
-            except (urllib.URLError, socket.timeout) as e:
-                message = '{name}: Download failed [{filename}]'.format(
+            except Exception as e:
+                message = '{name}: Download failed [{filename}] [{errno}: {strerror}]'.format(
                     name=self.__class__.__name__,
-                    filename=item['remote_package']
+                    filename=item['remote_package'],
+                    errno=e.errno,
+                    strerror=e.strerror,
                 )
-
                 self.logger.exception(message)
                 raise IOError(message)
 
