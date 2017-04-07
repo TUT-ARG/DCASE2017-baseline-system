@@ -1282,21 +1282,23 @@ class FeatureStacker(object):
 
         return FeatureContainer(features=[numpy.hstack(feature_matrix)], meta=meta)
 
-    def process(self, feature_repository):
+    def process(self, feature_repository, feature_hop=1):
         """Feature vector creation
 
         Parameters
         ----------
         feature_repository : FeatureRepository
             Feature repository with needed features
-
+        feature_hop : int, optional
+            Feature hopping
+            Default value 1
         Returns
         -------
         FeatureContainer
 
         """
 
-        return self.feature_vector(feature_repository=feature_repository)
+        return self.feature_vector(feature_repository=feature_repository, feature_hop=1)
 
 
 class FeatureNormalizer(DataFile, ContainerMixin):
