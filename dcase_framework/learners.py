@@ -853,6 +853,66 @@ class SceneClassifier(LearnerContainer):
         raise AssertionError(message)
 
 
+class SceneClassifierGMM(SceneClassifier):
+    """Scene classifier with GMM"""
+    def __init__(self, *args, **kwargs):
+        super(SceneClassifierGMM, self).__init__(*args, **kwargs)
+        self.method = 'gmm'
+
+    def learn(self, data, annotations):
+        """Learn based on data ana annotations
+
+        Parameters
+        ----------
+        data : dict of FeatureContainers
+            Feature data
+        annotations : dict of MetadataContainers
+            Meta data
+
+        Returns
+        -------
+        self
+
+        """
+
+        from sklearn.mixture import GaussianMixture
+
+        training_files = sorted(list(annotations.keys()))  # Collect training files
+        activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
+        X_training = numpy.vstack([data[x].feat[0] for x in training_files])
+        Y_training = numpy.vstack([activity_matrix_dict[x] for x in training_files])
+
+        class_progress = tqdm(self.class_labels,
+                              file=sys.stdout,
+                              leave=False,
+                              desc='           {0:>15s}'.format('Learn '),
+                              miniters=1,
+                              disable=self.disable_progress_bar
+                              )
+
+        for class_id, class_label in enumerate(class_progress):
+            if self.log_progress:
+                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {class_label:<15s}'.format(
+                    title='Learn',
+                    item_id=class_id,
+                    total=len(self.class_labels),
+                    class_label=class_label)
+                )
+            current_class_data = X_training[Y_training[:, class_id] > 0, :]
+
+            self['model'][class_label] = GaussianMixture(**self.learner_params).fit(current_class_data)
+
+        return self
+
+    def _frame_probabilities(self, feature_data):
+        logls = numpy.ones((len(self['model']), feature_data.shape[0])) * -numpy.inf
+
+        for label_id, label in enumerate(self.class_labels):
+            logls[label_id] = self['model'][label].score(feature_data)
+
+        return logls
+
+
 class SceneClassifierGMMdeprecated(SceneClassifier):
     """Scene classifier with GMM"""
     def __init__(self, *args, **kwargs):
@@ -912,66 +972,6 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
         warnings.simplefilter("ignore", DeprecationWarning)
         from sklearn import mixture
 
-        logls = numpy.ones((len(self['model']), feature_data.shape[0])) * -numpy.inf
-
-        for label_id, label in enumerate(self.class_labels):
-            logls[label_id] = self['model'][label].score(feature_data)
-
-        return logls
-
-
-class SceneClassifierGMM(SceneClassifier):
-    """Scene classifier with GMM"""
-    def __init__(self, *args, **kwargs):
-        super(SceneClassifierGMM, self).__init__(*args, **kwargs)
-        self.method = 'gmm'
-
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
-
-        Parameters
-        ----------
-        data : dict of FeatureContainers
-            Feature data
-        annotations : dict of MetadataContainers
-            Meta data
-
-        Returns
-        -------
-        self
-
-        """
-
-        from sklearn.mixture import GaussianMixture
-
-        training_files = sorted(list(annotations.keys()))  # Collect training files
-        activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
-        X_training = numpy.vstack([data[x].feat[0] for x in training_files])
-        Y_training = numpy.vstack([activity_matrix_dict[x] for x in training_files])
-
-        class_progress = tqdm(self.class_labels,
-                              file=sys.stdout,
-                              leave=False,
-                              desc='           {0:>15s}'.format('Learn '),
-                              miniters=1,
-                              disable=self.disable_progress_bar
-                              )
-
-        for class_id, class_label in enumerate(class_progress):
-            if self.log_progress:
-                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {class_label:<15s}'.format(
-                    title='Learn',
-                    item_id=class_id,
-                    total=len(self.class_labels),
-                    class_label=class_label)
-                )
-            current_class_data = X_training[Y_training[:, class_id] > 0, :]
-
-            self['model'][class_label] = GaussianMixture(**self.learner_params).fit(current_class_data)
-
-        return self
-
-    def _frame_probabilities(self, feature_data):
         logls = numpy.ones((len(self['model']), feature_data.shape[0])) * -numpy.inf
 
         for label_id, label in enumerate(self.class_labels):
@@ -1444,6 +1444,156 @@ class EventDetector(LearnerContainer):
         return sorted(validation_files)
 
 
+class EventDetectorGMM(EventDetector):
+    def __init__(self, *args, **kwargs):
+        super(EventDetectorGMM, self).__init__(*args, **kwargs)
+        self.method = 'gmm'
+
+    def learn(self, data, annotations):
+        """Learn based on data ana annotations
+
+        Parameters
+        ----------
+        data : dict of FeatureContainers
+            Feature data
+        annotations : dict of MetadataContainers
+            Meta data
+
+        Returns
+        -------
+        self
+
+        """
+
+        from sklearn.mixture import GaussianMixture
+
+        if not self.params.get_path('hop_length_seconds'):
+            message = '{name}: No hop length set.'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
+            raise ValueError(message)
+
+        class_progress = tqdm(self.class_labels,
+                              file=sys.stdout,
+                              leave=False,
+                              desc='           {0:>15s}'.format('Learn '),
+                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}',  # [{elapsed}<{remaining}, {rate_fmt}]',
+                              disable=self.disable_progress_bar
+                              )
+
+        # Collect training examples
+        activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
+
+        for event_id, event_label in enumerate(class_progress):
+            if self.log_progress:
+                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {event_label:<15s}'.format(
+                    title='Learn',
+                    item_id=event_id,
+                    total=len(self.class_labels),
+                    event_label=event_label)
+                )
+            data_positive = []
+            data_negative = []
+
+            for audio_filename in sorted(list(activity_matrix_dict.keys())):
+                activity_matrix = activity_matrix_dict[audio_filename]
+
+                positive_mask = activity_matrix[:, event_id].astype(bool)
+                # Store positive examples
+                if any(positive_mask):
+                    data_positive.append(data[audio_filename].feat[0][positive_mask, :])
+
+                # Store negative examples
+                if any(~positive_mask):
+                    data_negative.append(data[audio_filename].feat[0][~positive_mask, :])
+            self['model'][event_label] = {
+                'positive': None,
+                'negative': None,
+            }
+            if len(data_positive):
+                self['model'][event_label]['positive'] = GaussianMixture(**self.learner_params).fit(
+                    numpy.concatenate(data_positive)
+                )
+
+            if len(data_negative):
+                self['model'][event_label]['negative'] = GaussianMixture(**self.learner_params).fit(
+                    numpy.concatenate(data_negative)
+                )
+
+
+    def predict(self, feature_data, recognizer_params=None):
+        if recognizer_params is None:
+            recognizer_params = {}
+
+        recognizer_params = DottedDict(recognizer_params)
+
+        results = []
+        for event_id, event_label in enumerate(self.class_labels):
+            # Evaluate positive and negative models
+            if self['model'][event_label]['positive']:
+                positive = self['model'][event_label]['positive'].score_samples(feature_data.feat[0])
+
+                # Accumulate
+                if recognizer_params.get_path('frame_accumulation.enable'):
+                    positive = self._slide_and_accumulate(
+                        input_probabilities=positive,
+                        window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
+                        accumulation_type=recognizer_params.get_path('frame_accumulation.type')
+                    )
+
+            if self['model'][event_label]['negative']:
+                negative = self['model'][event_label]['negative'].score_samples(feature_data.feat[0])
+
+                # Accumulate
+                if recognizer_params.get_path('frame_accumulation.enable'):
+                    negative = self._slide_and_accumulate(
+                        input_probabilities=negative,
+                        window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
+                        accumulation_type=recognizer_params.get_path('frame_accumulation.type')
+                    )
+            if self['model'][event_label]['positive'] and self['model'][event_label]['negative']:
+                # Likelihood ratio
+                frame_probabilities = positive - negative
+            elif self['model'][event_label]['positive'] is None and self['model'][event_label]['negative'] is not None:
+                # Likelihood ratio
+                frame_probabilities = -negative
+
+            elif self['model'][event_label]['positive'] is not None and self['model'][event_label]['negative'] is None:
+                # Likelihood ratio
+                frame_probabilities = positive
+
+            # Binarization
+            if recognizer_params.get_path('frame_binarization.enable'):
+                if recognizer_params.get_path('frame_binarization.type') == 'global_threshold':
+                    event_activity = frame_probabilities > recognizer_params.get_path('frame_binarization.threshold', 0.0)
+                else:
+                    message = '{name}: Unknown frame_binarization type [{type}].'.format(
+                        name=self.__class__.__name__,
+                        type=recognizer_params.get_path('frame_binarization.type')
+                    )
+
+                    self.logger.exception(message)
+                    raise AssertionError(message)
+
+            else:
+                message = '{name}: No frame_binarization enabled.'.format(name=self.__class__.__name__)
+                self.logger.exception(message)
+                raise AssertionError(message)
+
+            # Get events
+            event_segments = self._contiguous_regions(event_activity) * self.params.get_path('hop_length_seconds')
+
+            # Add events
+            for event in event_segments:
+                results.append(MetaDataItem({'event_onset': event[0],
+                                             'event_offset': event[1],
+                                             'event_label': event_label}))
+
+        return MetaDataContainer(results)
+
+
 class EventDetectorGMMdeprecated(EventDetector):
     def __init__(self, *args, **kwargs):
         super(EventDetectorGMMdeprecated, self).__init__(*args, **kwargs)
@@ -1514,8 +1664,19 @@ class EventDetectorGMMdeprecated(EventDetector):
             if event_label not in self['model']:
                 self['model'][event_label] = {'positive': None, 'negative': None}
 
-            self['model'][event_label]['positive'] = mixture.GMM(**self.learner_params).fit(numpy.concatenate(data_positive))
-            self['model'][event_label]['negative'] = mixture.GMM(**self.learner_params).fit(numpy.concatenate(data_negative))
+            self['model'][event_label] = {
+                'positive': None,
+                'negative': None,
+            }
+            if len(data_positive):
+                self['model'][event_label]['positive'] = mixture.GMM(**self.learner_params).fit(
+                    numpy.concatenate(data_positive)
+                )
+
+            if len(data_negative):
+                self['model'][event_label]['negative'] = mixture.GMM(**self.learner_params).fit(
+                    numpy.concatenate(data_negative)
+                )
 
     def _frame_probabilities(self, feature_data, accumulation_window_length_frames=None):
         probabilities = numpy.ones((len(self.class_labels), feature_data.shape[0])) * -numpy.inf
@@ -1563,136 +1724,6 @@ class EventDetectorGMMdeprecated(EventDetector):
             event_segments = self._contiguous_regions(event_activity) * self.params.get_path('hop_length_seconds')
             for event in event_segments:
                 results.append(MetaDataItem({'event_onset': event[0], 'event_offset': event[1], 'event_label': event_label}))
-
-        return MetaDataContainer(results)
-
-
-class EventDetectorGMM(EventDetector):
-    def __init__(self, *args, **kwargs):
-        super(EventDetectorGMM, self).__init__(*args, **kwargs)
-        self.method = 'gmm'
-
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
-
-        Parameters
-        ----------
-        data : dict of FeatureContainers
-            Feature data
-        annotations : dict of MetadataContainers
-            Meta data
-
-        Returns
-        -------
-        self
-
-        """
-
-        from sklearn.mixture import GaussianMixture
-
-        if not self.params.get_path('hop_length_seconds'):
-            message = '{name}: No hop length set.'.format(
-                name=self.__class__.__name__
-            )
-
-            self.logger.exception(message)
-            raise ValueError(message)
-
-        class_progress = tqdm(self.class_labels,
-                              file=sys.stdout,
-                              leave=False,
-                              desc='           {0:>15s}'.format('Learn '),
-                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}',  # [{elapsed}<{remaining}, {rate_fmt}]',
-                              disable=self.disable_progress_bar
-                              )
-
-        # Collect training examples
-        activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
-
-        for event_id, event_label in enumerate(class_progress):
-            if self.log_progress:
-                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {event_label:<15s}'.format(
-                    title='Learn',
-                    item_id=event_id,
-                    total=len(self.class_labels),
-                    event_label=event_label)
-                )
-            data_positive = []
-            data_negative = []
-
-            for audio_filename in sorted(list(activity_matrix_dict.keys())):
-                activity_matrix = activity_matrix_dict[audio_filename]
-
-                positive_mask = activity_matrix[:, event_id].astype(bool)
-                # Store positive examples
-                if any(positive_mask):
-                    data_positive.append(data[audio_filename].feat[0][positive_mask, :])
-
-                # Store negative examples
-                if any(~positive_mask):
-                    data_negative.append(data[audio_filename].feat[0][~positive_mask, :])
-
-            self['model'][event_label] = {
-                'positive': GaussianMixture(**self.learner_params).fit(numpy.concatenate(data_positive)),
-                'negative': GaussianMixture(**self.learner_params).fit(numpy.concatenate(data_negative))
-            }
-
-    def predict(self, feature_data, recognizer_params=None):
-
-        if recognizer_params is None:
-            recognizer_params = {}
-
-        recognizer_params = DottedDict(recognizer_params)
-
-        results = []
-        for event_id, event_label in enumerate(self.class_labels):
-            # Evaluate positive and negative models
-            positive = self['model'][event_label]['positive'].score_samples(feature_data.feat[0])
-            negative = self['model'][event_label]['negative'].score_samples(feature_data.feat[0])
-
-            # Accumulate
-            if recognizer_params.get_path('frame_accumulation.enable'):
-                positive = self._slide_and_accumulate(
-                    input_probabilities=positive,
-                    window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
-                    accumulation_type=recognizer_params.get_path('frame_accumulation.type')
-                )
-
-                negative = self._slide_and_accumulate(
-                    input_probabilities=negative,
-                    window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
-                    accumulation_type=recognizer_params.get_path('frame_accumulation.type')
-                )
-
-            # Likelihood ratio
-            frame_probabilities = positive - negative
-
-            # Binarization
-            if recognizer_params.get_path('frame_binarization.enable'):
-                if recognizer_params.get_path('frame_binarization.type') == 'global_threshold':
-                    event_activity = frame_probabilities > recognizer_params.get_path('frame_binarization.threshold', 0.0)
-                else:
-                    message = '{name}: Unknown frame_binarization type [{type}].'.format(
-                        name=self.__class__.__name__,
-                        type=recognizer_params.get_path('frame_binarization.type')
-                    )
-
-                    self.logger.exception(message)
-                    raise AssertionError(message)
-
-            else:
-                message = '{name}: No frame_binarization enabled.'.format(name=self.__class__.__name__)
-                self.logger.exception(message)
-                raise AssertionError(message)
-
-            # Get events
-            event_segments = self._contiguous_regions(event_activity) * self.params.get_path('hop_length_seconds')
-
-            # Add events
-            for event in event_segments:
-                results.append(MetaDataItem({'event_onset': event[0],
-                                             'event_offset': event[1],
-                                             'event_label': event_label}))
 
         return MetaDataContainer(results)
 
