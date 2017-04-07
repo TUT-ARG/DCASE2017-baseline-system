@@ -46,7 +46,7 @@ Usage examples:
     Dataset.event_label_count
     Dataset.audio_tags
     Dataset.audio_tag_count
-    Dataset.download
+    Dataset.download_packages
     Dataset.extract
     Dataset.train
     Dataset.test
@@ -337,6 +337,8 @@ class Dataset(object):
         # Recognized audio extensions
         self.audio_extensions = {'wav', 'flac'}
 
+        self.default_audio_extension = 'wav'
+
         # Reference data presence flag, by default dataset should have reference data present.
         # However, some evaluation dataset might not have
         self.reference_data_present = True
@@ -356,7 +358,7 @@ class Dataset(object):
             os.makedirs(self.local_path)
 
         if not self.check_filelist():
-            self.download()
+            self.download_packages()
             self.extract()
             self._save_filelist_hash()
 
@@ -663,8 +665,8 @@ class Dataset(object):
             i += 1
             meta = self[i]
 
-    def download(self):
-        """Download dataset over the internet to the local path
+    def download_packages(self):
+        """Download dataset packages over the internet to the local path
 
         Parameters
         ----------
@@ -1282,7 +1284,7 @@ class SyntheticSoundEventDataset(SoundEventDataset):
             os.makedirs(self.local_path)
 
         if not self.check_filelist():
-            self.download()
+            self.download_packages()
             self.extract()
             self._save_filelist_hash()
 
@@ -2208,7 +2210,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
             # Generate mixture filename
             mixing_param_hash = hashlib.md5(yaml.dump(mixture_recipe)).hexdigest()
-            mixture_recipe['mixture_audio_filename'] = 'mixture' + '_' + subset + '_' + class_label + '_' + '%03d' % mixture_id + '_' + mixing_param_hash + '.wav'
+            mixture_recipe['mixture_audio_filename'] = 'mixture' + '_' + subset + '_' + class_label + '_' + '%03d' % mixture_id + '_' + mixing_param_hash + self.default_audio_extension
 
             # Generate mixture annotation
             if event_presence_flag:
@@ -2590,7 +2592,7 @@ class TUTSoundEvents_2017_DevelopmentSet(SoundEventDataset):
                     item['source_label'] = 'mixture'
 
                 meta_data += data
-            self.meta_container.update(meta_data.values())
+            self.meta_container.update(meta_data)
             self.meta_container.save()
         else:
             self.meta_container.load()
