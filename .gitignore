@@ -72,3 +72,7 @@ examples/challenge_submission/*
 examples/data/*
 examples/logs/*
 examples/system/*
+tests/material/saved.mfcc.cpickle
+tests/material/test.mfcc.cpickle
+tests/material/saved.txt
+tests/material/saved.yaml
