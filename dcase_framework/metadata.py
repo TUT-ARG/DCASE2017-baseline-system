@@ -768,11 +768,11 @@ class MetaDataContainer(ListFile):
 
         """
 
-        file_list = []
+        files = {}
         for item in self:
-            if item.file not in file_list:
-                file_list.append(item.file)
-        return file_list
+            files[item.file] = item.file
+
+        return sorted(files.values())
 
     @property
     def event_count(self):
@@ -1283,6 +1283,9 @@ class EventRoll(object):
         if length > self.event_roll.shape[0]:
             padding = numpy.zeros((length-self.event_roll.shape[0], self.event_roll.shape[1]))
             self.event_roll = numpy.vstack((self.event_roll, padding))
+
+        elif length < self.event_roll.shape[0]:
+            self.event_roll = self.event_roll[0:length, :]
 
         return self.event_roll
 
