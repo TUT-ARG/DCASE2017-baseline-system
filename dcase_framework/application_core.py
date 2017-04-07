@@ -560,16 +560,16 @@ class AppCore(object):
         """
 
         if not files:
-            files = []
+            files = {}
 
             for fold in self._get_active_folds():
                 for item_id, item in enumerate(self.dataset.train(fold)):
-                    if item['file'] not in files:
-                        files.append(item['file'])
+                    files[item['file']] = item['file']
+
                 for item_id, item in enumerate(self.dataset.test(fold)):
-                    if item['file'] not in files:
-                        files.append(item['file'])
-            files = sorted(files)
+                    files[item['file']] = item['file']
+
+            files = sorted(files.values())
 
         if not overwrite:
             overwrite = self.params.get_path('general.overwrite', False)
@@ -1219,7 +1219,10 @@ class AcousticSceneClassificationAppCore(AppCore):
                         )
 
                     # Stack features
-                    feature_container = feature_stacker.process(feature_repository=feature_repository)
+                    feature_container = feature_stacker.process(
+                        feature_repository=feature_repository,
+                        feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                    )
 
                     # Normalize features
                     if feature_normalizer:
@@ -1242,6 +1245,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                                             filename=current_model_file,
                                             disable_progress_bar=self.disable_progress_bar,
                                             log_progress=self.log_system_progress)
+
                 learner.learn(data=data, annotations=annotations)
                 learner.save()
 
@@ -1903,7 +1907,7 @@ class SoundEventAppCore(AppCore):
                         data = {}
                         annotations = {}
 
-                        item_progress = tqdm(train_meta.file_list,
+                        item_progress = tqdm(train_meta.file_list[::self.params.get_path('learner.file_hop', 1)],
                                              desc="           {0: >15s}".format('Collect data '),
                                              file=sys.stdout,
                                              leave=False,
@@ -1944,7 +1948,10 @@ class SoundEventAppCore(AppCore):
                                     raise IOError(message)
 
                             # Stack features
-                            feature_data = feature_stacker.feature_vector(feature_repository=feature_list)
+                            feature_data = feature_stacker.process(
+                                feature_repository=feature_list,
+                                feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                            )
 
                             # Normalize features
                             if feature_normalizer:
@@ -2070,7 +2077,7 @@ class SoundEventAppCore(AppCore):
                             self.logger.exception(message)
                             raise IOError(message)
 
-                        item_progress = tqdm(self.dataset.test(fold, scene_label=scene_label),
+                        item_progress = tqdm(self.dataset.test(fold, scene_label=scene_label).file_list,
                                              desc="           {0: >15s}".format('Testing '),
                                              file=sys.stdout,
                                              leave=False,
@@ -2078,19 +2085,19 @@ class SoundEventAppCore(AppCore):
                                              disable=self.disable_progress_bar,
                                              ascii=self.use_ascii_progress_bar
                                              )
-                        for item_id, item in enumerate(item_progress):
+                        for item_id, audio_filename in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
                                     '  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
                                         title='Testing',
                                         item_id=item_id,
                                         total=len(item_progress),
-                                        item=os.path.split(item['file'])[-1])
+                                        item=os.path.split(audio_filename)[-1])
                                     )
 
                             # Load features
                             feature_filenames = self._get_feature_filename(
-                                audio_file=item['file'],
+                                audio_file=audio_filename,
                                 path=self.params.get_path('path.feature_extractor')
                             )
 
@@ -2101,14 +2108,15 @@ class SoundEventAppCore(AppCore):
                                 else:
                                     message = '{name}: Features not found [{file}]'.format(
                                         name=self.__class__.__name__,
-                                        file=item['file']
+                                        file=audio_filename
                                     )
 
                                     self.logger.exception(message)
                                     raise IOError(message)
 
-                            feature_data = model_container.feature_stacker.feature_vector(
-                                feature_repository=feature_list)
+                            feature_data = model_container.feature_stacker.process(
+                                feature_repository=feature_list
+                            )
 
                             # Normalize features
                             if model_container.feature_normalizer:
@@ -2131,7 +2139,7 @@ class SoundEventAppCore(AppCore):
                                 )
 
                             for event in current_result:
-                                event.file = self.dataset.absolute_to_relative(item['file'])
+                                event.file = self.dataset.absolute_to_relative(audio_filename)
                                 results.append(event)
 
                         # Save testing results
@@ -2205,19 +2213,19 @@ class SoundEventAppCore(AppCore):
 
                         results = MetaDataContainer().load(filename=result_filename)
 
-                        for file_id, item in enumerate(self.dataset.test(fold, scene_label=scene_label)):
+                        for file_id, audio_filename in enumerate(self.dataset.test(fold, scene_label=scene_label).file_list):
 
                             # Select only row which are from current file and contains only detected event
                             current_file_results = []
                             for result_item in results.filter(
-                                    filename=posix_path(self.dataset.absolute_to_relative(item['file']))
+                                    filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
                                 if 'event_label' in result_item and result_item.event_label:
                                     current_file_results.append(result_item)
 
                             meta = []
                             for meta_item in self.dataset.file_meta(
-                                    filename=posix_path(self.dataset.absolute_to_relative(item['file']))
+                                    filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
                                 if 'event_label' in meta_item and meta_item.event_label:
                                     meta.append(meta_item)
@@ -2846,7 +2854,10 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                     raise IOError(message)
 
                             # Stack features
-                            feature_data = feature_stacker.feature_vector(feature_repository=feature_list)
+                            feature_data = feature_stacker.process(
+                                feature_repository=feature_list,
+                                feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                            )
 
                             # Normalize features
                             if feature_normalizer:
@@ -3084,8 +3095,9 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                     self.logger.exception(message)
                                     raise IOError(message)
 
-                            feature_data = model_container.feature_stacker.feature_vector(
-                                feature_repository=feature_list)
+                            feature_data = model_container.feature_stacker.process(
+                                feature_repository=feature_list
+                            )
 
                             # Normalize features
                             if model_container.feature_normalizer:
