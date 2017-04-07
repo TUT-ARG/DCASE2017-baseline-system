@@ -2760,6 +2760,348 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
             return data
 
 
+class DCASE2017_Task4tagging_DevelopmentSet(SoundEventDataset):
+    """DCASE 2017 Large-scale weakly supervised sound event detection for smart cars
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs['storage_name'] = kwargs.get('storage_name', 'DCASE2017-task4-development')
+        super(DCASE2017_Task4tagging_DevelopmentSet, self).__init__(*args, **kwargs)
+
+        self.dataset_group = 'audio tagging'
+        self.dataset_meta = {
+            'authors': 'Benjamin Elizalde, Emmanuel Vincent, Bhiksha Raj',
+            'name_remote': 'Task 4 Large-scale weakly supervised sound event detection for smart cars',
+            'url': 'https://github.com/ankitshah009/Task-4-Large-scale-weakly-supervised-sound-event-detection-for-smart-cars',
+            'audio_source': 'Field recording',
+            'audio_type': 'Natural',
+            'recording_device_model': None,
+            'microphone_model': None,
+        }
+
+        self.crossvalidation_folds = 1
+        self.default_audio_extension = 'flac'
+
+        github_url = 'https://raw.githubusercontent.com/ankitshah009/Task-4-Large-scale-weakly-supervised-sound-event-detection-for-smart-cars/master/'
+
+        self.package_list = [
+            {
+                'remote_package': github_url + 'training_set.csv',
+                'local_package': os.path.join(self.local_path, 'training_set.csv'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'testing_set.csv',
+                'local_package': os.path.join(self.local_path, 'testing_set.csv'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'groundtruth_weak_label_training_set.csv',
+                'local_package': os.path.join(self.local_path, 'groundtruth_weak_label_training_set.csv'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'groundtruth_weak_label_testing_set.csv',
+                'local_package': os.path.join(self.local_path, 'groundtruth_weak_label_testing_set.csv'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'APACHE_LICENSE.txt',
+                'local_package': os.path.join(self.local_path, 'APACHE_LICENSE.txt'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'README.txt',
+                'local_package': os.path.join(self.local_path, 'README.txt'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'sound_event_list_17_classes.txt',
+                'local_package': os.path.join(self.local_path, 'sound_event_list_17_classes.txt'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': github_url + 'groundtruth_strong_label_testing_set.csv',
+                'local_package': os.path.join(self.local_path, 'groundtruth_strong_label_testing_set.csv'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            }
+        ]
+
+    @property
+    def scene_labels(self):
+        labels = ['youtube']
+        labels.sort()
+        return labels
+
+    def _after_extract(self, to_return=None):
+        import csv
+        from httplib import BadStatusLine
+        from dcase_framework.files import AudioFile
+
+        def progress_hook(t):
+            """
+            Wraps tqdm instance. Don't forget to close() or __exit__()
+            the tqdm instance once you're done with it (easiest using `with` syntax).
+            """
+
+            def inner(total, recvd, ratio, rate, eta):
+                t.total = int(total / 1024.0)
+                t.update(int(recvd / 1024.0))
+
+            return inner
+
+        # Collect file ids
+        files = []
+        with open(os.path.join(self.local_path, 'testing_set.csv'), 'rb') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                files.append({
+                    'query_id': row[0],
+                    'segment_start': row[1],
+                    'segment_end': row[2]}
+                )
+
+        with open(os.path.join(self.local_path, 'training_set.csv'), 'rb') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                files.append({
+                    'query_id': row[0],
+                    'segment_start': row[1],
+                    'segment_end': row[2]}
+                )
+
+        # Make sure audio directory exists
+        if not os.path.isdir(os.path.join(self.local_path, 'audio')):
+            os.makedirs(os.path.join(self.local_path, 'audio'))
+
+        file_progress = tqdm(files,
+                             desc="{0: <25s}".format('Files'),
+                             file=sys.stdout,
+                             leave=False,
+                             disable=self.disable_progress_bar,
+                             ascii=self.use_ascii_progress_bar)
+
+        non_existing_videos = []
+
+        # Check that audio files exists
+        for file_data in file_progress:
+            audio_filename = os.path.join(self.local_path,
+                                          'audio',
+                                          'Y{query_id}_{segment_start}_{segment_end}.{extension}'.format(
+                                              query_id=file_data['query_id'],
+                                              segment_start=file_data['segment_start'],
+                                              segment_end=file_data['segment_end'],
+                                              extension=self.default_audio_extension
+                                          )
+                                          )
+
+            # Download segment if it does not exists
+            if not os.path.isfile(audio_filename):
+                import pafy
+
+                #
+                try:
+                    # Access youtube video and get best quality audio stream
+                    youtube_audio = pafy.new(
+                        url='https://www.youtube.com/watch?v={query_id}'.format(query_id=file_data['query_id']),
+                        basic=False,
+                        gdata=False,
+                        size=False
+                    ).getbestaudio()
+
+                    # Get temp file
+                    tmp_file = os.path.join(self.local_path, 'tmp_file.{extension}'.format(
+                        extension=youtube_audio.extension)
+                                            )
+
+                    # Create download progress bar
+                    download_progress_bar = tqdm(
+                        desc="{0: <25s}".format('Download youtube item '),
+                        file=sys.stdout,
+                        unit='B',
+                        unit_scale=True,
+                        leave=False,
+                        disable=self.disable_progress_bar,
+                        ascii=self.use_ascii_progress_bar
+                    )
+
+                    # Download audio
+                    youtube_audio.download(
+                        filepath=tmp_file,
+                        quiet=True,
+                        callback=progress_hook(download_progress_bar)
+                    )
+
+                    # Close progress bar
+                    download_progress_bar.close()
+
+                    # Create audio processing progress bar
+                    audio_processing_progress_bar = tqdm(
+                        desc="{0: <25s}".format('Processing '),
+                        initial=0,
+                        total=4,
+                        file=sys.stdout,
+                        leave=False,
+                        disable=self.disable_progress_bar,
+                        ascii=self.use_ascii_progress_bar
+                    )
+
+                    # Load audio
+                    audio_file = AudioFile()
+                    audio_file.load(
+                        filename=tmp_file,
+                        mono=True,
+                        fs=44100,
+                        res_type='kaiser_best',
+                        start=float(file_data['segment_start']),
+                        stop=float(file_data['segment_end'])
+                    )
+                    audio_processing_progress_bar.update(1)
+
+                    # Save the segment
+                    audio_file.save(
+                        filename=audio_filename,
+                        bitdepth=16
+                    )
+                    audio_processing_progress_bar.update(3)
+
+                    # Remove temporal file
+                    os.remove(tmp_file)
+                    audio_processing_progress_bar.close()
+
+                except (IOError, BadStatusLine) as e:
+                    # Store files with errors
+                    file_data['error'] = str(e.message)
+                    non_existing_videos.append(file_data)
+
+                except (KeyboardInterrupt, SystemExit):
+                    # Remove temporal file and current audio file.
+                    os.remove(tmp_file)
+                    os.remove(audio_filename)
+                    raise
+
+        log_filename = os.path.join(self.local_path, 'item_access_error.log')
+        with open(log_filename, 'wb') as csv_file:
+            csv_writer = csv.writer(csv_file, delimiter=',')
+            for item in non_existing_videos:
+                csv_writer.writerow(
+                    (item['query_id'], item['error'].replace('\n', ' '))
+                )
+
+        # Make sure evaluation_setup directory exists
+        if not os.path.isdir(os.path.join(self.local_path, self.evaluation_setup_folder)):
+            os.makedirs(os.path.join(self.local_path, self.evaluation_setup_folder))
+
+        # Check that evaluation setup exists
+        evaluation_setup_exists = True
+        train_filename = self._get_evaluation_setup_filename(
+            setup_part='train',
+            fold=1,
+            scene_label='youtube',
+            file_extension='txt'
+        )
+
+        test_filename = self._get_evaluation_setup_filename(
+            setup_part='test',
+            fold=1,
+            scene_label='youtube',
+            file_extension='txt'
+        )
+
+        evaluate_filename = self._get_evaluation_setup_filename(
+            setup_part='evaluate',
+            fold=1,
+            scene_label='youtube',
+            file_extension='txt'
+        )
+
+        if not os.path.isfile(train_filename) or not os.path.isfile(test_filename) or not os.path.isfile(
+                evaluate_filename):
+            evaluation_setup_exists = False
+
+        # Evaluation setup was not found generate
+        if not evaluation_setup_exists:
+            fold = 1
+
+            train_meta = MetaDataContainer()
+            for item in MetaDataContainer().load(
+                    os.path.join(self.local_path, 'groundtruth_weak_label_training_set.csv')):
+                if not item['file'].endswith('flac'):
+                    item['file'] = os.path.join('audio', 'Y' + os.path.splitext(item['file'])[
+                        0] + '.' + self.default_audio_extension)
+                # Set scene label
+                item['scene_label'] = 'youtube'
+
+                # Translate event onset and offset, weak labels
+                item['event_offset'] -= item['event_onset']
+                item['event_onset'] -= item['event_onset']
+
+                # Only collect items which exists
+                if os.path.isfile(os.path.join(self.local_path, item['file'])):
+                    train_meta.append(item)
+
+            train_meta.save(filename=self._get_evaluation_setup_filename(
+                setup_part='train',
+                fold=fold,
+                scene_label='youtube',
+                file_extension='txt')
+            )
+
+            evaluate_meta = MetaDataContainer()
+            for item in MetaDataContainer().load(
+                    os.path.join(self.local_path, 'groundtruth_strong_label_testing_set.csv')):
+                if not item['file'].endswith('flac'):
+                    item['file'] = os.path.join('audio', 'Y' + os.path.splitext(item['file'])[
+                        0] + '.' + self.default_audio_extension)
+                # Set scene label
+                item['scene_label'] = 'youtube'
+
+                # Only collect items which exists
+                if os.path.isfile(os.path.join(self.local_path, item['file'])):
+                    evaluate_meta.append(item)
+
+            evaluate_meta.save(filename=self._get_evaluation_setup_filename(
+                setup_part='evaluate',
+                fold=fold,
+                scene_label='youtube',
+                file_extension='txt')
+            )
+
+            test_meta = MetaDataContainer()
+            for item in evaluate_meta:
+                test_meta.append(MetaDataItem({'file': item['file']}))
+
+                test_meta.save(filename=self._get_evaluation_setup_filename(
+                    setup_part='test',
+                    fold=fold,
+                    scene_label='youtube',
+                    file_extension='txt')
+                )
+
+        if not self.meta_container.exists():
+            fold = 1
+            meta_data = MetaDataContainer()
+            meta_data += MetaDataContainer().load(self._get_evaluation_setup_filename(
+                setup_part='train',
+                fold=fold,
+                scene_label='youtube',
+                file_extension='txt')
+            )
+
+            meta_data += MetaDataContainer().load(self._get_evaluation_setup_filename(
+                setup_part='evaluate',
+                fold=fold,
+                scene_label='youtube',
+                file_extension='txt')
+            )
+
+            self.meta_container.update(meta_data)
+            self.meta_container.save()
+        else:
+            self.meta_container.load()
+
+
 # =====================================================
 # DCASE 2016
 # =====================================================
