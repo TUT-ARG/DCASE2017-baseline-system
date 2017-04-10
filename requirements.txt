@@ -14,3 +14,4 @@ tqdm >=4.11.2
 pyyaml>=3.11
 msgpack-python>=0.4.8
 pydot-ng >= 1.0.0
+pafy>=0.5.3.1
