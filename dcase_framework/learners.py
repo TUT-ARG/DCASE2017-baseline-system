@@ -1060,21 +1060,39 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         # Convert annotations into activity matrix format
         activity_matrix_dict = self._get_target_matrix_dict(data=data, annotations=annotations)
 
+        # Process data
+        X_training = self.process_data(data=data, files=training_files)
+        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
+
+        if self.show_extra_debug:
+            self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
+
+        # Process validation data
+        if validation_files:
+            X_validation = self.process_data(data=data, files=validation_files)
+            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
+
+            validation = (X_validation, Y_validation)
+            if self.show_extra_debug:
+                self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
+        else:
+            validation = None
+
+        # Set seed
         self.set_seed()
 
+        # Setup Keras
         self._setup_keras()
 
         with SuppressStdoutAndStderr():
             # Import keras and suppress backend announcement printed to stderr
             import keras
 
+        # Create model
         self.create_model(input_shape=self._get_input_size(data=data))
 
         if self.show_extra_debug:
             self.log_model_summary()
-
-        X_training = self.process_data(data=data, files=training_files)
-        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
 
         class FancyProgbarLogger(keras.callbacks.Callback):
             """Callback that prints metrics to stdout.
@@ -1187,19 +1205,10 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
                     self.logger.exception(message)
                     raise AttributeError(message)
 
-        self.set_seed()
         if self.show_extra_debug:
-            self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
-        if validation_files:
-            X_validation = self.process_data(data=data, files=validation_files)
-            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
-
-            validation = (X_validation, Y_validation)
-            if self.show_extra_debug:
-                self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
-        else:
-            validation = None
-        if self.show_extra_debug:
+            self.logger.debug('  Feature vector \t[{vector:d}]'.format(
+                vector=self._get_input_size(data=data))
+            )
             self.logger.debug('  Batch size \t[{batch:d}]'.format(
                 batch=self.learner_params.get_path('training.batch_size', 1))
             )
@@ -1207,6 +1216,9 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
             self.logger.debug('  Epochs \t\t[{epoch:d}]'.format(
                 epoch=self.learner_params.get_path('training.epochs', 1))
             )
+
+        # Set seed
+        self.set_seed()
 
         hist = self.model.fit(x=X_training,
                               y=Y_training,
@@ -1811,20 +1823,40 @@ class EventDetectorMLP(EventDetector, KerasMixin):
         # Convert annotations into activity matrix format
         activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
 
+        # Process data
+        X_training = self.process_data(data=data, files=training_files)
+        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
+
+        if self.show_extra_debug:
+            self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
+
+        # Process validation data
+        if validation_files:
+            X_validation = self.process_data(data=data, files=validation_files)
+            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
+
+            validation = (X_validation, Y_validation)
+
+            if self.show_extra_debug:
+                self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
+        else:
+            validation = None
+
+        # Set seed
         self.set_seed()
 
+        # Setup Keras
         self._setup_keras()
 
         with SuppressStdoutAndStderr():
             # Import keras and suppress backend announcement printed to stderr
             import keras
 
+        # Create model
         self.create_model(input_shape=self._get_input_size(data=data))
 
         if self.show_extra_debug:
             self.log_model_summary()
-        X_training = self.process_data(data=data, files=training_files)
-        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
 
         class_weight = None
         if len(self.class_labels) == 1:
@@ -1960,25 +1992,19 @@ class EventDetectorMLP(EventDetector, KerasMixin):
                     self.logger.exception(message)
                     raise AttributeError(message)
 
+        if self.show_extra_debug:
+            self.logger.debug('  Feature vector \t[{vector:d}]'.format(
+                vector=self._get_input_size(data=data))
+            )
+            self.logger.debug('  Batch size \t[{batch:d}]'.format(
+                batch=self.learner_params.get_path('training.batch_size', 1))
+            )
+            self.logger.debug('  Epochs \t\t[{epoch:d}]'.format(
+                epoch=self.learner_params.get_path('training.epochs', 1))
+            )
+
+        # Set seed
         self.set_seed()
-        if self.show_extra_debug:
-            self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
-
-        if validation_files:
-            X_validation = self.process_data(data=data, files=validation_files)
-            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
-
-            validation = (X_validation, Y_validation)
-
-            if self.show_extra_debug:
-                self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
-        else:
-            validation = None
-
-        if self.show_extra_debug:
-            self.logger.debug('  Feature vector \t[{vector:d}]'.format(vector=self._get_input_size(data=data)))
-            self.logger.debug('  Batch size \t[{batch:d}]'.format(batch=self.learner_params.get_path('training.batch_size', 1)))
-            self.logger.debug('  Epochs \t\t[{epoch:d}]'.format(epoch=self.learner_params.get_path('training.epochs', 1)))
 
         hist = self.model.fit(
             x=X_training,
