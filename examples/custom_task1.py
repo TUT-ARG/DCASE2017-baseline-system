@@ -296,7 +296,7 @@ def main(argv):
         description=textwrap.dedent('''\
             DCASE 2017
             Task 1: Acoustic Scene Classification
-            Example how to customize applicationS
+            Example how to customize application
             ---------------------------------------------
                 Tampere University of Technology / Audio Research Group
                 Author:  Toni Heittola ( toni.heittola@tut.fi )
