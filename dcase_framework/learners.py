@@ -427,6 +427,40 @@ class KerasMixin(object):
         from keras.utils.visualize_util import plot
         plot(self.model, to_file=filename, show_shapes=show_shapes, show_layer_names=show_layer_names)
 
+    def process_data(self, data, files):
+        """Concatenate feature data into one feature matrix
+
+        Parameters
+        ----------
+        data : dict of FeatureContainers
+            Feature data
+        files : list of str
+            List of filenames
+        Returns
+        -------
+        numpy.ndarray
+            Features concatenated
+        """
+
+        return numpy.vstack([data[x].feat[0] for x in files])
+
+    def process_activity(self, activity_matrix_dict, files):
+        """Concatenate activity matrices into one activity matrix
+
+        Parameters
+        ----------
+        activity_matrix_dict : dict of binary matrices
+            Meta data
+        files : list of str
+            List of filenames
+        Returns
+        -------
+        numpy.ndarray
+            Activity matrix
+        """
+
+        return numpy.vstack([activity_matrix_dict[x] for x in files])
+
     def create_model(self, input_shape):
         from keras.models import Sequential
         self.model = Sequential()
@@ -659,7 +693,6 @@ class KerasMixin(object):
             )
             self.logger.exception(message)
             raise AssertionError(message)
-
 
 
 
@@ -1040,8 +1073,8 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         if self.show_extra_debug:
             self.log_model_summary()
 
-        X_training = numpy.vstack([data[x].feat[0] for x in training_files])
-        Y_training = numpy.vstack([activity_matrix_dict[x] for x in training_files])
+        X_training = self.process_data(data=data, files=training_files)
+        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
 
         class FancyProgbarLogger(keras.callbacks.Callback):
             """Callback that prints metrics to stdout.
@@ -1158,8 +1191,9 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         if self.show_extra_debug:
             self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
         if validation_files:
-            X_validation = numpy.vstack([data[x].feat[0] for x in validation_files])
-            Y_validation = numpy.vstack([activity_matrix_dict[x] for x in validation_files])
+            X_validation = self.process_data(data=data, files=validation_files)
+            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
+
             validation = (X_validation, Y_validation)
             if self.show_extra_debug:
                 self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
@@ -1789,9 +1823,8 @@ class EventDetectorMLP(EventDetector, KerasMixin):
 
         if self.show_extra_debug:
             self.log_model_summary()
-
-        X_training = numpy.vstack([data[x].feat[0] for x in training_files])
-        Y_training = numpy.vstack([activity_matrix_dict[x] for x in training_files])
+        X_training = self.process_data(data=data, files=training_files)
+        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
 
         class_weight = None
         if len(self.class_labels) == 1:
@@ -1932,8 +1965,9 @@ class EventDetectorMLP(EventDetector, KerasMixin):
             self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
 
         if validation_files:
-            X_validation = numpy.vstack([data[x].feat[0] for x in validation_files])
-            Y_validation = numpy.vstack([activity_matrix_dict[x] for x in validation_files])
+            X_validation = self.process_data(data=data, files=validation_files)
+            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
+
             validation = (X_validation, Y_validation)
 
             if self.show_extra_debug:
