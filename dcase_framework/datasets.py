@@ -112,7 +112,6 @@ from __future__ import print_function, absolute_import
 import sys
 import os
 import logging
-import urllib
 import socket
 import zipfile
 import tarfile
@@ -682,6 +681,11 @@ class Dataset(object):
 
         """
 
+        try:
+            from urllib.request import urlretrieve
+        except ImportError:
+            from urllib import urlretrieve
+
         # Set socket timeout
         socket.setdefaulttimeout(120)
 
@@ -731,7 +735,7 @@ class Dataset(object):
                               disable=self.disable_progress_bar,
                               ascii=self.use_ascii_progress_bar) as t:
 
-                        local_filename, headers = urllib.urlretrieve(
+                        local_filename, headers = urlretrieve(
                             remote_file,
                             filename=tmp_file,
                             reporthook=progress_hook(t),
@@ -744,8 +748,8 @@ class Dataset(object):
                 message = '{name}: Download failed [{filename}] [{errno}: {strerror}]'.format(
                     name=self.__class__.__name__,
                     filename=item['remote_package'],
-                    errno=e.errno,
-                    strerror=e.strerror,
+                    errno=e.errno if hasattr(e, 'errno') else '',
+                    strerror=e.strerror if hasattr(e, 'strerror') else '',
                 )
                 self.logger.exception(message)
                 raise
