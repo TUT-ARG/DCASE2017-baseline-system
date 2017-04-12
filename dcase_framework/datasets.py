@@ -2214,7 +2214,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
             # Generate mixture filename
             mixing_param_hash = hashlib.md5(yaml.dump(mixture_recipe)).hexdigest()
-            mixture_recipe['mixture_audio_filename'] = 'mixture' + '_' + subset + '_' + class_label + '_' + '%03d' % mixture_id + '_' + mixing_param_hash + self.default_audio_extension
+            mixture_recipe['mixture_audio_filename'] = 'mixture' + '_' + subset + '_' + class_label + '_' + '%03d' % mixture_id + '_' + mixing_param_hash + '.' + self.default_audio_extension
 
             # Generate mixture annotation
             if event_presence_flag:
