@@ -412,7 +412,7 @@ class KerasMixin(object):
                     shape=str(layer.output_shape),
                     params=str(layer.count_params()),
                     name=str(layer.name),
-                    connected=str(connections[0]),
+                    connected=str(connections[0]) if len(connections)>0 else '---',
                     activation=str(config.get('activation', '---')),
                     init=str(config.get('init', '---'))
                 )
