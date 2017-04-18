@@ -393,6 +393,10 @@ Example section:
 +================================+==============+======================================================================+
 | stacking_recipe                | string       | Stacking recipe to form feature vector.                              |
 +--------------------------------+--------------+----------------------------------------------------------------------+
+| feature_hop                    | int          | Debugging parameter to strip data by taking every Nth feature vector.|
+|                                |              | Use this only for classification tasks, as it will break             |
+|                                |              | syncronization of the meta data.                                     |
++--------------------------------+--------------+----------------------------------------------------------------------+
 
 Feature normalizer
 ^^^^^^^^^^^^^^^^^^
@@ -654,6 +658,9 @@ This learner is using Keras neural network implementation. See `documentation <h
 |                                |              |   This automatically inserted for input layer.                               |
 |                                |              | - ``CLASS_COUNT``, number of classes.                                        |
 |                                |              |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| input_shape                    | list of      | List of integers which is converted into tuple before giving to Keras layer. |
+|                                | ints         |                                                                              |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
 | **mlp->training->model**                                                                                                     |
 +--------------------------------+--------------+------------------------------------------------------------------------------+

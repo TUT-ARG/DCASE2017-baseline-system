@@ -15,8 +15,6 @@
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
   
-  
-  
 
   
 
@@ -50,7 +48,6 @@
 
 <body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -87,10 +84,7 @@
           
             
             
-              
-            
-            
-              <p class="caption"><span class="caption-text">Baseline system</span></p>
+                <p class="caption"><span class="caption-text">Baseline system</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="system_description.html">System description</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="system_description.html#mlp-based-system-dcase2017-baseline">MLP based system, DCASE2017 baseline</a></li>
@@ -321,7 +315,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.event_label_count.html">dcase_framework.datasets.Dataset.event_label_count</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.audio_tags.html">dcase_framework.datasets.Dataset.audio_tags</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.audio_tag_count.html">dcase_framework.datasets.Dataset.audio_tag_count</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.download.html">dcase_framework.datasets.Dataset.download</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.download_packages.html">dcase_framework.datasets.Dataset.download_packages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.extract.html">dcase_framework.datasets.Dataset.extract</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.train.html">dcase_framework.datasets.Dataset.train</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.Dataset.test.html">dcase_framework.datasets.Dataset.test</a></li>
@@ -551,10 +545,8 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">DCASE2017 Baseline</a>
-        
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">DCASE2017 Baseline</a>
       </nav>
 
 
@@ -563,38 +555,21 @@
         <div class="rst-content">
           
 
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html">Docs</a> &raquo;</li>
-        
-      <li>Parameterization</li>
-    
-    
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Parameterization</li>
       <li class="wy-breadcrumbs-aside">
         
-            
+          
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -1132,6 +1107,12 @@ Stacking recipe is <code class="docutils literal"><span class="pre">;</span></co
 <td>string</td>
 <td>Stacking recipe to form feature vector.</td>
 </tr>
+<tr class="row-odd"><td>feature_hop</td>
+<td>int</td>
+<td>Debugging parameter to strip data by taking every Nth feature vector.
+Use this only for classification tasks, as it will break
+syncronization of the meta data.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1483,27 +1464,32 @@ This automatically inserted for input layer.</li>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>mlp-&gt;training-&gt;model</strong></td>
+<tr class="row-even"><td>input_shape</td>
+<td>list of
+ints</td>
+<td>List of integers which is converted into tuple before giving to Keras layer.</td>
 </tr>
-<tr class="row-odd"><td>loss</td>
+<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;training-&gt;model</strong></td>
+</tr>
+<tr class="row-even"><td>loss</td>
 <td>string</td>
 <td>Keras loss function name. See
 <a class="reference external" href="https://keras.io/losses/">Keras documentation</a>.</td>
 </tr>
-<tr class="row-even"><td>metrics</td>
+<tr class="row-odd"><td>metrics</td>
 <td>list of
 strings</td>
 <td>Keras metric function name. See
 <a class="reference external" href="https://keras.io/metrics/">Keras documentation</a>.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>mlp-&gt;training-&gt;model-&gt;optimizer</strong></td>
+<tr class="row-even"><td colspan="3"><strong>mlp-&gt;training-&gt;model-&gt;optimizer</strong></td>
 </tr>
-<tr class="row-even"><td>type</td>
+<tr class="row-odd"><td>type</td>
 <td>string</td>
 <td>Keras optimizer name. See
 <a class="reference external" href="https://keras.io/optimizers/">Keras documentation</a>.</td>
 </tr>
-<tr class="row-odd"><td>parameters</td>
+<tr class="row-even"><td>parameters</td>
 <td>dict</td>
 <td>Place inside this all parameters for the optimizer.</td>
 </tr>
@@ -1946,18 +1932,15 @@ used:</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="reproducibility.html" class="btn btn-neutral float-right" title="Reproducibility" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="reproducibility.html" class="btn btn-neutral float-right" title="Reproducibility" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="usage_tutorial.html" class="btn btn-neutral" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="usage_tutorial.html" class="btn btn-neutral" title="Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -1990,8 +1973,7 @@ used:</p>
             VERSION:'1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
