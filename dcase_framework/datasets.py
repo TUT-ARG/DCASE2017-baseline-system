@@ -2076,10 +2076,6 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
     def _generate_mixture_recipes(self, params, subset, class_label, mixture_recipes_filename, background_meta,
                                   event_meta, background_audio_path, event_audio_path, r):
-        try:
-            from itertools import izip as zip
-        except ImportError:  # will be 3.x series
-            pass
 
         def get_event_amplitude_scaling_factor(signal, noise, target_snr_db):
             """Get amplitude scaling factor
@@ -2140,8 +2136,10 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         event_offsets_seconds[event_presence_flags] = [event['offset_seconds'] for event in events]
 
         # Double-check that we didn't shuffle things wrongly: check that the offset never exceeds bg_len-event_len
-        checker = [offset + events[int(event_instance_id)]['length_seconds'] for offset, event_instance_id in
-                   zip(event_offsets_seconds[event_presence_flags], event_instance_ids[event_presence_flags])]
+        checker = []
+        for offset, event_instance_id in zip(event_offsets_seconds[event_presence_flags], event_instance_ids[event_presence_flags]):
+            checker.append(offset + events[int(event_instance_id)]['length_seconds'])
+
         assert numpy.max(numpy.array(checker)) < params.get('mixture').get('length_seconds')
 
         # Target EBRs
@@ -2213,7 +2211,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 mixture_recipe['segment_end_seconds'] = events[int(event_instance_id)]['segment'][1]
 
             # Generate mixture filename
-            mixing_param_hash = hashlib.md5(yaml.dump(mixture_recipe)).hexdigest()
+            mixing_param_hash = hashlib.md5(yaml.dump(mixture_recipe).encode('utf-8')).hexdigest()
             mixture_recipe['mixture_audio_filename'] = 'mixture' + '_' + subset + '_' + class_label + '_' + '%03d' % mixture_id + '_' + mixing_param_hash + '.' + self.default_audio_extension
 
             # Generate mixture annotation
