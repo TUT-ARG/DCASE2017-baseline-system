@@ -357,7 +357,7 @@ class LearnerContainer(DataFile, ContainerMixin):
 
 class KerasMixin(object):
 
-    def exists(self):
+    def keras_model_exists(self):
         keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
         return os.path.isfile(self.filename) and os.path.isfile(keras_model_filename)
 
@@ -417,10 +417,11 @@ class KerasMixin(object):
                     init=str(config.get('init', '---'))
                 )
             )
+
         trainable_count, non_trainable_count = count_total_params(self.model.layers, layer_set=None)
-        self.logger.debug('  Total params         : {:,}'.format(trainable_count + non_trainable_count))
-        self.logger.debug('  Trainable params     : {:,}'.format(trainable_count))
-        self.logger.debug('  Non-trainable params : {:,}'.format(non_trainable_count))
+        self.logger.debug('  Total params         : {param_count:,}'.format(param_count=int(trainable_count + non_trainable_count)))
+        self.logger.debug('  Trainable params     : {param_count:,}'.format(param_count=int(trainable_count)))
+        self.logger.debug('  Non-trainable params : {param_count:,}'.format(param_count=int(non_trainable_count)))
         self.logger.debug('  ')
         
     def plot_model(self, filename='model.png', show_shapes=True, show_layer_names=True):
@@ -464,11 +465,24 @@ class KerasMixin(object):
     def create_model(self, input_shape):
         from keras.models import Sequential
         self.model = Sequential()
+
+        # Get model parameters
         model_params = copy.deepcopy(self.learner_params.get_path('model.config'))
+
+        # Setup layers
         for layer_id, layer_setup in enumerate(model_params):
+            # Get layer parameters
             layer_setup = DottedDict(layer_setup)
+            if 'config' not in layer_setup:
+                layer_setup['config'] = {}
+
+            # Get layer class
             try:
-                LayerClass = getattr(importlib.import_module("keras.layers"), layer_setup['class_name'])
+                LayerClass = getattr(
+                    importlib.import_module("keras.layers"),
+                    layer_setup['class_name']
+                )
+
             except AttributeError:
                 message = '{name}: Invalid Keras layer type [{type}].'.format(
                     name=self.__class__.__name__,
@@ -477,22 +491,31 @@ class KerasMixin(object):
                 self.logger.exception(message)
                 raise AttributeError(message)
 
-            if 'config' not in layer_setup:
-                layer_setup['config'] = {}
+            # Convert input_shape into tuple if list is given
+            if 'input_shape' in layer_setup['config'] and isinstance(layer_setup['config']['input_shape'], list):
+                if 'FEATURE_VECTOR_LENGTH' in layer_setup['config']['input_shape']:
+                    layer_setup['config']['input_shape'][layer_setup['config']['input_shape'].index('FEATURE_VECTOR_LENGTH')] = input_shape
+                elif 'CLASS_COUNT' in layer_setup['config']['input_shape']:
+                    layer_setup['config']['input_shape'][layer_setup['config']['input_shape'].index('CLASS_COUNT')] = len(self.class_labels)
 
-            # Set layer input
+                layer_setup['config']['input_shape'] = tuple(layer_setup['config']['input_shape'])
+
+            # Layer setup
             if layer_id == 0 and layer_setup.get_path('config.input_shape') is None:
                 # Set input layer dimension for the first layer if not set
-                if layer_setup.get('class_name') == 'Dropout':
-                    layer_setup['config']['input_shape'] = (input_shape,)
-                else:
-                    layer_setup['config']['input_dim'] = input_shape
+                layer_setup['config']['input_shape'] = (input_shape,)
 
             elif layer_setup.get_path('config.input_dim') == 'FEATURE_VECTOR_LENGTH':
-                layer_setup['config']['input_dim'] = input_shape
+                # Magic field "FEATURE_VECTOR_LENGTH"
+                layer_setup['config']['input_shape'] = (input_shape,)
+
+            elif layer_setup.get_path('config.input_shape') == 'FEATURE_VECTOR_LENGTH':
+                # Magic field "FEATURE_VECTOR_LENGTH"
+                layer_setup['config']['input_shape'] = (input_shape,)
 
             # Set layer output
             if layer_setup.get_path('config.units') == 'CLASS_COUNT':
+                # Magic field "CLASS_COUNT"
                 layer_setup['config']['units'] = len(self.class_labels)
 
             if layer_setup.get('config'):
@@ -500,10 +523,12 @@ class KerasMixin(object):
             else:
                 self.model.add(LayerClass())
 
+        # Get Optimizer class
         try:
-            OptimizerClass = getattr(importlib.import_module("keras.optimizers"),
-                                     self.learner_params.get_path('model.optimizer.type')
-                                     )
+            OptimizerClass = getattr(
+                importlib.import_module("keras.optimizers"),
+                self.learner_params.get_path('model.optimizer.type')
+            )
 
         except AttributeError:
             message = '{name}: Invalid Keras optimizer type [{type}].'.format(
@@ -513,6 +538,7 @@ class KerasMixin(object):
             self.logger.exception(message)
             raise AttributeError(message)
 
+        # Compile the model
         self.model.compile(
             loss=self.learner_params.get_path('model.loss'),
             optimizer=OptimizerClass(**dict(self.learner_params.get_path('model.optimizer.parameters', {}))),
@@ -564,7 +590,6 @@ class KerasMixin(object):
             blas_libraries = ['']
 
         blas_extra_info = []
-
         # Set backend and parameters before importing keras
         if self.show_extra_debug:
             self.logger.debug('  ')
@@ -695,9 +720,9 @@ class KerasMixin(object):
             raise AssertionError(message)
 
 
-
 class SceneClassifier(LearnerContainer):
     """Scene classifier (Frame classifier / Multiclass - Singlelabel)"""
+
     def predict(self, feature_data, recognizer_params=None):
         """Predict scene label for given feature matrix
 
@@ -836,6 +861,8 @@ class SceneClassifier(LearnerContainer):
 
                 for scene_label in sorted(validation_amounts.keys()):
                     self.logger.debug('  {0:<20s} | {1:4.2f} '.format(scene_label, validation_amounts[scene_label]*100))
+                self.logger.debug('  ')
+
         else:
             message = '{name}: Unknown validation_type [{type}].'.format(
                 name=self.__class__.__name__,
@@ -889,6 +916,26 @@ class SceneClassifier(LearnerContainer):
 class SceneClassifierGMM(SceneClassifier):
     """Scene classifier with GMM"""
     def __init__(self, *args, **kwargs):
+        self.default_parameters = DottedDict({
+            'show_model_information': False,
+            'audio_error_handling': False,
+            'win_length_seconds': 0.04,
+            'hop_length_seconds': 0.02,
+            'method': 'gmm',
+            'parameters': {
+                'covariance_type': 'diag',
+                'init_params': 'kmeans',
+                'max_iter': 40,
+                'n_components': 16,
+                'n_init': 1,
+                'random_state': 0,
+                'reg_covar': 0,
+                'tol': 0.001
+            },
+        })
+        self.default_parameters.merge(override=kwargs.get('params', {}))
+        kwargs['params'] = self.default_parameters
+
         super(SceneClassifierGMM, self).__init__(*args, **kwargs)
         self.method = 'gmm'
 
@@ -949,6 +996,27 @@ class SceneClassifierGMM(SceneClassifier):
 class SceneClassifierGMMdeprecated(SceneClassifier):
     """Scene classifier with GMM"""
     def __init__(self, *args, **kwargs):
+        self.default_parameters = DottedDict({
+            'show_model_information': False,
+            'audio_error_handling': False,
+            'win_length_seconds': 0.04,
+            'hop_length_seconds': 0.02,
+            'method': 'gmm_deprecated',
+            'parameters': {
+                'n_components': 16,
+                'covariance_type': 'diag',
+                'random_state': 0,
+                'tol': 0.001,
+                'min_covar': 0.001,
+                'n_iter': 40,
+                'n_init': 1,
+                'params': 'wmc',
+                'init_params': 'wmc',
+            },
+        })
+        self.default_parameters.merge(override=kwargs.get('params', {}))
+        kwargs['params'] = self.default_parameters
+
         super(SceneClassifierGMMdeprecated, self).__init__(*args, **kwargs)
         self.method = 'gmm_deprecated'
 
@@ -1016,6 +1084,67 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
 class SceneClassifierMLP(SceneClassifier, KerasMixin):
     """Scene classifier with MLP"""
     def __init__(self, *args, **kwargs):
+        self.default_parameters = DottedDict({
+            'show_model_information': False,
+            'audio_error_handling': False,
+            'win_length_seconds': 0.1,
+            'hop_length_seconds': 0.02,
+            'method': 'mlp',
+            'parameters': {
+                'seed': 0,
+                'keras': {
+                    'backend': 'theano',
+                    'backend_parameters': {
+                        'CNR': True,
+                        'device': 'cpu',
+                        'fastmath': False,
+                        'floatX': 'float64',
+                        'openmp': False,
+                        'optimizer': 'None',
+                        'threads': 1
+                    }
+                },
+                'model': {
+                    'config': [
+                        {
+                            'class_name': 'Dense',
+                            'config': {
+                                'activation': 'relu',
+                                'kernel_initializer': 'uniform',
+                                'units': 50
+                            }
+                        },
+                        {
+                            'class_name': 'Dense',
+                            'config': {
+                                'activation': 'softmax',
+                                'kernel_initializer': 'uniform',
+                                'units': 'CLASS_COUNT'
+                            }
+                        }
+                    ],
+                    'loss': 'categorical_crossentropy',
+                    'metrics': ['categorical_accuracy'],
+                    'optimizer': {
+                        'type': 'Adam'
+                    }
+                },
+                'training': {
+                    'batch_size': 256,
+                    'epochs': 200,
+                    'shuffle': True,
+                    'callbacks': [],
+                },
+                'validation': {
+                    'enable': True,
+                    'setup_source': 'generated_scene_balanced',
+                    'validation_amount': 0.1
+                }
+            }
+        })
+        self.default_parameters.merge(override=kwargs.get('params', {}))
+        kwargs['params'] = self.default_parameters
+
         super(SceneClassifierMLP, self).__init__(*args, **kwargs)
         self.method = 'mlp'
 
@@ -1435,7 +1564,7 @@ class EventDetector(LearnerContainer):
                                 event=event_label,
                                 amount=numpy.round(event_amount_percentages[event_label_id] * 100))
                             )
-
+                        self.logger.debug('  ')
                 else:
                     message = '{name}: Validation setup creation was not successful! Could not find a set with examples for each event class in both training and validation.'.format(
                         name=self.__class__.__name__
@@ -1492,6 +1621,25 @@ class EventDetector(LearnerContainer):
 
 class EventDetectorGMM(EventDetector):
     def __init__(self, *args, **kwargs):
+        self.default_parameters = DottedDict({
+            'win_length_seconds': 0.04,
+            'hop_length_seconds': 0.02,
+            'method': 'gmm',
+            'scene_handling': 'scene-dependent',
+            'parameters': {
+                'covariance_type': 'diag',
+                'init_params': 'kmeans',
+                'max_iter': 40,
+                'n_components': 16,
+                'n_init': 1,
+                'random_state': 0,
+                'reg_covar': 0,
+                'tol': 0.001
+            },
+        })
+        self.default_parameters.merge(override=kwargs.get('params', {}))
+        kwargs['params'] = self.default_parameters
+
         super(EventDetectorGMM, self).__init__(*args, **kwargs)
         self.method = 'gmm'
 
@@ -1642,6 +1790,26 @@ class EventDetectorGMM(EventDetector):
 
 class EventDetectorGMMdeprecated(EventDetector):
     def __init__(self, *args, **kwargs):
+        self.default_parameters = DottedDict({
+            'win_length_seconds': 0.04,
+            'hop_length_seconds': 0.02,
+            'method': 'gmm_deprecated',
+            'scene_handling': 'scene-dependent',
+            'parameters': {
+                'n_components': 16,
+                'covariance_type': 'diag',
+                'random_state': 0,
+                'tol': 0.001,
+                'min_covar': 0.001,
+                'n_iter': 40,
+                'n_init': 1,
+                'params': 'wmc',
+                'init_params': 'wmc',
+            },
+        })
+        self.default_parameters.merge(override=kwargs.get('params', {}))
+        kwargs['params'] = self.default_parameters
+
         super(EventDetectorGMMdeprecated, self).__init__(*args, **kwargs)
         self.method = 'gmm_deprecated'
 
@@ -1776,6 +1944,66 @@ class EventDetectorGMMdeprecated(EventDetector):
 
 class EventDetectorMLP(EventDetector, KerasMixin):
     def __init__(self, *args, **kwargs):
+        self.default_parameters = DottedDict({
+            'win_length_seconds': 0.04,
+            'hop_length_seconds': 0.02,
+            'method': 'mlp',
+            'scene_handling': 'scene-dependent',
+            'parameters': {
+                'seed': 0,
+                'keras': {
+                    'backend': 'theano',
+                    'backend_parameters': {
+                        'CNR': True,
+                        'device': 'cpu',
+                        'fastmath': False,
+                        'floatX': 'float64',
+                        'openmp': False,
+                        'optimizer': 'None',
+                        'threads': 1
+                    }
+                },
+                'model': {
+                    'config': [
+                        {
+                            'class_name': 'Dense',
+                            'config': {
+                                'activation': 'relu',
+                                'kernel_initializer': 'uniform',
+                                'units': 50
+                            }
+                        },
+                        {
+                            'class_name': 'Dense',
+                            'config': {
+                                'activation': 'sigmoid',
+                                'kernel_initializer': 'uniform',
+                                'units': 'CLASS_COUNT'
+                            }
+                        }
+                    ],
+                    'loss': 'categorical_crossentropy',
+                    'metrics': ['categorical_accuracy'],
+                    'optimizer': {
+                        'type': 'Adam'
+                    }
+                },
+                'training': {
+                    'batch_size': 256,
+                    'epochs': 200,
+                    'shuffle': True,
+                    'callbacks': [],
+                },
+                'validation': {
+                    'enable': True,
+                    'setup_source': 'generated_scene_location_event_balanced',
+                    'validation_amount': 0.1
+                }
+            },
+        })
+        self.default_parameters.merge(override=kwargs.get('params', {}))
+        kwargs['params'] = self.default_parameters
+
         super(EventDetectorMLP, self).__init__(*args, **kwargs)
         self.method = 'mlp'
 
