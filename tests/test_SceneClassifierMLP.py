@@ -11,48 +11,50 @@ from dcase_framework.learners import SceneClassifierMLP
 import tempfile
 
 learner_params = {
-    'seed': 1234,
-    'keras': {
-        'backend': 'theano',
-        'backend_parameters': {
-            'floatX': 'float32',
-            'device': 'cpu',
-        }
-    },
-    'validation': {
-        'enable': False,
-    },
-    'training': {
-        'epochs': 10,
-        'batch_size': 16,
-        'shuffle': True,
-    },
-    'model': {
-        'config': [
-            {
-                'class_name': 'Dense',
-                'config': {
-                    'units': 50,
-                    'kernel_initializer': 'uniform',
-                    'activation': 'relu',
-                }
-            },
-            {
-                'class_name': 'Dense',
-                'config': {
-                    'units': 'CLASS_COUNT',
-                    'kernel_initializer': 'uniform',
-                    'activation': 'softmax',
-                }
-            },
-        ],
-        'optimizer': {
-          'type': 'Adam',
+    'parameters':{
+        'seed': 1234,
+        'keras': {
+            'backend': 'theano',
+            'backend_parameters': {
+                'floatX': 'float32',
+                'device': 'cpu',
+            }
         },
-        'loss': 'categorical_crossentropy',
-        'metrics': [
-            'categorical_accuracy'
-        ]
+        'validation': {
+            'enable': False,
+        },
+        'training': {
+            'epochs': 10,
+            'batch_size': 16,
+            'shuffle': True,
+        },
+        'model': {
+            'config': [
+                {
+                    'class_name': 'Dense',
+                    'config': {
+                        'units': 50,
+                        'kernel_initializer': 'uniform',
+                        'activation': 'relu',
+                    }
+                },
+                {
+                    'class_name': 'Dense',
+                    'config': {
+                        'units': 'CLASS_COUNT',
+                        'kernel_initializer': 'uniform',
+                        'activation': 'softmax',
+                    }
+                },
+            ],
+            'optimizer': {
+              'type': 'Adam',
+            },
+            'loss': 'categorical_crossentropy',
+            'metrics': [
+                'categorical_accuracy'
+            ]
+        }
     }
 }
 
@@ -104,7 +106,7 @@ def test_learn():
     sc.learn(data=data, annotations=annotations)
 
     # Test epochs
-    nose.tools.eq_(len(sc['learning_history']['loss']), learner_params['training']['epochs'])
+    nose.tools.eq_(len(sc['learning_history']['loss']), learner_params['parameters']['training']['epochs'])
 
 
 def test_predict():
