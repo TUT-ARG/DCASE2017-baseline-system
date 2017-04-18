@@ -124,7 +124,10 @@ sets:
           backend_parameters:
             floatX: float32
             device: gpu
-            fastmath: false
+            fastmath: true
+            optimizer: FAST_RUN
+            openmp: true
+            threads: 4
 
         validation:
           enable: true
