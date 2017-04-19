@@ -1127,7 +1127,10 @@ class AcousticSceneClassificationAppCore(AppCore):
             current_model_file = self._get_model_filename(fold=fold, path=self.params.get_path('path.learner'))
             if not os.path.isfile(current_model_file) or overwrite:
                 # Feature stacker
-                feature_stacker = self.FeatureStacker(recipe=self.params.get_path('feature_extractor.recipe'))
+                feature_stacker = self.FeatureStacker(
+                    recipe=self.params.get_path('feature_extractor.recipe'),
+                    feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                )
 
                 feature_masker = None
                 if self.params.get_path('learner.audio_error_handling'):
@@ -1220,8 +1223,7 @@ class AcousticSceneClassificationAppCore(AppCore):
 
                     # Stack features
                     feature_container = feature_stacker.process(
-                        feature_repository=feature_repository,
-                        feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                        feature_repository=feature_repository
                     )
 
                     # Normalize features
@@ -1868,7 +1870,10 @@ class SoundEventAppCore(AppCore):
 
                     if not os.path.isfile(current_model_file) or overwrite:
                         # Feature stacker
-                        feature_stacker = FeatureStacker(recipe=self.params.get_path('feature_extractor.recipe'))
+                        feature_stacker = FeatureStacker(
+                            recipe=self.params.get_path('feature_extractor.recipe'),
+                            feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                        )
 
                         feature_aggregator = None
                         if self.params.get_path('feature_aggregator.enable'):
@@ -1949,8 +1954,7 @@ class SoundEventAppCore(AppCore):
 
                             # Stack features
                             feature_data = feature_stacker.process(
-                                feature_repository=feature_list,
-                                feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                                feature_repository=feature_list
                             )
 
                             # Normalize features
@@ -2769,7 +2773,10 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                                                   event_label=event_label)
                     if not os.path.isfile(current_model_file) or overwrite:
                         # Feature stacker
-                        feature_stacker = FeatureStacker(recipe=self.params.get_path('feature_extractor.recipe'))
+                        feature_stacker = FeatureStacker(
+                            recipe=self.params.get_path('feature_extractor.recipe'),
+                            feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                        )
 
                         feature_aggregator = None
                         if self.params.get_path('feature_aggregator.enable'):
@@ -2855,8 +2862,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
 
                             # Stack features
                             feature_data = feature_stacker.process(
-                                feature_repository=feature_list,
-                                feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                                feature_repository=feature_list
                             )
 
                             # Normalize features
@@ -2974,7 +2980,6 @@ class BinarySoundEventAppCore(SoundEventAppCore):
 
             self.logger.exception(message)
             raise ValueError(message)
-
 
     @before_and_after_function_wrapper
     def system_testing(self, overwrite=None):

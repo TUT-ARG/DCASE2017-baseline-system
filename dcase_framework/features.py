@@ -1117,16 +1117,21 @@ class FeatureStacker(object):
     """Feature stacker"""
     __version__ = '0.0.1'
 
-    def __init__(self, recipe, **kwargs):
+    def __init__(self, recipe, feature_hop=1, **kwargs):
         """Constructor
 
         Parameters
         ----------
         recipe : dict
             Stacking recipe
+        feature_hop : int, optional
+            Feature hopping
+            Default value 1
+
         """
 
         self.recipe = recipe
+        self.feature_hop = feature_hop
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     def __getstate__(self):
@@ -1207,16 +1212,13 @@ class FeatureStacker(object):
 
         return normalizer
 
-    def feature_vector(self, feature_repository, feature_hop=1):
+    def feature_vector(self, feature_repository):
         """Feature vector creation
 
         Parameters
         ----------
         feature_repository : FeatureRepository, dict
             Feature repository with needed features
-        feature_hop : int, optional
-            Feature hopping
-            Default value 1
 
         Returns
         -------
@@ -1258,14 +1260,14 @@ class FeatureStacker(object):
 
             if 'vector-index' not in feature or ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full']):
                 # We have Full matrix
-                feature_matrix.append(feature_repository[method].feat[channel][::feature_hop, :])
+                feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, :])
             elif 'vector-index' in feature and 'vector' in feature['vector-index'] and 'selection' in feature['vector-index'] and feature['vector-index']['selection']:
                 index = numpy.array(feature['vector-index']['vector'])
                 # We have selector vector
-                feature_matrix.append(feature_repository[method].feat[channel][::feature_hop, index])
+                feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, index])
             elif 'vector-index' in feature and 'start' in feature['vector-index'] and 'end' in feature['vector-index']:
                 # we have start and end index
-                feature_matrix.append(feature_repository[method].feat[channel][::feature_hop, feature['vector-index']['start']:feature['vector-index']['end']])
+                feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, feature['vector-index']['start']:feature['vector-index']['end']])
 
         meta = {
             'parameters': {
@@ -1282,23 +1284,21 @@ class FeatureStacker(object):
 
         return FeatureContainer(features=[numpy.hstack(feature_matrix)], meta=meta)
 
-    def process(self, feature_repository, feature_hop=1):
+    def process(self, feature_repository):
         """Feature vector creation
 
         Parameters
         ----------
         feature_repository : FeatureRepository
             Feature repository with needed features
-        feature_hop : int, optional
-            Feature hopping
-            Default value 1
+
         Returns
         -------
         FeatureContainer
 
         """
 
-        return self.feature_vector(feature_repository=feature_repository, feature_hop=1)
+        return self.feature_vector(feature_repository=feature_repository)
 
 
 class FeatureNormalizer(DataFile, ContainerMixin):
