@@ -1137,7 +1137,8 @@ class FeatureStacker(object):
     def __getstate__(self):
         """Return only needed data for pickle"""
         return {
-            'recipe': self.recipe
+            'recipe': self.recipe,
+            'feature_hop': self.feature_hop,
         }
 
     def normalizer(self, normalizer_list):
