@@ -1706,7 +1706,10 @@
             <span class="n">current_model_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_model_filename</span><span class="p">(</span><span class="n">fold</span><span class="o">=</span><span class="n">fold</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;path.learner&#39;</span><span class="p">))</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current_model_file</span><span class="p">)</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
                 <span class="c1"># Feature stacker</span>
-                <span class="n">feature_stacker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FeatureStacker</span><span class="p">(</span><span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_extractor.recipe&#39;</span><span class="p">))</span>
+                <span class="n">feature_stacker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">FeatureStacker</span><span class="p">(</span>
+                    <span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_extractor.recipe&#39;</span><span class="p">),</span>
+                    <span class="n">feature_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.feature_hop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span>
 
                 <span class="n">feature_masker</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.audio_error_handling&#39;</span><span class="p">):</span>
@@ -1799,8 +1802,7 @@
 
                     <span class="c1"># Stack features</span>
                     <span class="n">feature_container</span> <span class="o">=</span> <span class="n">feature_stacker</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
-                        <span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_repository</span><span class="p">,</span>
-                        <span class="n">feature_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.feature_hop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_repository</span>
                     <span class="p">)</span>
 
                     <span class="c1"># Normalize features</span>
@@ -2447,7 +2449,10 @@
 
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current_model_file</span><span class="p">)</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
                         <span class="c1"># Feature stacker</span>
-                        <span class="n">feature_stacker</span> <span class="o">=</span> <span class="n">FeatureStacker</span><span class="p">(</span><span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_extractor.recipe&#39;</span><span class="p">))</span>
+                        <span class="n">feature_stacker</span> <span class="o">=</span> <span class="n">FeatureStacker</span><span class="p">(</span>
+                            <span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_extractor.recipe&#39;</span><span class="p">),</span>
+                            <span class="n">feature_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.feature_hop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="p">)</span>
 
                         <span class="n">feature_aggregator</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_aggregator.enable&#39;</span><span class="p">):</span>
@@ -2528,8 +2533,7 @@
 
                             <span class="c1"># Stack features</span>
                             <span class="n">feature_data</span> <span class="o">=</span> <span class="n">feature_stacker</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
-                                <span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_list</span><span class="p">,</span>
-                                <span class="n">feature_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.feature_hop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                                <span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_list</span>
                             <span class="p">)</span>
 
                             <span class="c1"># Normalize features</span>
@@ -3348,7 +3352,10 @@
                                                                   <span class="n">event_label</span><span class="o">=</span><span class="n">event_label</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current_model_file</span><span class="p">)</span> <span class="ow">or</span> <span class="n">overwrite</span><span class="p">:</span>
                         <span class="c1"># Feature stacker</span>
-                        <span class="n">feature_stacker</span> <span class="o">=</span> <span class="n">FeatureStacker</span><span class="p">(</span><span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_extractor.recipe&#39;</span><span class="p">))</span>
+                        <span class="n">feature_stacker</span> <span class="o">=</span> <span class="n">FeatureStacker</span><span class="p">(</span>
+                            <span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_extractor.recipe&#39;</span><span class="p">),</span>
+                            <span class="n">feature_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.feature_hop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="p">)</span>
 
                         <span class="n">feature_aggregator</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_aggregator.enable&#39;</span><span class="p">):</span>
@@ -3434,8 +3441,7 @@
 
                             <span class="c1"># Stack features</span>
                             <span class="n">feature_data</span> <span class="o">=</span> <span class="n">feature_stacker</span><span class="o">.</span><span class="n">process</span><span class="p">(</span>
-                                <span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_list</span><span class="p">,</span>
-                                <span class="n">feature_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.feature_hop&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                                <span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_list</span>
                             <span class="p">)</span>
 
                             <span class="c1"># Normalize features</span>
@@ -3553,7 +3559,6 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
-
 
     <span class="nd">@before_and_after_function_wrapper</span>
 <div class="viewcode-block" id="BinarySoundEventAppCore.system_testing"><a class="viewcode-back" href="../../generated/dcase_framework.application_core.BinarySoundEventAppCore.system_testing.html#dcase_framework.application_core.BinarySoundEventAppCore.system_testing">[docs]</a>    <span class="k">def</span> <span class="nf">system_testing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

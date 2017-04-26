@@ -1696,22 +1696,28 @@
     <span class="sd">&quot;&quot;&quot;Feature stacker&quot;&quot;&quot;</span>
     <span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
 
-<div class="viewcode-block" id="FeatureStacker.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.html#dcase_framework.features.FeatureStacker.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureStacker.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.html#dcase_framework.features.FeatureStacker.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">feature_hop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        recipe : dict</span>
 <span class="sd">            Stacking recipe</span>
+<span class="sd">        feature_hop : int, optional</span>
+<span class="sd">            Feature hopping</span>
+<span class="sd">            Default value 1</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span> <span class="o">=</span> <span class="n">recipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span> <span class="o">=</span> <span class="n">feature_hop</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return only needed data for pickle&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;recipe&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span>
+            <span class="s1">&#39;recipe&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span><span class="p">,</span>
+            <span class="s1">&#39;feature_hop&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span>
         <span class="p">}</span>
 
 <div class="viewcode-block" id="FeatureStacker.normalizer"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.normalizer.html#dcase_framework.features.FeatureStacker.normalizer">[docs]</a>    <span class="k">def</span> <span class="nf">normalizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalizer_list</span><span class="p">):</span>
@@ -1786,16 +1792,13 @@
 
         <span class="k">return</span> <span class="n">normalizer</span></div>
 
-<div class="viewcode-block" id="FeatureStacker.feature_vector"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.feature_vector.html#dcase_framework.features.FeatureStacker.feature_vector">[docs]</a>    <span class="k">def</span> <span class="nf">feature_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">,</span> <span class="n">feature_hop</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureStacker.feature_vector"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.feature_vector.html#dcase_framework.features.FeatureStacker.feature_vector">[docs]</a>    <span class="k">def</span> <span class="nf">feature_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Feature vector creation</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        feature_repository : FeatureRepository, dict</span>
 <span class="sd">            Feature repository with needed features</span>
-<span class="sd">        feature_hop : int, optional</span>
-<span class="sd">            Feature hopping</span>
-<span class="sd">            Default value 1</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1837,14 +1840,14 @@
 
             <span class="k">if</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;full&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;full&#39;</span><span class="p">]):</span>
                 <span class="c1"># We have Full matrix</span>
-                <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="n">feature_hop</span><span class="p">,</span> <span class="p">:])</span>
+                <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span> <span class="p">:])</span>
             <span class="k">elif</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;vector&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;selection&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]:</span>
                 <span class="n">index</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;vector&#39;</span><span class="p">])</span>
                 <span class="c1"># We have selector vector</span>
-                <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="n">feature_hop</span><span class="p">,</span> <span class="n">index</span><span class="p">])</span>
+                <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span> <span class="n">index</span><span class="p">])</span>
             <span class="k">elif</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;start&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;end&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]:</span>
                 <span class="c1"># we have start and end index</span>
-                <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="n">feature_hop</span><span class="p">,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;start&#39;</span><span class="p">]:</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;end&#39;</span><span class="p">]])</span>
+                <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;start&#39;</span><span class="p">]:</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;end&#39;</span><span class="p">]])</span>
 
         <span class="n">meta</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -1861,23 +1864,21 @@
 
         <span class="k">return</span> <span class="n">FeatureContainer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">feature_matrix</span><span class="p">)],</span> <span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FeatureStacker.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">,</span> <span class="n">feature_hop</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureStacker.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Feature vector creation</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        feature_repository : FeatureRepository</span>
 <span class="sd">            Feature repository with needed features</span>
-<span class="sd">        feature_hop : int, optional</span>
-<span class="sd">            Feature hopping</span>
-<span class="sd">            Default value 1</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        FeatureContainer</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_vector</span><span class="p">(</span><span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_repository</span><span class="p">,</span> <span class="n">feature_hop</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_vector</span><span class="p">(</span><span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_repository</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="FeatureNormalizer"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureNormalizer.html#dcase_framework.features.FeatureNormalizer">[docs]</a><span class="k">class</span> <span class="nc">FeatureNormalizer</span><span class="p">(</span><span class="n">DataFile</span><span class="p">,</span> <span class="n">ContainerMixin</span><span class="p">):</span>

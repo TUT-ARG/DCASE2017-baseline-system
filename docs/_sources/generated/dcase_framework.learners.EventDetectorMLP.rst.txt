@@ -32,6 +32,7 @@ dcase_framework.learners.EventDetectorMLP
       ~EventDetectorMLP.iteritems
       ~EventDetectorMLP.iterkeys
       ~EventDetectorMLP.itervalues
+      ~EventDetectorMLP.keras_model_exists
       ~EventDetectorMLP.keys
       ~EventDetectorMLP.learn
       ~EventDetectorMLP.load
@@ -42,6 +43,8 @@ dcase_framework.learners.EventDetectorMLP
       ~EventDetectorMLP.pop
       ~EventDetectorMLP.popitem
       ~EventDetectorMLP.predict
+      ~EventDetectorMLP.process_activity
+      ~EventDetectorMLP.process_data
       ~EventDetectorMLP.save
       ~EventDetectorMLP.set_seed
       ~EventDetectorMLP.setdefault

@@ -582,7 +582,7 @@
 <h1>dcase_framework.features.FeatureStacker<a class="headerlink" href="#dcase-framework-features-featurestacker" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="dcase_framework.features.FeatureStacker">
-<em class="property">class </em><code class="descclassname">dcase_framework.features.</code><code class="descname">FeatureStacker</code><span class="sig-paren">(</span><em>recipe</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dcase_framework/features.html#FeatureStacker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dcase_framework.features.FeatureStacker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">dcase_framework.features.</code><code class="descname">FeatureStacker</code><span class="sig-paren">(</span><em>recipe</em>, <em>feature_hop=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dcase_framework/features.html#FeatureStacker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dcase_framework.features.FeatureStacker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Feature stacker</p>
 <p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -590,8 +590,13 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>recipe</strong> : dict</p>
-<blockquote class="last">
+<blockquote>
 <div><p>Stacking recipe</p>
+</div></blockquote>
+<p><strong>feature_hop</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>Feature hopping
+Default value 1</p>
 </div></blockquote>
 </td>
 </tr>
@@ -599,15 +604,20 @@
 </table>
 <dl class="method">
 <dt id="dcase_framework.features.FeatureStacker.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>recipe</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dcase_framework/features.html#FeatureStacker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dcase_framework.features.FeatureStacker.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>recipe</em>, <em>feature_hop=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dcase_framework/features.html#FeatureStacker.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dcase_framework.features.FeatureStacker.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>recipe</strong> : dict</p>
-<blockquote class="last">
+<blockquote>
 <div><p>Stacking recipe</p>
+</div></blockquote>
+<p><strong>feature_hop</strong> : int, optional</p>
+<blockquote class="last">
+<div><p>Feature hopping
+Default value 1</p>
 </div></blockquote>
 </td>
 </tr>
@@ -622,16 +632,16 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#dcase_framework.features.FeatureStacker.__init__" title="dcase_framework.features.FeatureStacker.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(recipe,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#dcase_framework.features.FeatureStacker.__init__" title="dcase_framework.features.FeatureStacker.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(recipe[,&nbsp;feature_hop])</td>
 <td>Constructor</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.features.FeatureStacker.feature_vector.html#dcase_framework.features.FeatureStacker.feature_vector" title="dcase_framework.features.FeatureStacker.feature_vector"><code class="xref py py-obj docutils literal"><span class="pre">feature_vector</span></code></a>(feature_repository[,&nbsp;feature_hop])</td>
+<tr class="row-even"><td><a class="reference internal" href="dcase_framework.features.FeatureStacker.feature_vector.html#dcase_framework.features.FeatureStacker.feature_vector" title="dcase_framework.features.FeatureStacker.feature_vector"><code class="xref py py-obj docutils literal"><span class="pre">feature_vector</span></code></a>(feature_repository)</td>
 <td>Feature vector creation</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="dcase_framework.features.FeatureStacker.normalizer.html#dcase_framework.features.FeatureStacker.normalizer" title="dcase_framework.features.FeatureStacker.normalizer"><code class="xref py py-obj docutils literal"><span class="pre">normalizer</span></code></a>(normalizer_list)</td>
 <td>Stack normalization factors based on stack map</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process" title="dcase_framework.features.FeatureStacker.process"><code class="xref py py-obj docutils literal"><span class="pre">process</span></code></a>(feature_repository[,&nbsp;feature_hop])</td>
+<tr class="row-even"><td><a class="reference internal" href="dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process" title="dcase_framework.features.FeatureStacker.process"><code class="xref py py-obj docutils literal"><span class="pre">process</span></code></a>(feature_repository)</td>
 <td>Feature vector creation</td>
 </tr>
 </tbody>

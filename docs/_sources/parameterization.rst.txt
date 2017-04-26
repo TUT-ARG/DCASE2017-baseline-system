@@ -394,8 +394,8 @@ Example section:
 | stacking_recipe                | string       | Stacking recipe to form feature vector.                              |
 +--------------------------------+--------------+----------------------------------------------------------------------+
 | feature_hop                    | int          | Debugging parameter to strip data by taking every Nth feature vector.|
-|                                |              | Use this only for classification tasks, as it will break             |
-|                                |              | syncronization of the meta data.                                     |
+|                                | {1}          | Use this only for classification tasks, as it will break             |
+|                                |              | synchronization of the meta data.                                    |
 +--------------------------------+--------------+----------------------------------------------------------------------+
 
 Feature normalizer

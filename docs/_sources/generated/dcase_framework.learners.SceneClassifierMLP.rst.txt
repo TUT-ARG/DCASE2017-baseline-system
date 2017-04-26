@@ -32,6 +32,7 @@ dcase_framework.learners.SceneClassifierMLP
       ~SceneClassifierMLP.iteritems
       ~SceneClassifierMLP.iterkeys
       ~SceneClassifierMLP.itervalues
+      ~SceneClassifierMLP.keras_model_exists
       ~SceneClassifierMLP.keys
       ~SceneClassifierMLP.learn
       ~SceneClassifierMLP.load
@@ -42,6 +43,8 @@ dcase_framework.learners.SceneClassifierMLP
       ~SceneClassifierMLP.pop
       ~SceneClassifierMLP.popitem
       ~SceneClassifierMLP.predict
+      ~SceneClassifierMLP.process_activity
+      ~SceneClassifierMLP.process_data
       ~SceneClassifierMLP.save
       ~SceneClassifierMLP.set_seed
       ~SceneClassifierMLP.setdefault

@@ -20,6 +20,10 @@ The system is tested to work on Linux, Windows and MacOS platforms.
 
 One can install either the official `CPython <https://www.python.org/>`_ or use some Python distribution based on it. New users are recommended to use `Anaconda Python distribution <https://www.continuum.io/>`_.
 
+**Using the system on Windows**
+
+The baseline system uses rather long directory paths, since it is storing 32 character MD5 hash of the system parameters into directory names.
+Some Windows system have path length limit (lowest 260 characters), which is causing problems. To avoid problems related to this, install the system as close as possible to the drive root.
 
 **External modules**
 

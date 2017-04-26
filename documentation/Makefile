@@ -5,7 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-CACHEDIR         = build
+CACHEDIR      = build
 BUILDDIR      = ../docs
 
 # User-friendly check for sphinx-build

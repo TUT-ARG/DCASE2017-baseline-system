@@ -16,7 +16,7 @@ dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet
       ~TUTSoundEvents_2016_DevelopmentSet.__init__
       ~TUTSoundEvents_2016_DevelopmentSet.absolute_to_relative
       ~TUTSoundEvents_2016_DevelopmentSet.check_filelist
-      ~TUTSoundEvents_2016_DevelopmentSet.download
+      ~TUTSoundEvents_2016_DevelopmentSet.download_packages
       ~TUTSoundEvents_2016_DevelopmentSet.error_meta_count
       ~TUTSoundEvents_2016_DevelopmentSet.eval
       ~TUTSoundEvents_2016_DevelopmentSet.event_label_count

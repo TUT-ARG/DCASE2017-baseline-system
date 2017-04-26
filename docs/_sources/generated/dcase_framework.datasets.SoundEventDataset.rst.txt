@@ -16,7 +16,7 @@ dcase_framework.datasets.SoundEventDataset
       ~SoundEventDataset.__init__
       ~SoundEventDataset.absolute_to_relative
       ~SoundEventDataset.check_filelist
-      ~SoundEventDataset.download
+      ~SoundEventDataset.download_packages
       ~SoundEventDataset.error_meta_count
       ~SoundEventDataset.eval
       ~SoundEventDataset.event_label_count

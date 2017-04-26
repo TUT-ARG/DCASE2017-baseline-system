@@ -1,6 +1,0 @@
-dcase_framework.metadata.MetaDataItem.location_identifier
-=========================================================
-
-.. currentmodule:: dcase_framework.metadata
-
-.. autoattribute:: MetaDataItem.location_identifier

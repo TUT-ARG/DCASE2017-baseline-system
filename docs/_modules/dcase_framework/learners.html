@@ -2143,7 +2143,7 @@
                                 <span class="n">event</span><span class="o">=</span><span class="n">event_label</span><span class="p">,</span>
                                 <span class="n">amount</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">event_amount_percentages</span><span class="p">[</span><span class="n">event_label_id</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">))</span>
                             <span class="p">)</span>
-
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Validation setup creation was not successful! Could not find a set with examples for each event class in both training and validation.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>

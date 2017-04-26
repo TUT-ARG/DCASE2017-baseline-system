@@ -16,7 +16,7 @@ dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet
       ~TUTAcousticScenes_2016_EvaluationSet.__init__
       ~TUTAcousticScenes_2016_EvaluationSet.absolute_to_relative
       ~TUTAcousticScenes_2016_EvaluationSet.check_filelist
-      ~TUTAcousticScenes_2016_EvaluationSet.download
+      ~TUTAcousticScenes_2016_EvaluationSet.download_packages
       ~TUTAcousticScenes_2016_EvaluationSet.error_meta_count
       ~TUTAcousticScenes_2016_EvaluationSet.eval
       ~TUTAcousticScenes_2016_EvaluationSet.event_labels
