@@ -1175,9 +1175,10 @@ class AcousticSceneClassificationAppCore(AppCore):
                     )
 
                 # Collect training examples
+                train_meta = self.dataset.train(fold)
                 data = {}
                 annotations = {}
-                item_progress = tqdm(self.dataset.train(fold),
+                item_progress = tqdm(train_meta.file_list[::self.params.get_path('learner.file_hop', 1)],
                                      desc="           {0: >15s}".format('Collect data '),
                                      file=sys.stdout,
                                      leave=False,
@@ -1470,15 +1471,20 @@ class AcousticSceneClassificationAppCore(AppCore):
                 scene_metric_fold = sed_eval.scene.SceneClassificationMetrics(scene_labels=self.dataset.scene_labels)
 
                 estimated_scene_list = MetaDataContainer(
-                    filename=self._get_result_filename(fold=fold, path=self.params.get_path('path.recognizer'))).load()
+                    filename=self._get_result_filename(fold=fold, path=self.params.get_path('path.recognizer'))
+                ).load()
+
                 reference_scene_list = self.dataset.eval(fold=fold)
+
                 for item in reference_scene_list:
                     item['file'] = self.dataset.absolute_to_relative(item['file'])
 
                 scene_metric.evaluate(reference_scene_list=reference_scene_list,
                                       estimated_scene_list=estimated_scene_list)
+
                 scene_metric_fold.evaluate(reference_scene_list=reference_scene_list,
                                            estimated_scene_list=estimated_scene_list)
+
                 results_fold.append(scene_metric_fold.results())
 
             results = scene_metric.results()
@@ -2820,7 +2826,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                         data = {}
                         annotations = {}
 
-                        item_progress = tqdm(train_meta.file_list,
+                        item_progress = tqdm(train_meta.file_list[::self.params.get_path('learner.file_hop', 1)],
                                              desc="           {0: >15s}".format('Collect data '),
                                              file=sys.stdout,
                                              leave=False,
