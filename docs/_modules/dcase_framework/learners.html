@@ -734,6 +734,7 @@
             <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
             <span class="s1">&#39;class_labels&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class_labels&#39;</span><span class="p">,</span> <span class="p">[]),</span>
             <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">DottedDict</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="p">{})),</span>
+            <span class="s1">&#39;feature_processing_chain&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_processing_chain&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
             <span class="s1">&#39;feature_masker&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_masker&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
             <span class="s1">&#39;feature_normalizer&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_normalizer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
             <span class="s1">&#39;feature_stacker&#39;</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_stacker&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
@@ -805,6 +806,22 @@
     <span class="nd">@params</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">feature_processing_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Feature processing chain</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">         feature_processing_chain</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;feature_processing_chain&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@feature_processing_chain</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">feature_processing_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_processing_chain&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">feature_masker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

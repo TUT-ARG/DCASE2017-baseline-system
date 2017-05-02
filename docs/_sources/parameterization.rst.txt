@@ -494,6 +494,10 @@ Example section:
 | show_model_information         | bool         | Switch to show extra information about the learned model. Used       |
 |                                |              | only with keras learners.                                            |
 +--------------------------------+--------------+----------------------------------------------------------------------+
+| file_hop                       | int          | Debugging parameter to strip data by taking every Nth file when      |
+|                                | {1}          | collecting training data. Use this for debugging when dealing with   |
+|                                |              | large datasets.                                                      |
++--------------------------------+--------------+----------------------------------------------------------------------+
 
 **MLP**
 
