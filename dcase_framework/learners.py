@@ -155,6 +155,7 @@ class LearnerContainer(DataFile, ContainerMixin):
             'method': kwargs.get('method', None),
             'class_labels': kwargs.get('class_labels', []),
             'params': DottedDict(kwargs.get('params', {})),
+            'feature_processing_chain': kwargs.get('feature_processing_chain', None),
             'feature_masker': kwargs.get('feature_masker', None),
             'feature_normalizer': kwargs.get('feature_normalizer', None),
             'feature_stacker': kwargs.get('feature_stacker', None),
@@ -226,6 +227,22 @@ class LearnerContainer(DataFile, ContainerMixin):
     @params.setter
     def params(self, value):
         self['params'] = value
+
+    @property
+    def feature_processing_chain(self):
+        """Feature processing chain
+
+        Returns
+        -------
+         feature_processing_chain
+
+        """
+
+        return self.get('feature_processing_chain', None)
+
+    @feature_processing_chain.setter
+    def feature_processing_chain(self, value):
+        self['feature_processing_chain'] = value
 
     @property
     def feature_masker(self):
@@ -365,8 +382,8 @@ class KerasMixin(object):
         layer_name_map = {
             'BatchNormalization': 'BatchNorm',
         }
+        import keras.backend as K
 
-        from keras.utils.layer_utils import count_total_params
         self.logger.debug('  ')
         self.logger.debug('  Model summary')
         self.logger.debug(
@@ -417,8 +434,9 @@ class KerasMixin(object):
                     init=str(config.get('init', '---'))
                 )
             )
+        trainable_count = int(numpy.sum([K.count_params(p) for p in set(self.model.trainable_weights)]))
+        non_trainable_count = int(numpy.sum([K.count_params(p) for p in set(self.model.non_trainable_weights)]))
 
-        trainable_count, non_trainable_count = count_total_params(self.model.layers, layer_set=None)
         self.logger.debug('  Total params         : {param_count:,}'.format(param_count=int(trainable_count + non_trainable_count)))
         self.logger.debug('  Trainable params     : {param_count:,}'.format(param_count=int(trainable_count)))
         self.logger.debug('  Non-trainable params : {param_count:,}'.format(param_count=int(non_trainable_count)))
