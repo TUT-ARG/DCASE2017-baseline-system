@@ -15,7 +15,7 @@ def before_and_after_function_wrapper(func):
     """Before and after decorator
 
     Check if class method has before and after methods and call them.
-    Idea by Konstantinos Drossos <konstantinos.drossos@tut.fi>
+    Code by Konstantinos Drossos <konstantinos.drossos@tut.fi>
 
     Parameters
     ----------
