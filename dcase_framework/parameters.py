@@ -311,12 +311,14 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             'learner': [
                 'feature_extractor',
                 'feature_normalizer',
+                'feature_stacker',
                 'feature_aggregator',
                 'learner'
             ],
             'recognizer': [
                 'feature_extractor',
                 'feature_normalizer',
+                'feature_stacker',
                 'feature_aggregator',
                 'learner',
                 'recognizer'
@@ -968,8 +970,14 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         if self.get_path('general.scene_handling'):
             self['feature_normalizer']['scene_handling'] = self.get_path('general.scene_handling')
 
+        if self.get_path('general.active_scenes'):
+            self['feature_normalizer']['active_scenes'] = self.get_path('general.active_scenes')
+
         if self.get_path('general.event_handling'):
             self['feature_normalizer']['event_handling'] = self.get_path('general.event_handling')
+
+        if self.get_path('general.active_events'):
+            self['feature_normalizer']['active_events'] = self.get_path('general.active_events')
 
     def _process_feature_extractor_method_parameters(self):
         for method, data in iteritems(self['feature_extractor_method_parameters']):
@@ -1006,18 +1014,31 @@ class ParameterContainer(ParameterFile, ContainerMixin):
 
         self['learner']['win_length_seconds'] = float(win_length_seconds)
         self['learner']['hop_length_seconds'] = float(hop_length_seconds)
+
         if self.get_path('general.scene_handling'):
             self['learner']['scene_handling'] = self.get_path('general.scene_handling')
 
+        if self.get_path('general.active_scenes'):
+            self['learner']['active_scenes'] = self.get_path('general.active_scenes')
+
         if self.get_path('general.event_handling'):
             self['learner']['event_handling'] = self.get_path('general.event_handling')
+
+        if self.get_path('general.active_events'):
+            self['learner']['active_events'] = self.get_path('general.active_events')
 
     def _process_recognizer(self):
         if self.get_path('general.scene_handling'):
             self['recognizer']['scene_handling'] = self.get_path('general.scene_handling')
 
+        if self.get_path('general.active_scenes'):
+            self['recognizer']['active_scenes'] = self.get_path('general.active_scenes')
+
         if self.get_path('general.event_handling'):
             self['recognizer']['event_handling'] = self.get_path('general.event_handling')
+
+        if self.get_path('general.active_events'):
+            self['recognizer']['active_events'] = self.get_path('general.active_events')
 
         if self.get_path('recognizer.frame_accumulation.enable') and self.get_path('recognizer.frame_accumulation.window_length_seconds'):
             self['recognizer']['frame_accumulation']['window_length_frames'] = int(self.get_path('recognizer.frame_accumulation.window_length_seconds')/float(self.get_path('learner.hop_length_seconds')))
@@ -1029,7 +1050,12 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         if self.get_path('general.scene_handling'):
             self['evaluator']['scene_handling'] = self.get_path('general.scene_handling')
 
+        if self.get_path('general.active_scenes'):
+            self['evaluator']['active_scenes'] = self.get_path('general.active_scenes')
+
         if self.get_path('general.event_handling'):
             self['evaluator']['event_handling'] = self.get_path('general.event_handling')
 
+        if self.get_path('general.active_events'):
+            self['evaluator']['active_events'] = self.get_path('general.active_events')
 
