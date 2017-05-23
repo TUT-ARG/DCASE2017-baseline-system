@@ -776,9 +776,10 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             return os.path.join(self['path']['system_base'], self['path'][path_label])
 
     def _get_directory_name(self, prefix, param_hash):
-        # Use short directory names for Windows, as it has path length limit (260)
         if platform.system() == 'Windows':
-            return param_hash
+            # Use short directory names and truncated hash for Windows, as it has path length limit (260)
+            return param_hash[0:20]
+
         else:
             return prefix + '_' + param_hash
 
