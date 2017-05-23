@@ -123,7 +123,7 @@ Class to convert MetaDataContainer to binary matrix indicating event activity wi
 from __future__ import print_function, absolute_import
 
 from .files import ListFile
-from .utils import posix_path
+from .utils import posix_path, get_parameter_hash
 import os
 import numpy
 import csv
@@ -186,6 +186,22 @@ class MetaDataItem(dict):
         string_data += ' {:<8s} |'.format(self.source_label if self.source_label is not None else '---')
 
         return string_data
+
+    @property
+    def id(self):
+        string = ''
+        if self.file:
+            string+= self.file
+        if self.scene_label:
+            string += self.scene_label
+        if self.event_label:
+            string += self.event_label
+        if self.event_onset:
+            string += '{:8.4f}'.format(self.event_onset)
+        if self.event_offset:
+            string += '{:8.4f}'.format(self.event_offset)
+
+        return get_parameter_hash(string)
 
     @staticmethod
     def get_header():
