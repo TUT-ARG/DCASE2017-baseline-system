@@ -1187,20 +1187,20 @@ class AcousticSceneClassificationAppCore(AppCore):
                                      ascii=self.use_ascii_progress_bar
                                      )
 
-                for item_id, item in enumerate(item_progress):
+                for item_id, audio_filename in enumerate(item_progress):
                     if self.log_system_progress:
                         self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
                             title='Collect data ',
                             item_id=item_id,
                             total=len(item_progress),
-                            item=os.path.split(item['file'])[-1])
+                            item=os.path.split(audio_filename)[-1])
                         )
 
-                    item_progress.set_postfix(file=os.path.splitext(os.path.split(item['file'])[-1])[0])
+                    item_progress.set_postfix(file=os.path.splitext(os.path.split(audio_filename)[-1])[0])
                     item_progress.update()
 
                     # Load features
-                    feature_filenames = self._get_feature_filename(audio_file=item['file'],
+                    feature_filenames = self._get_feature_filename(audio_file=audio_filename,
                                                                    path=self.params.get_path('path.feature_extractor'))
                     feature_repository = FeatureRepository()
                     for method, feature_filename in iteritems(feature_filenames):
@@ -1235,8 +1235,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                     if feature_aggregator:
                         feature_container = feature_aggregator.process(feature_container=feature_container)
 
-                    data[item['file']] = feature_container
-                    annotations[item['file']] = item
+                    data[audio_filename] = feature_container
+                    annotations[audio_filename] = train_meta.filter(filename=audio_filename)[0]
 
                 learner = self._get_learner(method=self.params.get_path('learner.method'),
                                             class_labels=self.dataset.scene_labels,
@@ -1741,7 +1741,16 @@ class SoundEventAppCore(AppCore):
                             total=len(fold_progress))
                         )
 
-                    for scene_label in self.dataset.scene_labels:
+                    scene_labels = self.dataset.scene_labels
+                    # Select only active scenes
+                    if self.params.get_path('feature_normalizer.active_scenes'):
+                        scene_labels = list(
+                            set(scene_labels).intersection(
+                                self.params.get_path('feature_normalizer.active_scenes')
+                            )
+                        )
+
+                    for scene_label in scene_labels:
                         current_normalizer_files = self._get_feature_normalizer_filename(
                             fold=fold,
                             path=self.params.get_path('path.feature_normalizer'),
@@ -1860,7 +1869,17 @@ class SoundEventAppCore(AppCore):
                     self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(title='Fold',
                                                                                   fold=fold,
                                                                                   total=len(fold_progress)))
-                scene_progress = tqdm(self.dataset.scene_labels,
+
+                scene_labels = self.dataset.scene_labels
+                # Select only active scenes
+                if self.params.get_path('learner.active_scenes'):
+                    scene_labels = list(
+                        set(scene_labels).intersection(
+                            self.params.get_path('learner.active_scenes')
+                        )
+                    )
+
+                scene_progress = tqdm(scene_labels,
                                       desc="           {0: >15s}".format('Scene '),
                                       file=sys.stdout,
                                       leave=False,
@@ -2051,7 +2070,16 @@ class SoundEventAppCore(AppCore):
                         total=len(fold_progress))
                     )
 
-                scene_progress = tqdm(self.dataset.scene_labels,
+                scene_labels = self.dataset.scene_labels
+                # Select only active scenes
+                if self.params.get_path('recognizer.active_scenes'):
+                    scene_labels = list(
+                        set(scene_labels).intersection(
+                            self.params.get_path('recognizer.active_scenes')
+                        )
+                    )
+
+                scene_progress = tqdm(scene_labels,
                                       desc="           {0: >15s}".format('Scene '),
                                       file=sys.stdout,
                                       leave=False,
@@ -2199,7 +2227,17 @@ class SoundEventAppCore(AppCore):
             output = ''
             if self.params.get_path('evaluator.scene_handling') == 'scene-dependent':
                 overall_metrics_per_scene = {}
-                for scene_id, scene_label in enumerate(self.dataset.scene_labels):
+
+                scene_labels = self.dataset.scene_labels
+                # Select only active scenes
+                if self.params.get_path('evaluator.active_scenes'):
+                    scene_labels = list(
+                        set(scene_labels).intersection(
+                            self.params.get_path('evaluator.active_scenes')
+                        )
+                    )
+
+                for scene_id, scene_label in enumerate(scene_labels):
                     if scene_label not in overall_metrics_per_scene:
                         overall_metrics_per_scene[scene_label] = {}
 
@@ -2286,7 +2324,7 @@ class SoundEventAppCore(AppCore):
                     'event_based_fscore': [],
                     'event_based_er': [],
                 }
-                for scene_id, scene_label in enumerate(self.dataset.scene_labels):
+                for scene_id, scene_label in enumerate(scene_labels):
                     output += "    {scene_label:<17s} | {segment_based_fscore:<7s} | {segment_based_er:<7s} | {event_based_fscore:<7s} | {event_based_er:<7s} | \n".format(
                         scene_label=scene_label,
                         segment_based_fscore="{:4.2f}".format(overall_metrics_per_scene.get_path(scene_label + '.segment_based_metrics.overall.f_measure.f_measure') * 100),
@@ -2646,7 +2684,16 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             total=len(fold_progress))
                         )
 
-                    for event_label in self.dataset.event_labels:
+                    event_labels = self.dataset.event_labels
+                    # Select only active events
+                    if self.params.get_path('feature_normalizer.active_events'):
+                        event_labels = list(
+                            set(event_labels).intersection(
+                                self.params.get_path('feature_normalizer.active_events')
+                            )
+                        )
+
+                    for event_label in event_labels:
                         current_normalizer_files = self._get_feature_normalizer_filename(
                             fold=fold,
                             path=self.params.get_path('path.feature_normalizer'),
@@ -2765,7 +2812,13 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                     self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(title='Fold',
                                                                                   fold=fold,
                                                                                   total=len(fold_progress)))
-                event_progress = tqdm(self.dataset.event_labels,
+
+                event_labels = self.dataset.event_labels
+                # Select only active events
+                if self.params.get_path('learner.active_events'):
+                    event_labels = list(set(event_labels).intersection(self.params.get_path('learner.active_events')))
+
+                event_progress = tqdm(event_labels,
                                       desc="           {0: >15s}".format('Event '),
                                       file=sys.stdout,
                                       leave=False,
@@ -3032,7 +3085,12 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                                                                   fold=fold,
                                                                                   total=len(fold_progress)))
 
-                event_progress = tqdm(self.dataset.event_labels,
+                event_labels = self.dataset.event_labels
+                # Select only active events
+                if self.params.get_path('recognizer.active_events'):
+                    event_labels = list(set(event_labels).intersection(self.params.get_path('recognizer.active_events')))
+
+                event_progress = tqdm(event_labels,
                                       desc="           {0: >15s}".format('Event '),
                                       file=sys.stdout,
                                       leave=False,
@@ -3073,7 +3131,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                              desc="           {0: >15s}".format('Testing '),
                                              file=sys.stdout,
                                              leave=False,
-                                             bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
+                                             #bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
                                              disable=self.disable_progress_bar,
                                              ascii=self.use_ascii_progress_bar)
 
@@ -3184,7 +3242,13 @@ class BinarySoundEventAppCore(SoundEventAppCore):
             output = ''
             if self.params.get_path('evaluator.event_handling', 'event-dependent') == 'event-dependent':
                 overall_metrics_per_event = {}
-                for event_id, event_label in enumerate(self.dataset.event_labels):
+
+                event_labels = self.dataset.event_labels
+                # Select only active events
+                if self.params.get_path('evaluator.active_events'):
+                    event_labels = list(set(event_labels).intersection(self.params.get_path('evaluator.active_events')))
+
+                for event_id, event_label in enumerate(event_labels):
                     if event_label not in overall_metrics_per_event:
                         overall_metrics_per_event[event_label] = {}
 
@@ -3271,7 +3335,8 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                     'event_based_fscore': [],
                     'event_based_er': [],
                 }
-                for event_id, event_label in enumerate(self.dataset.event_labels):
+
+                for event_id, event_label in enumerate(event_labels):
                     output += "    {event_label:<17s} | {event_based_fscore:<7s} | {event_based_er:<7s} | {segment_based_fscore:<7s} | {segment_based_er:<7s} |\n".format(
                         event_label=event_label,
                         segment_based_fscore="{:4.2f}".format(overall_metrics_per_event.get_path(event_label+'.segment_based_metrics.overall.f_measure.f_measure')*100),
