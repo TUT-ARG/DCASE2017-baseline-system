@@ -93,6 +93,7 @@ Specialized classes inherited SoundEventDataset:
     :toctree: generated/
 
     TUTRareSoundEvents_2017_DevelopmentSet
+    TUTSoundEvents_2017_DevelopmentSet
     TUTSoundEvents_2016_DevelopmentSet
     TUTSoundEvents_2016_EvaluationSet
 
