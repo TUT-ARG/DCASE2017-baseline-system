@@ -310,15 +310,15 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             ],
             'learner': [
                 'feature_extractor',
-                'feature_normalizer',
                 'feature_stacker',
+                'feature_normalizer',
                 'feature_aggregator',
                 'learner'
             ],
             'recognizer': [
                 'feature_extractor',
-                'feature_normalizer',
                 'feature_stacker',
+                'feature_normalizer',
                 'feature_aggregator',
                 'learner',
                 'recognizer'

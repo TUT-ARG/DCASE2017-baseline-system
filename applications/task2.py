@@ -131,6 +131,7 @@ def main(argv):
                                         'learner': [
                                             'dataset',
                                             'feature_extractor',
+                                            'feature_stacker',
                                             'feature_normalizer',
                                             'feature_aggregator',
                                             'learner'
@@ -138,6 +139,7 @@ def main(argv):
                                         'recognizer': [
                                             'dataset',
                                             'feature_extractor',
+                                            'feature_stacker',
                                             'feature_normalizer',
                                             'feature_aggregator',
                                             'learner',
