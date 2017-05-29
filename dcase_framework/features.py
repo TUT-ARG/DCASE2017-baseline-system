@@ -1386,6 +1386,13 @@ class FeatureNormalizer(DataFile, ContainerMixin):
             'std': self['std'],
         }
 
+    def __setstate__(self, d):
+        self.N = d['N']
+        self.S1 = d['S1']
+        self.S2 = d['S2']
+        self.mean = d['mean']
+        self.std = d['std']
+
     def accumulate(self, feature_container):
         """Accumalate statistics
 
