@@ -467,6 +467,7 @@ defaults:
     #  - [extractor (string)]=[channel (int)]:[start index (int)]-[end index (int)] => specified channel and vector [start:end]
     #  - [extractor (string)]=1,2,3,4,5                                             => vector [1,2,3,4,4]
     #  - [extractor (string)]=0                                                     => specified channel and full vector
+    # Multiple vector can be concatenate together with ";" delimiter
     # ==========================================================
     stacking_recipe: mel
 
