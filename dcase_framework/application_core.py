@@ -1497,7 +1497,7 @@ class AcousticSceneClassificationAppCore(AppCore):
             fold_labels = ''
             separator = '     =====================+======+======+==========+  +'
             if len(results_fold) > 1:
-                for fold in self.dataset.folds(mode=self.dataset_evaluation_mode):
+                for fold in self._get_active_folds():
                     fold_labels += " {fold:8s} |".format(fold='Fold' + str(fold))
                     separator += "==========+"
             output += "     {scene:20s} | {ref:4s} : {sys:4s} | {acc:8s} |  |".format(
@@ -1511,7 +1511,7 @@ class AcousticSceneClassificationAppCore(AppCore):
             for label_id, label in enumerate(sorted(results['class_wise'])):
                 fold_values = ''
                 if len(results_fold) > 1:
-                    for fold in self.dataset.folds(mode=self.dataset_evaluation_mode):
+                    for fold in self._get_active_folds():
                         fold_values += " {value:5.1f} %  |".format(
                             value=results_fold[fold - 1]['class_wise'][label]['accuracy']['accuracy'] * 100
                         )
@@ -1526,7 +1526,7 @@ class AcousticSceneClassificationAppCore(AppCore):
             output += separator + '\n'
             fold_values = ''
             if len(results_fold) > 1:
-                for fold in self.dataset.folds(mode=self.dataset_evaluation_mode):
+                for fold in self._get_active_folds():
                     fold_values += " {:5.1f} %  |".format(results_fold[fold - 1]['overall']['accuracy'] * 100)
 
             output += "     {label:20s} | {ref:4d} : {sys:4d} | {acc:5.1f} %  |  |".format(
@@ -1692,7 +1692,6 @@ class SoundEventAppCore(AppCore):
                     f1='{0:4.2f} %'.format(data.get_path('average.segment_based_fscore'))
                 )
         self.ui.line(output)
-
 
     @before_and_after_function_wrapper
     def feature_normalization(self, overwrite=None):
@@ -2200,7 +2199,6 @@ class SoundEventAppCore(AppCore):
 
             self.logger.exception(message)
             raise ValueError(message)
-
 
     @before_and_after_function_wrapper
     def system_evaluation(self):
