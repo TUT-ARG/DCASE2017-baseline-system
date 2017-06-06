@@ -1611,7 +1611,14 @@ class EventDetector(LearnerContainer):
                     amount='-' * 20)
                 )
 
-            for event_label in sorted(list(event_amounts.keys())):
+            def sorter(key):
+                if not key:
+                    return ""
+                return key
+
+            event_label_list = list(event_amounts.keys())
+            event_label_list.sort(key=sorter)
+            for event_label in event_label_list:
                 files = numpy.array(list(event_amounts[event_label]))
                 random.shuffle(files, random.random)
                 valid_percentage_index = int(numpy.ceil(valid_percentage * len(files)))
