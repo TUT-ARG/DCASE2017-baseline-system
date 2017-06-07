@@ -776,15 +776,15 @@ class Dataset(object):
                              ascii=self.use_ascii_progress_bar)
 
         for item_id, item in enumerate(item_progress):
-            if self.log_system_progress:
-                self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {package:<30s}'.format(
-                    title='Extract packages ',
-                    item_id=item_id,
-                    total=len(item_progress),
-                    package=item['local_package'])
-                )
-
             if item['local_package'] and os.path.isfile(item['local_package']):
+                if self.log_system_progress:
+                    self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {package:<30s}'.format(
+                        title='Extract packages ',
+                        item_id=item_id,
+                        total=len(item_progress),
+                        package=item['local_package'])
+                    )
+
                 if item['local_package'].endswith('.zip'):
 
                     with zipfile.ZipFile(item['local_package'], "r") as z:
