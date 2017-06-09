@@ -274,7 +274,15 @@ class FileMixin(object):
         if file_format in self.valid_formats:
             return file_format
         else:
-            raise IOError("Unknown format [%s]" % filename)
+            message = '{name}: Unknown format [{format}] for file [{file}]'.format(
+                name=self.__class__.__name__,
+                format = os.path.splitext(filename)[-1],
+                file=filename
+            )
+            if self.logger:
+                self.logger.exception(message)
+
+            raise IOError(message)
 
     def exists(self):
         """Checks that file exists
