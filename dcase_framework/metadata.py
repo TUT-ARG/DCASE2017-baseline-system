@@ -990,6 +990,7 @@ class MetaDataContainer(ListFile):
             List containing event dicts
 
         """
+
         if filename:
             self.filename = filename
             self.format = self.detect_file_format(self.filename)
@@ -1000,10 +1001,10 @@ class MetaDataContainer(ListFile):
         data = []
         with open(self.filename, 'rt') as f:
             for row in csv.reader(f, delimiter=self._delimiter):
-                row_format = []
-                for item in row:
-                    row_format.append(self._is_number(item))
                 if row:
+                    row_format = []
+                    for item in row:
+                        row_format.append(self._is_number(item))
                     if len(row) == 1 and row_format == [False]:
                         # Format: [file]
                         data.append(
