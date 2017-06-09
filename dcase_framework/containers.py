@@ -37,6 +37,7 @@ class ContainerMixin(object):
         -------
 
         """
+
         if data is None:
             data = self
         fields = dotted_path.split('.')
@@ -61,6 +62,49 @@ class ContainerMixin(object):
 
             else:
                 return default
+
+    def set_path(self, dotted_path, new_value, data=None):
+        """Set value in nested dict with dotted path
+
+        Parameters
+        ----------
+        dotted_path : str
+            String in form of "field1.field2.field3"
+        new_value :
+            new value to be placed
+        data : dict, optional
+            Dict for which path search is done, if None given self is used. Used for recursive path search.
+            Default value "None"
+
+        Returns
+        -------
+
+        """
+
+        if data is None:
+            data = self
+        fields = dotted_path.split('.')
+
+        if '*' == fields[0]:
+            # Magic field to set all childes in a list
+            for key, value in iteritems(data):
+                if len(fields) > 1:
+                    self.set_path(new_value=new_value, data=value, dotted_path='.'.join(fields[1:]))
+                else:
+                    data[key] = new_value
+
+        else:
+            print(fields[0])
+            if len(fields) == 1:
+                # We reached to the node
+                data[fields[0]] = new_value
+            else:
+                if fields[0] not in data:
+                    data[fields[0]] = {}
+                elif not isinstance(data[fields[0]], dict):
+                    # Overwrite path
+                    data[fields[0]] = {}
+                self.set_path(new_value=new_value, data=data[fields[0]], dotted_path='.'.join(fields[1:]))
 
     def _walk(self, d, depth=0):
         """Recursive dict walk to get string of the content nicely formatted
@@ -307,4 +351,5 @@ class DottedDict(dict, ContainerMixin):
 
     def __setstate__(self, state):
         self.__dict__ = state
+
 
