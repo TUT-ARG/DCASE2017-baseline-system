@@ -40,6 +40,16 @@ SuppressStdoutAndStderr
 
     SuppressStdoutAndStderr
 
+SimpleMathStringEvaluator
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autosummary::
+    :toctree: generated/
+
+    SimpleMathStringEvaluator
+    SimpleMathStringEvaluator.eval
+
+
 """
 
 import os
@@ -384,3 +394,178 @@ class SuppressStdoutAndStderr(object):
         # Close the null files
         os.close(self.null_fds[0])
         os.close(self.null_fds[1])
+
+
+class SimpleMathStringEvaluator(object):
+    """Simple math string evaluator
+
+    Uses pyparsing for safe string evaluation.
+
+    Implementation after pyparsing example: http://pyparsing.wikispaces.com/file/view/eval_arith.py
+
+    """
+
+    def __init__(self):
+        from pyparsing import Word,nums, alphas, Combine, oneOf, opAssoc, operatorPrecedence
+
+        # Define the parser
+        integer = Word(nums).setParseAction(lambda t:int(t[0]))
+        real = Combine(Word(nums) + "." + Word(nums))
+        variable = Word(alphas, exact=1)
+        operand = real | integer | variable
+
+        # Operators
+        self.operators = {
+            'sign': oneOf('+ -'),
+            'multiply': oneOf('* /'),
+            'plus': oneOf('+ -'),
+            'comparision': oneOf('< <= > >= != = <> LT GT LE GE EQ NE'),
+        }
+
+        def operatorOperands(token_list):
+            """generator to extract operators and operands in pairs."""
+            it = iter(token_list)
+            while True:
+                try:
+                    o1 = next(it)
+                    o2 = next(it)
+                    yield (o1, o2)
+                except StopIteration:
+                    break
+
+        class EvalConstant():
+            """Class to evaluate a parsed constant or variable."""
+
+            def __init__(self, tokens):
+                self.value = tokens[0]
+
+            def eval(self, vars):
+                if self.value in vars:
+                    return vars[self.value]
+                else:
+                    try:
+                        return int(self.value)
+                    except:
+                        return float(self.value)
+
+        class EvalAddOp():
+            """Class to evaluate addition and subtraction expressions."""
+
+            def __init__(self, tokens):
+                self.value = tokens[0]
+
+            def eval(self, vars):
+                sum = self.value[0].eval(vars)
+                for op, val in operatorOperands(self.value[1:]):
+                    if op == '+':
+                        sum += val.eval(vars)
+                    if op == '-':
+                        sum -= val.eval(vars)
+                return sum
+
+        class EvalSignOp():
+            """Class to evaluate expressions with a leading + or - sign."""
+
+            def __init__(self, tokens):
+                self.sign, self.value = tokens[0]
+
+            def eval(self, vars_):
+                mult = {'+': 1, '-': -1}[self.sign]
+                return mult * self.value.eval(vars_)
+
+        class EvalMultOp():
+            """Class to evaluate multiplication and division expressions."""
+
+            def __init__(self, tokens):
+                self.operator_map={
+                    '*': lambda a,b : a * b,
+                    '/': lambda a,b : a / b,
+                }
+                self.value = tokens[0]
+
+            def eval(self, vars):
+                prod = self.value[0].eval(vars)
+                for op, val in operatorOperands(self.value[1:]):
+                    fn = self.operator_map[op]
+                    val2 = val.eval(vars)
+                    prod = fn(prod, val2)
+                return prod
+
+        class EvalComparisonOp(object):
+            "Class to evaluate comparison expressions"
+            def __init__(self, tokens):
+                self.value = tokens[0]
+                self.operator_map = {
+                    "<": lambda a, b: a < b,
+                    "<=": lambda a, b: a <= b,
+                    ">": lambda a, b: a > b,
+                    ">=": lambda a, b: a >= b,
+                    "!=": lambda a, b: a != b,
+                    "=": lambda a, b: a == b,
+                    "LT": lambda a, b: a < b,
+                    "LE": lambda a, b: a <= b,
+                    "GT": lambda a, b: a > b,
+                    "GE": lambda a, b: a >= b,
+                    "NE": lambda a, b: a != b,
+                    "EQ": lambda a, b: a == b,
+                    "<>": lambda a, b: a != b,
+                }
+            def eval(self, vars):
+                val1 = self.value[0].eval(vars)
+                for op, val in operatorOperands(self.value[1:]):
+                    fn = self.operator_map[op]
+                    val2 = val.eval(vars)
+                    if not fn(val1, val2):
+                        break
+                    val1 = val2
+                else:
+                    return True
+                return False
+
+        operand.setParseAction(EvalConstant)
+        self.arith_expr = operatorPrecedence(
+            operand,
+            [
+                (self.operators['sign'], 1, opAssoc.RIGHT, EvalSignOp),
+                (self.operators['multiply'], 2, opAssoc.LEFT, EvalMultOp),
+                (self.operators['plus'], 2, opAssoc.LEFT, EvalAddOp),
+                (self.operators['comparision'], 2, opAssoc.LEFT, EvalComparisonOp),
+            ]
+        )
+
+    def eval(self, string):
+        """Evaluate math in the string
+
+        Parameters
+        ----------
+        string : str
+            String to be evaluated
+
+        Returns
+        -------
+        result : numeric
+            Evaluation result
+        """
+
+        from pyparsing import ParseException
+        if not isinstance(string, str):
+            # Bypass everything else than strings
+            return string
+
+        else:
+            try:
+                return int(string)
+
+            except:
+                try:
+                    return float(string)
+
+                except:
+                    try:
+                        ret = self.arith_expr.parseString(string, parseAll=True)[0]
+                        result = ret.eval([])
+                        return result
+
+                    except ParseException:
+                        # Bypass eval for strings which cannot be evaluated
+                        return string
