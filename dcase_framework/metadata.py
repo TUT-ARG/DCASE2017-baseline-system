@@ -51,6 +51,7 @@ Dict based class for storing meta data item (i.e. one row in meta data file).
     :toctree: generated/
 
     MetaDataItem
+    MetaDataItem.id
     MetaDataItem.file
     MetaDataItem.scene_label
     MetaDataItem.event_label
@@ -189,9 +190,19 @@ class MetaDataItem(dict):
 
     @property
     def id(self):
+        """Unique item identifier
+
+        ID is formed by taking MD5 hash of the item data.
+
+        Returns
+        -------
+        id : str
+            Unique item id
+        """
+
         string = ''
         if self.file:
-            string+= self.file
+            string += self.file
         if self.scene_label:
             string += self.scene_label
         if self.event_label:
@@ -1280,6 +1291,15 @@ class EventRoll(object):
 
     @property
     def roll(self):
+        """Event roll
+
+        Returns
+        -------
+        event_roll: np.ndarray, shape=(m,k)
+            Event roll
+
+        """
+
         return self.event_roll
 
     def pad(self, length):
