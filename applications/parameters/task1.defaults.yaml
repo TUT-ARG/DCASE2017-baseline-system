@@ -497,14 +497,6 @@ defaults:
         epochs: 200
         batch_size: 256
         shuffle: true
-        callbacks:
-          - type: EarlyStopping
-            parameters:
-              monitor: val_categorical_accuracy         # quantity to be monitored.
-              min_delta: 0.001                          # minimum change in the monitored quantity to qualify as an improvement, i.e. an absolute change of less than min_delta, will count as no improvement.
-              patience: 10                              # number of epochs with no improvement after which training will be stopped.
-              verbose: 0                                # verbosity mode.
-              mode: max                                 # {auto, min, max}. In min mode, training will stop when the quantity monitored has stopped decreasing; in max mode it will stop when the quantity monitored has stopped increasing; in auto mode, the direction is automatically inferred from the name of the monitored quantity.
 
       model:
         # class_nam can be any standard Keras layer, e.g. Dense, Activation, Dropout
