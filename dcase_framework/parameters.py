@@ -292,8 +292,8 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             'feature_aggregator',
             'feature_aggregator_parameters',
             'learner',
-            'learner_method_parameters',
             'recognizer',
+            'learner_method_parameters',
             'recognizer_method_parameters',
             'evaluator',
         ]
@@ -369,6 +369,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             'log_learner_status',
             'show_model_information',
             'use_ascii_progress_bar',
+            'label',
         ]
         if kwargs.get('non_hashable_fields'):
             self.non_hashable_fields.update(kwargs.get('non_hashable_fields'))
@@ -783,7 +784,6 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         else:
             return prefix + '_' + param_hash
 
-
     def _save_path_parameters(self, base, structure, parameter_filename='parameters.yaml'):
         path_parts = [os.path.join(base[0])]
         for part in structure:
@@ -1027,6 +1027,12 @@ class ParameterContainer(ParameterFile, ContainerMixin):
 
         if self.get_path('general.active_events'):
             self['learner']['active_events'] = self.get_path('general.active_events')
+
+    def _process_learner_method_parameters(self):
+        for method, data in iteritems(self['learner_method_parameters']):
+            data = DottedDict(data)
+            if data.get_path('training.epoch_processing.enable'):
+                data['training']['epoch_processing']['recognizer'] = self.get_path('recognizer')
 
     def _process_recognizer(self):
         if self.get_path('general.scene_handling'):
