@@ -499,6 +499,7 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
         """
 
         super(FeatureRepository, self).__init__(*args, **kwargs)
+
         if kwargs.get('filename_list', None):
             self.filename_list = kwargs.get('filename_list', None)
             self.load()
@@ -516,6 +517,7 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
         self
 
         """
+
         if filename_list:
             self.filename_list = filename_list
 
@@ -523,7 +525,9 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
             dict.clear(self)
             sorted(self.filename_list)
             for method, filename in iteritems(self.filename_list):
-                self[method] = FeatureContainer().load(filename=filename)
+                if not method.startswith('_'):
+                    # Skip method starting with '_', those are just for extra info
+                    self[method] = FeatureContainer().load(filename=filename)
 
             return self
 
@@ -607,6 +611,26 @@ class FeatureExtractor(object):
             data.update(self.default_general_parameters)
             if 'dependency_method' in data and data['dependency_method'] in self.valid_extractors and data['dependency_method'] in self.default_parameters:
                 data['dependency_parameters'] = self.default_parameters[data['dependency_method']]
+
+    def __getstate__(self):
+        # Return only needed data for pickle
+        return {
+            'eps': self.eps,
+            'overwrite': self.overwrite,
+            'store': self.store,
+            'valid_extractors': self.valid_extractors,
+            'default_general_parameters': self.default_general_parameters,
+            'default_parameters': self.default_parameters,
+        }
+
+    def __setstate__(self, d):
+        self.eps = d['eps']
+        self.overwrite = d['overwrite']
+        self.store = d['store']
+        self.valid_extractors = d['valid_extractors']
+        self.default_general_parameters = d['default_general_parameters']
+        self.default_parameters = d['default_parameters']
+        self.logger = logging.getLogger(__name__)
 
     def extract(self, audio_file, extractor_params=None, storage_paths=None, extractor_name=None):
         """Extract features for audio file
@@ -1141,6 +1165,11 @@ class FeatureStacker(object):
             'feature_hop': self.feature_hop,
         }
 
+    def __setstate__(self, d):
+        self.recipe = d['recipe']
+        self.feature_hop = d['feature_hop']
+        self.logger = logging.getLogger(__name__)
+
     def normalizer(self, normalizer_list):
         """Stack normalization factors based on stack map
 
@@ -1530,6 +1559,19 @@ class FeatureAggregator(object):
         self.win_length_frames = kwargs.get('win_length_frames')
         self.hop_length_frames = kwargs.get('hop_length_frames')
 
+    def __getstate__(self):
+        # Return only needed data for pickle
+        return {
+            'recipe': self.recipe,
+            'win_length_frames': self.win_length_frames,
+            'hop_length_frames': self.hop_length_frames,
+        }
+
+    def __setstate__(self, d):
+        self.recipe = d['recipe']
+        self.win_length_frames = d['win_length_frames']
+        self.hop_length_frames = d['hop_length_frames']
+
     def process(self, feature_container):
         """Process features
 
@@ -1615,6 +1657,16 @@ class FeatureMasker(object):
 
         """
         self.hop_length_seconds = kwargs.get('hop_length_seconds')
+
+
+    def __getstate__(self):
+        # Return only needed data for pickle
+        return {
+            'hop_length_seconds': self.hop_length_seconds,
+        }
+
+    def __setstate__(self, d):
+        self.hop_length_seconds = d['hop_length_seconds']
 
     def process(self, feature_repository, mask_events, hop_length_seconds=None):
         """Process feature repository
