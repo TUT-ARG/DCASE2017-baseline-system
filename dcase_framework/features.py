@@ -54,7 +54,8 @@ Usage examples:
 FeatureRepository
 ^^^^^^^^^^^^^^^^^
 
-Feature repository class, where feature containers for each type of features are stored in a dict. Type name is used as key.
+Feature repository class, where feature containers for each type of features are stored in a dict. Type name is
+used as key.
 
 .. autosummary::
     :toctree: generated/
@@ -395,7 +396,7 @@ class FeatureContainer(FeatureFile, ContainerMixin):
 
         Returns
         -------
-            lisf of numpy.ndarray
+            list of numpy.ndarray
 
         """
 
@@ -609,7 +610,10 @@ class FeatureExtractor(object):
         # Update general parameters and expand dependencies
         for method, data in iteritems(self.default_parameters):
             data.update(self.default_general_parameters)
-            if 'dependency_method' in data and data['dependency_method'] in self.valid_extractors and data['dependency_method'] in self.default_parameters:
+            if ('dependency_method' in data and
+               data['dependency_method'] in self.valid_extractors and
+               data['dependency_method'] in self.default_parameters):
+
                 data['dependency_parameters'] = self.default_parameters[data['dependency_method']]
 
     def __getstate__(self):
@@ -638,13 +642,16 @@ class FeatureExtractor(object):
         Parameters
         ----------
         audio_file : str
-            Filename of audio file
+            Filename of audio file.
         extractor_params : dict of dicts
-            Keys at first level corresponds to feature extraction methods, and second level is parameters given to the extractor method. If none given, default parameters used.
+            Keys at first level corresponds to feature extraction methods, and second level is parameters given to the
+            extractor method. If none given, default parameters used.
         storage_paths : dict of strings
-            Keys at first level corresponds to feature extraction methods, second level is path to store feature containers
+            Keys at first level corresponds to feature extraction methods, second level is path to store feature
+            containers.
         extractor_name : str
-            Feature extractor method name, if none given, extractor_params is used. Use this to select specific extractor method
+            Feature extractor method name, if none given, extractor_params is used. Use this to select specific
+            extractor method.
             Default value "None"
 
         Raises
@@ -681,7 +688,10 @@ class FeatureExtractor(object):
 
         # Update general parameters and expand dependencies
         for method, data in iteritems(extractor_params):
-            if 'dependency_method' in data and data['dependency_method'] in self.valid_extractors and data['dependency_method'] in extractor_params:
+            if ('dependency_method' in data and
+               data['dependency_method'] in self.valid_extractors and
+               data['dependency_method'] in extractor_params):
+
                 data['dependency_parameters'] = extractor_params[data['dependency_method']]
 
         feature_repository = FeatureRepository({})
@@ -729,7 +739,9 @@ class FeatureExtractor(object):
                         self.logger.exception(message)
                         raise ValueError(message)
 
-                    if current_extractor_params['dependency_method'] in storage_paths and os.path.isfile(storage_paths[current_extractor_params['dependency_method']]):
+                    if (current_extractor_params['dependency_method'] in storage_paths and
+                       os.path.isfile(storage_paths[current_extractor_params['dependency_method']])):
+
                         # Load features from disk
                         data = FeatureContainer(
                             filename=storage_paths[current_extractor_params['dependency_method']]
@@ -799,14 +811,15 @@ class FeatureExtractor(object):
         Parameters
         ----------
         data : numpy.ndarray
-            Audio data
+            Audio data.
         params : dict
-            Parameters
+            Parameters.
 
         Returns
         -------
-        list of numpy.ndarrays
-            List of feature matrices, feature matrix per audio channel
+        list of numpy.ndarray
+            List of feature matrices, feature matrix per audio channel.
+
         """
 
         window = self._window_function(N=params.get('win_length_samples'),
@@ -856,7 +869,7 @@ class FeatureExtractor(object):
 
         Returns
         -------
-        list of numpy.ndarrays
+        list of numpy.ndarray
             List of feature matrices, feature matrix per audio channel
 
         """
@@ -908,7 +921,7 @@ class FeatureExtractor(object):
 
         Returns
         -------
-        list of numpy.ndarrays
+        list of numpy.ndarray
             List of feature matrices, feature matrix per audio channel
 
         """
@@ -934,7 +947,7 @@ class FeatureExtractor(object):
 
         Returns
         -------
-        list of numpy.ndarrays
+        list of numpy.ndarray
             List of feature matrices, feature matrix per audio channel
 
         """
@@ -1219,17 +1232,25 @@ class FeatureStacker(object):
             if 'vector-index' in feature:
                 channel = feature['vector-index']['channel']
 
-            if 'vector-index' not in feature or ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full']):
+            if ('vector-index' not in feature or
+               ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full'])):
+
                 # We have Full matrix
                 stacked_mean.append(normalizer_list[method]['mean'][channel])
                 stacked_std.append(normalizer_list[method]['std'][channel])
 
-            elif 'vector-index' in feature and 'vector' in feature['vector-index'] and 'selection' in feature['vector-index'] and feature['vector-index']['selection']:
+            elif ('vector-index' in feature and
+                  'vector' in feature['vector-index'] and
+                  'selection' in feature['vector-index'] and feature['vector-index']['selection']):
+
                 # We have selector vector
                 stacked_mean.append(normalizer_list[method]['mean'][channel][:, feature['vector-index']['vector']])
                 stacked_std.append(normalizer_list[method]['std'][channel][:, feature['vector-index']['vector']])
 
-            elif 'vector-index' in feature and 'start' in feature['vector-index'] and 'end' in feature['vector-index']:
+            elif ('vector-index' in feature and
+                  'start' in feature['vector-index'] and
+                  'end' in feature['vector-index']):
+
                 # we have start and end index
                 stacked_mean.append(normalizer_list[method]['mean'][channel][:, feature['vector-index']['start']:feature['vector-index']['end']])
                 stacked_std.append(normalizer_list[method]['std'][channel][:, feature['vector-index']['start']:feature['vector-index']['end']])
@@ -1288,14 +1309,24 @@ class FeatureStacker(object):
             if 'vector-index' in feature:
                 channel = feature['vector-index']['channel']
 
-            if 'vector-index' not in feature or ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full']):
+            if ('vector-index' not in feature or
+               ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full'])):
+
                 # We have Full matrix
                 feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, :])
-            elif 'vector-index' in feature and 'vector' in feature['vector-index'] and 'selection' in feature['vector-index'] and feature['vector-index']['selection']:
+
+            elif ('vector-index' in feature and
+                  'vector' in feature['vector-index'] and
+                  'selection' in feature['vector-index'] and feature['vector-index']['selection']):
+
                 index = numpy.array(feature['vector-index']['vector'])
                 # We have selector vector
                 feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, index])
-            elif 'vector-index' in feature and 'start' in feature['vector-index'] and 'end' in feature['vector-index']:
+
+            elif ('vector-index' in feature and
+                  'start' in feature['vector-index'] and
+                  'end' in feature['vector-index']):
+
                 # we have start and end index
                 feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, feature['vector-index']['start']:feature['vector-index']['end']])
 
@@ -1423,7 +1454,7 @@ class FeatureNormalizer(DataFile, ContainerMixin):
         self.std = d['std']
 
     def accumulate(self, feature_container):
-        """Accumalate statistics
+        """Accumulate statistics
 
         Parameters
         ----------
@@ -1538,7 +1569,7 @@ class FeatureAggregator(object):
 
         Parameters
         ----------
-        recipe : list of dicts or list of strs
+        recipe : list of dict or list of str
             Aggregation recipe, supported methods [mean, std, cov, kurtosis, skew, flatten].
         win_length_frames : int
             Window length in feature frames
@@ -1657,7 +1688,6 @@ class FeatureMasker(object):
 
         """
         self.hop_length_seconds = kwargs.get('hop_length_seconds')
-
 
     def __getstate__(self):
         # Return only needed data for pickle
