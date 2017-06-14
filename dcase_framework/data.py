@@ -59,11 +59,10 @@ through item key. When internal buffer is filled, oldest item is replaced.
 
 from __future__ import print_function, absolute_import
 from six import iteritems
-import os
 import logging
 import numpy
 import collections
-from .features import FeatureContainer, FeatureRepository
+from .features import FeatureRepository
 
 
 class DataBuffer(object):
@@ -313,12 +312,12 @@ class DataSequencer(object):
                 # If end of the matrix, pad with last frame
                 frame_ids[frame_ids > data_length - 1] = data_length - 1
 
-            X.append(numpy.expand_dims(data[frame_ids, :], axis=0) )
+            X.append(numpy.expand_dims(data[frame_ids, :], axis=0))
 
         if len(X) == 0:
-            message = '{name}: Cannot create valid segment, adjust segment length and hop size, or use padding flag.'.format(
-                name=self.__class__.__name__,
-            )
+            message = '{name}: Cannot create valid segment, adjust segment length and hop size, or use ' \
+                      'padding flag.'.format(name=self.__class__.__name__)
+
             self.logger.exception(message)
             raise IOError(message)
 
@@ -383,6 +382,12 @@ class DataProcessor(object):
         ----------
         feature_filename_list : dict of filenames
             Dict with feature extraction methods as keys and value corresponding feature file
+        process_features : bool
+            Apply feature processing chain
+            Default value True
+        process_data : bool
+            Apply data processing chain
+            Default value True
 
         Returns
         -------
@@ -407,6 +412,12 @@ class DataProcessor(object):
         ----------
         feature_data : various
             Feature data
+        process_features : bool
+            Apply feature processing chain
+            Default value True
+        process_data : bool
+            Apply data processing chain
+            Default value True
 
         Returns
         -------
@@ -448,7 +459,7 @@ class DataProcessor(object):
 
         # Go through the feature processing chain
         for processing_step in self.feature_processing_chain:
-            if processing_step is not None:
+            if processing_step is not None and hasattr(processing_step, 'process'):
                 feature_data = processing_step.process(feature_data)
 
         return feature_data
@@ -494,7 +505,7 @@ class DataProcessor(object):
         # Go through the data processing chain
         if self.data_processing_chain:
             for processing_step in self.data_processing_chain:
-                if processing_step is not None:
+                if processing_step is not None and hasattr(processing_step, 'process'):
                     data = processing_step.process(data)
 
             if not metadata:
