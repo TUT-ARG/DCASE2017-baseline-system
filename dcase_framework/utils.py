@@ -227,7 +227,9 @@ def setup_logging(parameter_container=None,
             logging.basicConfig(level=default_level)
     else:
         logging.config.dictConfig(parameter_container.get('parameters'))
-        if parameter_container.get('colored', False) and 'console' in parameter_container.get_path('parameters.handlers'):
+        if (parameter_container.get('colored', False) and
+           'console' in parameter_container.get_path('parameters.handlers')):
+
             try:
                 import coloredlogs
                 coloredlogs.install(
@@ -269,7 +271,8 @@ def posix_path(path):
 
     """
 
-    return os.path.normpath(path).replace('\\','/')
+    return os.path.normpath(path).replace('\\', '/')
+
 
 def check_pkg_resources(package_requirement, logger=None):
     working_set = pkg_resources.WorkingSet()
@@ -406,10 +409,10 @@ class SimpleMathStringEvaluator(object):
     """
 
     def __init__(self):
-        from pyparsing import Word,nums, alphas, Combine, oneOf, opAssoc, operatorPrecedence
+        from pyparsing import Word, nums, alphas, Combine, oneOf, opAssoc, operatorPrecedence
 
         # Define the parser
-        integer = Word(nums).setParseAction(lambda t:int(t[0]))
+        integer = Word(nums).setParseAction(lambda t: int(t[0]))
         real = Combine(Word(nums) + "." + Word(nums))
         variable = Word(alphas, exact=1)
         operand = real | integer | variable
@@ -422,7 +425,7 @@ class SimpleMathStringEvaluator(object):
             'comparision': oneOf('< <= > >= != = <> LT GT LE GE EQ NE'),
         }
 
-        def operatorOperands(token_list):
+        def operator_operands(token_list):
             """generator to extract operators and operands in pairs."""
             it = iter(token_list)
             while True:
@@ -433,7 +436,7 @@ class SimpleMathStringEvaluator(object):
                 except StopIteration:
                     break
 
-        class EvalConstant():
+        class EvalConstant(object):
             """Class to evaluate a parsed constant or variable."""
 
             def __init__(self, tokens):
@@ -448,7 +451,7 @@ class SimpleMathStringEvaluator(object):
                     except:
                         return float(self.value)
 
-        class EvalAddOp():
+        class EvalAddOp(object):
             """Class to evaluate addition and subtraction expressions."""
 
             def __init__(self, tokens):
@@ -456,14 +459,14 @@ class SimpleMathStringEvaluator(object):
 
             def eval(self, vars):
                 sum = self.value[0].eval(vars)
-                for op, val in operatorOperands(self.value[1:]):
+                for op, val in operator_operands(self.value[1:]):
                     if op == '+':
                         sum += val.eval(vars)
                     if op == '-':
                         sum -= val.eval(vars)
                 return sum
 
-        class EvalSignOp():
+        class EvalSignOp(object):
             """Class to evaluate expressions with a leading + or - sign."""
 
             def __init__(self, tokens):
@@ -473,26 +476,26 @@ class SimpleMathStringEvaluator(object):
                 mult = {'+': 1, '-': -1}[self.sign]
                 return mult * self.value.eval(vars_)
 
-        class EvalMultOp():
+        class EvalMultOp(object):
             """Class to evaluate multiplication and division expressions."""
 
             def __init__(self, tokens):
-                self.operator_map={
-                    '*': lambda a,b : a * b,
-                    '/': lambda a,b : a / b,
+                self.operator_map = {
+                    '*': lambda a, b: a * b,
+                    '/': lambda a, b: a / b,
                 }
                 self.value = tokens[0]
 
             def eval(self, vars):
                 prod = self.value[0].eval(vars)
-                for op, val in operatorOperands(self.value[1:]):
+                for op, val in operator_operands(self.value[1:]):
                     fn = self.operator_map[op]
                     val2 = val.eval(vars)
                     prod = fn(prod, val2)
                 return prod
 
         class EvalComparisonOp(object):
-            "Class to evaluate comparison expressions"
+            """Class to evaluate comparison expressions"""
             def __init__(self, tokens):
                 self.value = tokens[0]
                 self.operator_map = {
@@ -510,9 +513,10 @@ class SimpleMathStringEvaluator(object):
                     "EQ": lambda a, b: a == b,
                     "<>": lambda a, b: a != b,
                 }
+
             def eval(self, vars):
                 val1 = self.value[0].eval(vars)
-                for op, val in operatorOperands(self.value[1:]):
+                for op, val in operator_operands(self.value[1:]):
                     fn = self.operator_map[op]
                     val2 = val.eval(vars)
                     if not fn(val1, val2):
