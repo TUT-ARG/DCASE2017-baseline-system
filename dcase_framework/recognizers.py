@@ -51,6 +51,7 @@ import scipy
 from .containers import DottedDict
 from .metadata import MetaDataContainer, MetaDataItem
 
+
 class BaseRecognizer(object):
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -229,6 +230,60 @@ class BaseRecognizer(object):
 
 class SceneRecognizer(BaseRecognizer):
     """Multi-class single label recognition
+
+    **Parameters**
+
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | Field name                     | Value type         | Description                                                |
+    +================================+====================+============================================================+
+    | **frame_accumulation**, Defining frame probability accumulation.                                                 |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable frame probability accumulation.                     |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | type                           | string             | Operator type used to accumulate.                          |
+    |                                | {sliding_sum |     |                                                            |
+    |                                | sliding_mean |     |                                                            |
+    |                                | sliding_median }   |                                                            |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | window_length_seconds          | float              | Window length in seconds for sliding accumulation.         |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | **frame_binarization**, Defining frame probability binarization.                                                 |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable frame probability binarization.                     |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | type                           | string             | Type of binarization:                                      |
+    |                                | {frame_max |       |                                                            |
+    |                                | global_threshold } | - ``frame_max``, each frame is treated individually,       |
+    |                                |                    |   max of each frame is set to one, all others to zero.     |
+    |                                |                    | - ``global_threshold``, global threshold, all values over  |
+    |                                |                    |   the threshold are set to one.                            |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | threshold                      | float              | Threshold value. Set to null if not used.                  |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | **event_activity_processing**, Event activity processing per frame.                                              |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable activity processing.                                |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | type                           | string             | Type of decision:                                          |
+    |                                | {median_filtering} |                                                            |
+    |                                |                    | - ``median_filtering``, median filtering of decision       |
+    |                                |                    |    inside window.                                          |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | window_length_seconds          | float              | Length of sliding window in seconds for activity           |
+    |                                |                    | processing.                                                |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | **event_post_processing**, Event post processing per event.                                                      |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable event processing.                                   |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | minimum_event_length_seconds   | float              | Minimum allowed event length. Shorter events will be       |
+    |                                |                    | removed.                                                   |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | minimum_event_gap_second       | float              | Minimum allowed gap between events. Smaller gaps between   |
+    |                                |                    | events will cause events to be merged together.            |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+
+
     """
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -350,6 +405,18 @@ class EventRecognizer(BaseRecognizer):
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     def process(self, frame_probabilities):
+
+        if isinstance(frame_probabilities, tuple) and len(frame_probabilities) == 2:
+            return self.process_ratio(
+                frame_probabilities_positive=frame_probabilities[0],
+                frame_probabilities_negative=frame_probabilities[1],
+            )
+        else:
+            return self.process_matrix(
+                frame_probabilities=frame_probabilities
+            )
+
+    def process_matrix(self, frame_probabilities):
         """Multi-class multi-label detection.
 
         Parameters
