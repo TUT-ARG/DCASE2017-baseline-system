@@ -232,7 +232,6 @@ from .files import ParameterFile
 from .containers import ContainerMixin, DottedDict
 
 
-
 class ParameterContainer(ParameterFile, ContainerMixin):
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -245,7 +244,8 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             Parameter section processing order. Given dict is used to override internal default list.
             Default value "None"
         path_structure : dict of lists, optional
-            Defines how paths are created, section hash is used to create unique folder names. Given dict is used to override internal default list.
+            Defines how paths are created, section hash is used to create unique folder names. Given dict is used to
+            override internal default list.
             Default value "None"
         method_dependencies : dict of dicts, optional
             Given dict is used to override internal default list.
@@ -254,10 +254,12 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             Dict of field names for specific tasks. Given dict is used to override internal default list.
             Default value "None"
         non_hashable_fields : list, optional
-            List of fields skipped when parameter hash for the section is calculated. Given list is used to override internal default list.
+            List of fields skipped when parameter hash for the section is calculated. Given list is used to override
+            internal default list.
             Default value "None"
         control_sections : list, optional
-            List of top level sections used for framework control, for these section no hash is calculated. Given list is used to override internal default list.
+            List of top level sections used for framework control, for these section no hash is calculated. Given list
+            is used to override internal default list.
             Default value "None"
         """
 
@@ -370,6 +372,11 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             'show_model_information',
             'use_ascii_progress_bar',
             'label',
+            'active_scenes',
+            'active_events',
+            'plotting_rate',
+            'focus_span',
+            'output_format',
         ]
         if kwargs.get('non_hashable_fields'):
             self.non_hashable_fields.update(kwargs.get('non_hashable_fields'))
@@ -477,7 +484,9 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                 if section in self.magic_field:
                     self.control_sections[section_id] = self.magic_field[section]
 
-            if self.magic_field['default-parameters'] in self and self.magic_field['set-list'] in self and self.magic_field['active-set'] in self:
+            if (self.magic_field['default-parameters'] in self and
+               self.magic_field['set-list'] in self and
+               self.magic_field['active-set'] in self):
 
                 default_params = copy.deepcopy(self[self.magic_field['default-parameters']])
                 active_set_id = self[self.magic_field['active-set']]
@@ -527,7 +536,10 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                 if field_process_func is not None:
                     field_process_func()
 
-                if self[section] and (self.magic_field['method'] in self[section] or self.magic_field['recipe'] in self[section]) and section+'_method_parameters' in self:
+                if (self[section] and
+                   (self.magic_field['method'] in self[section] or self.magic_field['recipe'] in self[section]) and
+                    section+'_method_parameters' in self):
+
                     field_process_parameters_func = getattr(self, '_process_{}_method_parameters'.format(section), None)
                     if field_process_parameters_func is not None:
                         field_process_parameters_func()
@@ -542,7 +554,9 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             for section in section_list:
                 if self[section] and self.magic_field['parameters'] in self[section]:
                     for key, item in iteritems(self[section][self.magic_field['parameters']]):
-                        if section in self.method_dependencies and key in self.method_dependencies[section] and self.method_dependencies[section][key]:
+                        if (section in self.method_dependencies and
+                            key in self.method_dependencies[section] and self.method_dependencies[section][key]):
+
                             fields = self.method_dependencies[section][key].split('.')
                             if len(fields) == 1:
                                 item['dependency_parameters'] = copy.deepcopy(
@@ -604,7 +618,9 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         # Inject method parameters
         if self[section]:
             if self.magic_field['method'] in self[section]:
-                if section + '_method_parameters' in self and self[section][self.magic_field['method']] in self[section + '_method_parameters']:
+                if (section + '_method_parameters' in self and
+                   self[section][self.magic_field['method']] in self[section + '_method_parameters']):
+
                     self[section]['parameters'] = copy.deepcopy(
                         self[section + '_method_parameters'][self[section][self.magic_field['method']]]
                     )
@@ -628,7 +644,9 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             if self.magic_field['recipe'] in self[section]:
                 self[section][self.magic_field['parameters']] = {}
                 for item in self[section][self.magic_field['recipe']]:
-                    if section + '_method_parameters' in self and item[self.magic_field['method']] in self[section + '_method_parameters']:
+                    if (section + '_method_parameters' in self and
+                       item[self.magic_field['method']] in self[section + '_method_parameters']):
+
                         self[section]['parameters'][item[self.magic_field['method']]] = copy.deepcopy(
                             self[section + '_method_parameters'][item[self.magic_field['method']]]
                         )
@@ -958,7 +976,9 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                 handler_data['filename'] = os.path.join(self['path']['logs'], handler_data['filename'])
 
     def _process_feature_extractor(self):
-        if 'recipe' not in self['feature_extractor'] and 'feature_stacker' in self and 'stacking_recipe' in self['feature_stacker']:
+        if ('recipe' not in self['feature_extractor'] and 'feature_stacker' in self and
+           'stacking_recipe' in self['feature_stacker']):
+
             self['feature_extractor']['recipe'] = self.get_path('feature_stacker.stacking_recipe')
 
         if 'win_length_seconds' in self['feature_extractor'] and 'fs' in self['feature_extractor']:
@@ -1047,10 +1067,14 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         if self.get_path('general.active_events'):
             self['recognizer']['active_events'] = self.get_path('general.active_events')
 
-        if self.get_path('recognizer.frame_accumulation.enable') and self.get_path('recognizer.frame_accumulation.window_length_seconds'):
+        if (self.get_path('recognizer.frame_accumulation.enable') and
+           self.get_path('recognizer.frame_accumulation.window_length_seconds')):
+
             self['recognizer']['frame_accumulation']['window_length_frames'] = int(self.get_path('recognizer.frame_accumulation.window_length_seconds')/float(self.get_path('learner.hop_length_seconds')))
 
-        if self.get_path('recognizer.event_activity_processing.enable') and self.get_path('recognizer.event_activity_processing.window_length_seconds'):
+        if (self.get_path('recognizer.event_activity_processing.enable') and
+           self.get_path('recognizer.event_activity_processing.window_length_seconds')):
+
             self['recognizer']['event_activity_processing']['window_length_frames'] = int(self.get_path('recognizer.event_activity_processing.window_length_seconds')/float(self.get_path('learner.hop_length_seconds')))
 
     def _process_evaluator(self):
