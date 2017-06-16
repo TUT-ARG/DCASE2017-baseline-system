@@ -54,7 +54,8 @@ Usage examples:
 FeatureRepository
 ^^^^^^^^^^^^^^^^^
 
-Feature repository class, where feature containers for each type of features are stored in a dict. Type name is used as key.
+Feature repository class, where feature containers for each type of features are stored in a dict. Type name is
+used as key.
 
 .. autosummary::
     :toctree: generated/
@@ -287,7 +288,7 @@ from .files import FeatureFile, AudioFile, DataFile, RepositoryFile
 from .containers import ContainerMixin, DottedDict
 from .parameters import ParameterContainer
 from .utils import filelist_exists
-
+from .metadata import MetaDataContainer
 
 class FeatureContainer(FeatureFile, ContainerMixin):
     """Feature container inherited from dict
@@ -395,7 +396,7 @@ class FeatureContainer(FeatureFile, ContainerMixin):
 
         Returns
         -------
-            lisf of numpy.ndarray
+            list of numpy.ndarray
 
         """
 
@@ -609,7 +610,10 @@ class FeatureExtractor(object):
         # Update general parameters and expand dependencies
         for method, data in iteritems(self.default_parameters):
             data.update(self.default_general_parameters)
-            if 'dependency_method' in data and data['dependency_method'] in self.valid_extractors and data['dependency_method'] in self.default_parameters:
+            if ('dependency_method' in data and
+               data['dependency_method'] in self.valid_extractors and
+               data['dependency_method'] in self.default_parameters):
+
                 data['dependency_parameters'] = self.default_parameters[data['dependency_method']]
 
     def __getstate__(self):
@@ -638,13 +642,16 @@ class FeatureExtractor(object):
         Parameters
         ----------
         audio_file : str
-            Filename of audio file
+            Filename of audio file.
         extractor_params : dict of dicts
-            Keys at first level corresponds to feature extraction methods, and second level is parameters given to the extractor method. If none given, default parameters used.
+            Keys at first level corresponds to feature extraction methods, and second level is parameters given to the
+            extractor method. If none given, default parameters used.
         storage_paths : dict of strings
-            Keys at first level corresponds to feature extraction methods, second level is path to store feature containers
+            Keys at first level corresponds to feature extraction methods, second level is path to store feature
+            containers.
         extractor_name : str
-            Feature extractor method name, if none given, extractor_params is used. Use this to select specific extractor method
+            Feature extractor method name, if none given, extractor_params is used. Use this to select specific
+            extractor method.
             Default value "None"
 
         Raises
@@ -681,7 +688,10 @@ class FeatureExtractor(object):
 
         # Update general parameters and expand dependencies
         for method, data in iteritems(extractor_params):
-            if 'dependency_method' in data and data['dependency_method'] in self.valid_extractors and data['dependency_method'] in extractor_params:
+            if ('dependency_method' in data and
+               data['dependency_method'] in self.valid_extractors and
+               data['dependency_method'] in extractor_params):
+
                 data['dependency_parameters'] = extractor_params[data['dependency_method']]
 
         feature_repository = FeatureRepository({})
@@ -729,7 +739,9 @@ class FeatureExtractor(object):
                         self.logger.exception(message)
                         raise ValueError(message)
 
-                    if current_extractor_params['dependency_method'] in storage_paths and os.path.isfile(storage_paths[current_extractor_params['dependency_method']]):
+                    if (current_extractor_params['dependency_method'] in storage_paths and
+                       os.path.isfile(storage_paths[current_extractor_params['dependency_method']])):
+
                         # Load features from disk
                         data = FeatureContainer(
                             filename=storage_paths[current_extractor_params['dependency_method']]
@@ -799,14 +811,15 @@ class FeatureExtractor(object):
         Parameters
         ----------
         data : numpy.ndarray
-            Audio data
+            Audio data.
         params : dict
-            Parameters
+            Parameters.
 
         Returns
         -------
-        list of numpy.ndarrays
-            List of feature matrices, feature matrix per audio channel
+        list of numpy.ndarray
+            List of feature matrices, feature matrix per audio channel.
+
         """
 
         window = self._window_function(N=params.get('win_length_samples'),
@@ -856,7 +869,7 @@ class FeatureExtractor(object):
 
         Returns
         -------
-        list of numpy.ndarrays
+        list of numpy.ndarray
             List of feature matrices, feature matrix per audio channel
 
         """
@@ -908,7 +921,7 @@ class FeatureExtractor(object):
 
         Returns
         -------
-        list of numpy.ndarrays
+        list of numpy.ndarray
             List of feature matrices, feature matrix per audio channel
 
         """
@@ -934,7 +947,7 @@ class FeatureExtractor(object):
 
         Returns
         -------
-        list of numpy.ndarrays
+        list of numpy.ndarray
             List of feature matrices, feature matrix per audio channel
 
         """
@@ -1137,7 +1150,13 @@ class FeatureExtractor(object):
         return d
 
 
-class FeatureStacker(object):
+class FeatureProcessingUnitMixin(object):
+    """Feature processing chain unit mixin"""
+    def process(self, feature_data):
+        pass
+
+
+class FeatureStacker(FeatureProcessingUnitMixin):
     """Feature stacker"""
     __version__ = '0.0.1'
 
@@ -1219,17 +1238,25 @@ class FeatureStacker(object):
             if 'vector-index' in feature:
                 channel = feature['vector-index']['channel']
 
-            if 'vector-index' not in feature or ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full']):
+            if ('vector-index' not in feature or
+               ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full'])):
+
                 # We have Full matrix
                 stacked_mean.append(normalizer_list[method]['mean'][channel])
                 stacked_std.append(normalizer_list[method]['std'][channel])
 
-            elif 'vector-index' in feature and 'vector' in feature['vector-index'] and 'selection' in feature['vector-index'] and feature['vector-index']['selection']:
+            elif ('vector-index' in feature and
+                  'vector' in feature['vector-index'] and
+                  'selection' in feature['vector-index'] and feature['vector-index']['selection']):
+
                 # We have selector vector
                 stacked_mean.append(normalizer_list[method]['mean'][channel][:, feature['vector-index']['vector']])
                 stacked_std.append(normalizer_list[method]['std'][channel][:, feature['vector-index']['vector']])
 
-            elif 'vector-index' in feature and 'start' in feature['vector-index'] and 'end' in feature['vector-index']:
+            elif ('vector-index' in feature and
+                  'start' in feature['vector-index'] and
+                  'end' in feature['vector-index']):
+
                 # we have start and end index
                 stacked_mean.append(normalizer_list[method]['mean'][channel][:, feature['vector-index']['start']:feature['vector-index']['end']])
                 stacked_std.append(normalizer_list[method]['std'][channel][:, feature['vector-index']['start']:feature['vector-index']['end']])
@@ -1288,14 +1315,24 @@ class FeatureStacker(object):
             if 'vector-index' in feature:
                 channel = feature['vector-index']['channel']
 
-            if 'vector-index' not in feature or ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full']):
+            if ('vector-index' not in feature or
+               ('vector-index' in feature and 'full' in feature['vector-index'] and feature['vector-index']['full'])):
+
                 # We have Full matrix
                 feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, :])
-            elif 'vector-index' in feature and 'vector' in feature['vector-index'] and 'selection' in feature['vector-index'] and feature['vector-index']['selection']:
+
+            elif ('vector-index' in feature and
+                  'vector' in feature['vector-index'] and
+                  'selection' in feature['vector-index'] and feature['vector-index']['selection']):
+
                 index = numpy.array(feature['vector-index']['vector'])
                 # We have selector vector
                 feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, index])
-            elif 'vector-index' in feature and 'start' in feature['vector-index'] and 'end' in feature['vector-index']:
+
+            elif ('vector-index' in feature and
+                  'start' in feature['vector-index'] and
+                  'end' in feature['vector-index']):
+
                 # we have start and end index
                 feature_matrix.append(feature_repository[method].feat[channel][::self.feature_hop, feature['vector-index']['start']:feature['vector-index']['end']])
 
@@ -1314,12 +1351,12 @@ class FeatureStacker(object):
 
         return FeatureContainer(features=[numpy.hstack(feature_matrix)], meta=meta)
 
-    def process(self, feature_repository):
+    def process(self, feature_data):
         """Feature vector creation
 
         Parameters
         ----------
-        feature_repository : FeatureRepository
+        feature_data : FeatureRepository
             Feature repository with needed features
 
         Returns
@@ -1328,10 +1365,10 @@ class FeatureStacker(object):
 
         """
 
-        return self.feature_vector(feature_repository=feature_repository)
+        return self.feature_vector(feature_repository=feature_data)
 
 
-class FeatureNormalizer(DataFile, ContainerMixin):
+class FeatureNormalizer(DataFile, ContainerMixin, FeatureProcessingUnitMixin):
     """Feature normalizer
 
     Accumulates feature statistics
@@ -1423,7 +1460,7 @@ class FeatureNormalizer(DataFile, ContainerMixin):
         self.std = d['std']
 
     def accumulate(self, feature_container):
-        """Accumalate statistics
+        """Accumulate statistics
 
         Parameters
         ----------
@@ -1509,12 +1546,12 @@ class FeatureNormalizer(DataFile, ContainerMixin):
         elif isinstance(feature_container, numpy.ndarray):
             return (feature_container - self['mean'][channel]) / self['std'][channel]
 
-    def process(self, feature_container):
+    def process(self, feature_data):
         """Normalize feature matrix with internal statistics of the class
 
         Parameters
         ----------
-        feature_container : numpy.ndarray [shape=(frames, number of feature values)]
+        feature_data : FeatureContainer or numpy.ndarray [shape=(frames, number of feature values)]
             Feature matrix to be normalized
 
         Returns
@@ -1524,10 +1561,10 @@ class FeatureNormalizer(DataFile, ContainerMixin):
 
         """
 
-        return self.normalize(feature_container=feature_container)
+        return self.normalize(feature_container=feature_data)
 
 
-class FeatureAggregator(object):
+class FeatureAggregator(FeatureProcessingUnitMixin):
     """Feature aggregator"""
     __version__ = '0.0.1'
 
@@ -1538,7 +1575,7 @@ class FeatureAggregator(object):
 
         Parameters
         ----------
-        recipe : list of dicts or list of strs
+        recipe : list of dict or list of str
             Aggregation recipe, supported methods [mean, std, cov, kurtosis, skew, flatten].
         win_length_frames : int
             Window length in feature frames
@@ -1572,12 +1609,12 @@ class FeatureAggregator(object):
         self.win_length_frames = d['win_length_frames']
         self.hop_length_frames = d['hop_length_frames']
 
-    def process(self, feature_container):
+    def process(self, feature_data):
         """Process features
 
         Parameters
         ----------
-        feature_container : FeatureContainer
+        feature_data : FeatureContainer
             Features to be aggregated
         Returns
         -------
@@ -1588,9 +1625,9 @@ class FeatureAggregator(object):
         # Not the most efficient way as numpy stride_tricks would produce
         # faster code, however, opted for cleaner presentation this time.
         feature_data_per_channel = []
-        for channel in range(0, feature_container.channels):
+        for channel in range(0, feature_data.channels):
             aggregated_features = []
-            for frame in range(0, feature_container.feat[channel].shape[0], self.hop_length_frames):
+            for frame in range(0, feature_data.feat[channel].shape[0], self.hop_length_frames):
                 # Get start and end of the window, keep frame at the middle (approximately)
                 start_frame = int(frame - numpy.floor(self.win_length_frames/2.0))
                 end_frame = int(frame + numpy.ceil(self.win_length_frames / 2.0))
@@ -1600,9 +1637,9 @@ class FeatureAggregator(object):
                 frame_id[frame_id < 0] = 0
 
                 # If end of the feature matrix, pad with last frame
-                frame_id[frame_id > feature_container.feat[channel].shape[0]-1] = feature_container.feat[channel].shape[0] - 1
+                frame_id[frame_id > feature_data.feat[channel].shape[0] - 1] = feature_data.feat[channel].shape[0] - 1
 
-                current_frame = feature_container.feat[channel][frame_id, :]
+                current_frame = feature_data.feat[channel][frame_id, :]
                 aggregated_frame = []
 
                 if 'mean' in self.recipe:
@@ -1637,8 +1674,8 @@ class FeatureAggregator(object):
             'datetime': strftime("%Y-%m-%d %H:%M:%S", gmtime()),
         }
 
-        if 'audio_file' in feature_container.meta:
-            meta['audio_file'] = feature_container.meta['audio_file']
+        if 'audio_file' in feature_data.meta:
+            meta['audio_file'] = feature_data.meta['audio_file']
 
         return FeatureContainer(features=feature_data_per_channel, meta=meta)
 
@@ -1658,6 +1695,8 @@ class FeatureMasker(object):
         """
         self.hop_length_seconds = kwargs.get('hop_length_seconds')
 
+        # Initialize mask events
+        self.mask_events = MetaDataContainer()
 
     def __getstate__(self):
         # Return only needed data for pickle
@@ -1667,17 +1706,29 @@ class FeatureMasker(object):
 
     def __setstate__(self, d):
         self.hop_length_seconds = d['hop_length_seconds']
+        self.mask_events = MetaDataContainer()
 
-    def process(self, feature_repository, mask_events, hop_length_seconds=None):
-        """Process feature repository
+    def set_mask(self, mask_events):
+        """Set masking events
 
         Parameters
         ----------
-        feature_repository : FeatureRepository
         mask_events : list of MetaItems or MetaDataContainer
             Event list used for masking
-        hop_length_seconds : float
-            Hop length in seconds, if none given one given for constructor used
+
+        """
+
+        self.mask_events = mask_events
+        return self
+
+    def masking(self, feature_data, mask_event):
+        """Masking feature repository with given events
+
+        Parameters
+        ----------
+        feature_data : FeatureRepository
+        mask_events : list of MetaItems or MetaDataContainer
+            Event list used for masking
 
         Returns
         -------
@@ -1685,20 +1736,35 @@ class FeatureMasker(object):
 
         """
 
-        if not hop_length_seconds:
-            hop_length_seconds = self.hop_length_seconds
+        for method in list(feature_data.keys()):
+            removal_mask = numpy.ones((feature_data[method].shape[0]), dtype=bool)
+            for mask_event in self.mask_events:
+                onset_frame = int(numpy.floor(mask_event.event_onset / self.hop_length_seconds))
+                offset_frame = int(numpy.ceil(mask_event.event_offset / self.hop_length_seconds))
+                if offset_frame > feature_data[method].shape[0]:
+                    offset_frame = feature_data[method].shape[0]
+                removal_mask[onset_frame:offset_frame] = False
 
-        if mask_events:
-            for method in list(feature_repository.keys()):
-                removal_mask = numpy.ones((feature_repository[method].shape[0]), dtype=bool)
-                for mask_event in mask_events:
-                    onset_frame = int(numpy.floor(mask_event.event_onset / hop_length_seconds))
-                    offset_frame = int(numpy.ceil(mask_event.event_offset / hop_length_seconds))
-                    if offset_frame > feature_repository[method].shape[0]:
-                        offset_frame = feature_repository[method].shape[0]
-                    removal_mask[onset_frame:offset_frame] = False
-                for channel in range(0, feature_repository[method].channels):
-                    feature_repository[method].feat[channel] = feature_repository[method].feat[channel][removal_mask, :]
+            for channel in range(0, feature_data[method].channels):
+                feature_data[method].feat[channel] = feature_data[method].feat[channel][removal_mask, :]
 
-        return feature_repository
+        return feature_data
+
+    def process(self, feature_data):
+        """Process feature repository
+
+        Parameters
+        ----------
+        feature_data : FeatureRepository
+
+        Returns
+        -------
+        FeatureRepository
+
+        """
+
+        if self.mask_events:
+            return self.masking(feature_data=feature_data, mask_event=self.mask_events)
+        else:
+            return feature_data
 
