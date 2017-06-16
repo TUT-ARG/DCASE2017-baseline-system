@@ -59,11 +59,10 @@ through item key. When internal buffer is filled, oldest item is replaced.
 
 from __future__ import print_function, absolute_import
 from six import iteritems
-import os
 import logging
 import numpy
 import collections
-from .features import FeatureContainer, FeatureRepository
+from .features import FeatureRepository
 
 
 class DataBuffer(object):
@@ -187,7 +186,13 @@ class DataBuffer(object):
         self.meta_buffer.clear()
 
 
-class DataSequencer(object):
+class DataProcessingUnitMixin(object):
+    """Data processing chain unit mixin"""
+    def process(self, data):
+        pass
+
+
+class DataSequencer(DataProcessingUnitMixin):
     """Data sequencer"""
     __version__ = '0.0.1'
 
@@ -313,12 +318,12 @@ class DataSequencer(object):
                 # If end of the matrix, pad with last frame
                 frame_ids[frame_ids > data_length - 1] = data_length - 1
 
-            X.append(numpy.expand_dims(data[frame_ids, :], axis=0) )
+            X.append(numpy.expand_dims(data[frame_ids, :], axis=0))
 
         if len(X) == 0:
-            message = '{name}: Cannot create valid segment, adjust segment length and hop size, or use padding flag.'.format(
-                name=self.__class__.__name__,
-            )
+            message = '{name}: Cannot create valid segment, adjust segment length and hop size, or use ' \
+                      'padding flag.'.format(name=self.__class__.__name__)
+
             self.logger.exception(message)
             raise IOError(message)
 
@@ -344,7 +349,13 @@ class DataSequencer(object):
 
 
 class DataProcessor(object):
-    """Data processors with feature and data processing chains"""
+    """Data processors with feature and data processing chains
+
+    Feature processing chain comprehend all processing done to get feature matrix synchronized with meta data.
+
+    Data processing chain is applied to the feature matrix and meta data to reshape data for machine learning.
+
+    """
     __version__ = '0.0.1'
 
     def __init__(self, *args, **kwargs):
@@ -352,16 +363,17 @@ class DataProcessor(object):
 
         Parameters
         ----------
-        feature_processing_chain : list of functions
+        feature_processing_chain : ProcessingChain or list of FeatureProcessingUnitMixin
             List of processing functions
 
-        data_processing_chain : list of functions
+        data_processing_chain : ProcessingChain or list of DataProcessingUnitMixin
             List of data processing functions
 
         """
 
-        self.feature_processing_chain = kwargs.get('feature_processing_chain', [])
-        self.data_processing_chain = kwargs.get('data_processing_chain', [])
+        self.feature_processing_chain = kwargs.get('feature_processing_chain', ProcessingChain())
+        self.data_processing_chain = kwargs.get('data_processing_chain', ProcessingChain())
+
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     def __getstate__(self):
@@ -376,14 +388,22 @@ class DataProcessor(object):
         self.data_processing_chain = d['data_processing_chain']
         self.logger = logging.getLogger(__name__)
 
-    def load(self, feature_filename_list, process_features=True, process_data=True):
+    def load(self, feature_filename_list, process_features=True, process_data=True, mask_events=None):
         """Load feature item
 
         Parameters
         ----------
         feature_filename_list : dict of filenames
             Dict with feature extraction methods as keys and value corresponding feature file
-
+        process_features : bool
+            Apply feature processing chain.
+            Default value True
+        process_data : bool
+            Apply data processing chain.
+            Default value True
+        mask_events : list of MetaItems or MetaDataContainer
+            Event list used for masking.
+            Default value None
         Returns
         -------
         Processed feature data
@@ -397,27 +417,39 @@ class DataProcessor(object):
         return self.process(
             feature_data=feature_data,
             process_features=process_features,
-            process_data=process_data
+            process_data=process_data,
+            feature_mask_events=mask_events,
         )
 
-    def process(self, feature_data, process_features=True, process_data=True):
+    def process(self, feature_data, process_features=True, process_data=True, feature_mask_events=None):
         """Process feature data
 
         Parameters
         ----------
-        feature_data : various
-            Feature data
+        feature_data : FeatureContainer
+            Feature data.
+        process_features : bool
+            Apply feature processing chain.
+            Default value True
+        process_data : bool
+            Apply data processing chain.
+            Default value True
+        feature_mask_events : list of MetaItems or MetaDataContainer
+            Event list used for masking.
+            Default value None
 
         Returns
         -------
         feature_data : ndarray
             Processed feature data
+        feature_vector_count : int
+            Number of feature vectors before data processing
 
         """
 
         # Go through the feature processing chain
         if process_features:
-            feature_data = self.process_features(feature_data=feature_data)
+            feature_data = self.process_features(feature_data=feature_data, mask_events=feature_mask_events)
 
         # Save feature matrix length before doing data processing chain
         feature_vector_count = feature_data.shape[0]
@@ -428,13 +460,16 @@ class DataProcessor(object):
         else:
             return feature_data.feat[0], feature_vector_count
 
-    def process_features(self, feature_data):
+    def process_features(self, feature_data, mask_events=None):
         """Process feature data
 
         Parameters
         ----------
-        feature_data : various
-            Feature data
+        feature_data : FeatureContainer
+            Feature data.
+        mask_events : list of MetaItems or MetaDataContainer
+            Event list used for masking.
+            Default value None
 
         Returns
         -------
@@ -448,7 +483,13 @@ class DataProcessor(object):
 
         # Go through the feature processing chain
         for processing_step in self.feature_processing_chain:
-            if processing_step is not None:
+
+            # Set mask events if needed
+            if processing_step is not None and mask_events is not None and hasattr(processing_step, 'set_mask'):
+                processing_step.set_mask(mask_events)
+
+            # Do processing
+            if processing_step is not None and hasattr(processing_step, 'process'):
                 feature_data = processing_step.process(feature_data)
 
         return feature_data
@@ -494,7 +535,7 @@ class DataProcessor(object):
         # Go through the data processing chain
         if self.data_processing_chain:
             for processing_step in self.data_processing_chain:
-                if processing_step is not None:
+                if processing_step is not None and hasattr(processing_step, 'process'):
                     data = processing_step.process(data)
 
             if not metadata:
@@ -527,3 +568,7 @@ class DataProcessor(object):
         for item in self.data_processing_chain:
             if hasattr(item, method_name):
                 getattr(item, method_name)(**parameters)
+
+
+class ProcessingChain(list):
+    pass
