@@ -10,7 +10,7 @@ import tempfile
 
 def test_load():
     feature_repository = FeatureRepository().load(
-        filename_list={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
+        filename_dict={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
                        'mfcc2': os.path.join('material', 'test.mfcc.cpickle')}
     )
 

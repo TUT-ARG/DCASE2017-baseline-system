@@ -29,10 +29,12 @@ def test_process():
     test_recipe = 'mfcc=0-5'
     test_recipe_parsed = ParameterContainer()._parse_recipe(recipe=test_recipe)
 
-    feature_repository = FeatureRepository(filename_list={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_repository = FeatureRepository(
+        filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')}
+    )
 
     feature_stacker = FeatureStacker(recipe=test_recipe_parsed)
-    feature_container = feature_stacker.process(feature_repository=feature_repository)
+    feature_container = feature_stacker.process(feature_data=feature_repository)
 
     nose.tools.assert_list_equal(sorted(list(feature_container.keys())), ['feat', 'meta', 'stat'])
 
@@ -58,10 +60,12 @@ def test_process():
     test_recipe = 'mfcc=1,2,3,4'
     test_recipe_parsed = ParameterContainer()._parse_recipe(recipe=test_recipe)
 
-    feature_repository = FeatureRepository(filename_list={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_repository = FeatureRepository(
+        filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')}
+    )
 
     feature_stacker = FeatureStacker(recipe=test_recipe_parsed)
-    feature_container = feature_stacker.process(feature_repository=feature_repository)
+    feature_container = feature_stacker.process(feature_data=feature_repository)
 
     nose.tools.assert_list_equal(sorted(list(feature_container.keys())), ['feat', 'meta', 'stat'])
 
@@ -88,10 +92,12 @@ def test_process():
     test_recipe = 'mfcc'
     test_recipe_parsed = ParameterContainer()._parse_recipe(recipe=test_recipe)
 
-    feature_repository = FeatureRepository(filename_list={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_repository = FeatureRepository(
+        filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')}
+    )
 
     feature_stacker = FeatureStacker(recipe=test_recipe_parsed)
-    feature_container = feature_stacker.process(feature_repository=feature_repository)
+    feature_container = feature_stacker.process(feature_data=feature_repository)
 
     nose.tools.assert_list_equal(sorted(list(feature_container.keys())), ['feat', 'meta', 'stat'])
 

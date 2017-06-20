@@ -31,9 +31,9 @@ def test():
     )
 
     feature_stacker = FeatureStacker(recipe=[{'method': 'mfcc'}])
-    feature_repository = FeatureContainer().load(filename_list={'mfcc': os.path.join('material','test.mfcc.cpickle')})
-    feature_matrix = feature_stacker.feature_vector(feature_repository=feature_repository)
-    feature_matrix = feature_aggregator.process(feature_container=feature_matrix)
+    feature_repository = FeatureContainer().load(filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_matrix = feature_stacker.process(feature_data=feature_repository)
+    feature_matrix = feature_aggregator.process(feature_data=feature_matrix)
 
     nose.tools.eq_(feature_matrix.shape[0], 501)
     nose.tools.eq_(feature_matrix.shape[1], 10)
@@ -46,9 +46,9 @@ def test():
     )
 
     feature_stacker = FeatureStacker(recipe=[{'method': 'mfcc'}])
-    feature_repository = FeatureContainer().load(filename_list={'mfcc': os.path.join('material','test.mfcc.cpickle')})
-    feature_matrix = feature_stacker.feature_vector(feature_repository=feature_repository)
-    feature_matrix = feature_aggregator.process(feature_container=feature_matrix)
+    feature_repository = FeatureContainer().load(filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_matrix = feature_stacker.process(feature_data=feature_repository)
+    feature_matrix = feature_aggregator.process(feature_data=feature_matrix)
 
     nose.tools.eq_(feature_matrix.shape[0], 501)
     nose.tools.eq_(feature_matrix.shape[1], 2*10)
@@ -61,9 +61,9 @@ def test():
     )
 
     feature_stacker = FeatureStacker(recipe=[{'method': 'mfcc'}])
-    feature_repository = FeatureContainer().load(filename_list={'mfcc': os.path.join('material','test.mfcc.cpickle')})
-    feature_matrix = feature_stacker.feature_vector(feature_repository=feature_repository)
-    feature_matrix = feature_aggregator.process(feature_container=feature_matrix)
+    feature_repository = FeatureContainer().load(filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_matrix = feature_stacker.process(feature_data=feature_repository)
+    feature_matrix = feature_aggregator.process(feature_data=feature_matrix)
 
     nose.tools.eq_(feature_matrix.shape[0], 501)
     nose.tools.eq_(feature_matrix.shape[1], 4*10)
@@ -76,9 +76,9 @@ def test():
     )
 
     feature_stacker = FeatureStacker(recipe=[{'method': 'mfcc'}])
-    feature_repository = FeatureContainer().load(filename_list={'mfcc': os.path.join('material','test.mfcc.cpickle')})
-    feature_matrix = feature_stacker.feature_vector(feature_repository=feature_repository)
-    feature_matrix = feature_aggregator.process(feature_container=feature_matrix)
+    feature_repository = FeatureContainer().load(filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_matrix = feature_stacker.process(feature_data=feature_repository)
+    feature_matrix = feature_aggregator.process(feature_data=feature_matrix)
 
     nose.tools.eq_(feature_matrix.shape[0], 501)
     nose.tools.eq_(feature_matrix.shape[1], 10*10)
@@ -91,9 +91,9 @@ def test():
     )
 
     feature_stacker = FeatureStacker(recipe=[{'method': 'mfcc'}])
-    feature_repository = FeatureContainer().load(filename_list={'mfcc': os.path.join('material','test.mfcc.cpickle')})
-    feature_matrix = feature_stacker.feature_vector(feature_repository=feature_repository)
-    feature_matrix = feature_aggregator.process(feature_container=feature_matrix)
+    feature_repository = FeatureContainer().load(filename_dict={'mfcc': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_matrix = feature_stacker.process(feature_data=feature_repository)
+    feature_matrix = feature_aggregator.process(feature_data=feature_matrix)
 
     nose.tools.eq_(feature_matrix.shape[0], 501)
     nose.tools.eq_(feature_matrix.shape[1], 10*10)

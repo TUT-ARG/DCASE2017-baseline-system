@@ -8,6 +8,7 @@ import os
 from dcase_framework.features import FeatureContainer, FeatureExtractor
 from dcase_framework.metadata import MetaDataContainer, MetaDataItem
 from dcase_framework.learners import EventDetectorGMM
+from dcase_framework.recognizers import EventRecognizer
 import tempfile
 
 
@@ -275,14 +276,20 @@ def test_predict():
             'threshold': 10,
         }
     }
-    result = ed.predict(
-        feature_data=feature_container,
-        recognizer_params=recognizer_params
+
+    # Frame probabilities
+    frame_probabilities = ed.predict(
+        feature_data=feature_container
+    )
+
+    # Event recognizer
+    result = EventRecognizer(
+        hop_length_seconds=0.02,
+        params=recognizer_params,
+        class_labels=['event1', 'event2'],
+    ).process(
+        frame_probabilities=frame_probabilities
     )
 
     # Test result
     nose.tools.eq_(len(result) > 5, True)
-
-    # Test errors
-    recognizer_params['frame_binarization']['type'] = 'test'
-    nose.tools.assert_raises(AssertionError, ed.predict, feature_container, recognizer_params)
