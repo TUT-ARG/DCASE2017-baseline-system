@@ -372,6 +372,11 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             'show_model_information',
             'use_ascii_progress_bar',
             'label',
+            'active_scenes',
+            'active_events',
+            'plotting_rate',
+            'focus_span',
+            'output_format',
         ]
         if kwargs.get('non_hashable_fields'):
             self.non_hashable_fields.update(kwargs.get('non_hashable_fields'))
