@@ -75,6 +75,21 @@ See more detailed instructions from [documentation](https://tut-arg.github.io/DC
 Changelog
 =========
 
+#### 1.2 / 2017-06-20
+
+* Introduced recognizer classes: SceneRecognizer, EventRecognizer
+* Introduced Keras callbacks: ProgressLoggerCallback, ProgressPlotterCallback, StopperCallback, StasherCallback
+* Added new learner classes: SceneClassifierKerasSequential, EventDetectorKerasSequential
+    * Full support for Keras sequential API 
+    * Epoch-by-epoch processing, with external metric evaluation (using sed_eval)
+    * DataProcessor class to embed feature processing and data processing chains
+    * Feature generators to allow loading feature data from disk during training procedure
+* Added possibility to use constant and simple math equations in the keras based learner parameters 
+        
+#### 1.1.1 / 2017-06-06
+
+* feature_stacker parameter hash added to the data paths. This broke backward compatibility, previously stored models and results has to be re-calculated or moved to correct paths.
+
 #### 1.1 / 2017-04-02
 
 * Added Docker container to reproduce baseline results 
