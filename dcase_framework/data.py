@@ -54,6 +54,17 @@ through item key. When internal buffer is filled, oldest item is replaced.
     DataBuffer.get
     DataBuffer.clear
 
+ProcessingChain
+^^^^^^^^^^^^^^^
+
+Data processing chain class, inherited from list.
+
+.. autosummary::
+    :toctree: generated/
+
+    ProcessingChain
+    ProcessingChain.process
+    ProcessingChain.call_method
 
 """
 
@@ -186,7 +197,13 @@ class DataBuffer(object):
         self.meta_buffer.clear()
 
 
-class DataSequencer(object):
+class DataProcessingUnitMixin(object):
+    """Data processing chain unit mixin"""
+    def process(self, data):
+        pass
+
+
+class DataSequencer(DataProcessingUnitMixin):
     """Data sequencer"""
     __version__ = '0.0.1'
 
@@ -207,7 +224,7 @@ class DataSequencer(object):
         shift_step : int
             Sequence start temporal shifting amount, is added once method increase_shifting is called
             Default value 0
-        shift_border : string, {'roll', 'push'}
+        shift_border : string, {'roll', 'shift'}
             Sequence border handling when doing temporal shifting.
             Default value 'roll'
         shift_max : int
@@ -232,7 +249,7 @@ class DataSequencer(object):
         if self.shift_border is None:
             self.shift_border = 'roll'
 
-        if self.shift_border not in ['push', 'roll']:
+        if self.shift_border not in ['roll', 'shift']:
             message = '{name}: Unknown temporal shifting border handling [{border_mode}]'.format(
                 name=self.__class__.__name__,
                 border_mode=self.shift_border
@@ -283,14 +300,15 @@ class DataSequencer(object):
         data_length = data.shape[0]
         X = []
 
-        if self.shift_border == 'push':
+        if self.shift_border == 'shift':
             segment_indexes = numpy.arange(self.shift, data_length, self.hop_size)
 
         elif self.shift_border == 'roll':
             segment_indexes = numpy.arange(0, data_length, self.hop_size)
 
-            # Roll data
-            data = numpy.roll(data, shift=self.shift, axis=0)
+            if self.shift:
+                # Roll data
+                data = numpy.roll(data, shift=self.shift, axis=0)
 
         if self.padding:
             if len(segment_indexes) == 0:
@@ -298,7 +316,7 @@ class DataSequencer(object):
                 segment_indexes = numpy.array([0])
         else:
             # Remove segments which are not full
-            segment_indexes = segment_indexes[segment_indexes+self.hop_size < data_length]
+            segment_indexes = segment_indexes[(segment_indexes+self.hop_size-1) < data_length]
 
         for segment_start_frame in segment_indexes:
             segment_end_frame = segment_start_frame + self.hop_size
@@ -343,7 +361,13 @@ class DataSequencer(object):
 
 
 class DataProcessor(object):
-    """Data processors with feature and data processing chains"""
+    """Data processors with feature and data processing chains
+
+    Feature processing chain comprehend all processing done to get feature matrix synchronized with meta data.
+
+    Data processing chain is applied to the feature matrix and meta data to reshape data for machine learning.
+
+    """
     __version__ = '0.0.1'
 
     def __init__(self, *args, **kwargs):
@@ -351,16 +375,17 @@ class DataProcessor(object):
 
         Parameters
         ----------
-        feature_processing_chain : list of functions
+        feature_processing_chain : ProcessingChain
             List of processing functions
 
-        data_processing_chain : list of functions
+        data_processing_chain : ProcessingChain
             List of data processing functions
 
         """
 
-        self.feature_processing_chain = kwargs.get('feature_processing_chain', [])
-        self.data_processing_chain = kwargs.get('data_processing_chain', [])
+        self.feature_processing_chain = kwargs.get('feature_processing_chain', ProcessingChain())
+        self.data_processing_chain = kwargs.get('data_processing_chain', ProcessingChain())
+
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     def __getstate__(self):
@@ -375,20 +400,19 @@ class DataProcessor(object):
         self.data_processing_chain = d['data_processing_chain']
         self.logger = logging.getLogger(__name__)
 
-    def load(self, feature_filename_list, process_features=True, process_data=True):
+    def load(self, feature_filename_dict, process_features=True, process_data=True):
         """Load feature item
 
         Parameters
         ----------
-        feature_filename_list : dict of filenames
+        feature_filename_dict : dict of filenames
             Dict with feature extraction methods as keys and value corresponding feature file
         process_features : bool
-            Apply feature processing chain
+            Apply feature processing chain.
             Default value True
         process_data : bool
-            Apply data processing chain
+            Apply data processing chain.
             Default value True
-
         Returns
         -------
         Processed feature data
@@ -396,7 +420,7 @@ class DataProcessor(object):
         """
 
         # Load item
-        feature_data = FeatureRepository(filename_list=feature_filename_list)
+        feature_data = FeatureRepository(filename_dict=feature_filename_dict)
 
         # Process item
         return self.process(
@@ -410,19 +434,21 @@ class DataProcessor(object):
 
         Parameters
         ----------
-        feature_data : various
-            Feature data
+        feature_data : FeatureContainer
+            Feature data.
         process_features : bool
-            Apply feature processing chain
+            Apply feature processing chain.
             Default value True
         process_data : bool
-            Apply data processing chain
+            Apply data processing chain.
             Default value True
 
         Returns
         -------
         feature_data : ndarray
             Processed feature data
+        feature_vector_count : int
+            Number of feature vectors before data processing
 
         """
 
@@ -444,8 +470,8 @@ class DataProcessor(object):
 
         Parameters
         ----------
-        feature_data : various
-            Feature data
+        feature_data : FeatureContainer
+            Feature data.
 
         Returns
         -------
@@ -457,10 +483,8 @@ class DataProcessor(object):
         if hasattr(feature_data, 'feat'):
             feature_data = feature_data.feat[0]
 
-        # Go through the feature processing chain
-        for processing_step in self.feature_processing_chain:
-            if processing_step is not None and hasattr(processing_step, 'process'):
-                feature_data = processing_step.process(feature_data)
+        # Do processing
+        feature_data = self.feature_processing_chain.process(feature_data)
 
         return feature_data
 
@@ -504,9 +528,7 @@ class DataProcessor(object):
 
         # Go through the data processing chain
         if self.data_processing_chain:
-            for processing_step in self.data_processing_chain:
-                if processing_step is not None and hasattr(processing_step, 'process'):
-                    data = processing_step.process(data)
+            data = self.data_processing_chain.process(data)
 
             if not metadata:
                 data = numpy.expand_dims(data, axis=1)
@@ -529,12 +551,57 @@ class DataProcessor(object):
 
         """
 
+        self.feature_processing_chain.call_method(
+            method_name=method_name,
+            parameters=parameters
+        )
+
+        self.data_processing_chain.call_method(
+            method_name=method_name,
+            parameters=parameters
+        )
+
+
+class ProcessingChain(list):
+    def process(self, data):
+        """Process the data with processing chain
+
+        Parameters
+        ----------
+        data : FeatureContainer or numpy.ndarray
+            Data
+
+        Returns
+        -------
+        data : numpy.ndarray
+            Processed data
+
+        """
+
+        for step in self:
+            if step is not None and hasattr(step, 'process'):
+                data = step.process(data)
+
+        return data
+
+    def call_method(self, method_name, parameters=None):
+        """Call class method in the processing chain items
+
+        Processing chain is gone through and given method is
+        called to processing items having such method.
+
+        Parameters
+        ----------
+        method_name : str
+            Method name to call
+        parameters : dict
+            Parameters for the method
+            Default value {}
+
+        """
+
         parameters = parameters or {}
 
-        for item in self.feature_processing_chain:
-            if hasattr(item, method_name):
-                getattr(item, method_name)(**parameters)
-
-        for item in self.data_processing_chain:
+        for item in self:
             if hasattr(item, method_name):
                 getattr(item, method_name)(**parameters)
