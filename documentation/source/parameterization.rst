@@ -130,24 +130,38 @@ Example section:
         log_system_parameters: false
         log_system_progress: false
 
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| Field name                     | Value type   | Description                                                          |
-+================================+==============+======================================================================+
-| overwrite                      | bool         | Overwrite all pre-calculated data.                                   |
-|                                |              | Enable this when changing system implementation.                     |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| challenge_submission_mode      | bool         | Save results to path location defined in ``path->challenge_results``.|
-|                                |              | Use this mode when preparing a submission to the challenge.          |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| print_system_progress          | bool         | Print the system progress into console using carriage return.        |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| use_ascii_progress_bar         | bool         | Force ASCII progres bars, use this if your console does not support  |
-|                                |              | UTF-8 character set. Under Windows this is set automatically True.   |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| log_system_parameters          | bool         | Save system parameters into system log file.                         |
-+--------------------------------+--------------+----------------------------------------------------------------------+
-| log_system_progress            | bool         | Save system progress into system log file.                           |
-+--------------------------------+--------------+----------------------------------------------------------------------+
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| Field name                     | Value type            | Description                                                          |
++================================+=======================+======================================================================+
+| overwrite                      | bool                  | Overwrite all pre-calculated data.                                   |
+|                                |                       | Enable this when changing system implementation.                     |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| challenge_submission_mode      | bool                  | Save results to path location defined in ``path->challenge_results``.|
+|                                |                       | Use this mode when preparing a submission to the challenge.          |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| print_system_progress          | bool                  | Print the system progress into console using carriage return.        |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| use_ascii_progress_bar         | bool                  | Force ASCII progres bars, use this if your console does not support  |
+|                                |                       | UTF-8 character set. Under Windows this is set automatically True.   |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| log_system_parameters          | bool                  | Save system parameters into system log file.                         |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| log_system_progress            | bool                  | Save system progress into system log file.                           |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| scene_handling                 | string                | Scene handling type, can be used in sound event detection            |
+|                                | {scene-dependent |    | application to control how audio material from                       |
+|                                |  scene-independent}   | multiple acoustic scene classes are handled.                         |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| active_scenes                  | list                  | List of active scene classes in the processing. This can be used     |
+|                                |                       | to speed up processing when debugging.                               |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| event_handling                 | string                | Event handling type, can be used in binary sound event detection     |
+|                                | {event-dependent |    | application to control how audio material from                       |
+|                                |  event-independent}   | multiple event classes are handled.                                  |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
+| active_events                  | list                  | List of active event classes in the processing. This can be used     |
+|                                |                       | to speed up processing when debugging.                               |
++--------------------------------+-----------------------+----------------------------------------------------------------------+
 
 Path
 ^^^^
@@ -642,7 +656,8 @@ This learner is using Keras neural network implementation. See `documentation <h
 | **mlp->training->callbacks**, list of parameter sets in following format. Callback called during the model training.         |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
 | type                           | string       | Callback name, use standard keras callbacks                                  |
-|                                |              | `callbacks <https://keras.io/callbacks/>`_.                                  |
+|                                |              | `callbacks <https://keras.io/callbacks/>`_ or ones defined by                |
+|                                |              | dcase_framework (Plotter, Stopper, Stasher).                                 |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
 | parameters                     | dict         | Place inside this all parameters for the callback.                           |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
@@ -681,6 +696,339 @@ This learner is using Keras neural network implementation. See `documentation <h
 +--------------------------------+--------------+------------------------------------------------------------------------------+
 | parameters                     | dict         | Place inside this all parameters for the optimizer.                          |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
+
+**Keras sequential**
+
+Example section for Keras sequential learner:
+
+.. code-block:: yaml
+
+    learner_method_parameters:
+      keras_seq:
+        seed: 0
+        keras:
+          backend: theano
+          backend_parameters:
+            floatX: float32
+            device: gpu
+            fastmath: true
+            optimizer: fast_run
+            openmp: true
+            threads: 4
+            CNR: true
+
+        input_sequencer:
+          enable: false
+
+        temporal_shifter:
+          enable: false
+
+        generator:
+          enable: false
+          method: feature_generator
+          max_q_size: 1
+          workers: 1
+          parameters:
+            buffer_size: 10
+
+        validation:
+          enable: true
+          setup_source: generated_event_file_balanced
+          validation_amount: 0.10
+          seed: 123
+
+        training:
+          epochs: 200
+          batch_size: 256
+          shuffle: true
+
+          epoch_processing:
+            enable: true
+
+            external_metrics:
+              enable: true
+              evaluation_interval: 1
+              metrics:
+                - name: sed_eval.event_based.overall.error_rate.error_rate
+                  label: ER
+                  parameters:
+                    evaluate_onset: true
+                    evaluate_offset: false
+                    t_collar: 0.5
+                    percentage_of_length: 0.5
+                - name: sed_eval.event_based.overall.f_measure.f_measure
+                  label: F1
+                  parameters:
+                    evaluate_onset: true
+                    evaluate_offset: false
+                    t_collar: 0.5
+                    percentage_of_length: 0.5
+
+          callbacks:
+            - type: Plotter
+              parameters:
+                interactive: true
+                save: false
+                output_format: pdf
+                focus_span: 10
+                plotting_rate: 5
+
+            - type: Stopper
+              parameters:
+                monitor: sed_eval.event_based.overall.error_rate.error_rate
+                initial_delay: 20
+                min_delta: 0.01
+                patience: 10
+
+            - type: Stasher
+              parameters:
+                monitor: sed_eval.event_based.overall.error_rate.error_rate
+                initial_delay: 20
+
+        model:
+          constants:
+            LAYER_SIZE: 50
+            LAYER_INIT: uniform
+            LAYER_ACTIVATION: relu
+            DROPOUT: 0.2
+
+          config:
+            - class_name: Dense
+              config:
+                units: LAYER_SIZE
+                kernel_initializer: LAYER_INIT
+                activation: LAYER_ACTIVATION
+
+            - class_name: Dropout
+              config:
+                rate: DROPOUT
+
+            - class_name: Dense
+              config:
+                units: LAYER_SIZE
+                kernel_initializer: LAYER_INIT
+                activation: LAYER_ACTIVATION
+
+            - class_name: Dropout
+              config:
+                rate: DROPOUT
+
+            - class_name: Dense
+              config:
+                units: CLASS_COUNT
+                kernel_initializer: LAYER_INIT
+                activation: sigmoid
+
+          loss: binary_crossentropy
+
+          optimizer:
+            type: Adam
+
+          metrics:
+            - binary_accuracy
+
+This learner is using Keras neural network implementation. See `documentation <https://keras.io/>`_.
+
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| Field name                     | Value type   | Description                                                                  |
++================================+==============+==============================================================================+
+| seed                           | int          | Randomization seed. Use this to make learner behaviour                       |
+|                                |              | deterministic.                                                               |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->keras**                                                                                                         |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| backend                        | string       | Keras backend selector.                                                      |
+|                                | {theano |    |                                                                              |
+|                                | tensorflow}  |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->keras->backend_parameters**                                                                                     |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| device                         | string       | Device selector. ``cpu`` is best option to produce deterministic             |
+|                                | {cpu | gpu}  | results. All baseline results are calculated in cpu mode.                    |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| floatX                         | string       | Float number type. Usually float32 used since that is compatible             |
+|                                |              | with GPUs. Valid only for ``theano`` backend.                                |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| fastmath                       | bool         | If true, will enable fastmath mode when CUDA code is compiled.               |
+|                                |              | Div and sqrt are faster, but precision is lower. This can cause              |
+|                                |              | numerical issues some in cases. Valid only for ``theano`` backend            |
+|                                |              | and GPU mode.                                                                |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| optimizer                      | string       | Compilation mode for theano functions.                                       |
+|                                | {fast_run |  |                                                                              |
+|                                | merge |      |                                                                              |
+|                                | fast_compile |                                                                              |
+|                                | None}        |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| openmp                         | bool         | If true, Theano will use multiple cores, see                                 |
+|                                |              | `more <http://deeplearning.net/software/theano/tutorial/multi_cores.html>`_. |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| threads                        | int          | Number of threads used. Use one to disable threading.                        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| CNR                            | bool         | Conditional numerical reproducibility for MKL BLAS. When set to True,        |
+|                                |              | compatible mode used.                                                        |
+|                                |              | See `more <https://software.intel.com/en-us/node/528408>`_.                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->input_sequencer**, transforming input data into sequences                                                       |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, input sequencing is used during the training procedure.             |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| frames                         | int          | Frames per sequence                                                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| hop                            | int          | Hop (in frames) between sequences                                            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| padding                        | bool         | Replicating data when sequence is not full                                   |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->temporal_shifter**, shift data on temporal axis for each epoch                                                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, temporal data shifting per epoch is applied during the training     |
+|                                |              | procedure.                                                                   |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| border                         | string       | How border is handled:                                                       |
+|                                |              |                                                                              |
+|                                | {roll |      | - ``roll``, data matrix is rolled (data moved from end to the begin)         |
+|                                | push }       | - ``push``, unused material is not used.                                     |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| step                           | int          | How much sequence start is shifted per epoch                                 |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| max                            | int          | Maximum shift, after which shift is returned to zero.                        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->generator**, data generator to read training data directly from disk during the training procedure.             |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, data generator is used to provide training material.                |
+|                                |              |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| method                         | string       | Generator method:                                                            |
+|                                | {feature}    | - feature, feature based generator                                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| max_q_size                     | int          | Maximum size for the generator queue                                         |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| workers                        | int          | Maximum number of generator processes to start up.                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->generator->parameters**                                                                                         |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| buffer_size                    | int          | Size of internal buffer. How many items (files) will be stored in the        |
+|                                |              | memory.                                                                      |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->validation**                                                                                                    |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, validation set is used during the training procedure.               |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| setup_source                   | string       | Validation setup source. Valid sources:                                      |
+|                                |              |                                                                              |
+|                                |              | - ``generated_scene_balanced``, balanced based on scene labels,              |
+|                                |              |   used for Task1.                                                            |
+|                                |              | - ``generated_event_file_balanced``, balanced based on events, used          |
+|                                |              |   for Task2.                                                                 |
+|                                |              | - ``generated_scene_location_event_balanced``, balanced based on             |
+|                                |              |   scene, location and events. Used for Task3.                                |
+|                                |              |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| validation_amount              | float        | Percentage of training data selected for validation. Use value               |
+|                                |              | between 0.0-1.0.                                                             |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| seed                           | int          | Validation set generation seed. If Null, learner seed will be used.          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training**                                                                                                      |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| epochs                         | int          | Number of epochs.                                                            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| batch_size                     | int          | Batch size.                                                                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| shuffle                        | bool         | If true, training samples are shuffled at each epoch.                        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->epoch_processing**, epoch by epoch processing outside Keras.                                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, training is done in smaller segments to allow evaluation of         |
+|                                |              | external metrics for validation data.                                        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->epoch_processing->external_metrics**                                                                  |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| enable                         | bool         | If true, external metrics are evaluated.                                     |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| evaluation_interval            | int          | Evaluation is done every Nth epoch.                                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->epoch_processing->external_metrics->metrics**, list of dicts. Defining external metrics.              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| label                          | string       | Metric label, use unique label.                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| evaluator                      | string       | Evaluaor names:                                                              |
+|                                |              |                                                                              |
+|                                |              | - ``sed_eval.scene``, acoustic scene classification metrics                  |
+|                                |              | - ``sed_eval.segment_based``, segment based sound event detection metrics    |
+|                                |              | - ``sed_eval.event_based``, event based sound event detection metrics        |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| name                           | string       | Metric name, dict path to fetch metric value:                                |
+|                                |              |                                                                              |
+|                                |              | - ``overall.accuracy``, accuracy                                             |
+|                                |              | - ``overall.f_measure.f_measure``, F1                                        |
+|                                |              | - ``overall.error_rate.error_rate``, ER                                      |
+|                                |              |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| parameters                     | dict         | Parameters for the evaluator. See                                            |
+|                                |              | `sed_eval documentation <http://tut-arg.github.io/sed_eval/>`_.              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->callbacks**, list of parameter sets in following format. Callback called during the model training.   |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| type                           | string       | Callback name, use standard keras callbacks                                  |
+|                                |              | `callbacks <https://keras.io/callbacks/>`_ or ones defined by                |
+|                                |              | dcase_framework (Plotter, Stopper, Stasher).                                 |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| parameters                     | dict         | Place inside this all parameters for the callback.                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->model->constants**, Defined constant to be used in while defining network topology.                   |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->model->config**, list of dicts. Defining network topology.                                            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| class_name                     | string       | Layer name. Use standard keras                                               |
+|                                |              | `core layers <https://keras.io/layers/core/>`_,                              |
+|                                |              | `convolutional layers <https://keras.io/layers/convolutional/>`_,            |
+|                                |              | `pooling layers <https://keras.io/layers/pooling/>`_,                        |
+|                                |              | `recurrent layers <https://keras.io/layers/recurrent/>`_, or                 |
+|                                |              | `normalization layers <https://keras.io/layers/normalization/>`_.            |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| config                         | dict         | Place inside this all parameters for the layer.                              |
+|                                |              | See Keras documentation. Magic parameter values:                             |
+|                                |              |                                                                              |
+|                                |              | - ``FEATURE_VECTOR_LENGTH``, feature vector length.                          |
+|                                |              |   This automatically inserted for input layer.                               |
+|                                |              | - ``CLASS_COUNT``, number of classes.                                        |
+|                                |              | - ``INPUT_SEQUENCE_LENGTH``, input sequence length                           |
+|                                |              |                                                                              |
+|                                |              | Addition constants defined in keras_seq->training->model->constants          |
+|                                |              | can be used.                                                                 |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| input_shape                    | list of      | List of integers which is converted into tuple before giving to Keras layer. |
+|                                | ints         |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| kernel_size                    | list of      | List of integers which is converted into tuple before giving to Keras layer. |
+|                                | ints         |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| pool_size                      | list of      | List of integers which is converted into tuple before giving to Keras layer. |
+|                                | ints         |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| dims                           | list of      | List of integers which is converted into tuple before giving to Keras layer. |
+|                                | ints         |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| target_shape                   | list of      | List of integers which is converted into tuple before giving to Keras layer. |
+|                                | ints         |                                                                              |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->model**                                                                                               |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| loss                           | string       | Keras loss function name. See                                                |
+|                                |              | `Keras documentation <https://keras.io/losses/>`_.                           |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| metrics                        | list of      | Keras metric function name. See                                              |
+|                                | strings      | `Keras documentation <https://keras.io/metrics/>`_.                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| **keras_seq->training->model->optimizer**                                                                                    |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| type                           | string       | Keras optimizer name. See                                                    |
+|                                |              | `Keras documentation <https://keras.io/optimizers/>`_.                       |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+| parameters                     | dict         | Place inside this all parameters for the optimizer.                          |
++--------------------------------+--------------+------------------------------------------------------------------------------+
+
 
 **GMM**
 

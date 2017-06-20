@@ -16,7 +16,7 @@ dcase_framework.datasets.AudioTaggingDataset
       ~AudioTaggingDataset.__init__
       ~AudioTaggingDataset.absolute_to_relative
       ~AudioTaggingDataset.check_filelist
-      ~AudioTaggingDataset.download_packages
+      ~AudioTaggingDataset.download
       ~AudioTaggingDataset.error_meta_count
       ~AudioTaggingDataset.eval
       ~AudioTaggingDataset.event_labels

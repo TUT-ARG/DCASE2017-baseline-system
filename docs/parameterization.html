@@ -342,6 +342,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
 </ul>
@@ -355,6 +356,7 @@
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Meta data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="metadata.html#metadataitem">MetaDataItem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.id.html">dcase_framework.metadata.MetaDataItem.id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
@@ -458,23 +460,46 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="learners.html">Learners</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="learners.html#sceneclassifier">SceneClassifier</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#sceneclassifiergmm">SceneClassifierGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#sceneclassifiermlp">SceneClassifierMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#sceneclassifierkerassequential">SceneClassifierKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.html">dcase_framework.learners.SceneClassifierKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html">dcase_framework.learners.SceneClassifierKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html">dcase_framework.learners.SceneClassifierKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="learners.html#eventdetector">EventDetector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#eventdetectorgmm">EventDetectorGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#eventdetectormlp">EventDetectorMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#eventdetectorkerassequential">EventDetectorKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.html">dcase_framework.learners.EventDetectorKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html">dcase_framework.learners.EventDetectorKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html">dcase_framework.learners.EventDetectorKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="learners.html#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
@@ -489,6 +514,95 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recognizers.html">Recognizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#baserecognizer">BaseRecognizer</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#scenerecognizer">SceneRecognizer</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#eventrecognizer">EventRecognizer</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.html#datasequencer">DataSequencer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.html">dcase_framework.data.DataSequencer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.process.html">dcase_framework.data.DataSequencer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.increase_shifting.html">dcase_framework.data.DataSequencer.increase_shifting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dataprocessor">DataProcessor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.html">dcase_framework.data.DataProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.load.html">dcase_framework.data.DataProcessor.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process.html">dcase_framework.data.DataProcessor.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_features.html">dcase_framework.data.DataProcessor.process_features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_activity_data.html">dcase_framework.data.DataProcessor.process_activity_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_data.html">dcase_framework.data.DataProcessor.process_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.call_method.html">dcase_framework.data.DataProcessor.call_method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#databuffer">DataBuffer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.html">dcase_framework.data.DataBuffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.count.html">dcase_framework.data.DataBuffer.count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.full.html">dcase_framework.data.DataBuffer.full</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.key_exists.html">dcase_framework.data.DataBuffer.key_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.set.html">dcase_framework.data.DataBuffer.set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.get.html">dcase_framework.data.DataBuffer.get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.clear.html">dcase_framework.data.DataBuffer.clear</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keras_utils.html">Keras utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#kerasmixin">KerasMixin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_model.html">dcase_framework.keras_utils.KerasMixin.create_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_callback_list.html">dcase_framework.keras_utils.KerasMixin.create_callback_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators.html">dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.process_data.html">dcase_framework.keras_utils.KerasMixin.process_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.process_activity.html">dcase_framework.keras_utils.KerasMixin.process_activity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.keras_model_exists.html">dcase_framework.keras_utils.KerasMixin.keras_model_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.log_model_summary.html">dcase_framework.keras_utils.KerasMixin.log_model_summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.plot_model.html">dcase_framework.keras_utils.KerasMixin.plot_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.get_processing_interval.html">dcase_framework.keras_utils.KerasMixin.get_processing_interval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#basecallback">BaseCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseCallback.html">dcase_framework.keras_utils.BaseCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#progressloggercallback">ProgressLoggerCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.ProgressLoggerCallback.html">dcase_framework.keras_utils.ProgressLoggerCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#progressplottercallback">ProgressPlotterCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.ProgressPlotterCallback.html">dcase_framework.keras_utils.ProgressPlotterCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#stoppercallback">StopperCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.StopperCallback.html">dcase_framework.keras_utils.StopperCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#stashercallback">StasherCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.StasherCallback.html">dcase_framework.keras_utils.StasherCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#basedatagenerator">BaseDataGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.html">dcase_framework.keras_utils.BaseDataGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.input_size.html">dcase_framework.keras_utils.BaseDataGenerator.input_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.data_size.html">dcase_framework.keras_utils.BaseDataGenerator.data_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.steps_count.html">dcase_framework.keras_utils.BaseDataGenerator.steps_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.info.html">dcase_framework.keras_utils.BaseDataGenerator.info</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#featuregenerator">FeatureGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.FeatureGenerator.html">dcase_framework.keras_utils.FeatureGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.FeatureGenerator.generator.html">dcase_framework.keras_utils.FeatureGenerator.generator</a></li>
 </ul>
 </li>
 </ul>
@@ -529,6 +643,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#simplemathstringevaluator">SimpleMathStringEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SimpleMathStringEvaluator.html">dcase_framework.utils.SimpleMathStringEvaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SimpleMathStringEvaluator.eval.html">dcase_framework.utils.SimpleMathStringEvaluator.eval</a></li>
 </ul>
 </li>
 </ul>
@@ -711,9 +830,9 @@ By using this approach, the system will compute features, models and results onl
 </div>
 <table border="1" class="docutils">
 <colgroup>
-<col width="28%" />
-<col width="12%" />
-<col width="60%" />
+<col width="26%" />
+<col width="18%" />
+<col width="56%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Field name</th>
@@ -748,6 +867,36 @@ UTF-8 character set. Under Windows this is set automatically True.</td>
 <tr class="row-odd"><td>log_system_progress</td>
 <td>bool</td>
 <td>Save system progress into system log file.</td>
+</tr>
+<tr class="row-even"><td>scene_handling</td>
+<td><p class="first">string
+{scene-dependent |</p>
+<blockquote class="last">
+<div>scene-independent}</div></blockquote>
+</td>
+<td>Scene handling type, can be used in sound event detection
+application to control how audio material from
+multiple acoustic scene classes are handled.</td>
+</tr>
+<tr class="row-odd"><td>active_scenes</td>
+<td>list</td>
+<td>List of active scene classes in the processing. This can be used
+to speed up processing when debugging.</td>
+</tr>
+<tr class="row-even"><td>event_handling</td>
+<td><p class="first">string
+{event-dependent |</p>
+<blockquote class="last">
+<div>event-independent}</div></blockquote>
+</td>
+<td>Event handling type, can be used in binary sound event detection
+application to control how audio material from
+multiple event classes are handled.</td>
+</tr>
+<tr class="row-odd"><td>active_events</td>
+<td>list</td>
+<td>List of active event classes in the processing. This can be used
+to speed up processing when debugging.</td>
 </tr>
 </tbody>
 </table>
@@ -1444,7 +1593,8 @@ between 0.0-1.0.</td>
 <tr class="row-odd"><td>type</td>
 <td>string</td>
 <td>Callback name, use standard keras callbacks
-<a class="reference external" href="https://keras.io/callbacks/">callbacks</a>.</td>
+<a class="reference external" href="https://keras.io/callbacks/">callbacks</a> or ones defined by
+dcase_framework (Plotter, Stopper, Stasher).</td>
 </tr>
 <tr class="row-even"><td>parameters</td>
 <td>dict</td>
@@ -1491,6 +1641,455 @@ strings</td>
 <a class="reference external" href="https://keras.io/metrics/">Keras documentation</a>.</td>
 </tr>
 <tr class="row-even"><td colspan="3"><strong>mlp-&gt;training-&gt;model-&gt;optimizer</strong></td>
+</tr>
+<tr class="row-odd"><td>type</td>
+<td>string</td>
+<td>Keras optimizer name. See
+<a class="reference external" href="https://keras.io/optimizers/">Keras documentation</a>.</td>
+</tr>
+<tr class="row-even"><td>parameters</td>
+<td>dict</td>
+<td>Place inside this all parameters for the optimizer.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Keras sequential</strong></p>
+<p>Example section for Keras sequential learner:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">learner_method_parameters</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">keras_seq</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">seed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">keras</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">backend</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">theano</span>
+      <span class="l l-Scalar l-Scalar-Plain">backend_parameters</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">floatX</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float32</span>
+        <span class="l l-Scalar l-Scalar-Plain">device</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gpu</span>
+        <span class="l l-Scalar l-Scalar-Plain">fastmath</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">optimizer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fast_run</span>
+        <span class="l l-Scalar l-Scalar-Plain">openmp</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="l l-Scalar l-Scalar-Plain">threads</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="l l-Scalar l-Scalar-Plain">CNR</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">input_sequencer</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">temporal_shifter</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">generator</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="l l-Scalar l-Scalar-Plain">method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">feature_generator</span>
+      <span class="l l-Scalar l-Scalar-Plain">max_q_size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+      <span class="l l-Scalar l-Scalar-Plain">workers</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+      <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">buffer_size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">validation</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="l l-Scalar l-Scalar-Plain">setup_source</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">generated_event_file_balanced</span>
+      <span class="l l-Scalar l-Scalar-Plain">validation_amount</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.10</span>
+      <span class="l l-Scalar l-Scalar-Plain">seed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">123</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">training</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">epochs</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">200</span>
+      <span class="l l-Scalar l-Scalar-Plain">batch_size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">256</span>
+      <span class="l l-Scalar l-Scalar-Plain">shuffle</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+      <span class="l l-Scalar l-Scalar-Plain">epoch_processing</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+        <span class="l l-Scalar l-Scalar-Plain">external_metrics</span><span class="p p-Indicator">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">enable</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+          <span class="l l-Scalar l-Scalar-Plain">evaluation_interval</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+          <span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="p p-Indicator">:</span>
+            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sed_eval.event_based.overall.error_rate.error_rate</span>
+              <span class="l l-Scalar l-Scalar-Plain">label</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ER</span>
+              <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">evaluate_onset</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+                <span class="l l-Scalar l-Scalar-Plain">evaluate_offset</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+                <span class="l l-Scalar l-Scalar-Plain">t_collar</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+                <span class="l l-Scalar l-Scalar-Plain">percentage_of_length</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+            <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sed_eval.event_based.overall.f_measure.f_measure</span>
+              <span class="l l-Scalar l-Scalar-Plain">label</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">F1</span>
+              <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+                <span class="l l-Scalar l-Scalar-Plain">evaluate_onset</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+                <span class="l l-Scalar l-Scalar-Plain">evaluate_offset</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+                <span class="l l-Scalar l-Scalar-Plain">t_collar</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+                <span class="l l-Scalar l-Scalar-Plain">percentage_of_length</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+
+      <span class="l l-Scalar l-Scalar-Plain">callbacks</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Plotter</span>
+          <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">interactive</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="l l-Scalar l-Scalar-Plain">save</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+            <span class="l l-Scalar l-Scalar-Plain">output_format</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">pdf</span>
+            <span class="l l-Scalar l-Scalar-Plain">focus_span</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+            <span class="l l-Scalar l-Scalar-Plain">plotting_rate</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Stopper</span>
+          <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">monitor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sed_eval.event_based.overall.error_rate.error_rate</span>
+            <span class="l l-Scalar l-Scalar-Plain">initial_delay</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+            <span class="l l-Scalar l-Scalar-Plain">min_delta</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.01</span>
+            <span class="l l-Scalar l-Scalar-Plain">patience</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Stasher</span>
+          <span class="l l-Scalar l-Scalar-Plain">parameters</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">monitor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sed_eval.event_based.overall.error_rate.error_rate</span>
+            <span class="l l-Scalar l-Scalar-Plain">initial_delay</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+
+    <span class="l l-Scalar l-Scalar-Plain">model</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">constants</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">LAYER_SIZE</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">50</span>
+        <span class="l l-Scalar l-Scalar-Plain">LAYER_INIT</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">uniform</span>
+        <span class="l l-Scalar l-Scalar-Plain">LAYER_ACTIVATION</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">relu</span>
+        <span class="l l-Scalar l-Scalar-Plain">DROPOUT</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.2</span>
+
+      <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dense</span>
+          <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_SIZE</span>
+            <span class="l l-Scalar l-Scalar-Plain">kernel_initializer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_INIT</span>
+            <span class="l l-Scalar l-Scalar-Plain">activation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_ACTIVATION</span>
+
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dropout</span>
+          <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">rate</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">DROPOUT</span>
+
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dense</span>
+          <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_SIZE</span>
+            <span class="l l-Scalar l-Scalar-Plain">kernel_initializer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_INIT</span>
+            <span class="l l-Scalar l-Scalar-Plain">activation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_ACTIVATION</span>
+
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dropout</span>
+          <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">rate</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">DROPOUT</span>
+
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Dense</span>
+          <span class="l l-Scalar l-Scalar-Plain">config</span><span class="p p-Indicator">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">units</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">CLASS_COUNT</span>
+            <span class="l l-Scalar l-Scalar-Plain">kernel_initializer</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">LAYER_INIT</span>
+            <span class="l l-Scalar l-Scalar-Plain">activation</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sigmoid</span>
+
+      <span class="l l-Scalar l-Scalar-Plain">loss</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_crossentropy</span>
+
+      <span class="l l-Scalar l-Scalar-Plain">optimizer</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Adam</span>
+
+      <span class="l l-Scalar l-Scalar-Plain">metrics</span><span class="p p-Indicator">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">binary_accuracy</span>
+</pre></div>
+</div>
+<p>This learner is using Keras neural network implementation. See <a class="reference external" href="https://keras.io/">documentation</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="11%" />
+<col width="63%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Field name</th>
+<th class="head">Value type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>seed</td>
+<td>int</td>
+<td>Randomization seed. Use this to make learner behaviour
+deterministic.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;keras</strong></td>
+</tr>
+<tr class="row-even"><td>backend</td>
+<td>string
+{theano |
+tensorflow}</td>
+<td>Keras backend selector.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;keras-&gt;backend_parameters</strong></td>
+</tr>
+<tr class="row-even"><td>device</td>
+<td>string
+{cpu | gpu}</td>
+<td>Device selector. <code class="docutils literal"><span class="pre">cpu</span></code> is best option to produce deterministic
+results. All baseline results are calculated in cpu mode.</td>
+</tr>
+<tr class="row-odd"><td>floatX</td>
+<td>string</td>
+<td>Float number type. Usually float32 used since that is compatible
+with GPUs. Valid only for <code class="docutils literal"><span class="pre">theano</span></code> backend.</td>
+</tr>
+<tr class="row-even"><td>fastmath</td>
+<td>bool</td>
+<td>If true, will enable fastmath mode when CUDA code is compiled.
+Div and sqrt are faster, but precision is lower. This can cause
+numerical issues some in cases. Valid only for <code class="docutils literal"><span class="pre">theano</span></code> backend
+and GPU mode.</td>
+</tr>
+<tr class="row-odd"><td>optimizer</td>
+<td>string
+{fast_run |
+merge |
+fast_compile
+None}</td>
+<td>Compilation mode for theano functions.</td>
+</tr>
+<tr class="row-even"><td>openmp</td>
+<td>bool</td>
+<td>If true, Theano will use multiple cores, see
+<a class="reference external" href="http://deeplearning.net/software/theano/tutorial/multi_cores.html">more</a>.</td>
+</tr>
+<tr class="row-odd"><td>threads</td>
+<td>int</td>
+<td>Number of threads used. Use one to disable threading.</td>
+</tr>
+<tr class="row-even"><td>CNR</td>
+<td>bool</td>
+<td>Conditional numerical reproducibility for MKL BLAS. When set to True,
+compatible mode used.
+See <a class="reference external" href="https://software.intel.com/en-us/node/528408">more</a>.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;input_sequencer</strong>, transforming input data into sequences</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>If true, input sequencing is used during the training procedure.</td>
+</tr>
+<tr class="row-odd"><td>frames</td>
+<td>int</td>
+<td>Frames per sequence</td>
+</tr>
+<tr class="row-even"><td>hop</td>
+<td>int</td>
+<td>Hop (in frames) between sequences</td>
+</tr>
+<tr class="row-odd"><td>padding</td>
+<td>bool</td>
+<td>Replicating data when sequence is not full</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>keras_seq-&gt;temporal_shifter</strong>, shift data on temporal axis for each epoch</td>
+</tr>
+<tr class="row-odd"><td>enable</td>
+<td>bool</td>
+<td>If true, temporal data shifting per epoch is applied during the training
+procedure.</td>
+</tr>
+<tr class="row-even"><td>border</td>
+<td><p class="first">string</p>
+<p class="last">{roll |
+push }</p>
+</td>
+<td><p class="first">How border is handled:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">roll</span></code>, data matrix is rolled (data moved from end to the begin)</li>
+<li><code class="docutils literal"><span class="pre">push</span></code>, unused material is not used.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>step</td>
+<td>int</td>
+<td>How much sequence start is shifted per epoch</td>
+</tr>
+<tr class="row-even"><td>max</td>
+<td>int</td>
+<td>Maximum shift, after which shift is returned to zero.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;generator</strong>, data generator to read training data directly from disk during the training procedure.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>If true, data generator is used to provide training material.</td>
+</tr>
+<tr class="row-odd"><td>method</td>
+<td>string
+{feature}</td>
+<td>Generator method:
+- feature, feature based generator</td>
+</tr>
+<tr class="row-even"><td>max_q_size</td>
+<td>int</td>
+<td>Maximum size for the generator queue</td>
+</tr>
+<tr class="row-odd"><td>workers</td>
+<td>int</td>
+<td>Maximum number of generator processes to start up.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>keras_seq-&gt;generator-&gt;parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>buffer_size</td>
+<td>int</td>
+<td>Size of internal buffer. How many items (files) will be stored in the
+memory.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>keras_seq-&gt;validation</strong></td>
+</tr>
+<tr class="row-odd"><td>enable</td>
+<td>bool</td>
+<td>If true, validation set is used during the training procedure.</td>
+</tr>
+<tr class="row-even"><td>setup_source</td>
+<td>string</td>
+<td><p class="first">Validation setup source. Valid sources:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">generated_scene_balanced</span></code>, balanced based on scene labels,
+used for Task1.</li>
+<li><code class="docutils literal"><span class="pre">generated_event_file_balanced</span></code>, balanced based on events, used
+for Task2.</li>
+<li><code class="docutils literal"><span class="pre">generated_scene_location_event_balanced</span></code>, balanced based on
+scene, location and events. Used for Task3.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>validation_amount</td>
+<td>float</td>
+<td>Percentage of training data selected for validation. Use value
+between 0.0-1.0.</td>
+</tr>
+<tr class="row-even"><td>seed</td>
+<td>int</td>
+<td>Validation set generation seed. If Null, learner seed will be used.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;training</strong></td>
+</tr>
+<tr class="row-even"><td>epochs</td>
+<td>int</td>
+<td>Number of epochs.</td>
+</tr>
+<tr class="row-odd"><td>batch_size</td>
+<td>int</td>
+<td>Batch size.</td>
+</tr>
+<tr class="row-even"><td>shuffle</td>
+<td>bool</td>
+<td>If true, training samples are shuffled at each epoch.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;training-&gt;epoch_processing</strong>, epoch by epoch processing outside Keras.</td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>If true, training is done in smaller segments to allow evaluation of
+external metrics for validation data.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;training-&gt;epoch_processing-&gt;external_metrics</strong></td>
+</tr>
+<tr class="row-even"><td>enable</td>
+<td>bool</td>
+<td>If true, external metrics are evaluated.</td>
+</tr>
+<tr class="row-odd"><td>evaluation_interval</td>
+<td>int</td>
+<td>Evaluation is done every Nth epoch.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>keras_seq-&gt;training-&gt;epoch_processing-&gt;external_metrics-&gt;metrics</strong>, list of dicts. Defining external metrics.</td>
+</tr>
+<tr class="row-odd"><td>label</td>
+<td>string</td>
+<td>Metric label, use unique label.</td>
+</tr>
+<tr class="row-even"><td>evaluator</td>
+<td>string</td>
+<td><p class="first">Evaluaor names:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">sed_eval.scene</span></code>, acoustic scene classification metrics</li>
+<li><code class="docutils literal"><span class="pre">sed_eval.segment_based</span></code>, segment based sound event detection metrics</li>
+<li><code class="docutils literal"><span class="pre">sed_eval.event_based</span></code>, event based sound event detection metrics</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>string</td>
+<td><p class="first">Metric name, dict path to fetch metric value:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">overall.accuracy</span></code>, accuracy</li>
+<li><code class="docutils literal"><span class="pre">overall.f_measure.f_measure</span></code>, F1</li>
+<li><code class="docutils literal"><span class="pre">overall.error_rate.error_rate</span></code>, ER</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>parameters</td>
+<td>dict</td>
+<td>Parameters for the evaluator. See
+<a class="reference external" href="http://tut-arg.github.io/sed_eval/">sed_eval documentation</a>.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;training-&gt;callbacks</strong>, list of parameter sets in following format. Callback called during the model training.</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>string</td>
+<td>Callback name, use standard keras callbacks
+<a class="reference external" href="https://keras.io/callbacks/">callbacks</a> or ones defined by
+dcase_framework (Plotter, Stopper, Stasher).</td>
+</tr>
+<tr class="row-odd"><td>parameters</td>
+<td>dict</td>
+<td>Place inside this all parameters for the callback.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>keras_seq-&gt;training-&gt;model-&gt;constants</strong>, Defined constant to be used in while defining network topology.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;training-&gt;model-&gt;config</strong>, list of dicts. Defining network topology.</td>
+</tr>
+<tr class="row-even"><td>class_name</td>
+<td>string</td>
+<td>Layer name. Use standard keras
+<a class="reference external" href="https://keras.io/layers/core/">core layers</a>,
+<a class="reference external" href="https://keras.io/layers/convolutional/">convolutional layers</a>,
+<a class="reference external" href="https://keras.io/layers/pooling/">pooling layers</a>,
+<a class="reference external" href="https://keras.io/layers/recurrent/">recurrent layers</a>, or
+<a class="reference external" href="https://keras.io/layers/normalization/">normalization layers</a>.</td>
+</tr>
+<tr class="row-odd"><td>config</td>
+<td>dict</td>
+<td><p class="first">Place inside this all parameters for the layer.
+See Keras documentation. Magic parameter values:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">FEATURE_VECTOR_LENGTH</span></code>, feature vector length.
+This automatically inserted for input layer.</li>
+<li><code class="docutils literal"><span class="pre">CLASS_COUNT</span></code>, number of classes.</li>
+<li><code class="docutils literal"><span class="pre">INPUT_SEQUENCE_LENGTH</span></code>, input sequence length</li>
+</ul>
+<p class="last">Addition constants defined in keras_seq-&gt;training-&gt;model-&gt;constants
+can be used.</p>
+</td>
+</tr>
+<tr class="row-even"><td>input_shape</td>
+<td>list of
+ints</td>
+<td>List of integers which is converted into tuple before giving to Keras layer.</td>
+</tr>
+<tr class="row-odd"><td>kernel_size</td>
+<td>list of
+ints</td>
+<td>List of integers which is converted into tuple before giving to Keras layer.</td>
+</tr>
+<tr class="row-even"><td>pool_size</td>
+<td>list of
+ints</td>
+<td>List of integers which is converted into tuple before giving to Keras layer.</td>
+</tr>
+<tr class="row-odd"><td>dims</td>
+<td>list of
+ints</td>
+<td>List of integers which is converted into tuple before giving to Keras layer.</td>
+</tr>
+<tr class="row-even"><td>target_shape</td>
+<td>list of
+ints</td>
+<td>List of integers which is converted into tuple before giving to Keras layer.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>keras_seq-&gt;training-&gt;model</strong></td>
+</tr>
+<tr class="row-even"><td>loss</td>
+<td>string</td>
+<td>Keras loss function name. See
+<a class="reference external" href="https://keras.io/losses/">Keras documentation</a>.</td>
+</tr>
+<tr class="row-odd"><td>metrics</td>
+<td>list of
+strings</td>
+<td>Keras metric function name. See
+<a class="reference external" href="https://keras.io/metrics/">Keras documentation</a>.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>keras_seq-&gt;training-&gt;model-&gt;optimizer</strong></td>
 </tr>
 <tr class="row-odd"><td>type</td>
 <td>string</td>

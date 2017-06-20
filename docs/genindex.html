@@ -341,6 +341,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
 </ul>
@@ -354,6 +355,7 @@
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Meta data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="metadata.html#metadataitem">MetaDataItem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.id.html">dcase_framework.metadata.MetaDataItem.id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
@@ -457,23 +459,46 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="learners.html">Learners</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="learners.html#sceneclassifier">SceneClassifier</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#sceneclassifiergmm">SceneClassifierGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#sceneclassifiermlp">SceneClassifierMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#sceneclassifierkerassequential">SceneClassifierKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.html">dcase_framework.learners.SceneClassifierKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html">dcase_framework.learners.SceneClassifierKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html">dcase_framework.learners.SceneClassifierKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="learners.html#eventdetector">EventDetector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#eventdetectorgmm">EventDetectorGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#eventdetectormlp">EventDetectorMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="learners.html#eventdetectorkerassequential">EventDetectorKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.html">dcase_framework.learners.EventDetectorKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html">dcase_framework.learners.EventDetectorKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html">dcase_framework.learners.EventDetectorKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="learners.html#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
@@ -488,6 +513,109 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recognizers.html">Recognizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#scenerecognizer">SceneRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.SceneRecognizer.html">dcase_framework.recognizers.SceneRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.SceneRecognizer.process.html">dcase_framework.recognizers.SceneRecognizer.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#eventrecognizer">EventRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.EventRecognizer.html">dcase_framework.recognizers.EventRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.EventRecognizer.process.html">dcase_framework.recognizers.EventRecognizer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.EventRecognizer.process_ratio.html">dcase_framework.recognizers.EventRecognizer.process_ratio</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#baserecognizer">BaseRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.html">dcase_framework.recognizers.BaseRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions.html">dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.process_activity.html">dcase_framework.recognizers.BaseRecognizer.process_activity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.html#datasequencer">DataSequencer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.html">dcase_framework.data.DataSequencer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.process.html">dcase_framework.data.DataSequencer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.increase_shifting.html">dcase_framework.data.DataSequencer.increase_shifting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dataprocessor">DataProcessor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.html">dcase_framework.data.DataProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.load.html">dcase_framework.data.DataProcessor.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process.html">dcase_framework.data.DataProcessor.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_features.html">dcase_framework.data.DataProcessor.process_features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_activity_data.html">dcase_framework.data.DataProcessor.process_activity_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_data.html">dcase_framework.data.DataProcessor.process_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.call_method.html">dcase_framework.data.DataProcessor.call_method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#databuffer">DataBuffer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.html">dcase_framework.data.DataBuffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.count.html">dcase_framework.data.DataBuffer.count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.full.html">dcase_framework.data.DataBuffer.full</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.key_exists.html">dcase_framework.data.DataBuffer.key_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.set.html">dcase_framework.data.DataBuffer.set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.get.html">dcase_framework.data.DataBuffer.get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.clear.html">dcase_framework.data.DataBuffer.clear</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#processingchain">ProcessingChain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.ProcessingChain.html">dcase_framework.data.ProcessingChain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.ProcessingChain.process.html">dcase_framework.data.ProcessingChain.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.ProcessingChain.call_method.html">dcase_framework.data.ProcessingChain.call_method</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keras_utils.html">Keras utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#kerasmixin">KerasMixin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_model.html">dcase_framework.keras_utils.KerasMixin.create_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_callback_list.html">dcase_framework.keras_utils.KerasMixin.create_callback_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators.html">dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.keras_model_exists.html">dcase_framework.keras_utils.KerasMixin.keras_model_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.log_model_summary.html">dcase_framework.keras_utils.KerasMixin.log_model_summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.plot_model.html">dcase_framework.keras_utils.KerasMixin.plot_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.get_processing_interval.html">dcase_framework.keras_utils.KerasMixin.get_processing_interval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#basecallback">BaseCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseCallback.html">dcase_framework.keras_utils.BaseCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#progressloggercallback">ProgressLoggerCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.ProgressLoggerCallback.html">dcase_framework.keras_utils.ProgressLoggerCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#progressplottercallback">ProgressPlotterCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.ProgressPlotterCallback.html">dcase_framework.keras_utils.ProgressPlotterCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#stoppercallback">StopperCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.StopperCallback.html">dcase_framework.keras_utils.StopperCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#stashercallback">StasherCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.StasherCallback.html">dcase_framework.keras_utils.StasherCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#basedatagenerator">BaseDataGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.html">dcase_framework.keras_utils.BaseDataGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.input_size.html">dcase_framework.keras_utils.BaseDataGenerator.input_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.data_size.html">dcase_framework.keras_utils.BaseDataGenerator.data_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.steps_count.html">dcase_framework.keras_utils.BaseDataGenerator.steps_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.info.html">dcase_framework.keras_utils.BaseDataGenerator.info</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#featuregenerator">FeatureGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.FeatureGenerator.html">dcase_framework.keras_utils.FeatureGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.FeatureGenerator.generator.html">dcase_framework.keras_utils.FeatureGenerator.generator</a></li>
 </ul>
 </li>
 </ul>
@@ -528,6 +656,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#simplemathstringevaluator">SimpleMathStringEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SimpleMathStringEvaluator.html">dcase_framework.utils.SimpleMathStringEvaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SimpleMathStringEvaluator.eval.html">dcase_framework.utils.SimpleMathStringEvaluator.eval</a></li>
 </ul>
 </li>
 </ul>
@@ -587,6 +720,7 @@
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -611,6 +745,14 @@
 </li>
         <li><a href="generated/dcase_framework.application_core.SoundEventAppCore.html#dcase_framework.application_core.SoundEventAppCore.__init__">(dcase_framework.application_core.SoundEventAppCore method)</a>
 </li>
+        <li><a href="generated/dcase_framework.data.DataBuffer.html#dcase_framework.data.DataBuffer.__init__">(dcase_framework.data.DataBuffer method)</a>
+</li>
+        <li><a href="generated/dcase_framework.data.DataProcessor.html#dcase_framework.data.DataProcessor.__init__">(dcase_framework.data.DataProcessor method)</a>
+</li>
+        <li><a href="generated/dcase_framework.data.DataSequencer.html#dcase_framework.data.DataSequencer.__init__">(dcase_framework.data.DataSequencer method)</a>
+</li>
+        <li><a href="generated/dcase_framework.data.ProcessingChain.html#dcase_framework.data.ProcessingChain.__init__">(dcase_framework.data.ProcessingChain method)</a>
+</li>
         <li><a href="generated/dcase_framework.datasets.AcousticSceneDataset.html#dcase_framework.datasets.AcousticSceneDataset.__init__">(dcase_framework.datasets.AcousticSceneDataset method)</a>
 </li>
         <li><a href="generated/dcase_framework.datasets.AudioTaggingDataset.html#dcase_framework.datasets.AudioTaggingDataset.__init__">(dcase_framework.datasets.AudioTaggingDataset method)</a>
@@ -630,6 +772,8 @@
         <li><a href="generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html#dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.__init__">(dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet method)</a>
 </li>
         <li><a href="generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html#dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.__init__">(dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet method)</a>
+</li>
+        <li><a href="generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html#dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.__init__">(dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet method)</a>
 </li>
         <li><a href="generated/dcase_framework.features.FeatureAggregator.html#dcase_framework.features.FeatureAggregator.__init__">(dcase_framework.features.FeatureAggregator method)</a>
 </li>
@@ -663,9 +807,27 @@
 </li>
         <li><a href="generated/dcase_framework.files.TextFile.html#dcase_framework.files.TextFile.__init__">(dcase_framework.files.TextFile method)</a>
 </li>
+        <li><a href="generated/dcase_framework.keras_utils.BaseCallback.html#dcase_framework.keras_utils.BaseCallback.__init__">(dcase_framework.keras_utils.BaseCallback method)</a>
+</li>
+        <li><a href="generated/dcase_framework.keras_utils.BaseDataGenerator.html#dcase_framework.keras_utils.BaseDataGenerator.__init__">(dcase_framework.keras_utils.BaseDataGenerator method)</a>
+</li>
+        <li><a href="generated/dcase_framework.keras_utils.FeatureGenerator.html#dcase_framework.keras_utils.FeatureGenerator.__init__">(dcase_framework.keras_utils.FeatureGenerator method)</a>
+</li>
+        <li><a href="generated/dcase_framework.keras_utils.ProgressLoggerCallback.html#dcase_framework.keras_utils.ProgressLoggerCallback.__init__">(dcase_framework.keras_utils.ProgressLoggerCallback method)</a>
+</li>
+        <li><a href="generated/dcase_framework.keras_utils.ProgressPlotterCallback.html#dcase_framework.keras_utils.ProgressPlotterCallback.__init__">(dcase_framework.keras_utils.ProgressPlotterCallback method)</a>
+</li>
+        <li><a href="generated/dcase_framework.keras_utils.StasherCallback.html#dcase_framework.keras_utils.StasherCallback.__init__">(dcase_framework.keras_utils.StasherCallback method)</a>
+</li>
+        <li><a href="generated/dcase_framework.keras_utils.StopperCallback.html#dcase_framework.keras_utils.StopperCallback.__init__">(dcase_framework.keras_utils.StopperCallback method)</a>
+</li>
+        <li><a href="generated/dcase_framework.learners.DataSequencer.html#dcase_framework.learners.DataSequencer.__init__">(dcase_framework.learners.DataSequencer method)</a>
+</li>
         <li><a href="generated/dcase_framework.learners.EventDetector.html#dcase_framework.learners.EventDetector.__init__">(dcase_framework.learners.EventDetector method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.EventDetectorGMM.html#dcase_framework.learners.EventDetectorGMM.__init__">(dcase_framework.learners.EventDetectorGMM method)</a>
+</li>
+        <li><a href="generated/dcase_framework.learners.EventDetectorKerasSequential.html#dcase_framework.learners.EventDetectorKerasSequential.__init__">(dcase_framework.learners.EventDetectorKerasSequential method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.EventDetectorMLP.html#dcase_framework.learners.EventDetectorMLP.__init__">(dcase_framework.learners.EventDetectorMLP method)</a>
 </li>
@@ -674,6 +836,8 @@
         <li><a href="generated/dcase_framework.learners.SceneClassifier.html#dcase_framework.learners.SceneClassifier.__init__">(dcase_framework.learners.SceneClassifier method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM.__init__">(dcase_framework.learners.SceneClassifierGMM method)</a>
+</li>
+        <li><a href="generated/dcase_framework.learners.SceneClassifierKerasSequential.html#dcase_framework.learners.SceneClassifierKerasSequential.__init__">(dcase_framework.learners.SceneClassifierKerasSequential method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.SceneClassifierMLP.html#dcase_framework.learners.SceneClassifierMLP.__init__">(dcase_framework.learners.SceneClassifierMLP method)</a>
 </li>
@@ -685,7 +849,15 @@
 </li>
         <li><a href="generated/dcase_framework.parameters.ParameterContainer.html#dcase_framework.parameters.ParameterContainer.__init__">(dcase_framework.parameters.ParameterContainer method)</a>
 </li>
+        <li><a href="generated/dcase_framework.recognizers.BaseRecognizer.html#dcase_framework.recognizers.BaseRecognizer.__init__">(dcase_framework.recognizers.BaseRecognizer method)</a>
+</li>
+        <li><a href="generated/dcase_framework.recognizers.EventRecognizer.html#dcase_framework.recognizers.EventRecognizer.__init__">(dcase_framework.recognizers.EventRecognizer method)</a>
+</li>
+        <li><a href="generated/dcase_framework.recognizers.SceneRecognizer.html#dcase_framework.recognizers.SceneRecognizer.__init__">(dcase_framework.recognizers.SceneRecognizer method)</a>
+</li>
         <li><a href="generated/dcase_framework.ui.FancyLogger.html#dcase_framework.ui.FancyLogger.__init__">(dcase_framework.ui.FancyLogger method)</a>
+</li>
+        <li><a href="generated/dcase_framework.utils.SimpleMathStringEvaluator.html#dcase_framework.utils.SimpleMathStringEvaluator.__init__">(dcase_framework.utils.SimpleMathStringEvaluator method)</a>
 </li>
         <li><a href="generated/dcase_framework.utils.SuppressStdoutAndStderr.html#dcase_framework.utils.SuppressStdoutAndStderr.__init__">(dcase_framework.utils.SuppressStdoutAndStderr method)</a>
 </li>
@@ -732,6 +904,14 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.keras_utils.BaseCallback.html#dcase_framework.keras_utils.BaseCallback">BaseCallback (class in dcase_framework.keras_utils)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.BaseDataGenerator.html#dcase_framework.keras_utils.BaseDataGenerator">BaseDataGenerator (class in dcase_framework.keras_utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.recognizers.BaseRecognizer.html#dcase_framework.recognizers.BaseRecognizer">BaseRecognizer (class in dcase_framework.recognizers)</a>
+</li>
       <li><a href="generated/dcase_framework.application_core.BinarySoundEventAppCore.html#dcase_framework.application_core.BinarySoundEventAppCore">BinarySoundEventAppCore (class in dcase_framework.application_core)</a>
 </li>
   </ul></td>
@@ -740,11 +920,31 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.data.DataProcessor.call_method.html#dcase_framework.data.DataProcessor.call_method">call_method() (dcase_framework.data.DataProcessor method)</a>
+
+      <ul>
+        <li><a href="generated/dcase_framework.data.ProcessingChain.call_method.html#dcase_framework.data.ProcessingChain.call_method">(dcase_framework.data.ProcessingChain method)</a>
+</li>
+      </ul></li>
       <li><a href="generated/dcase_framework.features.FeatureContainer.channels.html#dcase_framework.features.FeatureContainer.channels">channels (dcase_framework.features.FeatureContainer attribute)</a>
+</li>
+      <li><a href="generated/dcase_framework.learners.LearnerContainer.class_labels.html#dcase_framework.learners.LearnerContainer.class_labels">class_labels (dcase_framework.learners.LearnerContainer attribute)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataBuffer.clear.html#dcase_framework.data.DataBuffer.clear">clear() (dcase_framework.data.DataBuffer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/dcase_framework.learners.LearnerContainer.class_labels.html#dcase_framework.learners.LearnerContainer.class_labels">class_labels (dcase_framework.learners.LearnerContainer attribute)</a>
+      <li><a href="generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities.html#dcase_framework.recognizers.BaseRecognizer.collapse_probabilities">collapse_probabilities() (dcase_framework.recognizers.BaseRecognizer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed.html#dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed">collapse_probabilities_windowed() (dcase_framework.recognizers.BaseRecognizer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataBuffer.count.html#dcase_framework.data.DataBuffer.count">count() (dcase_framework.data.DataBuffer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.create_callback_list.html#dcase_framework.keras_utils.KerasMixin.create_callback_list">create_callback_list() (dcase_framework.keras_utils.KerasMixin method)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators.html#dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators">create_external_metric_evaluators() (dcase_framework.keras_utils.KerasMixin method)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.create_model.html#dcase_framework.keras_utils.KerasMixin.create_model">create_model() (dcase_framework.keras_utils.KerasMixin method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -754,25 +954,43 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/dcase_framework.ui.FancyLogger.data.html#dcase_framework.ui.FancyLogger.data">data() (dcase_framework.ui.FancyLogger method)</a>
 </li>
+      <li><a href="generated/dcase_framework.keras_utils.BaseDataGenerator.data_size.html#dcase_framework.keras_utils.BaseDataGenerator.data_size">data_size (dcase_framework.keras_utils.BaseDataGenerator attribute)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataBuffer.html#dcase_framework.data.DataBuffer">DataBuffer (class in dcase_framework.data)</a>
+</li>
       <li><a href="generated/dcase_framework.files.DataFile.html#dcase_framework.files.DataFile">DataFile (class in dcase_framework.files)</a>
 </li>
+      <li><a href="generated/dcase_framework.data.DataProcessor.html#dcase_framework.data.DataProcessor">DataProcessor (class in dcase_framework.data)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataSequencer.html#dcase_framework.data.DataSequencer">DataSequencer (class in dcase_framework.data)</a>
+
+      <ul>
+        <li><a href="generated/dcase_framework.learners.DataSequencer.html#dcase_framework.learners.DataSequencer">(class in dcase_framework.learners)</a>
+</li>
+      </ul></li>
       <li><a href="generated/dcase_framework.datasets.Dataset.html#dcase_framework.datasets.Dataset">Dataset (class in dcase_framework.datasets)</a>
 </li>
       <li><a href="application_core.html#module-dcase_framework.application_core">dcase_framework.application_core (module)</a>
 </li>
+      <li><a href="data.html#module-dcase_framework.data">dcase_framework.data (module)</a>
+</li>
       <li><a href="datasets.html#module-dcase_framework.datasets">dcase_framework.datasets (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="features.html#module-dcase_framework.features">dcase_framework.features (module)</a>
 </li>
       <li><a href="files.html#module-dcase_framework.files">dcase_framework.files (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="keras_utils.html#module-dcase_framework.keras_utils">dcase_framework.keras_utils (module)</a>
+</li>
       <li><a href="learners.html#module-dcase_framework.learners">dcase_framework.learners (module)</a>
 </li>
       <li><a href="metadata.html#module-dcase_framework.metadata">dcase_framework.metadata (module)</a>
 </li>
       <li><a href="parameters.html#module-dcase_framework.parameters">dcase_framework.parameters (module)</a>
+</li>
+      <li><a href="recognizers.html#module-dcase_framework.recognizers">dcase_framework.recognizers (module)</a>
 </li>
       <li><a href="ui.html#module-dcase_framework.ui">dcase_framework.ui (module)</a>
 </li>
@@ -817,7 +1035,11 @@
       <li><a href="generated/dcase_framework.datasets.Dataset.error_meta_count.html#dcase_framework.datasets.Dataset.error_meta_count">error_meta_count() (dcase_framework.datasets.Dataset method)</a>
 </li>
       <li><a href="generated/dcase_framework.datasets.Dataset.eval.html#dcase_framework.datasets.Dataset.eval">eval() (dcase_framework.datasets.Dataset method)</a>
+
+      <ul>
+        <li><a href="generated/dcase_framework.utils.SimpleMathStringEvaluator.eval.html#dcase_framework.utils.SimpleMathStringEvaluator.eval">(dcase_framework.utils.SimpleMathStringEvaluator method)</a>
 </li>
+      </ul></li>
       <li><a href="generated/dcase_framework.metadata.MetaDataContainer.event_count.html#dcase_framework.metadata.MetaDataContainer.event_count">event_count (dcase_framework.metadata.MetaDataContainer attribute)</a>
 </li>
       <li><a href="generated/dcase_framework.metadata.MetaDataItem.event_label.html#dcase_framework.metadata.MetaDataItem.event_label">event_label (dcase_framework.metadata.MetaDataItem attribute)</a>
@@ -850,7 +1072,11 @@
 </li>
       <li><a href="generated/dcase_framework.learners.EventDetectorGMM.html#dcase_framework.learners.EventDetectorGMM">EventDetectorGMM (class in dcase_framework.learners)</a>
 </li>
+      <li><a href="generated/dcase_framework.learners.EventDetectorKerasSequential.html#dcase_framework.learners.EventDetectorKerasSequential">EventDetectorKerasSequential (class in dcase_framework.learners)</a>
+</li>
       <li><a href="generated/dcase_framework.learners.EventDetectorMLP.html#dcase_framework.learners.EventDetectorMLP">EventDetectorMLP (class in dcase_framework.learners)</a>
+</li>
+      <li><a href="generated/dcase_framework.recognizers.EventRecognizer.html#dcase_framework.recognizers.EventRecognizer">EventRecognizer (class in dcase_framework.recognizers)</a>
 </li>
       <li><a href="generated/dcase_framework.metadata.EventRoll.html#dcase_framework.metadata.EventRoll">EventRoll (class in dcase_framework.metadata)</a>
 </li>
@@ -926,9 +1152,11 @@
 </li>
       <li><a href="generated/dcase_framework.features.FeatureExtractor.html#dcase_framework.features.FeatureExtractor">FeatureExtractor (class in dcase_framework.features)</a>
 </li>
+      <li><a href="generated/dcase_framework.files.FeatureFile.html#dcase_framework.files.FeatureFile">FeatureFile (class in dcase_framework.files)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/dcase_framework.files.FeatureFile.html#dcase_framework.files.FeatureFile">FeatureFile (class in dcase_framework.files)</a>
+      <li><a href="generated/dcase_framework.keras_utils.FeatureGenerator.html#dcase_framework.keras_utils.FeatureGenerator">FeatureGenerator (class in dcase_framework.keras_utils)</a>
 </li>
       <li><a href="generated/dcase_framework.features.FeatureMasker.html#dcase_framework.features.FeatureMasker">FeatureMasker (class in dcase_framework.features)</a>
 </li>
@@ -956,6 +1184,8 @@
 </li>
       <li><a href="generated/dcase_framework.features.FeatureNormalizer.finalize.html#dcase_framework.features.FeatureNormalizer.finalize">finalize() (dcase_framework.features.FeatureNormalizer method)</a>
 </li>
+      <li><a href="generated/dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions.html#dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions">find_contiguous_regions() (dcase_framework.recognizers.BaseRecognizer method)</a>
+</li>
       <li><a href="generated/dcase_framework.datasets.Dataset.fold_count.html#dcase_framework.datasets.Dataset.fold_count">fold_count (dcase_framework.datasets.Dataset attribute)</a>
 </li>
       <li><a href="generated/dcase_framework.datasets.Dataset.folds.html#dcase_framework.datasets.Dataset.folds">folds() (dcase_framework.datasets.Dataset method)</a>
@@ -964,12 +1194,18 @@
 </li>
       <li><a href="generated/dcase_framework.features.FeatureContainer.frames.html#dcase_framework.features.FeatureContainer.frames">frames (dcase_framework.features.FeatureContainer attribute)</a>
 </li>
+      <li><a href="generated/dcase_framework.data.DataBuffer.full.html#dcase_framework.data.DataBuffer.full">full() (dcase_framework.data.DataBuffer method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.keras_utils.FeatureGenerator.generator.html#dcase_framework.keras_utils.FeatureGenerator.generator">generator() (dcase_framework.keras_utils.FeatureGenerator method)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataBuffer.get.html#dcase_framework.data.DataBuffer.get">get() (dcase_framework.data.DataBuffer method)</a>
+</li>
       <li><a href="generated/dcase_framework.utils.get_byte_string.html#dcase_framework.utils.get_byte_string">get_byte_string() (in module dcase_framework.utils)</a>
 </li>
       <li><a href="generated/dcase_framework.utils.get_class_inheritors.html#dcase_framework.utils.get_class_inheritors">get_class_inheritors() (in module dcase_framework.utils)</a>
@@ -978,10 +1214,10 @@
 </li>
       <li><a href="generated/dcase_framework.parameters.ParameterContainer.get_hash.html#dcase_framework.parameters.ParameterContainer.get_hash">get_hash() (dcase_framework.parameters.ParameterContainer method)</a>
 </li>
-      <li><a href="generated/dcase_framework.utils.get_parameter_hash.html#dcase_framework.utils.get_parameter_hash">get_parameter_hash() (in module dcase_framework.utils)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.utils.get_parameter_hash.html#dcase_framework.utils.get_parameter_hash">get_parameter_hash() (in module dcase_framework.utils)</a>
+</li>
       <li><a href="generated/dcase_framework.features.FeatureContainer.get_path.html#dcase_framework.features.FeatureContainer.get_path">get_path() (dcase_framework.features.FeatureContainer method)</a>
 
       <ul>
@@ -990,6 +1226,8 @@
         <li><a href="generated/dcase_framework.parameters.ParameterContainer.get_path.html#dcase_framework.parameters.ParameterContainer.get_path">(dcase_framework.parameters.ParameterContainer method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.get_processing_interval.html#dcase_framework.keras_utils.KerasMixin.get_processing_interval">get_processing_interval() (dcase_framework.keras_utils.KerasMixin method)</a>
+</li>
       <li><a href="generated/dcase_framework.metadata.MetaDataContainer.get_string.html#dcase_framework.metadata.MetaDataContainer.get_string">get_string() (dcase_framework.metadata.MetaDataContainer method)</a>
 
       <ul>
@@ -1002,10 +1240,20 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.metadata.MetaDataItem.id.html#dcase_framework.metadata.MetaDataItem.id">id (dcase_framework.metadata.MetaDataItem attribute)</a>
+</li>
       <li><a href="generated/dcase_framework.metadata.MetaDataItem.identifier.html#dcase_framework.metadata.MetaDataItem.identifier">identifier (dcase_framework.metadata.MetaDataItem attribute)</a>
 </li>
-      <li><a href="generated/dcase_framework.ui.FancyLogger.info.html#dcase_framework.ui.FancyLogger.info">info() (dcase_framework.ui.FancyLogger method)</a>
+      <li><a href="generated/dcase_framework.data.DataSequencer.increase_shifting.html#dcase_framework.data.DataSequencer.increase_shifting">increase_shifting() (dcase_framework.data.DataSequencer method)</a>
 </li>
+      <li><a href="generated/dcase_framework.keras_utils.BaseDataGenerator.info.html#dcase_framework.keras_utils.BaseDataGenerator.info">info() (dcase_framework.keras_utils.BaseDataGenerator method)</a>
+
+      <ul>
+        <li><a href="generated/dcase_framework.ui.FancyLogger.info.html#dcase_framework.ui.FancyLogger.info">(dcase_framework.ui.FancyLogger method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize.html#dcase_framework.application_core.AcousticSceneClassificationAppCore.initialize">initialize() (dcase_framework.application_core.AcousticSceneClassificationAppCore method)</a>
 
       <ul>
@@ -1018,6 +1266,20 @@
         <li><a href="generated/dcase_framework.datasets.Dataset.initialize.html#dcase_framework.datasets.Dataset.initialize">(dcase_framework.datasets.Dataset method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/dcase_framework.keras_utils.BaseDataGenerator.input_size.html#dcase_framework.keras_utils.BaseDataGenerator.input_size">input_size (dcase_framework.keras_utils.BaseDataGenerator attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.keras_model_exists.html#dcase_framework.keras_utils.KerasMixin.keras_model_exists">keras_model_exists() (dcase_framework.keras_utils.KerasMixin method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.data.DataBuffer.key_exists.html#dcase_framework.data.DataBuffer.key_exists">key_exists() (dcase_framework.data.DataBuffer method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1027,9 +1289,13 @@
       <li><a href="generated/dcase_framework.learners.EventDetectorGMM.learn.html#dcase_framework.learners.EventDetectorGMM.learn">learn() (dcase_framework.learners.EventDetectorGMM method)</a>
 
       <ul>
+        <li><a href="generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html#dcase_framework.learners.EventDetectorKerasSequential.learn">(dcase_framework.learners.EventDetectorKerasSequential method)</a>
+</li>
         <li><a href="generated/dcase_framework.learners.EventDetectorMLP.learn.html#dcase_framework.learners.EventDetectorMLP.learn">(dcase_framework.learners.EventDetectorMLP method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html#dcase_framework.learners.SceneClassifierGMM.learn">(dcase_framework.learners.SceneClassifierGMM method)</a>
+</li>
+        <li><a href="generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html#dcase_framework.learners.SceneClassifierKerasSequential.learn">(dcase_framework.learners.SceneClassifierKerasSequential method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html#dcase_framework.learners.SceneClassifierMLP.learn">(dcase_framework.learners.SceneClassifierMLP method)</a>
 </li>
@@ -1042,9 +1308,11 @@
 </li>
       <li><a href="generated/dcase_framework.files.ListFile.html#dcase_framework.files.ListFile">ListFile (class in dcase_framework.files)</a>
 </li>
-      <li><a href="generated/dcase_framework.features.FeatureContainer.load.html#dcase_framework.features.FeatureContainer.load">load() (dcase_framework.features.FeatureContainer method)</a>
+      <li><a href="generated/dcase_framework.data.DataProcessor.load.html#dcase_framework.data.DataProcessor.load">load() (dcase_framework.data.DataProcessor method)</a>
 
       <ul>
+        <li><a href="generated/dcase_framework.features.FeatureContainer.load.html#dcase_framework.features.FeatureContainer.load">(dcase_framework.features.FeatureContainer method)</a>
+</li>
         <li><a href="generated/dcase_framework.features.FeatureRepository.load.html#dcase_framework.features.FeatureRepository.load">(dcase_framework.features.FeatureRepository method)</a>
 </li>
         <li><a href="generated/dcase_framework.files.AudioFile.load.html#dcase_framework.files.AudioFile.load">(dcase_framework.files.AudioFile method)</a>
@@ -1080,6 +1348,8 @@
         <li><a href="generated/dcase_framework.parameters.ParameterContainer.log.html#dcase_framework.parameters.ParameterContainer.log">(dcase_framework.parameters.ParameterContainer method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.log_model_summary.html#dcase_framework.keras_utils.KerasMixin.log_model_summary">log_model_summary() (dcase_framework.keras_utils.KerasMixin method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1142,35 +1412,69 @@
 </li>
       <li><a href="generated/dcase_framework.metadata.EventRoll.plot.html#dcase_framework.metadata.EventRoll.plot">plot() (dcase_framework.metadata.EventRoll method)</a>
 </li>
+      <li><a href="generated/dcase_framework.keras_utils.KerasMixin.plot_model.html#dcase_framework.keras_utils.KerasMixin.plot_model">plot_model() (dcase_framework.keras_utils.KerasMixin method)</a>
+</li>
       <li><a href="generated/dcase_framework.utils.posix_path.html#dcase_framework.utils.posix_path">posix_path() (in module dcase_framework.utils)</a>
 </li>
       <li><a href="generated/dcase_framework.learners.EventDetectorGMM.predict.html#dcase_framework.learners.EventDetectorGMM.predict">predict() (dcase_framework.learners.EventDetectorGMM method)</a>
 
       <ul>
+        <li><a href="generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html#dcase_framework.learners.EventDetectorKerasSequential.predict">(dcase_framework.learners.EventDetectorKerasSequential method)</a>
+</li>
         <li><a href="generated/dcase_framework.learners.EventDetectorMLP.predict.html#dcase_framework.learners.EventDetectorMLP.predict">(dcase_framework.learners.EventDetectorMLP method)</a>
 </li>
         <li><a href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html#dcase_framework.learners.SceneClassifierGMM.predict">(dcase_framework.learners.SceneClassifierGMM method)</a>
 </li>
+        <li><a href="generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html#dcase_framework.learners.SceneClassifierKerasSequential.predict">(dcase_framework.learners.SceneClassifierKerasSequential method)</a>
+</li>
         <li><a href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html#dcase_framework.learners.SceneClassifierMLP.predict">(dcase_framework.learners.SceneClassifierMLP method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="generated/dcase_framework.features.FeatureAggregator.process.html#dcase_framework.features.FeatureAggregator.process">process() (dcase_framework.features.FeatureAggregator method)</a>
+      <li><a href="generated/dcase_framework.data.DataProcessor.process.html#dcase_framework.data.DataProcessor.process">process() (dcase_framework.data.DataProcessor method)</a>
 
       <ul>
+        <li><a href="generated/dcase_framework.data.DataSequencer.process.html#dcase_framework.data.DataSequencer.process">(dcase_framework.data.DataSequencer method)</a>
+</li>
+        <li><a href="generated/dcase_framework.data.ProcessingChain.process.html#dcase_framework.data.ProcessingChain.process">(dcase_framework.data.ProcessingChain method)</a>
+</li>
+        <li><a href="generated/dcase_framework.features.FeatureAggregator.process.html#dcase_framework.features.FeatureAggregator.process">(dcase_framework.features.FeatureAggregator method)</a>
+</li>
         <li><a href="generated/dcase_framework.features.FeatureMasker.process.html#dcase_framework.features.FeatureMasker.process">(dcase_framework.features.FeatureMasker method)</a>
 </li>
         <li><a href="generated/dcase_framework.features.FeatureNormalizer.process.html#dcase_framework.features.FeatureNormalizer.process">(dcase_framework.features.FeatureNormalizer method)</a>
 </li>
         <li><a href="generated/dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process">(dcase_framework.features.FeatureStacker method)</a>
 </li>
+        <li><a href="generated/dcase_framework.learners.DataSequencer.process.html#dcase_framework.learners.DataSequencer.process">(dcase_framework.learners.DataSequencer method)</a>
+</li>
         <li><a href="generated/dcase_framework.parameters.ParameterContainer.process.html#dcase_framework.parameters.ParameterContainer.process">(dcase_framework.parameters.ParameterContainer method)</a>
 </li>
+        <li><a href="generated/dcase_framework.recognizers.EventRecognizer.process.html#dcase_framework.recognizers.EventRecognizer.process">(dcase_framework.recognizers.EventRecognizer method)</a>
+</li>
+        <li><a href="generated/dcase_framework.recognizers.SceneRecognizer.process.html#dcase_framework.recognizers.SceneRecognizer.process">(dcase_framework.recognizers.SceneRecognizer method)</a>
+</li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/dcase_framework.recognizers.BaseRecognizer.process_activity.html#dcase_framework.recognizers.BaseRecognizer.process_activity">process_activity() (dcase_framework.recognizers.BaseRecognizer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataProcessor.process_activity_data.html#dcase_framework.data.DataProcessor.process_activity_data">process_activity_data() (dcase_framework.data.DataProcessor method)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataProcessor.process_data.html#dcase_framework.data.DataProcessor.process_data">process_data() (dcase_framework.data.DataProcessor method)</a>
+</li>
       <li><a href="generated/dcase_framework.metadata.MetaDataContainer.process_events.html#dcase_framework.metadata.MetaDataContainer.process_events">process_events() (dcase_framework.metadata.MetaDataContainer method)</a>
 </li>
+      <li><a href="generated/dcase_framework.data.DataProcessor.process_features.html#dcase_framework.data.DataProcessor.process_features">process_features() (dcase_framework.data.DataProcessor method)</a>
+</li>
       <li><a href="generated/dcase_framework.parameters.ParameterContainer.process_method_parameters.html#dcase_framework.parameters.ParameterContainer.process_method_parameters">process_method_parameters() (dcase_framework.parameters.ParameterContainer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.recognizers.EventRecognizer.process_ratio.html#dcase_framework.recognizers.EventRecognizer.process_ratio">process_ratio() (dcase_framework.recognizers.EventRecognizer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.ProcessingChain.html#dcase_framework.data.ProcessingChain">ProcessingChain (class in dcase_framework.data)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.ProgressLoggerCallback.html#dcase_framework.keras_utils.ProgressLoggerCallback">ProgressLoggerCallback (class in dcase_framework.keras_utils)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.ProgressPlotterCallback.html#dcase_framework.keras_utils.ProgressPlotterCallback">ProgressPlotterCallback (class in dcase_framework.keras_utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1228,9 +1532,15 @@
 </li>
       <li><a href="generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM">SceneClassifierGMM (class in dcase_framework.learners)</a>
 </li>
+      <li><a href="generated/dcase_framework.learners.SceneClassifierKerasSequential.html#dcase_framework.learners.SceneClassifierKerasSequential">SceneClassifierKerasSequential (class in dcase_framework.learners)</a>
+</li>
       <li><a href="generated/dcase_framework.learners.SceneClassifierMLP.html#dcase_framework.learners.SceneClassifierMLP">SceneClassifierMLP (class in dcase_framework.learners)</a>
 </li>
+      <li><a href="generated/dcase_framework.recognizers.SceneRecognizer.html#dcase_framework.recognizers.SceneRecognizer">SceneRecognizer (class in dcase_framework.recognizers)</a>
+</li>
       <li><a href="generated/dcase_framework.ui.FancyLogger.section_header.html#dcase_framework.ui.FancyLogger.section_header">section_header() (dcase_framework.ui.FancyLogger method)</a>
+</li>
+      <li><a href="generated/dcase_framework.data.DataBuffer.set.html#dcase_framework.data.DataBuffer.set">set() (dcase_framework.data.DataBuffer method)</a>
 </li>
       <li><a href="generated/dcase_framework.learners.LearnerContainer.set_seed.html#dcase_framework.learners.LearnerContainer.set_seed">set_seed() (dcase_framework.learners.LearnerContainer method)</a>
 </li>
@@ -1272,6 +1582,8 @@
         <li><a href="generated/dcase_framework.application_core.SoundEventAppCore.show_parameters.html#dcase_framework.application_core.SoundEventAppCore.show_parameters">(dcase_framework.application_core.SoundEventAppCore method)</a>
 </li>
       </ul></li>
+      <li><a href="generated/dcase_framework.utils.SimpleMathStringEvaluator.html#dcase_framework.utils.SimpleMathStringEvaluator">SimpleMathStringEvaluator (class in dcase_framework.utils)</a>
+</li>
       <li><a href="generated/dcase_framework.metadata.MetaDataContainer.slice_field.html#dcase_framework.metadata.MetaDataContainer.slice_field">slice_field() (dcase_framework.metadata.MetaDataContainer method)</a>
 </li>
       <li><a href="generated/dcase_framework.application_core.SoundEventAppCore.html#dcase_framework.application_core.SoundEventAppCore">SoundEventAppCore (class in dcase_framework.application_core)</a>
@@ -1282,9 +1594,15 @@
 </li>
       <li><a href="generated/dcase_framework.utils.Timer.start.html#dcase_framework.utils.Timer.start">start() (dcase_framework.utils.Timer method)</a>
 </li>
+      <li><a href="generated/dcase_framework.keras_utils.StasherCallback.html#dcase_framework.keras_utils.StasherCallback">StasherCallback (class in dcase_framework.keras_utils)</a>
+</li>
       <li><a href="generated/dcase_framework.features.FeatureContainer.stat.html#dcase_framework.features.FeatureContainer.stat">stat (dcase_framework.features.FeatureContainer attribute)</a>
 </li>
+      <li><a href="generated/dcase_framework.keras_utils.BaseDataGenerator.steps_count.html#dcase_framework.keras_utils.BaseDataGenerator.steps_count">steps_count (dcase_framework.keras_utils.BaseDataGenerator attribute)</a>
+</li>
       <li><a href="generated/dcase_framework.utils.Timer.stop.html#dcase_framework.utils.Timer.stop">stop() (dcase_framework.utils.Timer method)</a>
+</li>
+      <li><a href="generated/dcase_framework.keras_utils.StopperCallback.html#dcase_framework.keras_utils.StopperCallback">StopperCallback (class in dcase_framework.keras_utils)</a>
 </li>
       <li><a href="generated/dcase_framework.utils.SuppressStdoutAndStderr.html#dcase_framework.utils.SuppressStdoutAndStderr">SuppressStdoutAndStderr (class in dcase_framework.utils)</a>
 </li>
@@ -1355,6 +1673,8 @@
       <li><a href="generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html#dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet">TUTSoundEvents_2016_DevelopmentSet (class in dcase_framework.datasets)</a>
 </li>
       <li><a href="generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html#dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet">TUTSoundEvents_2016_EvaluationSet (class in dcase_framework.datasets)</a>
+</li>
+      <li><a href="generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html#dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet">TUTSoundEvents_2017_DevelopmentSet (class in dcase_framework.datasets)</a>
 </li>
   </ul></td>
 </tr></table>

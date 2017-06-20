@@ -151,6 +151,9 @@ Contents
     metadata
     features
     learners
+    recognizers
+    data
+    keras_utils
     ui
     utils
 
