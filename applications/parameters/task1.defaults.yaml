@@ -1,6 +1,7 @@
 active_set: dcase2017
 
 sets:
+
   - set_id: dcase2017
     description: DCASE2017 baseline (CPU) using DCASE2017 task 1 development dataset
     dataset:
@@ -22,7 +23,7 @@ sets:
       show_model_information: false
     learner_method_parameters:
       mlp:
-        seed: 1
+        seed: 0
         keras:
           backend: theano
           backend_parameters:
@@ -44,13 +45,13 @@ sets:
           batch_size: 256
           shuffle: true
           callbacks:
-            - type: EarlyStopping
+            - type: Stopper
               parameters:
                 monitor: val_categorical_accuracy
-                min_delta: 0.001
+                initial_delay: 100
+                min_delta: 0
                 patience: 10
-                verbose: 0
-                mode: max
+
         model:
           config:
             - class_name: Dense
