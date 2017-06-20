@@ -12,4 +12,5 @@ from . import metadata
 from . import parameters
 from . import ui
 from . import utils
+from . import keras_utils
 from . import data
