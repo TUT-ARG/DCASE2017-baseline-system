@@ -233,7 +233,7 @@ class SceneClassifierSVM(SceneClassifier):
         super(SceneClassifierSVM, self).__init__(*args, **kwargs)
         self.method = 'svm'
 
-    def learn(self, data, annotations):
+    def learn(self, data, annotations, data_filenames=None):
         """Learn based on data ana annotations
 
         Parameters
