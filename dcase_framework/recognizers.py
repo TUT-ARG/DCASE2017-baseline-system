@@ -5,18 +5,6 @@ Recognizers
 ===========
 Classes for handling the recognition process.
 
-BaseRecognizer
-..............
-
-.. autosummary::
-    :toctree: generated/
-
-    BaseRecognizer
-    BaseRecognizer.collapse_probabilities
-    BaseRecognizer.collapse_probabilities_windowed
-    BaseRecognizer.find_contiguous_regions
-    BaseRecognizer.process_activity
-
 SceneRecognizer
 ...............
 
@@ -36,6 +24,18 @@ EventRecognizer
     EventRecognizer
     EventRecognizer.process
     EventRecognizer.process_ratio
+
+BaseRecognizer
+..............
+
+.. autosummary::
+    :toctree: generated/
+
+    BaseRecognizer
+    BaseRecognizer.collapse_probabilities
+    BaseRecognizer.collapse_probabilities_windowed
+    BaseRecognizer.find_contiguous_regions
+    BaseRecognizer.process_activity
 
 """
 
@@ -58,10 +58,6 @@ class BaseRecognizer(object):
 
         Parameters
         ----------
-        hop_length_seconds : float
-            Analysis frame hop length in seconds.
-            Default value 0.02
-
         params : dict
             Processing parameters
 
@@ -70,7 +66,6 @@ class BaseRecognizer(object):
 
         """
 
-        self.hop_length_seconds = kwargs.get('hop_length_seconds', 0.02)
         self.params = DottedDict(kwargs.get('params', {}))
         self.class_labels = kwargs.get('class_labels', [])
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
@@ -290,13 +285,8 @@ class SceneRecognizer(BaseRecognizer):
 
         Parameters
         ----------
-        hop_length_seconds : float
-            Analysis frame hop length in seconds.
-            Default value 0.02
-
         params : dict
             Processing parameters
-
         class_labels : list of str
             Class labels in a list
 
@@ -401,6 +391,8 @@ class EventRecognizer(BaseRecognizer):
         """
 
         super(EventRecognizer, self).__init__(*args, **kwargs)
+
+        self.hop_length_seconds = kwargs.get('hop_length_seconds', 0.02)
         self.method = 'event'
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
