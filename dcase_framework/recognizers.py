@@ -173,7 +173,7 @@ class BaseRecognizer(object):
         """
 
         # Find the changes in the activity_array
-        change_indices = numpy.diff(activity_array).nonzero()[0]
+        change_indices = numpy.logical_xor(activity_array[1:], activity_array[:-1]).nonzero()[0]
 
         # Shift change_index with one, focus on frame after the change.
         change_indices += 1
