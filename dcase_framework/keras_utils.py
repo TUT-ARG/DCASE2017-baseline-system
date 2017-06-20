@@ -910,6 +910,7 @@ class BaseCallback(object):
         else:
             return numpy.less
 
+
 class ProgressLoggerCallback(BaseCallback):
     """Keras callback to store metrics with tqdm progress bar or logging interface. Implements Keras Callback API.
 
