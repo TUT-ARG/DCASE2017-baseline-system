@@ -55,10 +55,6 @@ def test_math_string_evaluator():
             'result': 2,
         },
         {
-            'input': '8/5',
-            'result': 1,
-        },
-        {
             'input': '8.0/5.0',
             'result': 1.6,
         },
