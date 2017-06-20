@@ -118,35 +118,36 @@ def main(argv):
 
     for parameter_set in parameters_sets:
         # Initialize ParameterContainer
-        params = ParameterContainer(project_base=os.path.dirname(os.path.realpath(__file__)),
-                                    path_structure={
-                                        'feature_extractor': [
-                                            'dataset',
-                                            'feature_extractor.parameters.*'
-                                        ],
-                                        'feature_normalizer': [
-                                            'dataset',
-                                            'feature_extractor.parameters.*'
-                                        ],
-                                        'learner': [
-                                            'dataset',
-                                            'feature_extractor',
-                                            'feature_stacker',
-                                            'feature_normalizer',
-                                            'feature_aggregator',
-                                            'learner'
-                                        ],
-                                        'recognizer': [
-                                            'dataset',
-                                            'feature_extractor',
-                                            'feature_stacker',
-                                            'feature_normalizer',
-                                            'feature_aggregator',
-                                            'learner',
-                                            'recognizer'
-                                        ],
-                                    }
-                                    )
+        params = ParameterContainer(
+            project_base=os.path.dirname(os.path.realpath(__file__)),
+            path_structure={
+                'feature_extractor': [
+                    'dataset',
+                    'feature_extractor.parameters.*'
+                ],
+                'feature_normalizer': [
+                    'dataset',
+                    'feature_extractor.parameters.*'
+                ],
+                'learner': [
+                    'dataset',
+                    'feature_extractor',
+                    'feature_stacker',
+                    'feature_normalizer',
+                    'feature_aggregator',
+                    'learner'
+                ],
+                'recognizer': [
+                    'dataset',
+                    'feature_extractor',
+                    'feature_stacker',
+                    'feature_normalizer',
+                    'feature_aggregator',
+                    'learner',
+                    'recognizer'
+                ],
+            }
+        )
 
         # Load default parameters from a file
         params.load(filename=default_parameters_filename)
@@ -193,15 +194,16 @@ def main(argv):
         # Setup logging
         setup_logging(parameter_container=params['logging'])
 
-        app = Task2AppCore(name='DCASE 2017::Detection of rare sound events / Baseline System',
-                           params=params,
-                           system_desc=params.get('description'),
-                           system_parameter_set_id=params.get('active_set'),
-                           setup_label='Development setup',
-                           log_system_progress=params.get_path('general.log_system_progress'),
-                           show_progress_in_console=params.get_path('general.print_system_progress'),
-                           use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
-                           )
+        app = Task2AppCore(
+            name='DCASE 2017::Detection of rare sound events / Baseline System',
+            params=params,
+            system_desc=params.get('description'),
+            system_parameter_set_id=params.get('active_set'),
+            setup_label='Development setup',
+            log_system_progress=params.get_path('general.log_system_progress'),
+            show_progress_in_console=params.get_path('general.print_system_progress'),
+            use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
+        )
 
         # Show parameter set list and exit
         if args.show_set_list:
@@ -276,15 +278,17 @@ def main(argv):
                 # If in submission mode, save results in separate folder for easier access
                 params['path']['recognizer'] = params.get_path('path.recognizer_challenge_output')
 
-            challenge_app = Task2AppCore(name='DCASE 2017::Sound Event Detection in Real-life Audio / Baseline System',
-                                         params=params,
-                                         system_desc=params.get('description'),
-                                         system_parameter_set_id=params.get('active_set'),
-                                         setup_label='Evaluation setup',
-                                         log_system_progress=params.get_path('general.log_system_progress'),
-                                         show_progress_in_console=params.get_path('general.print_system_progress'),
-                                         use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
-                                         )
+            challenge_app = Task2AppCore(
+                name='DCASE 2017::Sound Event Detection in Real-life Audio / Baseline System',
+                params=params,
+                system_desc=params.get('description'),
+                system_parameter_set_id=params.get('active_set'),
+                setup_label='Evaluation setup',
+                log_system_progress=params.get_path('general.log_system_progress'),
+                show_progress_in_console=params.get_path('general.print_system_progress'),
+                use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
+            )
+
             # Initialize application
             if params['flow']['initialize']:
                 challenge_app.initialize()
