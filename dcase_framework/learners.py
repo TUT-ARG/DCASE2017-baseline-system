@@ -2,24 +2,50 @@
 # -*- coding: utf-8 -*-
 """
 Learners
-==================
+========
 Classes for machine learning
 
 SceneClassifier
 ^^^^^^^^^^^^^^^
 
+SceneClassifierGMM
+..................
+
+Scene classifier with GMM. This learner is using ``sklearn.mixture.GaussianMixture`` implementation. See
+`documentation <http://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html/>`_.
+
 .. autosummary::
     :toctree: generated/
-
-    SceneClassifier
 
     SceneClassifierGMM
     SceneClassifierGMM.learn
     SceneClassifierGMM.predict
 
+SceneClassifierMLP
+..................
+
+Scene classifier with MLP. This learner is a simple MLP based learner using Keras neural network implementation
+and sequential API. See `documentation <https://keras.io/>`_.
+
+.. autosummary::
+    :toctree: generated/
+
     SceneClassifierMLP
     SceneClassifierMLP.learn
     SceneClassifierMLP.predict
+
+SceneClassifierKerasSequential
+..............................
+
+Scene classifier with Keras sequential API (see `documentation <https://keras.io/>`_). This learner can be used for
+more advanced network structures than SceneClassifierMLP.
+
+.. autosummary::
+    :toctree: generated/
+
+    SceneClassifierKerasSequential
+    SceneClassifierKerasSequential.learn
+    SceneClassifierKerasSequential.predict
 
 EventDetector
 ^^^^^^^^^^^^^^^
@@ -29,14 +55,35 @@ EventDetector
 
     EventDetector
 
+EventDetectorGMM
+................
+
+.. autosummary::
+    :toctree: generated/
+
     EventDetectorGMM
     EventDetectorGMM.learn
     EventDetectorGMM.predict
+
+EventDetectorMLP
+................
+
+.. autosummary::
+    :toctree: generated/
 
     EventDetectorMLP
     EventDetectorMLP.learn
     EventDetectorMLP.predict
 
+EventDetectorKerasSequential
+............................
+
+.. autosummary::
+    :toctree: generated/
+
+    EventDetectorKerasSequential
+    EventDetectorKerasSequential.learn
+    EventDetectorKerasSequential.predict
 
 LearnerContainer - Base class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -62,26 +109,25 @@ from __future__ import print_function, absolute_import
 from six import iteritems
 
 import sys
-import os
 import numpy
 import logging
 import random
 import warnings
-import importlib
 import copy
-import scipy
-
-from sklearn.metrics import mean_absolute_error
 
 from datetime import datetime
+from sklearn.metrics import mean_absolute_error
+from tqdm import tqdm
+
 from .files import DataFile
 from .containers import ContainerMixin, DottedDict
 from .features import FeatureContainer
 from .utils import SuppressStdoutAndStderr
-from .metadata import MetaDataContainer, MetaDataItem, EventRoll
-from .utils import Timer
-
-from tqdm import tqdm
+from .metadata import MetaDataItem, EventRoll
+from .keras_utils import KerasMixin, BaseDataGenerator, StasherCallback
+from .data import DataSequencer
+from .utils import get_class_inheritors
+from .recognizers import SceneRecognizer, EventRecognizer
 
 
 def scene_classifier_factory(*args, **kwargs):
@@ -99,8 +145,13 @@ def scene_classifier_factory(*args, **kwargs):
 def event_detector_factory(*args, **kwargs):
     if kwargs.get('method', None) == 'gmm':
         return EventDetectorGMM(*args, **kwargs)
+
     elif kwargs.get('method', None) == 'mlp':
         return EventDetectorMLP(*args, **kwargs)
+
+    elif kwargs.get('method', None) == 'keras_seq':
+        return EventDetectorKerasSequential(*args, **kwargs)
+
     else:
         raise ValueError('{name}: Invalid EventDetector method [{method}]'.format(
             name='event_detector_factory',
@@ -155,7 +206,6 @@ class LearnerContainer(DataFile, ContainerMixin):
             'method': kwargs.get('method', None),
             'class_labels': kwargs.get('class_labels', []),
             'params': DottedDict(kwargs.get('params', {})),
-            'feature_processing_chain': kwargs.get('feature_processing_chain', None),
             'feature_masker': kwargs.get('feature_masker', None),
             'feature_normalizer': kwargs.get('feature_normalizer', None),
             'feature_stacker': kwargs.get('feature_stacker', None),
@@ -227,22 +277,6 @@ class LearnerContainer(DataFile, ContainerMixin):
     @params.setter
     def params(self, value):
         self['params'] = value
-
-    @property
-    def feature_processing_chain(self):
-        """Feature processing chain
-
-        Returns
-        -------
-         feature_processing_chain
-
-        """
-
-        return self.get('feature_processing_chain', None)
-
-    @feature_processing_chain.setter
-    def feature_processing_chain(self, value):
-        self['feature_processing_chain'] = value
 
     @property
     def feature_masker(self):
@@ -372,382 +406,17 @@ class LearnerContainer(DataFile, ContainerMixin):
         return input_shape
 
 
-class KerasMixin(object):
-
-    def keras_model_exists(self):
-        keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
-        return os.path.isfile(self.filename) and os.path.isfile(keras_model_filename)
-
-    def log_model_summary(self):
-        layer_name_map = {
-            'BatchNormalization': 'BatchNorm',
-        }
-        import keras.backend as K
-
-        self.logger.debug('  ')
-        self.logger.debug('  Model summary')
-        self.logger.debug(
-            '  {type:<12s} | {out:10s} | {param:6s}  | {name:20s}  | {conn:27s} | {act:10s} | {init:9s}'.format(
-                type='Layer type',
-                out='Output',
-                param='Param',
-                name='Name',
-                conn='Connected to',
-                act='Activation',
-                init='Init')
-        )
-
-        self.logger.debug(
-            '  {type:<12s} + {out:10s} + {param:6s}  + {name:20s}  + {conn:27s} + {act:10s} + {init:9s}'.format(
-                type='-'*12,
-                out='-'*10,
-                param='-'*6,
-                name='-'*20,
-                conn='-'*27,
-                act='-'*10,
-                init='-'*9)
-        )
-
-        for layer in self.model.layers:
-            connections = []
-            for node_index, node in enumerate(layer.inbound_nodes):
-                for i in range(len(node.inbound_layers)):
-                    inbound_layer = node.inbound_layers[i].name
-                    inbound_node_index = node.node_indices[i]
-                    inbound_tensor_index = node.tensor_indices[i]
-                    connections.append(inbound_layer + '[' + str(inbound_node_index) +
-                                       '][' + str(inbound_tensor_index) + ']')
-
-            config = layer.get_config()
-            layer_name = layer.__class__.__name__
-            if layer_name in layer_name_map:
-                layer_name = layer_name_map[layer_name]
-
-            self.logger.debug(
-                '  {type:<12s} | {shape:10s} | {params:6s}  | {name:20s}  | {connected:27s} | {activation:10s} | {init:9s}'.format(
-                    type=layer_name,
-                    shape=str(layer.output_shape),
-                    params=str(layer.count_params()),
-                    name=str(layer.name),
-                    connected=str(connections[0]) if len(connections)>0 else '---',
-                    activation=str(config.get('activation', '---')),
-                    init=str(config.get('init', '---'))
-                )
-            )
-        trainable_count = int(numpy.sum([K.count_params(p) for p in set(self.model.trainable_weights)]))
-        non_trainable_count = int(numpy.sum([K.count_params(p) for p in set(self.model.non_trainable_weights)]))
-
-        self.logger.debug('  Total params         : {param_count:,}'.format(param_count=int(trainable_count + non_trainable_count)))
-        self.logger.debug('  Trainable params     : {param_count:,}'.format(param_count=int(trainable_count)))
-        self.logger.debug('  Non-trainable params : {param_count:,}'.format(param_count=int(non_trainable_count)))
-        self.logger.debug('  ')
-        
-    def plot_model(self, filename='model.png', show_shapes=True, show_layer_names=True):
-        from keras.utils.visualize_util import plot
-        plot(self.model, to_file=filename, show_shapes=show_shapes, show_layer_names=show_layer_names)
-
-    def process_data(self, data, files):
-        """Concatenate feature data into one feature matrix
-
-        Parameters
-        ----------
-        data : dict of FeatureContainers
-            Feature data
-        files : list of str
-            List of filenames
-        Returns
-        -------
-        numpy.ndarray
-            Features concatenated
-        """
-
-        return numpy.vstack([data[x].feat[0] for x in files])
-
-    def process_activity(self, activity_matrix_dict, files):
-        """Concatenate activity matrices into one activity matrix
-
-        Parameters
-        ----------
-        activity_matrix_dict : dict of binary matrices
-            Meta data
-        files : list of str
-            List of filenames
-        Returns
-        -------
-        numpy.ndarray
-            Activity matrix
-        """
-
-        return numpy.vstack([activity_matrix_dict[x] for x in files])
-
-    def create_model(self, input_shape):
-        from keras.models import Sequential
-        self.model = Sequential()
-
-        # Get model parameters
-        model_params = copy.deepcopy(self.learner_params.get_path('model.config'))
-
-        # Setup layers
-        for layer_id, layer_setup in enumerate(model_params):
-            # Get layer parameters
-            layer_setup = DottedDict(layer_setup)
-            if 'config' not in layer_setup:
-                layer_setup['config'] = {}
-
-            # Get layer class
-            try:
-                LayerClass = getattr(
-                    importlib.import_module("keras.layers"),
-                    layer_setup['class_name']
-                )
-
-            except AttributeError:
-                message = '{name}: Invalid Keras layer type [{type}].'.format(
-                    name=self.__class__.__name__,
-                    type=layer_setup['class_name']
-                )
-                self.logger.exception(message)
-                raise AttributeError(message)
-
-            # Convert input_shape into tuple if list is given
-            if 'input_shape' in layer_setup['config'] and isinstance(layer_setup['config']['input_shape'], list):
-                if 'FEATURE_VECTOR_LENGTH' in layer_setup['config']['input_shape']:
-                    layer_setup['config']['input_shape'][layer_setup['config']['input_shape'].index('FEATURE_VECTOR_LENGTH')] = input_shape
-                elif 'CLASS_COUNT' in layer_setup['config']['input_shape']:
-                    layer_setup['config']['input_shape'][layer_setup['config']['input_shape'].index('CLASS_COUNT')] = len(self.class_labels)
-
-                layer_setup['config']['input_shape'] = tuple(layer_setup['config']['input_shape'])
-
-            # Layer setup
-            if layer_id == 0 and layer_setup.get_path('config.input_shape') is None:
-                # Set input layer dimension for the first layer if not set
-                layer_setup['config']['input_shape'] = (input_shape,)
-
-            elif layer_setup.get_path('config.input_dim') == 'FEATURE_VECTOR_LENGTH':
-                # Magic field "FEATURE_VECTOR_LENGTH"
-                layer_setup['config']['input_shape'] = (input_shape,)
-
-            elif layer_setup.get_path('config.input_shape') == 'FEATURE_VECTOR_LENGTH':
-                # Magic field "FEATURE_VECTOR_LENGTH"
-                layer_setup['config']['input_shape'] = (input_shape,)
-
-            # Set layer output
-            if layer_setup.get_path('config.units') == 'CLASS_COUNT':
-                # Magic field "CLASS_COUNT"
-                layer_setup['config']['units'] = len(self.class_labels)
-
-            if layer_setup.get('config'):
-                self.model.add(LayerClass(**dict(layer_setup.get('config'))))
-            else:
-                self.model.add(LayerClass())
-
-        # Get Optimizer class
-        try:
-            OptimizerClass = getattr(
-                importlib.import_module("keras.optimizers"),
-                self.learner_params.get_path('model.optimizer.type')
-            )
-
-        except AttributeError:
-            message = '{name}: Invalid Keras optimizer type [{type}].'.format(
-                name=self.__class__.__name__,
-                type=self.learner_params.get_path('model.optimizer.type')
-            )
-            self.logger.exception(message)
-            raise AttributeError(message)
-
-        # Compile the model
-        self.model.compile(
-            loss=self.learner_params.get_path('model.loss'),
-            optimizer=OptimizerClass(**dict(self.learner_params.get_path('model.optimizer.parameters', {}))),
-            metrics=self.learner_params.get_path('model.metrics')
-        )
-
-    def __getstate__(self):
-        data = {}
-        excluded_fields = ['model']
-
-        for item in self:
-            if item not in excluded_fields and self.get(item):
-                data[item] = copy.deepcopy(self.get(item))
-        data['model'] = os.path.splitext(self.filename)[0] + '.model.hdf5'
-        return data
-
-    def _after_load(self, to_return=None):
-        with SuppressStdoutAndStderr():
-            from keras.models import Sequential, load_model
-
-        keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
-
-        if os.path.isfile(keras_model_filename):
-            with SuppressStdoutAndStderr():
-                self.model = load_model(keras_model_filename)
-        else:
-            message = '{name}: Keras model not found [{filename}]'.format(
-                name=self.__class__.__name__,
-                filename=keras_model_filename
-            )
-
-            self.logger.exception(message)
-            raise IOError(message)
-
-    def _after_save(self, to_return=None):
-        # Save keras model and weight
-        keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
-        model_weights_filename = os.path.splitext(self.filename)[0] + '.weights.hdf5'
-        self.model.save(keras_model_filename)
-        self.model.save_weights(model_weights_filename)
-
-    def _setup_keras(self):
-        """Setup keras backend and parameters"""
-
-        # Get BLAS library associated to numpy
-        if numpy.__config__.blas_opt_info and 'libraries' in numpy.__config__.blas_opt_info:
-            blas_libraries = numpy.__config__.blas_opt_info['libraries']
-        else:
-            blas_libraries = ['']
-
-        blas_extra_info = []
-        # Set backend and parameters before importing keras
-        if self.show_extra_debug:
-            self.logger.debug('  ')
-            self.logger.debug('  Keras backend \t[{backend}]'.format(
-                backend=self.learner_params.get_path('keras.backend', 'theano'))
-            )
-
-        # Threading
-        if self.learner_params.get_path('keras.backend_parameters.threads'):
-            thread_count = self.learner_params.get_path('keras.backend_parameters.threads', 1)
-            os.environ['GOTO_NUM_THREADS'] = str(thread_count)
-            os.environ['OMP_NUM_THREADS'] = str(thread_count)
-            os.environ['MKL_NUM_THREADS'] = str(thread_count)
-            blas_extra_info.append('Threads[{threads}]'.format(threads=thread_count))
-
-            if thread_count > 1:
-                os.environ['OMP_DYNAMIC'] = 'False'
-                os.environ['MKL_DYNAMIC'] = 'False'
-            else:
-                os.environ['OMP_DYNAMIC'] = 'True'
-                os.environ['MKL_DYNAMIC'] = 'True'
-
-        # Conditional Numerical Reproducibility (CNR) for MKL BLAS library
-        if self.learner_params.get_path('keras.backend_parameters.CNR', True) and blas_libraries[0].startswith('mkl'):
-            os.environ['MKL_CBWR'] = 'COMPATIBLE'
-            blas_extra_info.append('MKL_CBWR[{mode}]'.format(mode='COMPATIBLE'))
-
-        # Show BLAS info
-        if self.show_extra_debug:
-            if numpy.__config__.blas_opt_info:
-                blas_libraries = numpy.__config__.blas_opt_info['libraries']
-                if blas_libraries[0].startswith('openblas'):
-                    self.logger.debug('  BLAS library\t[OpenBLAS]\t\t({info})'.format(info=', '.join(blas_extra_info)))
-                elif blas_libraries[0].startswith('blas'):
-                    self.logger.debug('  BLAS library\t[BLAS/Atlas]\t\t({info})'.format(info=', '.join(blas_extra_info)))
-                elif blas_libraries[0].startswith('mkl'):
-                    self.logger.debug('  BLAS library\t[MKL]\t\t({info})'.format(info=', '.join(blas_extra_info)))
-
-        # Select Keras backend
-        os.environ["KERAS_BACKEND"] = self.learner_params.get_path('keras.backend', 'theano')
-
-
-        if self.learner_params.get_path('keras.backend', 'theano') == 'theano':
-            # Theano setup
-
-            # Default flags
-            flags = [
-                #'ldflags=',
-                'warn.round=False',
-            ]
-
-            # Set device
-            if self.learner_params.get_path('keras.backend_parameters.device'):
-                flags.append('device=' + self.learner_params.get_path('keras.backend_parameters.device', 'cpu'))
-
-                if self.show_extra_debug:
-                    self.logger.debug('  Theano device \t[{device}]'.format(
-                        device=self.learner_params.get_path('keras.backend_parameters.device', 'cpu'))
-                    )
-
-            # Set floatX
-            if self.learner_params.get_path('keras.backend_parameters.floatX'):
-                flags.append('floatX=' + self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
-
-                if self.show_extra_debug:
-                    self.logger.debug('  Theano floatX \t[{float}]'.format(
-                        float=self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
-                    )
-
-            # Set optimizer
-            if self.learner_params.get_path('keras.backend_parameters.optimizer') is not None:
-                if self.learner_params.get_path('keras.backend_parameters.optimizer') in ['fast_run', 'merge', 'fast_compile', 'None']:
-                    flags.append('optimizer='+self.learner_params.get_path('keras.backend_parameters.optimizer'))
-            else:
-                flags.append('optimizer=None')
-            if self.show_extra_debug:
-                self.logger.debug('  Theano optimizer \t[{optimizer}]'.format(
-                    optimizer=self.learner_params.get_path('keras.backend_parameters.optimizer', 'None'))
-                )
-
-            # Set fastmath for GPU mode only
-            if self.learner_params.get_path('keras.backend_parameters.fastmath') is not None and self.learner_params.get_path('keras.backend_parameters.device', 'cpu') != 'cpu':
-                if self.learner_params.get_path('keras.backend_parameters.fastmath', False):
-                    flags.append('nvcc.fastmath=True')
-                else:
-                    flags.append('nvcc.fastmath=False')
-
-                if self.show_extra_debug:
-                    self.logger.debug('  NVCC fastmath \t[{flag}]'.format(
-                        flag=str(self.learner_params.get_path('keras.backend_parameters.fastmath', False)))
-                    )
-
-            # Set OpenMP
-            if self.learner_params.get_path('keras.backend_parameters.openmp') is not None:
-                if self.learner_params.get_path('keras.backend_parameters.openmp', False):
-                    flags.append('openmp=True')
-                else:
-                    flags.append('openmp=False')
-
-                if self.show_extra_debug:
-                    self.logger.debug('  OpenMP\t\t[{flag}]'.format(
-                        flag=str(self.learner_params.get_path('keras.backend_parameters.openmp', False)))
-                    )
-
-            # Set environmental variable for Theano
-            os.environ["THEANO_FLAGS"] = ','.join(flags)
-
-        elif self.learner_params.get_path('keras.backend', 'tensorflow') == 'tensorflow':
-            # Tensorflow setup
-
-            # Set device
-            if self.learner_params.get_path('keras.backend_parameters.device', 'cpu'):
-
-                # In case of CPU disable visible GPU.
-                if self.learner_params.get_path('keras.backend_parameters.device', 'cpu') == 'cpu':
-                    os.environ["CUDA_VISIBLE_DEVICES"] = ''
-
-                if self.show_extra_debug:
-                    self.logger.debug('  Tensorflow device \t[{device}]'.format(
-                        device=self.learner_params.get_path('keras.backend_parameters.device', 'cpu')))
-
-        else:
-            message = '{name}: Keras backend not supported [backend].'.format(
-                name=self.__class__.__name__,
-                backend=self.learner_params.get_path('keras.backend')
-            )
-            self.logger.exception(message)
-            raise AssertionError(message)
-
-
 class SceneClassifier(LearnerContainer):
-    """Scene classifier (Frame classifier / Multiclass - Singlelabel)"""
+    """Scene classifier (Frame classifier / Multi-class - Single-label)
+    """
 
-    def predict(self, feature_data, recognizer_params=None):
-        """Predict scene label for given feature matrix
+    def predict(self, feature_data):
+        """Predict frame probabilities for given feature matrix
 
         Parameters
         ----------
         feature_data : numpy.ndarray
-        recognizer_params : DottedDict
+            Feature data
 
         Returns
         -------
@@ -756,67 +425,12 @@ class SceneClassifier(LearnerContainer):
 
         """
 
-        if recognizer_params is None:
-            recognizer_params = {}
-
-        if not isinstance(recognizer_params, DottedDict):
-            # Convert parameters to DottedDict
-            recognizer_params = DottedDict(recognizer_params)
-
         if isinstance(feature_data, FeatureContainer):
             # If we have featureContainer as input, get feature_data
             feature_data = feature_data.feat[0]
 
-        # Get frame wise probabilities
-        frame_probabilities = self._frame_probabilities(feature_data)
-
-        # Accumulate probabilities
-        if recognizer_params.get_path('frame_accumulation.enable', True):
-            probabilities = self._accumulate_probabilities(probabilities=frame_probabilities,
-                                                           accumulation_type=recognizer_params.get_path('frame_accumulation.type'))
-        else:
-            # Pass probabilities
-            probabilities = frame_probabilities
-
-        # Probability binarization
-        if recognizer_params.get_path('frame_binarization.enable', True):
-            if recognizer_params.get_path('frame_binarization.type') == 'global_threshold':
-                frame_decisions = numpy.argmax(
-                    probabilities > recognizer_params.get_path('frame_binarization.threshold', 0.5),
-                    axis=0
-                )
-
-            elif recognizer_params.get_path('frame_binarization.type') == 'frame_max':
-                frame_decisions = numpy.argmax(probabilities, axis=0)
-
-            else:
-                message = '{name}: Unknown frame_binarization type [{type}].'.format(
-                    name=self.__class__.__name__,
-                    type=recognizer_params.get_path('frame_binarization.type')
-                )
-
-                self.logger.exception(message)
-                raise AssertionError(message)
-
-        # Decision making
-        if recognizer_params.get_path('decision_making.enable', True):
-            if recognizer_params.get_path('decision_making.type') == 'maximum':
-                classification_result_id = numpy.argmax(probabilities)
-
-            elif recognizer_params.get_path('decision_making.type') == 'majority_vote':
-                counts = numpy.bincount(frame_decisions)
-                classification_result_id = numpy.argmax(counts)
-
-            else:
-                message = '{name}: Unknown decision_making type [{type}].'.format(
-                    name=self.__class__.__name__,
-                    type=recognizer_params.get_path('decision_making.type')
-                )
-
-                self.logger.exception(message)
-                raise AssertionError(message)
-
-        return self.class_labels[classification_result_id]
+        # Get frame probabilities
+        return self._frame_probabilities(feature_data)
 
     def _generate_validation(self, annotations, validation_type='generated_scene_balanced',
                              valid_percentage=0.20, seed=None):
@@ -892,25 +506,9 @@ class SceneClassifier(LearnerContainer):
 
         return validation_files
 
-    def _accumulate_probabilities(self, probabilities, accumulation_type='sum'):
-        accumulated = numpy.ones(len(self.class_labels)) * -numpy.inf
-        for row_id in range(0, probabilities.shape[0]):
-            if accumulation_type == 'sum':
-                accumulated[row_id] = numpy.sum(probabilities[row_id, :])
-            elif accumulation_type == 'prod':
-                accumulated[row_id] = numpy.prod(probabilities[row_id, :])
-            elif accumulation_type == 'mean':
-                accumulated[row_id] = numpy.mean(probabilities[row_id, :])
-            else:
-                message = '{name}: Unknown accumulation type [{type}].'.format(
-                    name=self.__class__.__name__,
-                    type=accumulation_type
-                )
-
-                self.logger.exception(message)
-                raise AssertionError(message)
-
-        return accumulated
+    def _frame_probabilities(self, feature_data):
+        # Implement in child class
+        pass
 
     def _get_target_matrix_dict(self, data, annotations):
         activity_matrix_dict = {}
@@ -922,7 +520,7 @@ class SceneClassifier(LearnerContainer):
             activity_matrix_dict[audio_filename] = roll
         return activity_matrix_dict
 
-    def learn(self, data, annotations):
+    def learn(self, data, annotations, data_filenames=None):
         message = '{name}: Implement learn function.'.format(
             name=self.__class__.__name__
         )
@@ -931,8 +529,140 @@ class SceneClassifier(LearnerContainer):
         raise AssertionError(message)
 
 
+
 class SceneClassifierGMM(SceneClassifier):
-    """Scene classifier with GMM"""
+    """Scene classifier with GMM
+
+    This learner is using ``sklearn.mixture.GaussianMixture`` implementation. See
+    `documentation <http://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html/>`_.
+
+    Usage example:
+
+    .. code-block:: python
+        :linenos:
+
+        # Audio files
+        files = ['example1.wav', 'example2.wav', 'example3.wav']
+
+        # Meta data
+        annotations = {
+            'example1.wav': MetaDataItem(
+                {
+                    'file': 'example1.wav',
+                    'scene_label': 'SceneA'
+                }
+            ),
+            'example2.wav':MetaDataItem(
+                {
+                    'file': 'example2.wav',
+                    'scene_label': 'SceneB'
+                }
+            ),
+            'example3.wav': MetaDataItem(
+                {
+                    'file': 'example3.wav',
+                    'scene_label': 'SceneC'
+                }
+            ),
+        }
+
+        # Extract features
+        feature_data = {}
+        for file in files:
+            feature_data[file] = FeatureExtractor().extract(
+                audio_file=file,
+                extractor_name='mfcc',
+                extractor_params={
+                    'mfcc': {
+                        'n_mfcc': 10
+                    }
+                }
+            )['mfcc']
+
+        # Learn acoustic model
+        learner_params = {
+            'n_components': 1,
+            'covariance_type': 'diag',
+            'tol': 0.001,
+            'reg_covar': 0,
+            'max_iter': 40,
+            'n_init': 1,
+            'init_params': 'kmeans',
+            'random_state': 0,
+        }
+
+        gmm_learner = SceneClassifierGMM(
+            filename='gmm_model.cpickle',
+            class_labels=['SceneA', 'SceneB', 'SceneC'],
+            params=learner_params,
+        )
+
+        gmm_learner.learn(
+            data=feature_data,
+            annotations=annotations
+        )
+
+        # Recognition
+        recognizer_params = {
+            'frame_accumulation': {
+                'enable': True,
+                'type': 'sum'
+            },
+            'decision_making': {
+                'enable': True,
+                'type': 'maximum',
+            }
+        }
+        correctly_predicted = 0
+        for file in feature_data:
+            frame_probabilities = gmm_learner.predict(
+                feature_data=feature_data[file],
+            )
+
+            # Scene recognizer
+            current_result = SceneRecognizer(
+                params=recognizer_params,
+                class_labels=gmm_learner.class_labels,
+            ).process(
+                frame_probabilities=frame_probabilities
+            )
+
+            if annotations[file].scene_label == current_result:
+                correctly_predicted += 1
+            print(current_result, annotations[file].scene_label)
+
+        print('Accuracy = {:3.2f} %'.format(correctly_predicted/float(len(feature_data))*100))
+
+    **Learner parameters**
+
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | Field name                     | Value type   | Description                                                      |
+    +================================+==============+==================================================================+
+    | n_components                   | int          | The number of mixture components.                                |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | covariance_type                | string       | Covariance type.                                                 |
+    |                                | { full |     |                                                                  |
+    |                                | tied |       |                                                                  |
+    |                                | diag |       |                                                                  |
+    |                                | spherical }  |                                                                  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | tol                            | float        | Covariance threshold.                                            |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | reg_covar                      | float        | Non-negative regularization added to the diagonal of covariance. |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | max_iter                       | int          | The number of EM iterations.                                     |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | n_init                         | int          | The number of initializations.                                   |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | init_params                    | string       | The method used to initialize model weights.                     |
+    |                                | { kmeans |   |                                                                  |
+    |                                | random }     |                                                                  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | random_state                   | int          | Random seed.                                                     |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+
+    """
+
     def __init__(self, *args, **kwargs):
         self.default_parameters = DottedDict({
             'show_model_information': False,
@@ -957,8 +687,8 @@ class SceneClassifierGMM(SceneClassifier):
         super(SceneClassifierGMM, self).__init__(*args, **kwargs)
         self.method = 'gmm'
 
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
         Parameters
         ----------
@@ -966,6 +696,8 @@ class SceneClassifierGMM(SceneClassifier):
             Feature data
         annotations : dict of MetadataContainers
             Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
         Returns
         -------
@@ -1038,8 +770,8 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
         super(SceneClassifierGMMdeprecated, self).__init__(*args, **kwargs)
         self.method = 'gmm_deprecated'
 
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
         Parameters
         ----------
@@ -1047,6 +779,8 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
             Feature data
         annotations : dict of MetadataContainers
             Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
         Returns
         -------
@@ -1100,7 +834,129 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
 
 
 class SceneClassifierMLP(SceneClassifier, KerasMixin):
-    """Scene classifier with MLP"""
+    """Scene classifier with MLP
+
+    This learner is a simple MLP based learner using Keras neural network implementation and sequential API.
+    See `documentation <https://keras.io/>`_.
+
+    **Learner parameters**
+
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | Field name                     | Value type   | Description                                                      |
+    +================================+==============+==================================================================+
+    | seed                           | int          | Randomization seed. Use this to make learner behaviour           |
+    |                                |              | deterministic.                                                   |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **keras**                                                                                                        |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | backend                        | string       | Keras backend selector.                                          |
+    |                                | {theano |    |                                                                  |
+    |                                | tensorflow}  |                                                                  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **keras->backend_parameters**                                                                                    |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | device                         | string       | Device selector. ``cpu`` is best option to produce deterministic |
+    |                                | {cpu | gpu}  | results. All baseline results are calculated in cpu mode.        |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | floatX                         | string       | Float number type. Usually float32 used since that is compatible |
+    |                                |              | with GPUs. Valid only for ``theano`` backend.                    |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | fastmath                       | bool         | If true, will enable fastmath mode when CUDA code is compiled.   |
+    |                                |              | Div and sqrt are faster, but precision is lower. This can cause  |
+    |                                |              | numerical issues some in cases. Valid only for ``theano``        |
+    |                                |              | backend and GPU mode.                                            |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | optimizer                      | string       | Compilation mode for theano functions.                           |
+    |                                | {fast_run |  |                                                                  |
+    |                                | merge |      |                                                                  |
+    |                                | fast_compile |                                                                  |
+    |                                | None}        |                                                                  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | openmp                         | bool         | If true, Theano will use multiple cores, see `more               |
+    |                                |              | <http://deeplearning.net/software/theano/                        |
+    |                                |              | tutorial/multi_cores.html>`_                                     |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | threads                        | int          | Number of threads used. Use one to disable threading.            |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | CNR                            | bool         | Conditional numerical reproducibility for MKL BLAS. When set to  |
+    |                                |              | True, compatible mode used.                                      |
+    |                                |              | See `more <https://software.intel.com/en-us/node/528408>`_.      |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **validation**                                                                                                   |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | enable                         | bool         | If true, validation set is used during the training procedure.   |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | setup_source                   | string       | Validation setup source. Valid sources:                          |
+    |                                |              |                                                                  |
+    |                                |              | - ``generated_scene_balanced``, balanced based on scene labels,  |
+    |                                |              |   used for Task1.                                                |
+    |                                |              | - ``generated_event_file_balanced``, balanced based on events,   |
+    |                                |              |   used for Task2.                                                |
+    |                                |              | - ``generated_scene_location_event_balanced``, balanced          |
+    |                                |              |   based on scene, location and events. Used for Task3.           |
+    |                                |              |                                                                  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | validation_amount              | float        | Percentage of training data selected for validation. Use value   |
+    |                                |              | between 0.0-1.0.                                                 |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | seed                           | int          | Validation set generation seed. If None, learner seed will be    |
+    |                                |              | used.                                                            |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **training**                                                                                                     |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | epochs                         | int          | Number of epochs.                                                |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | batch_size                     | int          | Batch size.                                                      |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | shuffle                        | bool         | If true, training samples are shuffled at each epoch.            |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **training->callbacks**, list of parameter sets in following format. Callback called during the model training.  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | type                           | string       | Callback name, use standard keras callbacks                      |
+    |                                |              | `callbacks <https://keras.io/callbacks/>`_ or ones defined by    |
+    |                                |              | dcase_framework (Plotter, Stopper, Stasher).                     |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | parameters                     | dict         | Place inside this all parameters for the callback.               |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **training->model->config**, list of dicts. Defining network topology.                                           |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | class_name                     | string       | Layer name. Use standard keras                                   |
+    |                                |              | `core layers <https://keras.io/layers/core/>`_,                  |
+    |                                |              | `convolutional                                                   |
+    |                                |              | layers <https://keras.io/layers/convolutional/>`_,               |
+    |                                |              | `pooling layers <https://keras.io/layers/pooling/>`_,            |
+    |                                |              | `recurrent layers <https://keras.io/layers/recurrent/>`_, or     |
+    |                                |              | `normalization layers <https://keras.io/layers/normalization/>`_ |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | config                         | dict         | Place inside this all parameters for the layer.                  |
+    |                                |              | See Keras documentation. Magic parameter values:                 |
+    |                                |              |                                                                  |
+    |                                |              | - ``FEATURE_VECTOR_LENGTH``, feature vector length.              |
+    |                                |              |   This automatically inserted for input layer.                   |
+    |                                |              | - ``CLASS_COUNT``, number of classes.                            |
+    |                                |              |                                                                  |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | input_shape                    | list of      | List of integers which is converted into tuple before giving to  |
+    |                                | ints         | Keras layer.                                                     |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **training->model**                                                                                              |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | loss                           | string       | Keras loss function name. See                                    |
+    |                                |              | `Keras documentation <https://keras.io/losses/>`_.               |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | metrics                        | list of      | Keras metric function name. See                                  |
+    |                                | strings      | `Keras documentation <https://keras.io/metrics/>`_.              |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | **training->model->optimizer**                                                                                   |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | type                           | string       | Keras optimizer name. See                                        |
+    |                                |              | `Keras documentation <https://keras.io/optimizers/>`_.           |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+    | parameters                     | dict         | Place inside this all parameters for the optimizer.              |
+    +--------------------------------+--------------+------------------------------------------------------------------+
+
+    """
+
     def __init__(self, *args, **kwargs):
         self.default_parameters = DottedDict({
             'show_model_information': False,
@@ -1166,8 +1022,8 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         super(SceneClassifierMLP, self).__init__(*args, **kwargs)
         self.method = 'mlp'
 
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
         Parameters
         ----------
@@ -1175,6 +1031,8 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
             Feature data
         annotations : dict of MetadataContainers
             Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
         Returns
         -------
@@ -1203,21 +1061,20 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
             self.logger.exception(message)
             raise ValueError(message)
 
-
         # Convert annotations into activity matrix format
         activity_matrix_dict = self._get_target_matrix_dict(data=data, annotations=annotations)
 
         # Process data
-        X_training = self.process_data(data=data, files=training_files)
-        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
+        X_training = self.prepare_data(data=data, files=training_files)
+        Y_training = self.prepare_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
 
         if self.show_extra_debug:
             self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
 
         # Process validation data
         if validation_files:
-            X_validation = self.process_data(data=data, files=validation_files)
-            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
+            X_validation = self.prepare_data(data=data, files=validation_files)
+            Y_validation = self.prepare_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
 
             validation = (X_validation, Y_validation)
             if self.show_extra_debug:
@@ -1241,116 +1098,8 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         if self.show_extra_debug:
             self.log_model_summary()
 
-        class FancyProgbarLogger(keras.callbacks.Callback):
-            """Callback that prints metrics to stdout.
-            """
-
-            def __init__(self, callbacks=None, queue_length=10, metric=None, disable_progress_bar=False, log_progress=False):
-                self.metric = metric
-                self.disable_progress_bar = disable_progress_bar
-                self.log_progress = log_progress
-                self.timer = Timer()
-
-            def on_train_begin(self, logs=None):
-                self.logger = logging.getLogger(__name__)
-                self.verbose = self.params['verbose']
-                self.epochs = self.params['epochs']
-                if self.log_progress:
-                    self.logger.info('Starting training process')
-                self.pbar = tqdm(total=self.epochs,
-                                 file=sys.stdout,
-                                 desc='           {0:>15s}'.format('Learn (epoch)'),
-                                 leave=False,
-                                 miniters=1,
-                                 disable=self.disable_progress_bar
-                                 )
-
-            def on_train_end(self, logs=None):
-                self.pbar.close()
-
-            def on_epoch_begin(self, epoch, logs=None):
-                if self.log_progress:
-                    self.logger.info('  Epoch %d/%d' % (epoch + 1, self.epochs))
-                self.seen = 0
-                self.timer.start()
-
-            def on_batch_begin(self, batch, logs=None):
-                if self.seen < self.params['samples']:
-                    self.log_values = []
-
-            def on_batch_end(self, batch, logs=None):
-                logs = logs or {}
-                batch_size = logs.get('size', 0)
-                self.seen += batch_size
-
-                for k in self.params['metrics']:
-                    if k in logs:
-                        self.log_values.append((k, logs[k]))
-
-            def on_epoch_end(self, epoch, logs=None):
-                logs = logs or {}
-                postfix = {
-                    'train': None,
-                    'validation': None,
-                }
-                for k in self.params['metrics']:
-                    if k in logs:
-                        self.log_values.append((k, logs[k]))
-                        if self.metric and k.endswith(self.metric):
-                            if k.startswith('val_'):
-                                postfix['validation'] = '{:4.2f}'.format(logs[k] * 100.0)
-                            else:
-                                postfix['train'] = '{:4.2f}'.format(logs[k] * 100.0)
-                self.timer.stop()
-                if self.log_progress:
-                    self.logger.info('                train={train}, validation={validation}, time={time}'.format(
-                        train=postfix['train'],
-                        validation=postfix['validation'],
-                        time=self.timer.get_string())
-                    )
-
-                self.pbar.set_postfix(postfix)
-                self.pbar.update(1)
-
-        # Add model callbacks
-        fancy_logger = FancyProgbarLogger(metric=self.learner_params.get_path('model.metrics')[0],
-                                          disable_progress_bar=self.disable_progress_bar,
-                                          log_progress=self.log_progress)
-
-        # Callback list, always have FancyProgbarLogger
-        callbacks = [fancy_logger]
-
-        callback_params = self.learner_params.get_path('training.callbacks', [])
-        if callback_params:
-            for cp in callback_params:
-                if cp['type'] == 'ModelCheckpoint' and not cp['parameters'].get('filepath'):
-                    cp['parameters']['filepath'] = os.path.splitext(self.filename)[0] + '.weights.{epoch:02d}-{val_loss:.2f}.hdf5'
-
-                if cp['type'] == 'EarlyStopping' and cp.get('parameters').get('monitor').startswith('val_') and not self.learner_params.get_path('validation.enable', False):
-                    message = '{name}: Cannot use callback type [{type}] with monitor parameter [{monitor}] as there is no validation set.'.format(
-                        name=self.__class__.__name__,
-                        type=cp['type'],
-                        monitor=cp.get('parameters').get('monitor')
-                    )
-
-                    self.logger.exception(message)
-                    raise AttributeError(message)
-
-                try:
-                    # Get Callback class
-                    CallbackClass = getattr(importlib.import_module("keras.callbacks"), cp['type'])
-
-                    # Add callback to list
-                    callbacks.append(CallbackClass(**cp.get('parameters', {})))
-
-                except AttributeError:
-                    message = '{name}: Invalid Keras callback type [{type}]'.format(
-                        name=self.__class__.__name__,
-                        type=cp['type']
-                    )
-
-                    self.logger.exception(message)
-                    raise AttributeError(message)
+        # Create callbacks
+        callback_list = self.create_callback_list()
 
         if self.show_extra_debug:
             self.logger.debug('  Feature vector \t[{vector:d}]'.format(
@@ -1367,93 +1116,601 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         # Set seed
         self.set_seed()
 
-        hist = self.model.fit(x=X_training,
-                              y=Y_training,
-                              batch_size=self.learner_params.get_path('training.batch_size', 1),
-                              epochs=self.learner_params.get_path('training.epochs', 1),
-                              validation_data=validation,
-                              verbose=0,
-                              shuffle=self.learner_params.get_path('training.shuffle', True),
-                              callbacks=callbacks
-                              )
+        hist = self.model.fit(
+            x=X_training,
+            y=Y_training,
+            batch_size=self.learner_params.get_path('training.batch_size', 1),
+            epochs=self.learner_params.get_path('training.epochs', 1),
+            validation_data=validation,
+            verbose=0,
+            shuffle=self.learner_params.get_path('training.shuffle', True),
+            callbacks=callback_list
+        )
+
+        # Manually update callbacks
+        for callback in callback_list:
+            if hasattr(callback, 'close'):
+                callback.close()
+
+        for callback in callback_list:
+            if isinstance(callback, StasherCallback):
+                callback.log()
+                best_weights = callback.get_best()['weights']
+                if best_weights:
+                    self.model.set_weights(best_weights)
+                break
+
         self['learning_history'] = hist.history
 
     def _frame_probabilities(self, feature_data):
         return self.model.predict(x=feature_data).T
 
 
-class EventDetector(LearnerContainer):
-    """Event detector (Frame classifier / Multiclass - Multilabel)"""
-    @staticmethod
-    def _contiguous_regions(activity_array):
-        """Find contiguous regions from bool valued numpy.array.
-        Transforms boolean values for each frame into pairs of onsets and offsets.
-        Parameters
-        ----------
-        activity_array : numpy.array [shape=(t)]
-            Event activity array, bool values
+class SceneClassifierKerasSequential(SceneClassifierMLP):
+    """Sequential Keras model for Acoustic scene classification"""
+    def __init__(self, *args, **kwargs):
+        super(SceneClassifierKerasSequential, self).__init__(*args, **kwargs)
+        self.method = 'keras_seq'
+
+        self['data_processor'] = kwargs.get('data_processor')
+        self['data_processor_training'] = kwargs.get('training_data_processor', copy.deepcopy(self['data_processor']))
+
+        self.data_generators = kwargs.get('data_generators')
+        if self.data_generators is None:
+            self.data_generators = {}
+            data_generator_list = get_class_inheritors(BaseDataGenerator)
+            for data_generator_item in data_generator_list:
+                generator = data_generator_item()
+                if generator.method:
+                    self.data_generators[generator.method] = data_generator_item
+
+    @property
+    def data_processor(self):
+        """Feature processing chain
+
         Returns
         -------
-        change_indices : numpy.ndarray [shape=(2, number of found changes)]
-            Onset and offset indices pairs in matrix
+         feature_processing_chain
+
         """
 
-        # Find the changes in the activity_array
-        change_indices = numpy.diff(activity_array).nonzero()[0]
+        return self.get('data_processor', None)
 
-        # Shift change_index with one, focus on frame after the change.
-        change_indices += 1
+    @data_processor.setter
+    def data_processor(self, value):
+        self['data_processor'] = value
 
-        if activity_array[0]:
-            # If the first element of activity_array is True add 0 at the beginning
-            change_indices = numpy.r_[0, change_indices]
+    @property
+    def data_processor_training(self):
+        """Feature processing chain
 
-        if activity_array[-1]:
-            # If the last element of activity_array is True, add the length of the array
-            change_indices = numpy.r_[change_indices, activity_array.size]
+        Returns
+        -------
+         feature_processing_chain
 
-        # Reshape the result into two columns
-        return change_indices.reshape((-1, 2))
+        """
 
-    def _slide_and_accumulate(self, input_probabilities, window_length, accumulation_type='sliding_sum'):
-        # Lets keep the system causal and use look-back while smoothing (accumulating) likelihoods
-        output_probabilities = copy.deepcopy(input_probabilities)
-        for stop_id in range(0, input_probabilities.shape[0]):
-            start_id = stop_id - window_length
-            if start_id < 0:
-                start_id = 0
-            if start_id != stop_id:
-                if accumulation_type == 'sliding_sum':
-                    output_probabilities[start_id] = numpy.sum(input_probabilities[start_id:stop_id])
-                elif accumulation_type == 'sliding_mean':
-                    output_probabilities[start_id] = numpy.mean(input_probabilities[start_id:stop_id])
-                elif accumulation_type == 'sliding_median':
-                    output_probabilities[start_id] = numpy.median(input_probabilities[start_id:stop_id])
-                else:
-                    message = '{name}: Unknown slide and accumulate type [{type}].'.format(
-                        name=self.__class__.__name__,
-                        type=accumulation_type
-                    )
+        return self.get('data_processor_training', None)
 
-                    self.logger.exception(message)
-                    raise AssertionError(message)
+    @data_processor_training.setter
+    def data_processor_training(self, value):
+        self['data_processor_training'] = value
 
-            else:
-                output_probabilities[start_id] = input_probabilities[start_id]
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
-        return output_probabilities
+        Parameters
+        ----------
+        data : dict of FeatureContainers
+            Feature data
+        annotations : dict of MetadataContainers
+            Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
-    def _activity_processing(self, activity_vector, window_size, processing_type="median_filtering"):
-        if processing_type == 'median_filtering':
-            return scipy.signal.medfilt(volume=activity_vector, kernel_size=window_size)
-        else:
-            message = '{name}: Unknown activity processing type [{type}].'.format(
-                name=self.__class__.__name__,
-                type=processing_type
+        Returns
+        -------
+        self
+
+        """
+
+        if (self.learner_params.get_path('temporal_shifting.enable') and
+           not self.learner_params.get_path('generator.enable') and
+           not self.learner_params.get_path('training.epoch_processing.enable')):
+
+            message = '{name}: Temporal shifting cannot be used. Use epoch_processing or generator to allow temporal shifting of data.'.format(
+                name=self.__class__.__name__
             )
 
             self.logger.exception(message)
-            raise AssertionError(message)
+            raise ValueError(message)
+
+        # Collect training files
+        training_files = sorted(list(annotations.keys()))
+
+        # Validation files
+        if self.learner_params.get_path('validation.enable', False):
+            validation_files = self._generate_validation(
+                annotations=annotations,
+                validation_type=self.learner_params.get_path('validation.setup_source'),
+                valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
+                seed=self.learner_params.get_path('validation.seed')
+            )
+
+            training_files = sorted(list(set(training_files) - set(validation_files)))
+        else:
+            validation_files = []
+
+        # Double check that training and validation files are not overlapping.
+        if set(training_files).intersection(validation_files):
+            message = '{name}: Training and validation file lists are overlapping!'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
+            raise ValueError(message)
+
+        # Set seed
+        self.set_seed()
+
+        # Setup Keras
+        self._setup_keras()
+
+        with SuppressStdoutAndStderr():
+            # Import keras and suppress backend announcement printed to stderr
+            import keras
+
+        if self.learner_params.get_path('generator.enable'):
+            # Create generators
+            if self.learner_params.get_path('generator.method') in self.data_generators:
+                training_data_generator = self.data_generators[self.learner_params.get_path('generator.method')](
+                    files=training_files,
+                    data_filenames=data_filenames,
+                    annotations=annotations,
+                    data_processor=self.data_processor_training,
+                    class_labels=self.class_labels,
+                    hop_length_seconds=self.params.get_path('hop_length_seconds'),
+                    shuffle=self.learner_params.get_path('training.shuffle', True),
+                    batch_size=self.learner_params.get_path('training.batch_size', 1),
+                    data_refresh_on_each_epoch=self.learner_params.get_path('temporal_shifting.enable'),
+                    label_mode='scene',
+                    **self.learner_params.get_path('generator.parameters', {})
+                )
+
+                if self.learner_params.get_path('validation.enable', False):
+                    validation_data_generator = self.data_generators[self.learner_params.get_path('generator.method')](
+                        files=validation_files,
+                        data_filenames=data_filenames,
+                        annotations=annotations,
+                        data_processor=self.data_processor,
+                        class_labels=self.class_labels,
+                        hop_length_seconds=self.params.get_path('hop_length_seconds'),
+                        shuffle=False,
+                        batch_size=self.learner_params.get_path('training.batch_size', 1),
+                        label_mode='scene',
+                        **self.learner_params.get_path('generator.parameters', {})
+                    )
+
+                else:
+                    validation_data_generator = None
+            else:
+                message = '{name}: Generator method not implemented [{method}]'.format(
+                    name=self.__class__.__name__,
+                    method=self.learner_params.get_path('generator.method')
+                )
+                self.logger.exception(message)
+                raise ValueError(message)
+
+            input_shape = training_data_generator.input_size
+            training_data_size = training_data_generator.data_size
+            if validation_data_generator:
+                validation_data_size = validation_data_generator.data_size
+
+        else:
+            # Convert annotations into activity matrix format
+            activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
+
+            X_training = self.prepare_data(
+                data=data,
+                files=training_files,
+                processor='training'
+            )
+            Y_training = self.prepare_activity(
+                activity_matrix_dict=activity_matrix_dict,
+                files=training_files,
+                processor='training'
+            )
+
+            if validation_files:
+                validation_data = (
+                    self.prepare_data(
+                        data=data,
+                        files=validation_files,
+                        processor='default'
+                    ),
+                    self.prepare_activity(
+                        activity_matrix_dict=activity_matrix_dict,
+                        files=validation_files,
+                        processor='default'
+                    )
+                )
+                validation_data_size = validation_data[0].shape[0]
+
+            input_shape = X_training.shape[-1]
+            training_data_size = X_training.shape[0]
+
+        # Create model
+        self.create_model(input_shape=input_shape)
+
+        # Get processing interval
+        processing_interval = self.get_processing_interval()
+
+        # Create callbacks
+        callback_list = self.create_callback_list()
+
+        if self.show_extra_debug:
+            self.log_model_summary()
+
+            self.logger.debug('  Files')
+            self.logger.debug(
+                '    Training \t[{examples:d}]'.format(examples=training_data_size)
+            )
+
+            if validation_files:
+                self.logger.debug(
+                    '    Validation \t[{validation:d}]'.format(validation=validation_data_size)
+                )
+            self.logger.debug('  ')
+
+            self.logger.debug('  Input')
+            self.logger.debug('    Feature vector \t[{vector:d}]'.format(
+                vector=input_shape)
+            )
+
+            if self.learner_params.get_path('input_sequencer.enable'):
+                self.logger.debug('    Sequence\t[{length:d}]\t\t({time:4.2f} sec)'.format(
+                    length=self.learner_params.get_path('input_sequencer.frames'),
+                    time=self.learner_params.get_path('input_sequencer.frames')*self.params.get_path('hop_length_seconds')
+                    )
+                )
+                self.logger.debug('  ')
+
+            if (self.learner_params.get_path('temporal_shifter.enable') and
+               self.learner_params.get_path('training.epoch_processing.enable')):
+
+                self.logger.debug('  Sequence shifting per epoch')
+                self.logger.debug('    Shift \t\t[{step:d} per epoch]\t({time:4.2f} sec)'.format(
+                    step=self.learner_params.get_path('temporal_shifter.step'),
+                    time=self.learner_params.get_path('temporal_shifter.step')*self.params.get_path('hop_length_seconds')
+                    )
+                )
+                self.logger.debug('    Max \t\t[{max:d} per epoch]\t({time:4.2f} sec)'.format(
+                    max=self.learner_params.get_path('temporal_shifter.max'),
+                    time=self.learner_params.get_path('temporal_shifter.max')*self.params.get_path('hop_length_seconds')
+                    )
+                )
+                self.logger.debug('    Border \t\t[{border:s}]'.format(
+                    border=self.learner_params.get_path('temporal_shifter.border', 'roll')
+                ))
+                self.logger.debug('  ')
+
+            self.logger.debug('  Batch size \t[{batch:d}]'.format(
+                batch=self.learner_params.get_path('training.batch_size', 1))
+            )
+            self.logger.debug('  Epochs \t\t[{epoch:d}]'.format(
+                epoch=self.learner_params.get_path('training.epochs', 1))
+            )
+            self.logger.debug('  ')
+
+            # Extra info about training
+            if self.learner_params.get_path('generator.enable'):
+                if training_data_generator:
+                    for i in training_data_generator.info():
+                        self.logger.debug(i)
+
+            if self.learner_params.get_path('training.epoch_processing.enable'):
+                self.logger.debug('  Epoch processing \t[{mode}]'.format(
+                    mode='Epoch-by-Epoch')
+                )
+            else:
+                self.logger.debug('  Epoch processing \t[{mode}]'.format(
+                    mode='Keras')
+                )
+            self.logger.debug('  ')
+
+            if (self.learner_params.get_path('validation.enable') and
+               self.learner_params.get_path('training.epoch_processing.enable') and
+               self.learner_params.get_path('training.epoch_processing.external_metrics.enable')):
+
+                self.logger.debug('  External metrics')
+
+                self.logger.debug('    Metrics\t\tLabel\tEvaluator:Name')
+                for metric in self.learner_params.get_path('training.epoch_processing.external_metrics.metrics'):
+                    self.logger.debug('    \t\t[{label}]\t[{metric}]'.format(
+                        label=metric.get('label'),
+                        metric=metric.get('evaluator') + ':' + metric.get('name'))
+                    )
+
+                self.logger.debug('    Interval \t[{processing_interval:d} epochs]'.format(
+                    processing_interval=processing_interval)
+                )
+
+            self.logger.debug('  ')
+
+        # Set seed
+        self.set_seed()
+
+        epochs = self.learner_params.get_path('training.epochs', 1)
+
+        # Initialize training history
+        learning_history = {
+            'loss': numpy.empty((epochs,)),
+            'val_loss': numpy.empty((epochs,)),
+        }
+        for metric in self.model.metrics:
+            learning_history[metric] = numpy.empty((epochs,))
+            learning_history['val_'+metric] = numpy.empty((epochs,))
+        for quantity in learning_history:
+            learning_history[quantity][:] = numpy.nan
+
+        if self.learner_params.get_path('training.epoch_processing.enable'):
+            # Get external metric evaluators
+            external_metric_evaluators = self.create_external_metric_evaluators()
+
+            for external_metric_id in external_metric_evaluators:
+                metric_label = external_metric_evaluators[external_metric_id]['label']
+                learning_history[metric_label] = numpy.empty((epochs,))
+                learning_history[metric_label][:] = numpy.nan
+
+            for epoch_start in range(0, epochs, processing_interval):
+                # Last epoch
+                epoch_end = epoch_start + processing_interval
+                # Make sure we have only specified amount of epochs
+                if epoch_end > epochs:
+                    epoch_end = epochs
+
+                # Model fitting
+                if self.learner_params.get_path('generator.enable'):
+                    hist = self.model.fit_generator(
+                        generator=training_data_generator.generator(),
+                        steps_per_epoch=training_data_generator.steps_count,
+                        initial_epoch=epoch_start,
+                        epochs=epoch_end,
+                        validation_data=validation_data_generator.generator(),
+                        validation_steps=validation_data_generator.steps_count,
+                        max_q_size=self.learner_params.get_path('generator.max_q_size', 1),
+                        workers=self.learner_params.get_path('generator.workers', 1),
+                        verbose=0,
+                        callbacks=callback_list
+                    )
+
+                else:
+                    hist = self.model.fit(
+                        x=X_training,
+                        y=Y_training,
+                        batch_size=self.learner_params.get_path('training.batch_size', 1),
+                        initial_epoch=epoch_start,
+                        epochs=epoch_end,
+                        validation_data=validation_data,
+                        verbose=0,
+                        shuffle=self.learner_params.get_path('training.shuffle', True),
+                        callbacks=callback_list
+                    )
+
+                # Store keras metrics into learning history log
+                for keras_metric in hist.history:
+                    learning_history[keras_metric][epoch_start:epoch_start+len(hist.history[keras_metric])] = hist.history[keras_metric]
+
+                # Evaluate validation data with external metrics
+                if (self.learner_params.get_path('validation.enable') and
+                   self.learner_params.get_path('training.epoch_processing.external_metrics.enable')):
+
+                    # Recognizer class
+                    recognizer = SceneRecognizer(
+                        params=self.learner_params.get_path('training.epoch_processing.recognizer'),
+                        class_labels=self.class_labels
+                    )
+
+                    for external_metric_id in external_metric_evaluators:
+                        # Reset evaluators
+                        external_metric_evaluators[external_metric_id]['evaluator'].reset()
+
+                        metric_label = external_metric_evaluators[external_metric_id]['label']
+
+                        # Evaluate validation data
+                        for validation_file in validation_files:
+                            # Get feature data
+                            if self.learner_params.get_path('generator.enable'):
+                                feature_data, feature_data_length = self.data_processor.load(
+                                    feature_filename_dict=data_filenames[validation_file]
+                                )
+
+                            else:
+                                feature_data = data[validation_file]
+
+                            # Predict
+                            frame_probabilities = self.predict(feature_data=feature_data)
+
+                            predicted = [
+                                MetaDataItem(
+                                    {
+                                        'file': validation_file,
+                                        'scene_label': recognizer.process(frame_probabilities=frame_probabilities),
+                                    }
+                                )
+                            ]
+
+                            # Get reference data
+                            meta = [
+                                annotations[validation_file]
+                            ]
+
+                            # Evaluate
+                            external_metric_evaluators[external_metric_id]['evaluator'].evaluate(
+                                meta,
+                                predicted
+                            )
+
+                        # Get metric value
+                        metric_value = DottedDict(
+                            external_metric_evaluators[external_metric_id]['evaluator'].results()
+                        ).get_path(external_metric_evaluators[external_metric_id]['path'])
+
+                        if metric_value is None:
+                            message = '{name}: Metric was not found, evaluator:[{evaluator}] metric:[{metric}]'.format(
+                                name=self.__class__.__name__,
+                                evaluator=external_metric_evaluators[external_metric_id]['evaluator'],
+                                metric=external_metric_evaluators[external_metric_id]['path']
+                            )
+                            self.logger.exception(message)
+                            raise ValueError(message)
+
+                        # Inject external metric values to the callbacks
+                        for callback in callback_list:
+                            if hasattr(callback, 'set_external_metric_value'):
+                                callback.set_external_metric_value(
+                                    metric_label=metric_label,
+                                    metric_value=metric_value
+                                )
+
+                        # Store metric value into learning history log
+                        learning_history[metric_label][epoch_end-1] = metric_value
+
+                # Manually update callbacks
+                for callback in callback_list:
+                    if hasattr(callback, 'update'):
+                        callback.update()
+
+                # Check we need to stop training
+                stop_training = False
+                for callback in callback_list:
+                    if hasattr(callback, 'stop'):
+                        if callback.stop():
+                            stop_training = True
+
+                if stop_training:
+                    # Stop the training loop
+                    break
+
+                # Training data processing between epochs
+                if self.learner_params.get_path('temporal_shifter.enable'):
+                    # Increase temporal shifting
+                    self.data_processor_training.call_method('increase_shifting')
+
+                    if not self.learner_params.get_path('generator.enable'):
+                        # Refresh training data manually with new parameters
+                        X_training = self.prepare_data(
+                            data=data,
+                            files=training_files,
+                            processor='training'
+                        )
+
+                        Y_training = self.prepare_activity(
+                            activity_matrix_dict=activity_matrix_dict,
+                            files=training_files,
+                            processor='training'
+                        )
+
+
+        else:
+            if self.learner_params.get_path('generator.enable'):
+                hist = self.model.fit_generator(
+                    generator=training_data_generator.generator(),
+                    steps_per_epoch=training_data_generator.steps_count,
+                    epochs=epochs,
+                    validation_data=validation_data_generator.generator(),
+                    validation_steps=validation_data_generator.steps_count,
+                    max_q_size=self.learner_params.get_path('generator.max_q_size', 1),
+                    workers=1,
+                    verbose=0,
+                    callbacks=callback_list
+                )
+
+            else:
+                hist = self.model.fit(
+                    x=X_training,
+                    y=Y_training,
+                    batch_size=self.learner_params.get_path('training.batch_size', 1),
+                    epochs=epochs,
+                    validation_data=validation_data,
+                    verbose=0,
+                    shuffle=self.learner_params.get_path('training.shuffle', True),
+                    callbacks=callback_list
+                )
+
+            # Store keras metrics into learning history log
+            for keras_metric in hist.history:
+                learning_history[keras_metric][0:len(hist.history[keras_metric])] = hist.history[keras_metric]
+
+        # Manually update callbacks
+        for callback in callback_list:
+            if hasattr(callback, 'close'):
+                callback.close()
+
+        for callback in callback_list:
+            if isinstance(callback, StasherCallback):
+                callback.log()
+                best_weights = callback.get_best()['weights']
+                if best_weights:
+                    self.model.set_weights(best_weights)
+                break
+
+        # Store learning history to the model
+        self['learning_history'] = learning_history
+
+        self.logger.debug(' ')
+
+    def predict(self, feature_data):
+        """Predict frame probabilities for given feature matrix
+
+        Parameters
+        ----------
+        feature_data : numpy.ndarray
+
+        Returns
+        -------
+        numpy.ndarray
+            Frame probabilities
+
+        """
+
+        if isinstance(feature_data, FeatureContainer):
+            # If we have featureContainer as input, get feature_data
+            feature_data = feature_data.feat[0]
+
+        if isinstance(feature_data, dict) and self.data_processor:
+            # Feature repository given, and feature processor present
+            feature_data, feature_length = self.data_processor.process(feature_data=feature_data)
+
+        # Get frame wise probabilities
+        frame_probabilities = None
+        if len(self.model.input_shape) == 2:
+            frame_probabilities = self.model.predict(x=feature_data).T
+
+        elif len(self.model.input_shape) == 4:
+            if len(feature_data.shape) != 4:
+                # Still feature data in wrong shape, trying to recover
+                data_sequencer = DataSequencer(
+                    frames=self.model.input_shape[2],
+                    hop=self.model.input_shape[2],
+                )
+
+                feature_data = numpy.expand_dims(data_sequencer.process(feature_data), axis=1)
+
+            frame_probabilities = self.model.predict(x=feature_data).T
+
+            # Join sequences
+            # TODO: if data_sequencer.hop != data_sequencer.frames, do additional processing here.
+            frame_probabilities = frame_probabilities.reshape(
+                frame_probabilities.shape[0],
+                frame_probabilities.shape[1] * frame_probabilities.shape[2]
+            )
+
+        return frame_probabilities
+
+
+class EventDetector(LearnerContainer):
+    """Event detector (Frame classifier / Multi-class - Multi-label)"""
 
     def _get_target_matrix_dict(self, data, annotations):
 
@@ -1465,7 +1722,7 @@ class EventDetector(LearnerContainer):
                                    time_resolution=self.params.get_path('hop_length_seconds')
                                    )
             # Pad event roll to full length of the signal
-            activity_matrix_dict[audio_filename] = event_roll.pad(length=data[audio_filename].feat[0].shape[0])
+            activity_matrix_dict[audio_filename] = event_roll.pad(length=data[audio_filename].shape[0])
 
         return activity_matrix_dict
 
@@ -1474,6 +1731,9 @@ class EventDetector(LearnerContainer):
 
         self.set_seed(seed=seed)
         validation_files = []
+
+        if self.show_extra_debug:
+            self.logger.debug('  Validation')
 
         if validation_type == 'generated_scene_location_event_balanced':
             # Get training data per scene label
@@ -1555,38 +1815,37 @@ class EventDetector(LearnerContainer):
                     validation_files += validation_set_candidates[best_set_id]
 
                     if self.show_extra_debug:
-                        self.logger.debug('  Valid sets found [{sets}]'.format(
+                        self.logger.debug('    Valid sets found [{sets}]'.format(
                             sets=len(validation_set_MAE))
                         )
 
-                        self.logger.debug('  Best fitting set ID={id}, Error={error:4.2}%'.format(
+                        self.logger.debug('    Best fitting set ID={id}, Error={error:4.2}%'.format(
                             id=best_set_id,
                             error=validation_set_MAE[best_set_id]*100)
                         )
-
-                        self.logger.debug('  Validation event counts in respect of all data:')
+                        self.logger.debug('    Validation event counts in respect of all data:')
                         event_amount_percentages = validation_set_event_amounts[best_set_id] / (validation_set_event_amounts[best_set_id] + training_set_event_amounts[best_set_id])
-
-                        self.logger.debug('  {event:<20s} | {amount:10s} '.format(
+                        self.logger.debug('    {event:<20s} | {amount:10s} '.format(
                             event='Event label',
-                            amount='Validation amount (%)')
+                            amount='Amount (%)')
                         )
 
-                        self.logger.debug('  {event:<20s} + {amount:10s} '.format(
+                        self.logger.debug('    {event:<20s} + {amount:10s} '.format(
                             event='-' * 20,
                             amount='-' * 20)
                         )
 
                         for event_label_id, event_label in enumerate(event_amounts[scene_label]):
-                            self.logger.debug('  {event:<20s} | {amount:4.2f} '.format(
+                            self.logger.debug('    {event:<20s} | {amount:4.2f} '.format(
                                 event=event_label,
                                 amount=numpy.round(event_amount_percentages[event_label_id] * 100))
                             )
-                        self.logger.debug('  ')
+
                 else:
-                    message = '{name}: Validation setup creation was not successful! Could not find a set with examples for each event class in both training and validation.'.format(
-                        name=self.__class__.__name__
-                    )
+                    message = '{name}: Validation setup creation was not successful! Could not find a set with ' \
+                              'examples for each event class in both training and validation.'.format(
+                                name=self.__class__.__name__
+                              )
 
                     self.logger.exception(message)
                     raise AssertionError(message)
@@ -1601,12 +1860,12 @@ class EventDetector(LearnerContainer):
                 event_amounts[event_label].append(audio_filename)
 
             if self.show_extra_debug:
-                self.logger.debug('  {event_label:<20s} | {amount:20s} '.format(
+                self.logger.debug('    {event_label:<20s} | {amount:20s} '.format(
                     event_label='Event label',
-                    amount='Validation amount, files (%)')
+                    amount='Files (%)')
                 )
 
-                self.logger.debug('  {event_label:<20s} + {amount:20s} '.format(
+                self.logger.debug('    {event_label:<20s} + {amount:20s} '.format(
                     event_label='-' * 20,
                     amount='-' * 20)
                 )
@@ -1625,7 +1884,7 @@ class EventDetector(LearnerContainer):
                 validation_files += files[0:valid_percentage_index].tolist()
 
                 if self.show_extra_debug:
-                    self.logger.debug('  {event_label:<20s} | {amount:4.2f} '.format(
+                    self.logger.debug('    {event_label:<20s} | {amount:4.2f} '.format(
                         event_label=event_label if event_label else '-',
                         amount=valid_percentage_index / float(len(files)) * 100.0)
                     )
@@ -1641,7 +1900,18 @@ class EventDetector(LearnerContainer):
             self.logger.exception(message)
             raise AssertionError(message)
 
+        if self.show_extra_debug:
+            self.logger.debug(' ')
+
         return sorted(validation_files)
+
+    def learn(self, data, annotations, data_filenames=None):
+        message = '{name}: Implement learn function.'.format(
+            name=self.__class__.__name__
+        )
+
+        self.logger.exception(message)
+        raise AssertionError(message)
 
 
 class EventDetectorGMM(EventDetector):
@@ -1668,8 +1938,8 @@ class EventDetectorGMM(EventDetector):
         super(EventDetectorGMM, self).__init__(*args, **kwargs)
         self.method = 'gmm'
 
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
         Parameters
         ----------
@@ -1677,6 +1947,8 @@ class EventDetectorGMM(EventDetector):
             Feature data
         annotations : dict of MetadataContainers
             Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
         Returns
         -------
@@ -1694,13 +1966,14 @@ class EventDetectorGMM(EventDetector):
             self.logger.exception(message)
             raise ValueError(message)
 
-        class_progress = tqdm(self.class_labels,
-                              file=sys.stdout,
-                              leave=False,
-                              desc='           {0:>15s}'.format('Learn '),
-                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}',  # [{elapsed}<{remaining}, {rate_fmt}]',
-                              disable=self.disable_progress_bar
-                              )
+        class_progress = tqdm(
+            self.class_labels,
+            file=sys.stdout,
+            leave=False,
+            desc='           {0:>15s}'.format('Learn '),
+            bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}',  # [{elapsed}<{remaining}, {rate_fmt}]',
+            disable=self.disable_progress_bar
+        )
 
         # Collect training examples
         activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
@@ -1727,10 +2000,12 @@ class EventDetectorGMM(EventDetector):
                 # Store negative examples
                 if any(~positive_mask):
                     data_negative.append(data[audio_filename].feat[0][~positive_mask, :])
+
             self['model'][event_label] = {
                 'positive': None,
                 'negative': None,
             }
+
             if len(data_positive):
                 self['model'][event_label]['positive'] = GaussianMixture(**self.learner_params).fit(
                     numpy.concatenate(data_positive)
@@ -1741,76 +2016,25 @@ class EventDetectorGMM(EventDetector):
                     numpy.concatenate(data_negative)
                 )
 
+    def predict(self, feature_data):
 
-    def predict(self, feature_data, recognizer_params=None):
-        if recognizer_params is None:
-            recognizer_params = {}
+        frame_probabilities_positive = numpy.empty((len(self.class_labels), feature_data.shape[0]))
+        frame_probabilities_negative = numpy.empty((len(self.class_labels), feature_data.shape[0]))
+        frame_probabilities_positive[:] = numpy.nan
+        frame_probabilities_negative[:] = numpy.nan
 
-        recognizer_params = DottedDict(recognizer_params)
-
-        results = []
         for event_id, event_label in enumerate(self.class_labels):
-            # Evaluate positive and negative models
             if self['model'][event_label]['positive']:
-                positive = self['model'][event_label]['positive'].score_samples(feature_data.feat[0])
-
-                # Accumulate
-                if recognizer_params.get_path('frame_accumulation.enable'):
-                    positive = self._slide_and_accumulate(
-                        input_probabilities=positive,
-                        window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
-                        accumulation_type=recognizer_params.get_path('frame_accumulation.type')
-                    )
+                frame_probabilities_positive[event_id, :] = self['model'][event_label]['positive'].score_samples(
+                    feature_data.feat[0]
+                )
 
             if self['model'][event_label]['negative']:
-                negative = self['model'][event_label]['negative'].score_samples(feature_data.feat[0])
+                frame_probabilities_negative[event_id, :] = self['model'][event_label]['negative'].score_samples(
+                    feature_data.feat[0]
+                )
 
-                # Accumulate
-                if recognizer_params.get_path('frame_accumulation.enable'):
-                    negative = self._slide_and_accumulate(
-                        input_probabilities=negative,
-                        window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
-                        accumulation_type=recognizer_params.get_path('frame_accumulation.type')
-                    )
-            if self['model'][event_label]['positive'] and self['model'][event_label]['negative']:
-                # Likelihood ratio
-                frame_probabilities = positive - negative
-            elif self['model'][event_label]['positive'] is None and self['model'][event_label]['negative'] is not None:
-                # Likelihood ratio
-                frame_probabilities = -negative
-
-            elif self['model'][event_label]['positive'] is not None and self['model'][event_label]['negative'] is None:
-                # Likelihood ratio
-                frame_probabilities = positive
-
-            # Binarization
-            if recognizer_params.get_path('frame_binarization.enable'):
-                if recognizer_params.get_path('frame_binarization.type') == 'global_threshold':
-                    event_activity = frame_probabilities > recognizer_params.get_path('frame_binarization.threshold', 0.0)
-                else:
-                    message = '{name}: Unknown frame_binarization type [{type}].'.format(
-                        name=self.__class__.__name__,
-                        type=recognizer_params.get_path('frame_binarization.type')
-                    )
-
-                    self.logger.exception(message)
-                    raise AssertionError(message)
-
-            else:
-                message = '{name}: No frame_binarization enabled.'.format(name=self.__class__.__name__)
-                self.logger.exception(message)
-                raise AssertionError(message)
-
-            # Get events
-            event_segments = self._contiguous_regions(event_activity) * self.params.get_path('hop_length_seconds')
-
-            # Add events
-            for event in event_segments:
-                results.append(MetaDataItem({'event_onset': event[0],
-                                             'event_offset': event[1],
-                                             'event_label': event_label}))
-
-        return MetaDataContainer(results)
+        return frame_probabilities_positive, frame_probabilities_negative
 
 
 class EventDetectorGMMdeprecated(EventDetector):
@@ -1838,8 +2062,8 @@ class EventDetectorGMMdeprecated(EventDetector):
         super(EventDetectorGMMdeprecated, self).__init__(*args, **kwargs)
         self.method = 'gmm_deprecated'
 
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
         Parameters
         ----------
@@ -1847,6 +2071,8 @@ class EventDetectorGMMdeprecated(EventDetector):
             Feature data
         annotations : dict of MetadataContainers
             Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
         Returns
         -------
@@ -1866,16 +2092,16 @@ class EventDetectorGMMdeprecated(EventDetector):
             self.logger.exception(message)
             raise ValueError(message)
 
-        class_progress = tqdm(self.class_labels,
-                              file=sys.stdout,
-                              leave=False,
-                              desc='           {0:>15s}'.format('Learn '),
-                              bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}',  # [{elapsed}<{remaining}, {rate_fmt}]',
-                              disable=self.disable_progress_bar
-                              )
+        class_progress = tqdm(
+            self.class_labels,
+            file=sys.stdout,
+            leave=False,
+            desc='           {0:>15s}'.format('Learn '),
+            bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}',  # [{elapsed}<{remaining}, {rate_fmt}]',
+            disable=self.disable_progress_bar
+        )
 
         # Collect training examples
-
         activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
         for event_id, event_label in enumerate(class_progress):
             if self.log_progress:
@@ -1917,57 +2143,30 @@ class EventDetectorGMMdeprecated(EventDetector):
                     numpy.concatenate(data_negative)
                 )
 
-    def _frame_probabilities(self, feature_data, accumulation_window_length_frames=None):
-        probabilities = numpy.ones((len(self.class_labels), feature_data.shape[0])) * -numpy.inf
+    def predict(self, feature_data):
+
+        frame_probabilities_positive = numpy.empty((len(self.class_labels), feature_data.shape[0]))
+        frame_probabilities_negative = numpy.empty((len(self.class_labels), feature_data.shape[0]))
+        frame_probabilities_positive[:] = numpy.nan
+        frame_probabilities_negative[:] = numpy.nan
+
         for event_id, event_label in enumerate(self.class_labels):
-            positive = self['model'][event_label]['positive'].score_samples(feature_data.feat[0])[0]
-            negative = self['model'][event_label]['negative'].score_samples(feature_data.feat[0])[0]
-            if accumulation_window_length_frames:
-                positive = self._slide_and_accumulate(input_probabilities=positive, window_length=accumulation_window_length_frames)
-                negative = self._slide_and_accumulate(input_probabilities=negative, window_length=accumulation_window_length_frames)
-            probabilities[event_id, :] = positive - negative
+            if self['model'][event_label]['positive']:
+                frame_probabilities_positive[event_id, :] = self['model'][event_label]['positive'].score_samples(
+                    feature_data.feat[0]
+                )[0]
 
-        return probabilities
+            if self['model'][event_label]['negative']:
+                frame_probabilities_negative[event_id, :] = self['model'][event_label]['negative'].score_samples(
+                    feature_data.feat[0]
+                )[0]
 
-    def predict(self, feature_data, recognizer_params=None):
-        if recognizer_params is None:
-            recognizer_params = {}
-
-        recognizer_params = DottedDict(recognizer_params)
-
-        warnings.filterwarnings("ignore")
-        warnings.simplefilter("ignore", DeprecationWarning)
-
-        frame_probabilities = self._frame_probabilities(
-            feature_data=feature_data,
-            accumulation_window_length_frames=recognizer_params.get_path('frame_accumulation.window_length_frames')
-        )
-
-        results = []
-        for event_id, event_label in enumerate(self.class_labels):
-            if recognizer_params.get_path('frame_binarization.enable'):
-                if recognizer_params.get_path('frame_binarization.type') == 'global_threshold':
-                    event_activity = frame_probabilities[event_id, :] > recognizer_params.get_path('frame_binarization.threshold', 0.0)
-                else:
-                    message = '{name}: Unknown frame_binarization type [{type}].'.format(
-                        name=self.__class__.__name__,
-                        type=recognizer_params.get_path('frame_binarization.type')
-                    )
-                    self.logger.exception(message)
-                    raise AssertionError(message)
-            else:
-                message = '{name}: No frame_binarization enabled.'.format(name=self.__class__.__name__)
-                self.logger.exception(message)
-                raise AssertionError(message)
-
-            event_segments = self._contiguous_regions(event_activity) * self.params.get_path('hop_length_seconds')
-            for event in event_segments:
-                results.append(MetaDataItem({'event_onset': event[0], 'event_offset': event[1], 'event_label': event_label}))
-
-        return MetaDataContainer(results)
+        return frame_probabilities_positive, frame_probabilities_negative
 
 
 class EventDetectorMLP(EventDetector, KerasMixin):
+    """Simple MLP Based sequential Keras model for Sound Event Detection"""
+
     def __init__(self, *args, **kwargs):
         self.default_parameters = DottedDict({
             'win_length_seconds': 0.04,
@@ -2032,8 +2231,8 @@ class EventDetectorMLP(EventDetector, KerasMixin):
         super(EventDetectorMLP, self).__init__(*args, **kwargs)
         self.method = 'mlp'
 
-    def learn(self, data, annotations):
-        """Learn based on data ana annotations
+    def learn(self, data, annotations, data_filenames=None):
+        """Learn based on data and annotations
 
         Parameters
         ----------
@@ -2041,6 +2240,8 @@ class EventDetectorMLP(EventDetector, KerasMixin):
             Feature data
         annotations : dict of MetadataContainers
             Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
 
         Returns
         -------
@@ -2054,11 +2255,12 @@ class EventDetectorMLP(EventDetector, KerasMixin):
         # Validation files
         if self.learner_params.get_path('validation.enable', False):
             if self.learner_params.get_path('validation.setup_source').startswith('generated'):
-                validation_files = self._generate_validation(annotations=annotations,
-                                                             validation_type=self.learner_params.get_path('validation.setup_source', 'generated_scene_event_balanced'),
-                                                             valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
-                                                             seed=self.learner_params.get_path('validation.seed'),
-                                                             )
+                validation_files = self._generate_validation(
+                    annotations=annotations,
+                    validation_type=self.learner_params.get_path('validation.setup_source', 'generated_scene_event_balanced'),
+                    valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
+                    seed=self.learner_params.get_path('validation.seed'),
+                )
 
             training_files = sorted(list(set(training_files) - set(validation_files)))
         else:
@@ -2077,16 +2279,16 @@ class EventDetectorMLP(EventDetector, KerasMixin):
         activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
 
         # Process data
-        X_training = self.process_data(data=data, files=training_files)
-        Y_training = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
+        X_training = self.prepare_data(data=data, files=training_files)
+        Y_training = self.prepare_activity(activity_matrix_dict=activity_matrix_dict, files=training_files)
 
         if self.show_extra_debug:
             self.logger.debug('  Training items \t[{examples:d}]'.format(examples=len(X_training)))
 
         # Process validation data
         if validation_files:
-            X_validation = self.process_data(data=data, files=validation_files)
-            Y_validation = self.process_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
+            X_validation = self.prepare_data(data=data, files=validation_files)
+            Y_validation = self.prepare_activity(activity_matrix_dict=activity_matrix_dict, files=validation_files)
 
             validation = (X_validation, Y_validation)
 
@@ -2123,127 +2325,18 @@ class EventDetectorMLP(EventDetector, KerasMixin):
                 negative_examples_id = numpy.where(Y_training[:, 0] == 0)[0]
                 positive_examples_id = numpy.where(Y_training[:, 0] == 1)[0]
 
-                self.logger.debug('  Positives items \t[{positives:d}]\t({perc:.2f} %)'.format(
+                self.logger.debug('  Positives items \t[{positives:d}]\t({percentage:.2f} %)'.format(
                     positives=len(positive_examples_id),
-                    perc=len(positive_examples_id)/float(len(positive_examples_id)+len(negative_examples_id))*100
+                    percentage=len(positive_examples_id)/float(len(positive_examples_id)+len(negative_examples_id))*100
                 ))
-                self.logger.debug('  Negatives items \t[{negatives:d}]\t({perc:.2f} %)'.format(
+                self.logger.debug('  Negatives items \t[{negatives:d}]\t({percentage:.2f} %)'.format(
                     negatives=len(negative_examples_id),
-                    perc=len(negative_examples_id) / float(len(positive_examples_id) + len(negative_examples_id)) * 100
+                    percentage=len(negative_examples_id) / float(len(positive_examples_id) + len(negative_examples_id)) * 100
                 ))
 
                 self.logger.debug('  Class weights \t[{weights}]\t'.format(weights=class_weight))
 
-        class FancyProgbarLogger(keras.callbacks.Callback):
-            """Callback that prints metrics to stdout.
-            """
-
-            def __init__(self, callbacks=None, queue_length=10, metric=None, disable_progress_bar=False, log_progress=False):
-                if isinstance(metric, str):
-                    self.metric = metric
-                elif callable(metric):
-                    self.metric = metric.__name__
-                self.disable_progress_bar = disable_progress_bar
-                self.log_progress = log_progress
-                self.timer = Timer()
-
-            def on_train_begin(self, logs=None):
-                self.logger = logging.getLogger(__name__)
-                self.verbose = self.params['verbose']
-                self.epochs = self.params['epochs']
-                if self.log_progress:
-                    self.logger.info('Starting training process')
-                self.pbar = tqdm(total=self.epochs,
-                                 file=sys.stdout,
-                                 desc='           {0:>15s}'.format('Learn (epoch)'),
-                                 leave=False,
-                                 miniters=1,
-                                 disable=self.disable_progress_bar
-                                 )
-
-            def on_train_end(self, logs=None):
-                self.pbar.close()
-
-            def on_epoch_begin(self, epoch, logs=None):
-                if self.log_progress:
-                    self.logger.info('  Epoch %d/%d' % (epoch + 1, self.epochs))
-                self.seen = 0
-                self.timer.start()
-
-            def on_batch_begin(self, batch, logs=None):
-                if self.seen < self.params['samples']:
-                    self.log_values = []
-
-            def on_batch_end(self, batch, logs=None):
-                logs = logs or {}
-                batch_size = logs.get('size', 0)
-                self.seen += batch_size
-
-                for k in self.params['metrics']:
-                    if k in logs:
-                        self.log_values.append((k, logs[k]))
-
-            def on_epoch_end(self, epoch, logs=None):
-                logs = logs or {}
-                postfix = {
-                    'train': None,
-                    'validation': None,
-                }
-                for k in self.params['metrics']:
-                    if k in logs:
-                        self.log_values.append((k, logs[k]))
-                        if self.metric and k.endswith(self.metric):
-                            if k.startswith('val_'):
-                                postfix['validation'] = '{:4.4f}'.format(logs[k])
-                            else:
-                                postfix['train'] = '{:4.4f}'.format(logs[k])
-                self.timer.stop()
-                if self.log_progress:
-                    self.logger.info('                train={train}, validation={validation}, time={time}'.format(
-                        train=postfix['train'],
-                        validation=postfix['validation'],
-                        time=self.timer.get_string())
-                    )
-
-                self.pbar.set_postfix(postfix)
-                self.pbar.update(1)
-
-        # Add model callbacks
-        fancy_logger = FancyProgbarLogger(
-            metric=self.learner_params.get_path('model.metrics')[0],
-            disable_progress_bar=self.disable_progress_bar,
-            log_progress=self.log_progress
-        )
-
-        callbacks = [fancy_logger]
-        callback_params = self.learner_params.get_path('training,callbacks', [])
-        if callback_params:
-            for cp in callback_params:
-                if cp['type'] == 'ModelCheckpoint' and not cp['parameters'].get('filepath'):
-                    cp['parameters']['filepath'] = os.path.splitext(self.filename)[0] + '.weights.{epoch:02d}-{val_loss:.2f}.hdf5'
-
-                if cp['type'] == 'EarlyStopping' and cp.get('parameters').get('monitor').startswith('val_') and not self.learner_params.get_path('validation.enable', False):
-                    message = '{name}: Cannot use callback type [{type}] with monitor parameter [{monitor}] as there is no validation set.'.format(
-                        name=self.__class__.__name__,
-                        type=cp['type'],
-                        monitor=cp.get('parameters').get('monitor')
-                    )
-
-                    self.logger.exception(message)
-                    raise AttributeError(message)
-
-                try:
-                    CallbackClass = getattr(importlib.import_module("keras.callbacks"), cp['type'])
-                    callbacks.append(CallbackClass(**cp.get('parameters', {})))
-
-                except AttributeError:
-                    message = '{name}: Invalid Keras callback type [{type}]'.format(
-                        name=self.__class__.__name__,
-                        type=cp['type']
-                    )
-
-                    self.logger.exception(message)
-                    raise AttributeError(message)
+        callback_list = self.create_callback_list()
 
         if self.show_extra_debug:
             self.logger.debug('  Feature vector \t[{vector:d}]'.format(
@@ -2267,60 +2360,609 @@ class EventDetectorMLP(EventDetector, KerasMixin):
             validation_data=validation,
             verbose=0,
             shuffle=self.learner_params.get_path('training.shuffle', True),
-            callbacks=callbacks,
+            callbacks=callback_list,
             class_weight=class_weight
         )
 
+        # Manually update callbacks
+        for callback in callback_list:
+            if hasattr(callback, 'close'):
+                callback.close()
+
+        for callback in callback_list:
+            if isinstance(callback, StasherCallback):
+                callback.log()
+                best_weights = callback.get_best()['weights']
+                if best_weights:
+                    self.model.set_weights(best_weights)
+                break
+
         self['learning_history'] = hist.history
 
-    def predict(self, feature_data, recognizer_params=None):
-
-        if recognizer_params is None:
-            recognizer_params = {}
-
-        recognizer_params = DottedDict(recognizer_params)
+    def predict(self, feature_data):
 
         if isinstance(feature_data, FeatureContainer):
             feature_data = feature_data.feat[0]
-        frame_probabilities = self.model.predict(x=feature_data).T
 
-        if recognizer_params.get_path('frame_accumulation.enable'):
-            for event_id, event_label in enumerate(self.class_labels):
-                frame_probabilities[event_id, :] = self._slide_and_accumulate(
-                    input_probabilities=frame_probabilities[event_id, :],
-                    window_length=recognizer_params.get_path('frame_accumulation.window_length_frames'),
-                    accumulation_type=recognizer_params.get_path('frame_accumulation.type'),
+        return self.model.predict(x=feature_data).T
+
+
+class EventDetectorKerasSequential(EventDetectorMLP):
+    """Sequential Keras model for Sound Event Detection"""
+
+    def __init__(self, *args, **kwargs):
+        super(EventDetectorKerasSequential, self).__init__(*args, **kwargs)
+        self.method = 'keras_seq'
+
+        self['data_processor'] = kwargs.get('data_processor')
+        self['data_processor_training'] = kwargs.get('training_data_processor', copy.deepcopy(self['data_processor']))
+
+        self.data_generators = kwargs.get('data_generators')
+        if self.data_generators is None:
+            self.data_generators = {}
+            data_generator_list = get_class_inheritors(BaseDataGenerator)
+            for data_generator_item in data_generator_list:
+                generator = data_generator_item()
+                if generator.method:
+                    self.data_generators[generator.method] = data_generator_item
+
+    @property
+    def data_processor(self):
+        """Feature processing chain
+
+        Returns
+        -------
+         feature_processing_chain
+
+        """
+
+        return self.get('data_processor', None)
+
+    @data_processor.setter
+    def data_processor(self, value):
+        self['data_processor'] = value
+
+    @property
+    def data_processor_training(self):
+        """Feature processing chain
+
+        Returns
+        -------
+         feature_processing_chain
+
+        """
+
+        return self.get('data_processor_training', None)
+
+    @data_processor_training.setter
+    def data_processor_training(self, value):
+        self['data_processor_training'] = value
+
+    def learn(self, annotations, data=None, data_filenames=None):
+        """Learn based on data and annotations
+
+        Parameters
+        ----------
+        data : dict of FeatureContainers
+            Feature data
+        annotations : dict of MetadataContainers
+            Meta data
+        data_filenames : dict of filenames
+            Filenames of stored data
+
+        Returns
+        -------
+        self
+
+        """
+
+        if (self.learner_params.get_path('temporal_shifting.enable') and
+           not self.learner_params.get_path('generator.enable') and
+           not self.learner_params.get_path('training.epoch_processing.enable')):
+
+            message = '{name}: Temporal shifting cannot be used. Use epoch_processing or generator to allow temporal ' \
+                      'shifting of data.'.format(
+                        name=self.__class__.__name__
+                      )
+
+            self.logger.exception(message)
+            raise ValueError(message)
+
+        # Collect training files
+        training_files = sorted(list(annotations.keys()))
+
+        # Validation files
+        if self.learner_params.get_path('validation.enable', False):
+            if self.learner_params.get_path('validation.setup_source').startswith('generated'):
+                validation_files = self._generate_validation(
+                    annotations=annotations,
+                    validation_type=self.learner_params.get_path('validation.setup_source', 'generated_scene_event_balanced'),
+                    valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
+                    seed=self.learner_params.get_path('validation.seed')
                 )
 
-        results = []
-        for event_id, event_label in enumerate(self.class_labels):
-            if recognizer_params.get_path('frame_binarization.enable'):
-                if recognizer_params.get_path('frame_binarization.type') == 'global_threshold':
-                    event_activity = frame_probabilities[event_id, :] > recognizer_params.get_path('frame_binarization.threshold', 0.5)
-                else:
-                    message = '{name}: Unknown frame_binarization type [{type}].'.format(
-                        name=self.__class__.__name__,
-                        type=recognizer_params.get_path('frame_binarization.type')
+            training_files = sorted(list(set(training_files) - set(validation_files)))
+        else:
+            validation_files = []
+
+        # Double check that training and validation files are not overlapping.
+        if set(training_files).intersection(validation_files):
+            message = '{name}: Training and validation file lists are overlapping!'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
+            raise ValueError(message)
+
+        # Set seed
+        self.set_seed()
+
+        # Setup Keras
+        self._setup_keras()
+
+        with SuppressStdoutAndStderr():
+            # Import keras and suppress backend announcement printed to stderr
+            import keras
+
+        if self.learner_params.get_path('generator.enable'):
+            # Create generators
+            if self.learner_params.get_path('generator.method') in self.data_generators:
+                training_data_generator = self.data_generators[self.learner_params.get_path('generator.method')](
+                    files=training_files,
+                    data_filenames=data_filenames,
+                    annotations=annotations,
+                    data_processor=self.data_processor_training,
+                    class_labels=self.class_labels,
+                    hop_length_seconds=self.params.get_path('hop_length_seconds'),
+                    shuffle=self.learner_params.get_path('training.shuffle', True),
+                    batch_size=self.learner_params.get_path('training.batch_size', 1),
+                    data_refresh_on_each_epoch=self.learner_params.get_path('temporal_shifting.enable'),
+                    label_mode='event',
+                    **self.learner_params.get_path('generator.parameters', {})
+                )
+
+                if self.learner_params.get_path('validation.enable', False):
+                    validation_data_generator = self.data_generators[self.learner_params.get_path('generator.method')](
+                        files=validation_files,
+                        data_filenames=data_filenames,
+                        annotations=annotations,
+                        data_processor=self.data_processor,
+                        class_labels=self.class_labels,
+                        hop_length_seconds=self.params.get_path('hop_length_seconds'),
+                        shuffle=False,
+                        batch_size=self.learner_params.get_path('training.batch_size', 1),
+                        label_mode='event',
+                        **self.learner_params.get_path('generator.parameters', {})
                     )
 
-                    self.logger.exception(message)
-                    raise AssertionError(message)
-
+                else:
+                    validation_data_generator = None
             else:
-                message = '{name}: No frame_binarization enabled.'.format(
-                    name=self.__class__.__name__
+                message = '{name}: Generator method not implemented [{method}]'.format(
+                    name=self.__class__.__name__,
+                    method=self.learner_params.get_path('generator.method')
+                )
+                self.logger.exception(message)
+                raise ValueError(message)
+
+            input_shape = training_data_generator.input_size
+            training_data_size = training_data_generator.data_size
+            if validation_data_generator:
+                validation_data_size = validation_data_generator.data_size
+
+        else:
+            # Convert annotations into activity matrix format
+            activity_matrix_dict = self._get_target_matrix_dict(data, annotations)
+
+            X_training = self.prepare_data(
+                data=data,
+                files=training_files,
+                processor='training'
+            )
+            Y_training = self.prepare_activity(
+                activity_matrix_dict=activity_matrix_dict,
+                files=training_files,
+                processor='training'
+            )
+
+            if validation_files:
+                validation_data = (
+                    self.prepare_data(
+                        data=data,
+                        files=validation_files,
+                        processor='default'
+                    ),
+                    self.prepare_activity(
+                        activity_matrix_dict=activity_matrix_dict,
+                        files=validation_files,
+                        processor='default'
+                    )
                 )
 
-                self.logger.exception(message)
-                raise AssertionError(message)
+                validation_data_size = validation_data[0].shape[0]
 
-            if recognizer_params.get_path('event_activity_processing.enable'):
-                event_activity = self._activity_processing(activity_vector=event_activity,
-                                                           window_size=recognizer_params.get_path('event_activity_processing.window_length_frames'))
+            input_shape = X_training.shape[-1]
+            training_data_size = X_training.shape[0]
 
-            event_segments = self._contiguous_regions(event_activity) * self.params.get_path('hop_length_seconds')
-            for event in event_segments:
-                results.append(MetaDataItem({'event_onset': event[0], 'event_offset': event[1], 'event_label': event_label}))
+        # Create model
+        self.create_model(input_shape=input_shape)
 
-        return MetaDataContainer(results)
+        # Get processing interval
+        processing_interval = self.get_processing_interval()
+
+        # Create callbacks
+        callback_list = self.create_callback_list()
+
+        if self.show_extra_debug:
+            self.log_model_summary()
+
+            self.logger.debug('  Files')
+            self.logger.debug(
+                '    Training \t[{examples:d}]'.format(examples=training_data_size)
+            )
+
+            if validation_files:
+                self.logger.debug(
+                    '    Validation \t[{validation:d}]'.format(validation=validation_data_size)
+                )
+            self.logger.debug('  ')
+
+        class_weight = None
+        if len(self.class_labels) == 1:
+            # Special case with binary classifier
+            if self.learner_params.get_path('training.class_weight'):
+                class_weight = {}
+                for class_id, weight in enumerate(self.learner_params.get_path('training.class_weight')):
+                    class_weight[class_id] = float(weight)
+
+            if self.show_extra_debug and not self.learner_params.get_path('generator.enable'):
+                if len(Y_training.shape) == 2:
+                    negative_examples_id = numpy.where(Y_training[:, 0] == 0)[0]
+                    positive_examples_id = numpy.where(Y_training[:, 0] == 1)[0]
+
+                elif len(Y_training.shape) == 3:
+                    negative_examples_id = numpy.where(Y_training[:, :, 0] == 0)[0]
+                    positive_examples_id = numpy.where(Y_training[:, :, 0] == 1)[0]
+
+                self.logger.debug('  Items')
+                self.logger.debug('    Positive \t[{perc:.2f} %]\t({positives:d})'.format(
+                    positives=len(positive_examples_id),
+                    perc=len(positive_examples_id)/float(len(positive_examples_id)+len(negative_examples_id))*100
+                ))
+                self.logger.debug('    Negative \t[{perc:.2f} %]\t({negatives:d})'.format(
+                    negatives=len(negative_examples_id),
+                    perc=len(negative_examples_id) / float(len(positive_examples_id) + len(negative_examples_id)) * 100
+                ))
+                self.logger.debug('  Class weights \t[{weights}]\t'.format(weights=class_weight))
+                self.logger.debug('  ')
+
+        if self.show_extra_debug:
+            self.logger.debug('  Input')
+            self.logger.debug('    Feature vector \t[{vector:d}]'.format(
+                vector=input_shape)
+            )
+
+            if self.learner_params.get_path('input_sequencer.enable'):
+                self.logger.debug('    Sequence\t[{length:d}]\t\t({time:4.2f} sec)'.format(
+                    length=self.learner_params.get_path('input_sequencer.frames'),
+                    time=self.learner_params.get_path('input_sequencer.frames')*self.params.get_path('hop_length_seconds')
+                    )
+                )
+                self.logger.debug('  ')
+
+            if (self.learner_params.get_path('temporal_shifter.enable') and
+               self.learner_params.get_path('training.epoch_processing.enable')):
+
+                self.logger.debug('  Sequence shifting per epoch')
+                self.logger.debug('    Shift \t\t[{step:d} per epoch]\t({time:4.2f} sec)'.format(
+                    step=self.learner_params.get_path('temporal_shifter.step'),
+                    time=self.learner_params.get_path('temporal_shifter.step')*self.params.get_path('hop_length_seconds')
+                    )
+                )
+                self.logger.debug('    Max \t\t[{max:d} per epoch]\t({time:4.2f} sec)'.format(
+                    max=self.learner_params.get_path('temporal_shifter.max'),
+                    time=self.learner_params.get_path('temporal_shifter.max')*self.params.get_path('hop_length_seconds')
+                    )
+                )
+                self.logger.debug('    Border \t\t[{border:s}]'.format(
+                    border=self.learner_params.get_path('temporal_shifter.border', 'roll')
+                ))
+                self.logger.debug('  ')
+
+            self.logger.debug('  Batch size \t[{batch:d}]'.format(
+                batch=self.learner_params.get_path('training.batch_size', 1))
+            )
+            self.logger.debug('  Epochs \t\t[{epoch:d}]'.format(
+                epoch=self.learner_params.get_path('training.epochs', 1))
+            )
+            self.logger.debug('  ')
+
+            # Extra info about training
+            if self.learner_params.get_path('generator.enable'):
+                if training_data_generator:
+                    for i in training_data_generator.info():
+                        self.logger.debug(i)
+
+            if self.learner_params.get_path('training.epoch_processing.enable'):
+                self.logger.debug('  Epoch processing \t[{mode}]'.format(
+                    mode='Epoch-by-Epoch')
+                )
+            else:
+                self.logger.debug('  Epoch processing \t[{mode}]'.format(
+                    mode='Keras')
+                )
+            self.logger.debug('  ')
+
+            if (self.learner_params.get_path('validation.enable') and
+               self.learner_params.get_path('training.epoch_processing.enable') and
+               self.learner_params.get_path('training.epoch_processing.external_metrics.enable')):
+
+                self.logger.debug('  External metrics')
+
+                self.logger.debug('    Metrics\t\tLabel\tEvaluator:Name')
+                for metric in self.learner_params.get_path('training.epoch_processing.external_metrics.metrics'):
+                    self.logger.debug('    \t\t[{label}]\t[{metric}]'.format(
+                        label=metric.get('label'),
+                        metric=metric.get('evaluator') + ':' + metric.get('name'))
+                    )
+
+                self.logger.debug('    Interval \t[{processing_interval:d} epochs]'.format(
+                    processing_interval=processing_interval)
+                )
+
+            self.logger.debug('  ')
+
+        # Set seed
+        self.set_seed()
+
+        epochs = self.learner_params.get_path('training.epochs', 1)
+
+        # Initialize training history
+        learning_history = {
+            'loss': numpy.empty((epochs,)),
+            'val_loss': numpy.empty((epochs,)),
+        }
+        for metric in self.model.metrics:
+            learning_history[metric] = numpy.empty((epochs,))
+            learning_history['val_'+metric] = numpy.empty((epochs,))
+        for quantity in learning_history:
+            learning_history[quantity][:] = numpy.nan
+
+        if self.learner_params.get_path('training.epoch_processing.enable'):
+            # Get external metric evaluators
+            external_metric_evaluators = self.create_external_metric_evaluators()
+
+            for external_metric_id in external_metric_evaluators:
+                metric_label = external_metric_evaluators[external_metric_id]['label']
+                learning_history[metric_label] = numpy.empty((epochs,))
+                learning_history[metric_label][:] = numpy.nan
+
+            for epoch_start in range(0, epochs, processing_interval):
+                # Last epoch
+                epoch_end = epoch_start + processing_interval
+                # Make sure we have only specified amount of epochs
+                if epoch_end > epochs:
+                    epoch_end = epochs
+
+                # Model fitting
+                if self.learner_params.get_path('generator.enable'):
+                    hist = self.model.fit_generator(
+                        generator=training_data_generator.generator(),
+                        steps_per_epoch=training_data_generator.steps_count,
+                        initial_epoch=epoch_start,
+                        epochs=epoch_end,
+                        validation_data=validation_data_generator.generator(),
+                        validation_steps=validation_data_generator.steps_count,
+                        max_q_size=self.learner_params.get_path('generator.max_q_size', 1),
+                        workers=self.learner_params.get_path('generator.workers', 1),
+                        verbose=0,
+                        callbacks=callback_list,
+                        class_weight=class_weight
+                    )
+
+                else:
+                    hist = self.model.fit(
+                        x=X_training,
+                        y=Y_training,
+                        batch_size=self.learner_params.get_path('training.batch_size', 1),
+                        initial_epoch=epoch_start,
+                        epochs=epoch_end,
+                        validation_data=validation_data,
+                        verbose=0,
+                        shuffle=self.learner_params.get_path('training.shuffle', True),
+                        callbacks=callback_list,
+                        class_weight=class_weight
+                    )
+
+                # Store keras metrics into learning history log
+                for keras_metric in hist.history:
+                    learning_history[keras_metric][epoch_start:epoch_start+len(hist.history[keras_metric])] = hist.history[keras_metric]
+
+                # Evaluate validation data with external metrics
+                if (self.learner_params.get_path('validation.enable') and
+                   self.learner_params.get_path('training.epoch_processing.external_metrics.enable')):
+
+                    # Recognizer class
+                    recognizer = EventRecognizer(
+                        hop_length_seconds=self.params.get_path('hop_length_seconds'),
+                        params=self.learner_params.get_path('training.epoch_processing.recognizer'),
+                        class_labels=self.class_labels
+                    )
+
+                    for external_metric_id in external_metric_evaluators:
+                        # Reset evaluators
+                        external_metric_evaluators[external_metric_id]['evaluator'].reset()
+
+                        metric_label = external_metric_evaluators[external_metric_id]['label']
+
+                        # Evaluate validation data
+                        for validation_file in validation_files:
+                            # Get feature data
+                            if self.learner_params.get_path('generator.enable'):
+                                feature_data, feature_data_length = self.data_processor.load(
+                                    feature_filename_dict=data_filenames[validation_file]
+                                )
+
+                            else:
+                                feature_data = data[validation_file]
+
+                            frame_probabilities = self.predict(feature_data=feature_data)
+
+                            # Predict
+                            predicted = recognizer.process(frame_probabilities=frame_probabilities)
+
+                            # Get reference data
+                            meta = []
+                            for meta_item in annotations[validation_file]:
+                                if 'event_label' in meta_item and meta_item.event_label:
+                                    meta.append(meta_item)
+
+                            # Evaluate
+                            external_metric_evaluators[external_metric_id]['evaluator'].evaluate(
+                                reference_event_list=meta,
+                                estimated_event_list=predicted
+                            )
+
+                        # Get metric value
+                        metric_value = DottedDict(
+                            external_metric_evaluators[external_metric_id]['evaluator'].results()
+                        ).get_path(external_metric_evaluators[external_metric_id]['path'])
+
+                        if metric_value is None:
+                            message = '{name}: Metric was not found, evaluator:[{evaluator}] metric:[{metric}]'.format(
+                                name=self.__class__.__name__,
+                                evaluator=external_metric_evaluators[external_metric_id]['evaluator'],
+                                metric=external_metric_evaluators[external_metric_id]['path']
+                            )
+                            self.logger.exception(message)
+                            raise ValueError(message)
+
+                        # Inject external metric values to the callbacks
+                        for callback in callback_list:
+                            if hasattr(callback, 'set_external_metric_value'):
+                                callback.set_external_metric_value(
+                                    metric_label=metric_label,
+                                    metric_value=metric_value
+                                )
+
+                        # Store metric value into learning history log
+                        learning_history[metric_label][epoch_end-1] = metric_value
+
+                # Manually update callbacks
+                for callback in callback_list:
+                    if hasattr(callback, 'update'):
+                        callback.update()
+
+                # Check we need to stop training
+                stop_training = False
+                for callback in callback_list:
+                    if hasattr(callback, 'stop'):
+                        if callback.stop():
+                            stop_training = True
+
+                if stop_training:
+                    # Stop the training loop
+                    break
+
+                # Training data processing between epochs
+                if self.learner_params.get_path('temporal_shifter.enable'):
+                    # Increase temporal shifting
+                    self.data_processor_training.call_method('increase_shifting')
+
+                    if not self.learner_params.get_path('generator.enable'):
+                        # Refresh training data manually with new parameters
+                        X_training = self.prepare_data(
+                            data=data,
+                            files=training_files,
+                            processor='training'
+                        )
+                        Y_training = self.prepare_activity(
+                            activity_matrix_dict=activity_matrix_dict,
+                            files=training_files,
+                            processor='training'
+                        )
+
+        else:
+            if self.learner_params.get_path('generator.enable'):
+                hist = self.model.fit_generator(
+                    generator=training_data_generator.generator(),
+                    steps_per_epoch=training_data_generator.steps_count,
+                    epochs=epochs,
+                    validation_data=validation_data_generator.generator(),
+                    validation_steps=validation_data_generator.steps_count,
+                    max_q_size=self.learner_params.get_path('generator.max_q_size', 1),
+                    workers=1,
+                    verbose=0,
+                    callbacks=callback_list,
+                    class_weight=class_weight
+                )
+
+            else:
+                hist = self.model.fit(
+                    x=X_training,
+                    y=Y_training,
+                    batch_size=self.learner_params.get_path('training.batch_size', 1),
+                    epochs=epochs,
+                    validation_data=validation_data,
+                    verbose=0,
+                    shuffle=self.learner_params.get_path('training.shuffle', True),
+                    callbacks=callback_list,
+                    class_weight=class_weight
+                )
+
+            # Store keras metrics into learning history log
+            for keras_metric in hist.history:
+                learning_history[keras_metric][0:len(hist.history[keras_metric])] = hist.history[keras_metric]
+
+        # Manually update callbacks
+        for callback in callback_list:
+            if hasattr(callback, 'close'):
+                callback.close()
+
+        for callback in callback_list:
+            if isinstance(callback, StasherCallback):
+                callback.log()
+                best_weights = callback.get_best()['weights']
+                if best_weights:
+                    self.model.set_weights(best_weights)
+                break
+
+        # Store learning history to the model
+        self['learning_history'] = learning_history
+
+        self.logger.debug(' ')
+
+    def predict(self, feature_data):
+
+        if isinstance(feature_data, FeatureContainer):
+            feature_data = feature_data.feat[0]
+
+        if isinstance(feature_data, dict) and self.data_processor:
+            # Feature repository given, and feature processor present
+            feature_data, feature_length = self.data_processor.process(feature_data=feature_data)
+
+        # Frame probabilities
+        frame_probabilities = None
+        if len(self.model.input_shape) == 2:
+            frame_probabilities = self.model.predict(x=feature_data).T
+
+        elif len(self.model.input_shape) == 4:
+            if len(feature_data.shape) != 4:
+                # Still feature data in wrong shape, trying to recover
+                data_sequencer = DataSequencer(
+                    frames=self.model.input_shape[2],
+                    hop=self.model.input_shape[2],
+                )
+                feature_data = numpy.expand_dims(data_sequencer.process(feature_data), axis=1)
+
+            frame_probabilities = self.model.predict(x=feature_data).T
+
+            # Join sequences
+            # TODO: if data_sequencer.hop != data_sequencer.frames, do additional processing here.
+            frame_probabilities = frame_probabilities.reshape(
+                frame_probabilities.shape[0],
+                frame_probabilities.shape[1] * frame_probabilities.shape[2]
+            )
+
+        return frame_probabilities
 
