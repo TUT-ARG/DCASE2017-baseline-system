@@ -288,6 +288,7 @@ from .files import FeatureFile, AudioFile, DataFile, RepositoryFile
 from .containers import ContainerMixin, DottedDict
 from .parameters import ParameterContainer
 from .utils import filelist_exists
+from .metadata import MetaDataContainer
 
 
 class FeatureContainer(FeatureFile, ContainerMixin):
@@ -451,7 +452,7 @@ class FeatureContainer(FeatureFile, ContainerMixin):
     def meta(self, value):
         self['meta'] = value
 
-    def load(self, filename=None, filename_list=None):
+    def load(self, filename=None, filename_dict=None):
         """Load data into container
 
         If filename is given, container is loaded from disk
@@ -460,7 +461,7 @@ class FeatureContainer(FeatureFile, ContainerMixin):
         Parameters
         ----------
         filename : str, optional
-        filename_list : list, optional
+        filename_dict : dict, optional
 
         Returns
         -------
@@ -470,9 +471,9 @@ class FeatureContainer(FeatureFile, ContainerMixin):
         if filename:
             return super(FeatureContainer, self).load(filename=filename)
 
-        if filename_list:
+        if filename_dict:
             repository = FeatureRepository({})
-            for method, filename in iteritems(filename_list):
+            for method, filename in iteritems(filename_dict):
                 repository[method] = FeatureContainer().load(filename=filename)
 
             return repository
@@ -491,8 +492,9 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
 
         Parameters
         ----------
-        filename_list: list, optional
-            If filename_list is given container is loaded in the initialization stage.
+        filename_dict: dict
+            Dict of file paths, feature extraction method label as key, and filename as value.
+            If given, features are loaded in the initialization stage.
             Default value "None"
 
         features: list, optional
@@ -501,17 +503,19 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
 
         super(FeatureRepository, self).__init__(*args, **kwargs)
 
-        if kwargs.get('filename_list', None):
-            self.filename_list = kwargs.get('filename_list', None)
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
+
+        if kwargs.get('filename_dict', None):
+            self.filename_dict = kwargs.get('filename_dict', None)
             self.load()
 
-    def load(self, filename_list=None):
+    def load(self, filename_dict=None):
         """Load file list
 
         Parameters
         ----------
-        filename_list : list
-            List of file paths
+        filename_dict : dict
+            Dict of file paths, feature extraction method label as key, and filename as value.
 
         Returns
         -------
@@ -519,18 +523,26 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
 
         """
 
-        if filename_list:
-            self.filename_list = filename_list
+        if filename_dict:
+            self.filename_dict = filename_dict
 
-        if self.filename_list and filelist_exists(self.filename_list):
+        if self.filename_dict and filelist_exists(self.filename_dict):
             dict.clear(self)
-            sorted(self.filename_list)
-            for method, filename in iteritems(self.filename_list):
+            sorted(self.filename_dict)
+            for method, filename in iteritems(self.filename_dict):
                 if not method.startswith('_'):
                     # Skip method starting with '_', those are just for extra info
                     self[method] = FeatureContainer().load(filename=filename)
 
             return self
+
+        else:
+            message = '{name}: Feature repository cannot be loaded [{filename_dict}]'.format(
+                name=self.__class__.__name__,
+                filename_dict=self.filename_dict
+            )
+            self.logger.exception(message)
+            raise IOError(message)
 
 
 class FeatureExtractor(object):
@@ -1150,7 +1162,13 @@ class FeatureExtractor(object):
         return d
 
 
-class FeatureStacker(object):
+class FeatureProcessingUnitMixin(object):
+    """Feature processing chain unit mixin"""
+    def process(self, feature_data):
+        pass
+
+
+class FeatureStacker(FeatureProcessingUnitMixin):
     """Feature stacker"""
     __version__ = '0.0.1'
 
@@ -1345,12 +1363,12 @@ class FeatureStacker(object):
 
         return FeatureContainer(features=[numpy.hstack(feature_matrix)], meta=meta)
 
-    def process(self, feature_repository):
+    def process(self, feature_data):
         """Feature vector creation
 
         Parameters
         ----------
-        feature_repository : FeatureRepository
+        feature_data : FeatureRepository
             Feature repository with needed features
 
         Returns
@@ -1359,10 +1377,10 @@ class FeatureStacker(object):
 
         """
 
-        return self.feature_vector(feature_repository=feature_repository)
+        return self.feature_vector(feature_repository=feature_data)
 
 
-class FeatureNormalizer(DataFile, ContainerMixin):
+class FeatureNormalizer(DataFile, ContainerMixin, FeatureProcessingUnitMixin):
     """Feature normalizer
 
     Accumulates feature statistics
@@ -1540,12 +1558,12 @@ class FeatureNormalizer(DataFile, ContainerMixin):
         elif isinstance(feature_container, numpy.ndarray):
             return (feature_container - self['mean'][channel]) / self['std'][channel]
 
-    def process(self, feature_container):
+    def process(self, feature_data):
         """Normalize feature matrix with internal statistics of the class
 
         Parameters
         ----------
-        feature_container : numpy.ndarray [shape=(frames, number of feature values)]
+        feature_data : FeatureContainer or numpy.ndarray [shape=(frames, number of feature values)]
             Feature matrix to be normalized
 
         Returns
@@ -1555,10 +1573,10 @@ class FeatureNormalizer(DataFile, ContainerMixin):
 
         """
 
-        return self.normalize(feature_container=feature_container)
+        return self.normalize(feature_container=feature_data)
 
 
-class FeatureAggregator(object):
+class FeatureAggregator(FeatureProcessingUnitMixin):
     """Feature aggregator"""
     __version__ = '0.0.1'
 
@@ -1603,12 +1621,12 @@ class FeatureAggregator(object):
         self.win_length_frames = d['win_length_frames']
         self.hop_length_frames = d['hop_length_frames']
 
-    def process(self, feature_container):
+    def process(self, feature_data):
         """Process features
 
         Parameters
         ----------
-        feature_container : FeatureContainer
+        feature_data : FeatureContainer
             Features to be aggregated
         Returns
         -------
@@ -1619,9 +1637,9 @@ class FeatureAggregator(object):
         # Not the most efficient way as numpy stride_tricks would produce
         # faster code, however, opted for cleaner presentation this time.
         feature_data_per_channel = []
-        for channel in range(0, feature_container.channels):
+        for channel in range(0, feature_data.channels):
             aggregated_features = []
-            for frame in range(0, feature_container.feat[channel].shape[0], self.hop_length_frames):
+            for frame in range(0, feature_data.feat[channel].shape[0], self.hop_length_frames):
                 # Get start and end of the window, keep frame at the middle (approximately)
                 start_frame = int(frame - numpy.floor(self.win_length_frames/2.0))
                 end_frame = int(frame + numpy.ceil(self.win_length_frames / 2.0))
@@ -1631,9 +1649,9 @@ class FeatureAggregator(object):
                 frame_id[frame_id < 0] = 0
 
                 # If end of the feature matrix, pad with last frame
-                frame_id[frame_id > feature_container.feat[channel].shape[0]-1] = feature_container.feat[channel].shape[0] - 1
+                frame_id[frame_id > feature_data.feat[channel].shape[0] - 1] = feature_data.feat[channel].shape[0] - 1
 
-                current_frame = feature_container.feat[channel][frame_id, :]
+                current_frame = feature_data.feat[channel][frame_id, :]
                 aggregated_frame = []
 
                 if 'mean' in self.recipe:
@@ -1668,8 +1686,8 @@ class FeatureAggregator(object):
             'datetime': strftime("%Y-%m-%d %H:%M:%S", gmtime()),
         }
 
-        if 'audio_file' in feature_container.meta:
-            meta['audio_file'] = feature_container.meta['audio_file']
+        if 'audio_file' in feature_data.meta:
+            meta['audio_file'] = feature_data.meta['audio_file']
 
         return FeatureContainer(features=feature_data_per_channel, meta=meta)
 
@@ -1689,6 +1707,9 @@ class FeatureMasker(object):
         """
         self.hop_length_seconds = kwargs.get('hop_length_seconds')
 
+        # Initialize mask events
+        self.mask_events = MetaDataContainer()
+
     def __getstate__(self):
         # Return only needed data for pickle
         return {
@@ -1697,17 +1718,29 @@ class FeatureMasker(object):
 
     def __setstate__(self, d):
         self.hop_length_seconds = d['hop_length_seconds']
+        self.mask_events = MetaDataContainer()
 
-    def process(self, feature_repository, mask_events, hop_length_seconds=None):
-        """Process feature repository
+    def set_mask(self, mask_events):
+        """Set masking events
 
         Parameters
         ----------
-        feature_repository : FeatureRepository
         mask_events : list of MetaItems or MetaDataContainer
             Event list used for masking
-        hop_length_seconds : float
-            Hop length in seconds, if none given one given for constructor used
+
+        """
+
+        self.mask_events = mask_events
+        return self
+
+    def masking(self, feature_data, mask_event):
+        """Masking feature repository with given events
+
+        Parameters
+        ----------
+        feature_data : FeatureRepository
+        mask_events : list of MetaItems or MetaDataContainer
+            Event list used for masking
 
         Returns
         -------
@@ -1715,20 +1748,35 @@ class FeatureMasker(object):
 
         """
 
-        if not hop_length_seconds:
-            hop_length_seconds = self.hop_length_seconds
+        for method in list(feature_data.keys()):
+            removal_mask = numpy.ones((feature_data[method].shape[0]), dtype=bool)
+            for mask_event in self.mask_events:
+                onset_frame = int(numpy.floor(mask_event.event_onset / self.hop_length_seconds))
+                offset_frame = int(numpy.ceil(mask_event.event_offset / self.hop_length_seconds))
+                if offset_frame > feature_data[method].shape[0]:
+                    offset_frame = feature_data[method].shape[0]
+                removal_mask[onset_frame:offset_frame] = False
 
-        if mask_events:
-            for method in list(feature_repository.keys()):
-                removal_mask = numpy.ones((feature_repository[method].shape[0]), dtype=bool)
-                for mask_event in mask_events:
-                    onset_frame = int(numpy.floor(mask_event.event_onset / hop_length_seconds))
-                    offset_frame = int(numpy.ceil(mask_event.event_offset / hop_length_seconds))
-                    if offset_frame > feature_repository[method].shape[0]:
-                        offset_frame = feature_repository[method].shape[0]
-                    removal_mask[onset_frame:offset_frame] = False
-                for channel in range(0, feature_repository[method].channels):
-                    feature_repository[method].feat[channel] = feature_repository[method].feat[channel][removal_mask, :]
+            for channel in range(0, feature_data[method].channels):
+                feature_data[method].feat[channel] = feature_data[method].feat[channel][removal_mask, :]
 
-        return feature_repository
+        return feature_data
+
+    def process(self, feature_data):
+        """Process feature repository
+
+        Parameters
+        ----------
+        feature_data : FeatureRepository
+
+        Returns
+        -------
+        FeatureRepository
+
+        """
+
+        if self.mask_events:
+            return self.masking(feature_data=feature_data, mask_event=self.mask_events)
+        else:
+            return feature_data
 
