@@ -1,0 +1,6 @@
+dcase_framework.recognizers.SceneRecognizer.process
+===================================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. automethod:: SceneRecognizer.process

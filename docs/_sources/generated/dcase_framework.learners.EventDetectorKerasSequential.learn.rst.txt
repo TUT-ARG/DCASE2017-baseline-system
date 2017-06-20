@@ -1,0 +1,6 @@
+dcase_framework.learners.EventDetectorKerasSequential.learn
+===========================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: EventDetectorKerasSequential.learn

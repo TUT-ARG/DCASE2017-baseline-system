@@ -1,0 +1,6 @@
+dcase_framework.data.DataBuffer.count
+=====================================
+
+.. currentmodule:: dcase_framework.data
+
+.. automethod:: DataBuffer.count

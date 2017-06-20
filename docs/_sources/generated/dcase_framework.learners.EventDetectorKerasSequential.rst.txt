@@ -1,0 +1,79 @@
+dcase_framework.learners.EventDetectorKerasSequential
+=====================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: EventDetectorKerasSequential
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventDetectorKerasSequential.__init__
+      ~EventDetectorKerasSequential.clear
+      ~EventDetectorKerasSequential.copy
+      ~EventDetectorKerasSequential.create_model
+      ~EventDetectorKerasSequential.detect_file_format
+      ~EventDetectorKerasSequential.empty
+      ~EventDetectorKerasSequential.exists
+      ~EventDetectorKerasSequential.fromkeys
+      ~EventDetectorKerasSequential.get
+      ~EventDetectorKerasSequential.get_dump_content
+      ~EventDetectorKerasSequential.get_file_information
+      ~EventDetectorKerasSequential.get_hash
+      ~EventDetectorKerasSequential.get_hash_for_path
+      ~EventDetectorKerasSequential.get_path
+      ~EventDetectorKerasSequential.has_key
+      ~EventDetectorKerasSequential.items
+      ~EventDetectorKerasSequential.iteritems
+      ~EventDetectorKerasSequential.iterkeys
+      ~EventDetectorKerasSequential.itervalues
+      ~EventDetectorKerasSequential.keras_model_exists
+      ~EventDetectorKerasSequential.keys
+      ~EventDetectorKerasSequential.learn
+      ~EventDetectorKerasSequential.load
+      ~EventDetectorKerasSequential.log
+      ~EventDetectorKerasSequential.log_model_summary
+      ~EventDetectorKerasSequential.merge
+      ~EventDetectorKerasSequential.plot_model
+      ~EventDetectorKerasSequential.pop
+      ~EventDetectorKerasSequential.popitem
+      ~EventDetectorKerasSequential.predict
+      ~EventDetectorKerasSequential.process_activity
+      ~EventDetectorKerasSequential.process_data
+      ~EventDetectorKerasSequential.save
+      ~EventDetectorKerasSequential.set_path
+      ~EventDetectorKerasSequential.set_seed
+      ~EventDetectorKerasSequential.setdefault
+      ~EventDetectorKerasSequential.show
+      ~EventDetectorKerasSequential.update
+      ~EventDetectorKerasSequential.values
+      ~EventDetectorKerasSequential.viewitems
+      ~EventDetectorKerasSequential.viewkeys
+      ~EventDetectorKerasSequential.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventDetectorKerasSequential.class_labels
+      ~EventDetectorKerasSequential.feature_aggregator
+      ~EventDetectorKerasSequential.feature_masker
+      ~EventDetectorKerasSequential.feature_normalizer
+      ~EventDetectorKerasSequential.feature_processing_chain
+      ~EventDetectorKerasSequential.feature_stacker
+      ~EventDetectorKerasSequential.learner_params
+      ~EventDetectorKerasSequential.method
+      ~EventDetectorKerasSequential.model
+      ~EventDetectorKerasSequential.params
+      ~EventDetectorKerasSequential.valid_formats
+   
+   

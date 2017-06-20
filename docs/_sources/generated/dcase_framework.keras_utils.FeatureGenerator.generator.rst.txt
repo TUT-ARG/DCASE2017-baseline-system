@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.FeatureGenerator.generator
+======================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: FeatureGenerator.generator

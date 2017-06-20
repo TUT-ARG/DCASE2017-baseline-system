@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.BaseDataGenerator.input_size
+========================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. autoattribute:: BaseDataGenerator.input_size

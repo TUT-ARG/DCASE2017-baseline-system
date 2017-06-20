@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.BaseDataGenerator.steps_count
+=========================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. autoattribute:: BaseDataGenerator.steps_count

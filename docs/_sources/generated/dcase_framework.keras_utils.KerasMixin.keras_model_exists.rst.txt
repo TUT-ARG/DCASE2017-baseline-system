@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.KerasMixin.keras_model_exists
+=========================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: KerasMixin.keras_model_exists

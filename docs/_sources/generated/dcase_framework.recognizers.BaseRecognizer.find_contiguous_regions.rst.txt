@@ -1,0 +1,6 @@
+dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions
+==================================================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. automethod:: BaseRecognizer.find_contiguous_regions

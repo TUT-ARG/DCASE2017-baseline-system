@@ -1,0 +1,23 @@
+dcase_framework.utils.SimpleMathStringEvaluator
+===============================================
+
+.. currentmodule:: dcase_framework.utils
+
+.. autoclass:: SimpleMathStringEvaluator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SimpleMathStringEvaluator.__init__
+      ~SimpleMathStringEvaluator.eval
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+dcase_framework.data.DataProcessor.load
+=======================================
+
+.. currentmodule:: dcase_framework.data
+
+.. automethod:: DataProcessor.load

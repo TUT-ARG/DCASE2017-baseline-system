@@ -1,0 +1,34 @@
+dcase_framework.keras_utils.BaseDataGenerator
+=============================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. autoclass:: BaseDataGenerator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BaseDataGenerator.__init__
+      ~BaseDataGenerator.info
+      ~BaseDataGenerator.on_epoch_end
+      ~BaseDataGenerator.on_epoch_start
+      ~BaseDataGenerator.process_item
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BaseDataGenerator.data_size
+      ~BaseDataGenerator.input_size
+      ~BaseDataGenerator.steps_count
+   
+   

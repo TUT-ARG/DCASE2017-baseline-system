@@ -1,0 +1,6 @@
+dcase_framework.recognizers.EventRecognizer.process_ratio
+=========================================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. automethod:: EventRecognizer.process_ratio

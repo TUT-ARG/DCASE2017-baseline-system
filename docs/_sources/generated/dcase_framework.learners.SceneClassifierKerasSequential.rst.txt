@@ -1,0 +1,83 @@
+dcase_framework.learners.SceneClassifierKerasSequential
+=======================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. autoclass:: SceneClassifierKerasSequential
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SceneClassifierKerasSequential.__init__
+      ~SceneClassifierKerasSequential.clear
+      ~SceneClassifierKerasSequential.copy
+      ~SceneClassifierKerasSequential.create_callback_list
+      ~SceneClassifierKerasSequential.create_external_metric_evaluators
+      ~SceneClassifierKerasSequential.create_model
+      ~SceneClassifierKerasSequential.detect_file_format
+      ~SceneClassifierKerasSequential.empty
+      ~SceneClassifierKerasSequential.exists
+      ~SceneClassifierKerasSequential.fromkeys
+      ~SceneClassifierKerasSequential.get
+      ~SceneClassifierKerasSequential.get_dump_content
+      ~SceneClassifierKerasSequential.get_file_information
+      ~SceneClassifierKerasSequential.get_hash
+      ~SceneClassifierKerasSequential.get_hash_for_path
+      ~SceneClassifierKerasSequential.get_path
+      ~SceneClassifierKerasSequential.get_processing_interval
+      ~SceneClassifierKerasSequential.has_key
+      ~SceneClassifierKerasSequential.items
+      ~SceneClassifierKerasSequential.iteritems
+      ~SceneClassifierKerasSequential.iterkeys
+      ~SceneClassifierKerasSequential.itervalues
+      ~SceneClassifierKerasSequential.keras_model_exists
+      ~SceneClassifierKerasSequential.keys
+      ~SceneClassifierKerasSequential.learn
+      ~SceneClassifierKerasSequential.load
+      ~SceneClassifierKerasSequential.log
+      ~SceneClassifierKerasSequential.log_model_summary
+      ~SceneClassifierKerasSequential.merge
+      ~SceneClassifierKerasSequential.plot_model
+      ~SceneClassifierKerasSequential.pop
+      ~SceneClassifierKerasSequential.popitem
+      ~SceneClassifierKerasSequential.predict
+      ~SceneClassifierKerasSequential.process_activity
+      ~SceneClassifierKerasSequential.process_data
+      ~SceneClassifierKerasSequential.save
+      ~SceneClassifierKerasSequential.set_path
+      ~SceneClassifierKerasSequential.set_seed
+      ~SceneClassifierKerasSequential.setdefault
+      ~SceneClassifierKerasSequential.show
+      ~SceneClassifierKerasSequential.update
+      ~SceneClassifierKerasSequential.values
+      ~SceneClassifierKerasSequential.viewitems
+      ~SceneClassifierKerasSequential.viewkeys
+      ~SceneClassifierKerasSequential.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SceneClassifierKerasSequential.class_labels
+      ~SceneClassifierKerasSequential.data_processor
+      ~SceneClassifierKerasSequential.data_processor_training
+      ~SceneClassifierKerasSequential.feature_aggregator
+      ~SceneClassifierKerasSequential.feature_masker
+      ~SceneClassifierKerasSequential.feature_normalizer
+      ~SceneClassifierKerasSequential.feature_stacker
+      ~SceneClassifierKerasSequential.learner_params
+      ~SceneClassifierKerasSequential.method
+      ~SceneClassifierKerasSequential.model
+      ~SceneClassifierKerasSequential.params
+      ~SceneClassifierKerasSequential.valid_formats
+   
+   

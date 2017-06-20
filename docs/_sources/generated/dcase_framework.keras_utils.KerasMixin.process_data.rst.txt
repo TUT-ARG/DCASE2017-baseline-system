@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.KerasMixin.process_data
+===================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: KerasMixin.process_data

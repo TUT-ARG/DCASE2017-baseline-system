@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.KerasMixin.process_activity
+=======================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: KerasMixin.process_activity

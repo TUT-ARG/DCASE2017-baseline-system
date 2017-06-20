@@ -1,0 +1,6 @@
+dcase_framework.recognizers.BaseRecognizer.collapse_probabilities
+=================================================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. automethod:: BaseRecognizer.collapse_probabilities

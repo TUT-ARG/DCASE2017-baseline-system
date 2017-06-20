@@ -1,0 +1,6 @@
+dcase_framework.metadata.MetaDataItem.id
+========================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: MetaDataItem.id

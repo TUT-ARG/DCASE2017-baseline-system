@@ -1,0 +1,32 @@
+dcase_framework.data.ProcessingChain
+====================================
+
+.. currentmodule:: dcase_framework.data
+
+.. autoclass:: ProcessingChain
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProcessingChain.append
+      ~ProcessingChain.call_method
+      ~ProcessingChain.count
+      ~ProcessingChain.extend
+      ~ProcessingChain.index
+      ~ProcessingChain.insert
+      ~ProcessingChain.pop
+      ~ProcessingChain.process
+      ~ProcessingChain.remove
+      ~ProcessingChain.reverse
+      ~ProcessingChain.sort
+   
+   
+
+   
+   
+   

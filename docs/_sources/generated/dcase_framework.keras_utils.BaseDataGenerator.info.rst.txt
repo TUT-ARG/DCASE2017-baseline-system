@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.BaseDataGenerator.info
+==================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: BaseDataGenerator.info

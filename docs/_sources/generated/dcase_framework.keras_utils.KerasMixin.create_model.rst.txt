@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.KerasMixin.create_model
+===================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: KerasMixin.create_model

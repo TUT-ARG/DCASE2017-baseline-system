@@ -1,0 +1,6 @@
+dcase_framework.recognizers.BaseRecognizer.process_activity
+===========================================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. automethod:: BaseRecognizer.process_activity

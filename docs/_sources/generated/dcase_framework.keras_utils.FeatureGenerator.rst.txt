@@ -1,0 +1,35 @@
+dcase_framework.keras_utils.FeatureGenerator
+============================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. autoclass:: FeatureGenerator
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FeatureGenerator.__init__
+      ~FeatureGenerator.generator
+      ~FeatureGenerator.info
+      ~FeatureGenerator.on_epoch_end
+      ~FeatureGenerator.on_epoch_start
+      ~FeatureGenerator.process_item
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FeatureGenerator.data_size
+      ~FeatureGenerator.input_size
+      ~FeatureGenerator.steps_count
+   
+   
