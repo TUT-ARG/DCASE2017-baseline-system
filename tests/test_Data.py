@@ -136,7 +136,7 @@ def test_data_sequencer():
     # Non-perfect fitting without padding, and push shifting
     data = [numpy.arange(0, 11), numpy.arange(0, 11), numpy.arange(0, 11)]
     data = numpy.vstack(data).T
-    ds = DataSequencer(frames=2, hop=2, padding=False, shift_step=1, shift_border='push')
+    ds = DataSequencer(frames=2, hop=2, padding=False, shift_step=1, shift_border='shift')
     ds.increase_shifting()
     seq = ds.process(data)
     nose.tools.eq_(len(seq), 5)
@@ -227,8 +227,3 @@ def test_data_processor():
     )
 
     numpy.testing.assert_array_equal(target_data, processed_data[:, 0, :, :])
-
-    from IPython import embed
-    #embed()
-
-#test_data_processor()
