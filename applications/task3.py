@@ -168,15 +168,16 @@ def main(argv):
         # Setup logging
         setup_logging(parameter_container=params['logging'])
 
-        app = Task3AppCore(name='DCASE 2017::Sound Event Detection in Real-life Audio / Baseline System',
-                           params=params,
-                           system_desc=params.get('description'),
-                           system_parameter_set_id=params.get('active_set'),
-                           setup_label='Development setup',
-                           log_system_progress=params.get_path('general.log_system_progress'),
-                           show_progress_in_console=params.get_path('general.print_system_progress'),
-                           use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
-                           )
+        app = Task3AppCore(
+            name='DCASE 2017::Sound Event Detection in Real-life Audio / Baseline System',
+            params=params,
+            system_desc=params.get('description'),
+            system_parameter_set_id=params.get('active_set'),
+            setup_label='Development setup',
+            log_system_progress=params.get_path('general.log_system_progress'),
+            show_progress_in_console=params.get_path('general.print_system_progress'),
+            use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
+        )
 
         # Show parameter set list and exit
         if args.show_set_list:
@@ -251,15 +252,17 @@ def main(argv):
                 # If in submission mode, save results in separate folder for easier access
                 params['path']['recognizer'] = params.get_path('path.recognizer_challenge_output')
 
-            challenge_app = Task3AppCore(name='DCASE 2017::Sound Event Detection in Real-life Audio / Baseline System',
-                                         params=params,
-                                         system_desc=params.get('description'),
-                                         system_parameter_set_id=params.get('active_set'),
-                                         setup_label='Evaluation setup',
-                                         log_system_progress=params.get_path('general.log_system_progress'),
-                                         show_progress_in_console=params.get_path('general.print_system_progress'),
-                                         use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
-                                         )
+            challenge_app = Task3AppCore(
+                name='DCASE 2017::Sound Event Detection in Real-life Audio / Baseline System',
+                params=params,
+                system_desc=params.get('description'),
+                system_parameter_set_id=params.get('active_set'),
+                setup_label='Evaluation setup',
+                log_system_progress=params.get_path('general.log_system_progress'),
+                show_progress_in_console=params.get_path('general.print_system_progress'),
+                use_ascii_progress_bar=params.get_path('general.use_ascii_progress_bar')
+            )
+
             # Initialize application
             if params['flow']['initialize']:
                 challenge_app.initialize()
