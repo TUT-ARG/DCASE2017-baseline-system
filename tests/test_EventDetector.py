@@ -91,61 +91,6 @@ def test_get_target_matrix_dict():
     nose.tools.eq_(numpy.sum(target_matrix['file2.wav'][:, 1] == 1), 50)
 
 
-def test_contiguous_regions():
-    ed = EventDetector(
-        class_labels=['event1', 'event2'],
-        disable_progress_bar=True,
-        params={
-            'hop_length_seconds': 0.02,
-        }
-    )
-    activity_array = numpy.array([0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1])
-    res = ed._contiguous_regions(activity_array=activity_array).tolist()
-    nose.tools.assert_list_equal(res, [[4, 8], [12, 14], [16, 20]])
-
-
-def test_slide_and_accumulate():
-
-    ed = EventDetector(
-        class_labels=['event1', 'event2'],
-        disable_progress_bar=True,
-        params={
-            'hop_length_seconds': 0.02,
-        }
-    )
-    probabilities = numpy.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0])
-
-    # Test sum
-    res = ed._slide_and_accumulate(input_probabilities=probabilities, window_length=2, accumulation_type='sliding_sum').tolist()
-    nose.tools.assert_list_equal(res, [3, 5, 7, 9, 11, 13, 15, 17, 9, 10])
-
-    # Test mean
-    res = ed._slide_and_accumulate(input_probabilities=probabilities, window_length=2, accumulation_type='sliding_mean').tolist()
-    nose.tools.assert_list_equal(res, [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.0, 10.0])
-
-    # Test median
-    res = ed._slide_and_accumulate(input_probabilities=probabilities, window_length=3, accumulation_type='sliding_median').tolist()
-    nose.tools.assert_list_equal(res, [2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 8.0, 9.0, 10.0])
-
-    nose.tools.assert_raises(AssertionError, ed._slide_and_accumulate, probabilities, 2, "test")
-
-
-def test_activity_processing():
-
-    ed = EventDetector(
-        class_labels=['event1', 'event2'],
-        disable_progress_bar=True,
-        params={
-            'hop_length_seconds': 0.02,
-        }
-    )
-    activity = numpy.array([1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0])
-    res = ed._activity_processing(activity_vector=activity, window_size=3, processing_type="median_filtering").tolist()
-    nose.tools.assert_list_equal(res, [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0])
-
-    nose.tools.assert_raises(AssertionError, ed._activity_processing, activity, 3, "test")
-
-
 def test_generate_validation():
 
     annotations = {

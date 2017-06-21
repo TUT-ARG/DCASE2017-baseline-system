@@ -1,0 +1,6 @@
+dcase_framework.data.DataBuffer.get
+===================================
+
+.. currentmodule:: dcase_framework.data
+
+.. automethod:: DataBuffer.get

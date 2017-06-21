@@ -290,6 +290,7 @@ from .parameters import ParameterContainer
 from .utils import filelist_exists
 from .metadata import MetaDataContainer
 
+
 class FeatureContainer(FeatureFile, ContainerMixin):
     """Feature container inherited from dict
 
@@ -451,7 +452,7 @@ class FeatureContainer(FeatureFile, ContainerMixin):
     def meta(self, value):
         self['meta'] = value
 
-    def load(self, filename=None, filename_list=None):
+    def load(self, filename=None, filename_dict=None):
         """Load data into container
 
         If filename is given, container is loaded from disk
@@ -460,7 +461,7 @@ class FeatureContainer(FeatureFile, ContainerMixin):
         Parameters
         ----------
         filename : str, optional
-        filename_list : list, optional
+        filename_dict : dict, optional
 
         Returns
         -------
@@ -470,9 +471,9 @@ class FeatureContainer(FeatureFile, ContainerMixin):
         if filename:
             return super(FeatureContainer, self).load(filename=filename)
 
-        if filename_list:
+        if filename_dict:
             repository = FeatureRepository({})
-            for method, filename in iteritems(filename_list):
+            for method, filename in iteritems(filename_dict):
                 repository[method] = FeatureContainer().load(filename=filename)
 
             return repository
@@ -491,8 +492,9 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
 
         Parameters
         ----------
-        filename_list: list, optional
-            If filename_list is given container is loaded in the initialization stage.
+        filename_dict: dict
+            Dict of file paths, feature extraction method label as key, and filename as value.
+            If given, features are loaded in the initialization stage.
             Default value "None"
 
         features: list, optional
@@ -501,17 +503,19 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
 
         super(FeatureRepository, self).__init__(*args, **kwargs)
 
-        if kwargs.get('filename_list', None):
-            self.filename_list = kwargs.get('filename_list', None)
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
+
+        if kwargs.get('filename_dict', None):
+            self.filename_dict = kwargs.get('filename_dict', None)
             self.load()
 
-    def load(self, filename_list=None):
+    def load(self, filename_dict=None):
         """Load file list
 
         Parameters
         ----------
-        filename_list : list
-            List of file paths
+        filename_dict : dict
+            Dict of file paths, feature extraction method label as key, and filename as value.
 
         Returns
         -------
@@ -519,18 +523,26 @@ class FeatureRepository(RepositoryFile, ContainerMixin):
 
         """
 
-        if filename_list:
-            self.filename_list = filename_list
+        if filename_dict:
+            self.filename_dict = filename_dict
 
-        if self.filename_list and filelist_exists(self.filename_list):
+        if self.filename_dict and filelist_exists(self.filename_dict):
             dict.clear(self)
-            sorted(self.filename_list)
-            for method, filename in iteritems(self.filename_list):
+            sorted(self.filename_dict)
+            for method, filename in iteritems(self.filename_dict):
                 if not method.startswith('_'):
                     # Skip method starting with '_', those are just for extra info
                     self[method] = FeatureContainer().load(filename=filename)
 
             return self
+
+        else:
+            message = '{name}: Feature repository cannot be loaded [{filename_dict}]'.format(
+                name=self.__class__.__name__,
+                filename_dict=self.filename_dict
+            )
+            self.logger.exception(message)
+            raise IOError(message)
 
 
 class FeatureExtractor(object):

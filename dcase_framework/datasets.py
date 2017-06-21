@@ -2540,22 +2540,22 @@ class TUTSoundEvents_2017_DevelopmentSet(SoundEventDataset):
                 'local_audio_path': os.path.join(self.local_path, 'audio', 'street'),
             },
             {
-                'remote_package': 'https://zenodo.org/record/400516/files/TUT-sound-events-2017-development.doc.zip',
+                'remote_package': 'https://zenodo.org/record/814831/files/TUT-sound-events-2017-development.doc.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-development.doc.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'https://zenodo.org/record/400516/files/TUT-sound-events-2017-development.meta.zip',
+                'remote_package': 'https://zenodo.org/record/814831/files/TUT-sound-events-2017-development.meta.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-development.meta.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'https://zenodo.org/record/400516/files/TUT-sound-events-2017-development.audio.1.zip',
+                'remote_package': 'https://zenodo.org/record/814831/files/TUT-sound-events-2017-development.audio.1.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-development.audio.1.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'https://zenodo.org/record/400516/files/TUT-sound-events-2017-development.audio.2.zip',
+                'remote_package': 'https://zenodo.org/record/814831/files/TUT-sound-events-2017-development.audio.2.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-development.audio.2.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },

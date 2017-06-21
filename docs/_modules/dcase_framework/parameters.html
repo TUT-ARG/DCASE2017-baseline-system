@@ -341,6 +341,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
 </ul>
@@ -354,6 +355,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../metadata.html">Meta data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../metadata.html#metadataitem">MetaDataItem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.id.html">dcase_framework.metadata.MetaDataItem.id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
@@ -457,23 +459,46 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../learners.html">Learners</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../learners.html#sceneclassifier">SceneClassifier</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#sceneclassifiergmm">SceneClassifierGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#sceneclassifiermlp">SceneClassifierMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#sceneclassifierkerassequential">SceneClassifierKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierKerasSequential.html">dcase_framework.learners.SceneClassifierKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html">dcase_framework.learners.SceneClassifierKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html">dcase_framework.learners.SceneClassifierKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../learners.html#eventdetector">EventDetector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#eventdetectorgmm">EventDetectorGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#eventdetectormlp">EventDetectorMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#eventdetectorkerassequential">EventDetectorKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorKerasSequential.html">dcase_framework.learners.EventDetectorKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html">dcase_framework.learners.EventDetectorKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html">dcase_framework.learners.EventDetectorKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../learners.html#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
@@ -488,6 +513,109 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../recognizers.html">Recognizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../recognizers.html#scenerecognizer">SceneRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.SceneRecognizer.html">dcase_framework.recognizers.SceneRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.SceneRecognizer.process.html">dcase_framework.recognizers.SceneRecognizer.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../recognizers.html#eventrecognizer">EventRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.EventRecognizer.html">dcase_framework.recognizers.EventRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.EventRecognizer.process.html">dcase_framework.recognizers.EventRecognizer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.EventRecognizer.process_ratio.html">dcase_framework.recognizers.EventRecognizer.process_ratio</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../recognizers.html#baserecognizer">BaseRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.html">dcase_framework.recognizers.BaseRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions.html">dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.process_activity.html">dcase_framework.recognizers.BaseRecognizer.process_activity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../data.html">Data utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#datasequencer">DataSequencer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataSequencer.html">dcase_framework.data.DataSequencer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataSequencer.process.html">dcase_framework.data.DataSequencer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataSequencer.increase_shifting.html">dcase_framework.data.DataSequencer.increase_shifting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#dataprocessor">DataProcessor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.html">dcase_framework.data.DataProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.load.html">dcase_framework.data.DataProcessor.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process.html">dcase_framework.data.DataProcessor.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process_features.html">dcase_framework.data.DataProcessor.process_features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process_activity_data.html">dcase_framework.data.DataProcessor.process_activity_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process_data.html">dcase_framework.data.DataProcessor.process_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.call_method.html">dcase_framework.data.DataProcessor.call_method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#databuffer">DataBuffer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.html">dcase_framework.data.DataBuffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.count.html">dcase_framework.data.DataBuffer.count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.full.html">dcase_framework.data.DataBuffer.full</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.key_exists.html">dcase_framework.data.DataBuffer.key_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.set.html">dcase_framework.data.DataBuffer.set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.get.html">dcase_framework.data.DataBuffer.get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.clear.html">dcase_framework.data.DataBuffer.clear</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#processingchain">ProcessingChain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.ProcessingChain.html">dcase_framework.data.ProcessingChain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.ProcessingChain.process.html">dcase_framework.data.ProcessingChain.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.ProcessingChain.call_method.html">dcase_framework.data.ProcessingChain.call_method</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../keras_utils.html">Keras utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#kerasmixin">KerasMixin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.create_model.html">dcase_framework.keras_utils.KerasMixin.create_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.create_callback_list.html">dcase_framework.keras_utils.KerasMixin.create_callback_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators.html">dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.keras_model_exists.html">dcase_framework.keras_utils.KerasMixin.keras_model_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.log_model_summary.html">dcase_framework.keras_utils.KerasMixin.log_model_summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.plot_model.html">dcase_framework.keras_utils.KerasMixin.plot_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.get_processing_interval.html">dcase_framework.keras_utils.KerasMixin.get_processing_interval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#basecallback">BaseCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseCallback.html">dcase_framework.keras_utils.BaseCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#progressloggercallback">ProgressLoggerCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.ProgressLoggerCallback.html">dcase_framework.keras_utils.ProgressLoggerCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#progressplottercallback">ProgressPlotterCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.ProgressPlotterCallback.html">dcase_framework.keras_utils.ProgressPlotterCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#stoppercallback">StopperCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.StopperCallback.html">dcase_framework.keras_utils.StopperCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#stashercallback">StasherCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.StasherCallback.html">dcase_framework.keras_utils.StasherCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#basedatagenerator">BaseDataGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.html">dcase_framework.keras_utils.BaseDataGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.input_size.html">dcase_framework.keras_utils.BaseDataGenerator.input_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.data_size.html">dcase_framework.keras_utils.BaseDataGenerator.data_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.steps_count.html">dcase_framework.keras_utils.BaseDataGenerator.steps_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.info.html">dcase_framework.keras_utils.BaseDataGenerator.info</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#featuregenerator">FeatureGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.FeatureGenerator.html">dcase_framework.keras_utils.FeatureGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.FeatureGenerator.generator.html">dcase_framework.keras_utils.FeatureGenerator.generator</a></li>
 </ul>
 </li>
 </ul>
@@ -528,6 +656,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html#simplemathstringevaluator">SimpleMathStringEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SimpleMathStringEvaluator.html">dcase_framework.utils.SimpleMathStringEvaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SimpleMathStringEvaluator.eval.html">dcase_framework.utils.SimpleMathStringEvaluator.eval</a></li>
 </ul>
 </li>
 </ul>
@@ -811,7 +944,6 @@
 <span class="kn">from</span> <span class="nn">.containers</span> <span class="k">import</span> <span class="n">ContainerMixin</span><span class="p">,</span> <span class="n">DottedDict</span>
 
 
-
 <div class="viewcode-block" id="ParameterContainer"><a class="viewcode-back" href="../../generated/dcase_framework.parameters.ParameterContainer.html#dcase_framework.parameters.ParameterContainer">[docs]</a><span class="k">class</span> <span class="nc">ParameterContainer</span><span class="p">(</span><span class="n">ParameterFile</span><span class="p">,</span> <span class="n">ContainerMixin</span><span class="p">):</span>
 <div class="viewcode-block" id="ParameterContainer.__init__"><a class="viewcode-back" href="../../generated/dcase_framework.parameters.ParameterContainer.html#dcase_framework.parameters.ParameterContainer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
@@ -824,7 +956,8 @@
 <span class="sd">            Parameter section processing order. Given dict is used to override internal default list.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 <span class="sd">        path_structure : dict of lists, optional</span>
-<span class="sd">            Defines how paths are created, section hash is used to create unique folder names. Given dict is used to override internal default list.</span>
+<span class="sd">            Defines how paths are created, section hash is used to create unique folder names. Given dict is used to</span>
+<span class="sd">            override internal default list.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 <span class="sd">        method_dependencies : dict of dicts, optional</span>
 <span class="sd">            Given dict is used to override internal default list.</span>
@@ -833,10 +966,12 @@
 <span class="sd">            Dict of field names for specific tasks. Given dict is used to override internal default list.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 <span class="sd">        non_hashable_fields : list, optional</span>
-<span class="sd">            List of fields skipped when parameter hash for the section is calculated. Given list is used to override internal default list.</span>
+<span class="sd">            List of fields skipped when parameter hash for the section is calculated. Given list is used to override</span>
+<span class="sd">            internal default list.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 <span class="sd">        control_sections : list, optional</span>
-<span class="sd">            List of top level sections used for framework control, for these section no hash is calculated. Given list is used to override internal default list.</span>
+<span class="sd">            List of top level sections used for framework control, for these section no hash is calculated. Given list</span>
+<span class="sd">            is used to override internal default list.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -871,8 +1006,8 @@
             <span class="s1">&#39;feature_aggregator&#39;</span><span class="p">,</span>
             <span class="s1">&#39;feature_aggregator_parameters&#39;</span><span class="p">,</span>
             <span class="s1">&#39;learner&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;learner_method_parameters&#39;</span><span class="p">,</span>
             <span class="s1">&#39;recognizer&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;learner_method_parameters&#39;</span><span class="p">,</span>
             <span class="s1">&#39;recognizer_method_parameters&#39;</span><span class="p">,</span>
             <span class="s1">&#39;evaluator&#39;</span><span class="p">,</span>
         <span class="p">]</span>
@@ -889,12 +1024,14 @@
             <span class="p">],</span>
             <span class="s1">&#39;learner&#39;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="s1">&#39;feature_extractor&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;feature_stacker&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;feature_normalizer&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;feature_aggregator&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;learner&#39;</span>
             <span class="p">],</span>
             <span class="s1">&#39;recognizer&#39;</span><span class="p">:</span> <span class="p">[</span>
                 <span class="s1">&#39;feature_extractor&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;feature_stacker&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;feature_normalizer&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;feature_aggregator&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;learner&#39;</span><span class="p">,</span>
@@ -946,6 +1083,12 @@
             <span class="s1">&#39;log_learner_status&#39;</span><span class="p">,</span>
             <span class="s1">&#39;show_model_information&#39;</span><span class="p">,</span>
             <span class="s1">&#39;use_ascii_progress_bar&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;label&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;active_scenes&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;active_events&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;plotting_rate&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;focus_span&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;output_format&#39;</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;non_hashable_fields&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">non_hashable_fields</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;non_hashable_fields&#39;</span><span class="p">))</span>
@@ -1053,7 +1196,9 @@
                 <span class="k">if</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">control_sections</span><span class="p">[</span><span class="n">section_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="n">section</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;default-parameters&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;set-list&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;active-set&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;default-parameters&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;set-list&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;active-set&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">):</span>
 
                 <span class="n">default_params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;default-parameters&#39;</span><span class="p">]])</span>
                 <span class="n">active_set_id</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;active-set&#39;</span><span class="p">]]</span>
@@ -1103,7 +1248,10 @@
                 <span class="k">if</span> <span class="n">field_process_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">field_process_func</span><span class="p">()</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;recipe&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">])</span> <span class="ow">and</span> <span class="n">section</span><span class="o">+</span><span class="s1">&#39;_method_parameters&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">and</span>
+                   <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;recipe&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">])</span> <span class="ow">and</span>
+                    <span class="n">section</span><span class="o">+</span><span class="s1">&#39;_method_parameters&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">):</span>
+
                     <span class="n">field_process_parameters_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_process_</span><span class="si">{}</span><span class="s1">_method_parameters&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">section</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">field_process_parameters_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">field_process_parameters_func</span><span class="p">()</span>
@@ -1118,7 +1266,9 @@
             <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">section_list</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
                     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]]):</span>
-                        <span class="k">if</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="n">key</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span> <span class="ow">and</span>
+                            <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span><span class="p">[</span><span class="n">section</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="n">key</span><span class="p">]):</span>
+
                             <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_dependencies</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
                             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                                 <span class="n">item</span><span class="p">[</span><span class="s1">&#39;dependency_parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
@@ -1180,7 +1330,9 @@
         <span class="c1"># Inject method parameters</span>
         <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span>
+                   <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span><span class="p">]):</span>
+
                     <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
                         <span class="bp">self</span><span class="p">[</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span><span class="p">][</span><span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]]</span>
                     <span class="p">)</span>
@@ -1204,7 +1356,9 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;recipe&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;recipe&#39;</span><span class="p">]]:</span>
-                    <span class="k">if</span> <span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="n">item</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span>
+                       <span class="n">item</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span><span class="p">]):</span>
+
                         <span class="bp">self</span><span class="p">[</span><span class="n">section</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="n">item</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
                             <span class="bp">self</span><span class="p">[</span><span class="n">section</span> <span class="o">+</span> <span class="s1">&#39;_method_parameters&#39;</span><span class="p">][</span><span class="n">item</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">magic_field</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]]]</span>
                         <span class="p">)</span>
@@ -1353,12 +1507,12 @@
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="s1">&#39;system_base&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="n">path_label</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_get_directory_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">param_hash</span><span class="p">):</span>
-        <span class="c1"># Use short directory names for Windows, as it has path length limit (260)</span>
         <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">param_hash</span>
+            <span class="c1"># Use short directory names and truncated hash for Windows, as it has path length limit (260)</span>
+            <span class="k">return</span> <span class="n">param_hash</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">param_hash</span>
-
 
     <span class="k">def</span> <span class="nf">_save_path_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">parameter_filename</span><span class="o">=</span><span class="s1">&#39;parameters.yaml&#39;</span><span class="p">):</span>
         <span class="n">path_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
@@ -1534,7 +1688,9 @@
                 <span class="n">handler_data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="s1">&#39;logs&#39;</span><span class="p">],</span> <span class="n">handler_data</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_process_feature_extractor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;recipe&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_extractor&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;feature_stacker&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span> <span class="s1">&#39;stacking_recipe&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_stacker&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;recipe&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_extractor&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;feature_stacker&#39;</span> <span class="ow">in</span> <span class="bp">self</span> <span class="ow">and</span>
+           <span class="s1">&#39;stacking_recipe&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_stacker&#39;</span><span class="p">]):</span>
+
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_extractor&#39;</span><span class="p">][</span><span class="s1">&#39;recipe&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;feature_stacker.stacking_recipe&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s1">&#39;win_length_seconds&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_extractor&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;fs&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_extractor&#39;</span><span class="p">]:</span>
@@ -1547,8 +1703,14 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_normalizer&#39;</span><span class="p">][</span><span class="s1">&#39;scene_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_normalizer&#39;</span><span class="p">][</span><span class="s1">&#39;active_scenes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_normalizer&#39;</span><span class="p">][</span><span class="s1">&#39;event_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_normalizer&#39;</span><span class="p">][</span><span class="s1">&#39;active_events&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_process_feature_extractor_method_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;feature_extractor_method_parameters&#39;</span><span class="p">]):</span>
@@ -1585,32 +1747,60 @@
 
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner&#39;</span><span class="p">][</span><span class="s1">&#39;win_length_seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">win_length_seconds</span><span class="p">)</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner&#39;</span><span class="p">][</span><span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">hop_length_seconds</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner&#39;</span><span class="p">][</span><span class="s1">&#39;scene_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner&#39;</span><span class="p">][</span><span class="s1">&#39;active_scenes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner&#39;</span><span class="p">][</span><span class="s1">&#39;event_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner&#39;</span><span class="p">][</span><span class="s1">&#39;active_events&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_process_learner_method_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learner_method_parameters&#39;</span><span class="p">]):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">DottedDict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;training.epoch_processing.enable&#39;</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">][</span><span class="s1">&#39;epoch_processing&#39;</span><span class="p">][</span><span class="s1">&#39;recognizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_process_recognizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;recognizer&#39;</span><span class="p">][</span><span class="s1">&#39;scene_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;recognizer&#39;</span><span class="p">][</span><span class="s1">&#39;active_scenes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;recognizer&#39;</span><span class="p">][</span><span class="s1">&#39;event_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.frame_accumulation.enable&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.frame_accumulation.window_length_seconds&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;recognizer&#39;</span><span class="p">][</span><span class="s1">&#39;active_events&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.frame_accumulation.enable&#39;</span><span class="p">)</span> <span class="ow">and</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.frame_accumulation.window_length_seconds&#39;</span><span class="p">)):</span>
+
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;recognizer&#39;</span><span class="p">][</span><span class="s1">&#39;frame_accumulation&#39;</span><span class="p">][</span><span class="s1">&#39;window_length_frames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.frame_accumulation.window_length_seconds&#39;</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.hop_length_seconds&#39;</span><span class="p">)))</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_activity_processing.enable&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_activity_processing.window_length_seconds&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_activity_processing.enable&#39;</span><span class="p">)</span> <span class="ow">and</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_activity_processing.window_length_seconds&#39;</span><span class="p">)):</span>
+
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;recognizer&#39;</span><span class="p">][</span><span class="s1">&#39;event_activity_processing&#39;</span><span class="p">][</span><span class="s1">&#39;window_length_frames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;recognizer.event_activity_processing.window_length_seconds&#39;</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;learner.hop_length_seconds&#39;</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">_process_evaluator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;evaluator&#39;</span><span class="p">][</span><span class="s1">&#39;scene_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.scene_handling&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;evaluator&#39;</span><span class="p">][</span><span class="s1">&#39;event_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;evaluator&#39;</span><span class="p">][</span><span class="s1">&#39;active_scenes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_scenes&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;evaluator&#39;</span><span class="p">][</span><span class="s1">&#39;event_handling&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.event_handling&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;evaluator&#39;</span><span class="p">][</span><span class="s1">&#39;active_events&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;general.active_events&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 

@@ -1,0 +1,27 @@
+dcase_framework.recognizers.SceneRecognizer
+===========================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. autoclass:: SceneRecognizer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SceneRecognizer.__init__
+      ~SceneRecognizer.collapse_probabilities
+      ~SceneRecognizer.collapse_probabilities_windowed
+      ~SceneRecognizer.find_contiguous_regions
+      ~SceneRecognizer.process
+      ~SceneRecognizer.process_activity
+   
+   
+
+   
+   
+   

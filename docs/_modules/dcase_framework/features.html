@@ -341,6 +341,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
 </ul>
@@ -354,6 +355,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../metadata.html">Meta data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../metadata.html#metadataitem">MetaDataItem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.id.html">dcase_framework.metadata.MetaDataItem.id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
@@ -457,23 +459,46 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../learners.html">Learners</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../learners.html#sceneclassifier">SceneClassifier</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#sceneclassifiergmm">SceneClassifierGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#sceneclassifiermlp">SceneClassifierMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#sceneclassifierkerassequential">SceneClassifierKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierKerasSequential.html">dcase_framework.learners.SceneClassifierKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html">dcase_framework.learners.SceneClassifierKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html">dcase_framework.learners.SceneClassifierKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../learners.html#eventdetector">EventDetector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#eventdetectorgmm">EventDetectorGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#eventdetectormlp">EventDetectorMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../learners.html#eventdetectorkerassequential">EventDetectorKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorKerasSequential.html">dcase_framework.learners.EventDetectorKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html">dcase_framework.learners.EventDetectorKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html">dcase_framework.learners.EventDetectorKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../learners.html#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
@@ -488,6 +513,109 @@
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../recognizers.html">Recognizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../recognizers.html#scenerecognizer">SceneRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.SceneRecognizer.html">dcase_framework.recognizers.SceneRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.SceneRecognizer.process.html">dcase_framework.recognizers.SceneRecognizer.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../recognizers.html#eventrecognizer">EventRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.EventRecognizer.html">dcase_framework.recognizers.EventRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.EventRecognizer.process.html">dcase_framework.recognizers.EventRecognizer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.EventRecognizer.process_ratio.html">dcase_framework.recognizers.EventRecognizer.process_ratio</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../recognizers.html#baserecognizer">BaseRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.html">dcase_framework.recognizers.BaseRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions.html">dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.recognizers.BaseRecognizer.process_activity.html">dcase_framework.recognizers.BaseRecognizer.process_activity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../data.html">Data utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#datasequencer">DataSequencer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataSequencer.html">dcase_framework.data.DataSequencer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataSequencer.process.html">dcase_framework.data.DataSequencer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataSequencer.increase_shifting.html">dcase_framework.data.DataSequencer.increase_shifting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#dataprocessor">DataProcessor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.html">dcase_framework.data.DataProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.load.html">dcase_framework.data.DataProcessor.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process.html">dcase_framework.data.DataProcessor.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process_features.html">dcase_framework.data.DataProcessor.process_features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process_activity_data.html">dcase_framework.data.DataProcessor.process_activity_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.process_data.html">dcase_framework.data.DataProcessor.process_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataProcessor.call_method.html">dcase_framework.data.DataProcessor.call_method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#databuffer">DataBuffer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.html">dcase_framework.data.DataBuffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.count.html">dcase_framework.data.DataBuffer.count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.full.html">dcase_framework.data.DataBuffer.full</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.key_exists.html">dcase_framework.data.DataBuffer.key_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.set.html">dcase_framework.data.DataBuffer.set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.get.html">dcase_framework.data.DataBuffer.get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.DataBuffer.clear.html">dcase_framework.data.DataBuffer.clear</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../data.html#processingchain">ProcessingChain</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.ProcessingChain.html">dcase_framework.data.ProcessingChain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.ProcessingChain.process.html">dcase_framework.data.ProcessingChain.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.data.ProcessingChain.call_method.html">dcase_framework.data.ProcessingChain.call_method</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../keras_utils.html">Keras utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#kerasmixin">KerasMixin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.create_model.html">dcase_framework.keras_utils.KerasMixin.create_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.create_callback_list.html">dcase_framework.keras_utils.KerasMixin.create_callback_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators.html">dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.keras_model_exists.html">dcase_framework.keras_utils.KerasMixin.keras_model_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.log_model_summary.html">dcase_framework.keras_utils.KerasMixin.log_model_summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.plot_model.html">dcase_framework.keras_utils.KerasMixin.plot_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.KerasMixin.get_processing_interval.html">dcase_framework.keras_utils.KerasMixin.get_processing_interval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#basecallback">BaseCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseCallback.html">dcase_framework.keras_utils.BaseCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#progressloggercallback">ProgressLoggerCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.ProgressLoggerCallback.html">dcase_framework.keras_utils.ProgressLoggerCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#progressplottercallback">ProgressPlotterCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.ProgressPlotterCallback.html">dcase_framework.keras_utils.ProgressPlotterCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#stoppercallback">StopperCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.StopperCallback.html">dcase_framework.keras_utils.StopperCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#stashercallback">StasherCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.StasherCallback.html">dcase_framework.keras_utils.StasherCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#basedatagenerator">BaseDataGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.html">dcase_framework.keras_utils.BaseDataGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.input_size.html">dcase_framework.keras_utils.BaseDataGenerator.input_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.data_size.html">dcase_framework.keras_utils.BaseDataGenerator.data_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.steps_count.html">dcase_framework.keras_utils.BaseDataGenerator.steps_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.BaseDataGenerator.info.html">dcase_framework.keras_utils.BaseDataGenerator.info</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../keras_utils.html#featuregenerator">FeatureGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.FeatureGenerator.html">dcase_framework.keras_utils.FeatureGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.keras_utils.FeatureGenerator.generator.html">dcase_framework.keras_utils.FeatureGenerator.generator</a></li>
 </ul>
 </li>
 </ul>
@@ -528,6 +656,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../utils.html#simplemathstringevaluator">SimpleMathStringEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SimpleMathStringEvaluator.html">dcase_framework.utils.SimpleMathStringEvaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../generated/dcase_framework.utils.SimpleMathStringEvaluator.eval.html">dcase_framework.utils.SimpleMathStringEvaluator.eval</a></li>
 </ul>
 </li>
 </ul>
@@ -633,7 +766,8 @@
 <span class="sd">FeatureRepository</span>
 <span class="sd">^^^^^^^^^^^^^^^^^</span>
 
-<span class="sd">Feature repository class, where feature containers for each type of features are stored in a dict. Type name is used as key.</span>
+<span class="sd">Feature repository class, where feature containers for each type of features are stored in a dict. Type name is</span>
+<span class="sd">used as key.</span>
 
 <span class="sd">.. autosummary::</span>
 <span class="sd">    :toctree: generated/</span>
@@ -866,6 +1000,7 @@
 <span class="kn">from</span> <span class="nn">.containers</span> <span class="k">import</span> <span class="n">ContainerMixin</span><span class="p">,</span> <span class="n">DottedDict</span>
 <span class="kn">from</span> <span class="nn">.parameters</span> <span class="k">import</span> <span class="n">ParameterContainer</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">filelist_exists</span>
+<span class="kn">from</span> <span class="nn">.metadata</span> <span class="k">import</span> <span class="n">MetaDataContainer</span>
 
 
 <div class="viewcode-block" id="FeatureContainer"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureContainer.html#dcase_framework.features.FeatureContainer">[docs]</a><span class="k">class</span> <span class="nc">FeatureContainer</span><span class="p">(</span><span class="n">FeatureFile</span><span class="p">,</span> <span class="n">ContainerMixin</span><span class="p">):</span>
@@ -974,7 +1109,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            lisf of numpy.ndarray</span>
+<span class="sd">            list of numpy.ndarray</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1029,7 +1164,7 @@
     <span class="k">def</span> <span class="nf">meta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;meta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="FeatureContainer.load"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureContainer.load.html#dcase_framework.features.FeatureContainer.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureContainer.load"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureContainer.load.html#dcase_framework.features.FeatureContainer.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load data into container</span>
 
 <span class="sd">        If filename is given, container is loaded from disk</span>
@@ -1038,7 +1173,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename : str, optional</span>
-<span class="sd">        filename_list : list, optional</span>
+<span class="sd">        filename_dict : dict, optional</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1048,9 +1183,9 @@
         <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">FeatureContainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">filename_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">filename_dict</span><span class="p">:</span>
             <span class="n">repository</span> <span class="o">=</span> <span class="n">FeatureRepository</span><span class="p">({})</span>
-            <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">filename_list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">filename_dict</span><span class="p">):</span>
                 <span class="n">repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="n">repository</span></div></div>
@@ -1069,8 +1204,9 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        filename_list: list, optional</span>
-<span class="sd">            If filename_list is given container is loaded in the initialization stage.</span>
+<span class="sd">        filename_dict: dict</span>
+<span class="sd">            Dict of file paths, feature extraction method label as key, and filename as value.</span>
+<span class="sd">            If given, features are loaded in the initialization stage.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 
 <span class="sd">        features: list, optional</span>
@@ -1078,33 +1214,47 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">FeatureRepository</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_list&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">filename_list</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_list&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_dict&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_dict&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FeatureRepository.load"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureRepository.load.html#dcase_framework.features.FeatureRepository.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureRepository.load"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureRepository.load.html#dcase_framework.features.FeatureRepository.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load file list</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        filename_list : list</span>
-<span class="sd">            List of file paths</span>
+<span class="sd">        filename_dict : dict</span>
+<span class="sd">            Dict of file paths, feature extraction method label as key, and filename as value.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">filename_list</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">filename_list</span> <span class="o">=</span> <span class="n">filename_list</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_list</span> <span class="ow">and</span> <span class="n">filelist_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">filename_dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span> <span class="o">=</span> <span class="n">filename_dict</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span> <span class="ow">and</span> <span class="n">filelist_exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span><span class="p">):</span>
             <span class="nb">dict</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-            <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_list</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_list</span><span class="p">):</span>
-                <span class="bp">self</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">method</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+                    <span class="c1"># Skip method starting with &#39;_&#39;, those are just for extra info</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="bp">self</span></div></div>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Feature repository cannot be loaded [</span><span class="si">{filename_dict}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">filename_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filename_dict</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="FeatureExtractor"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureExtractor.html#dcase_framework.features.FeatureExtractor">[docs]</a><span class="k">class</span> <span class="nc">FeatureExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1184,8 +1334,31 @@
         <span class="c1"># Update general parameters and expand dependencies</span>
         <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">):</span>
             <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_general_parameters</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;dependency_method&#39;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_extractors</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;dependency_method&#39;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span>
+               <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_extractors</span> <span class="ow">and</span>
+               <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">):</span>
+
                 <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]]</span></div>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return only needed data for pickle</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;eps&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span>
+            <span class="s1">&#39;overwrite&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span><span class="p">,</span>
+            <span class="s1">&#39;store&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">,</span>
+            <span class="s1">&#39;valid_extractors&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_extractors</span><span class="p">,</span>
+            <span class="s1">&#39;default_general_parameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_general_parameters</span><span class="p">,</span>
+            <span class="s1">&#39;default_parameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;eps&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;overwrite&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;store&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valid_extractors</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;valid_extractors&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_general_parameters</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;default_general_parameters&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_parameters</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;default_parameters&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FeatureExtractor.extract"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureExtractor.extract.html#dcase_framework.features.FeatureExtractor.extract">[docs]</a>    <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">audio_file</span><span class="p">,</span> <span class="n">extractor_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">storage_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extractor_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Extract features for audio file</span>
@@ -1193,13 +1366,16 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        audio_file : str</span>
-<span class="sd">            Filename of audio file</span>
+<span class="sd">            Filename of audio file.</span>
 <span class="sd">        extractor_params : dict of dicts</span>
-<span class="sd">            Keys at first level corresponds to feature extraction methods, and second level is parameters given to the extractor method. If none given, default parameters used.</span>
+<span class="sd">            Keys at first level corresponds to feature extraction methods, and second level is parameters given to the</span>
+<span class="sd">            extractor method. If none given, default parameters used.</span>
 <span class="sd">        storage_paths : dict of strings</span>
-<span class="sd">            Keys at first level corresponds to feature extraction methods, second level is path to store feature containers</span>
+<span class="sd">            Keys at first level corresponds to feature extraction methods, second level is path to store feature</span>
+<span class="sd">            containers.</span>
 <span class="sd">        extractor_name : str</span>
-<span class="sd">            Feature extractor method name, if none given, extractor_params is used. Use this to select specific extractor method</span>
+<span class="sd">            Feature extractor method name, if none given, extractor_params is used. Use this to select specific</span>
+<span class="sd">            extractor method.</span>
 <span class="sd">            Default value &quot;None&quot;</span>
 
 <span class="sd">        Raises</span>
@@ -1236,7 +1412,10 @@
 
         <span class="c1"># Update general parameters and expand dependencies</span>
         <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">iteritems</span><span class="p">(</span><span class="n">extractor_params</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s1">&#39;dependency_method&#39;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_extractors</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">extractor_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;dependency_method&#39;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span>
+               <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_extractors</span> <span class="ow">and</span>
+               <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">extractor_params</span><span class="p">):</span>
+
                 <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extractor_params</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]]</span>
 
         <span class="n">feature_repository</span> <span class="o">=</span> <span class="n">FeatureRepository</span><span class="p">({})</span>
@@ -1284,7 +1463,9 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-                    <span class="k">if</span> <span class="n">current_extractor_params</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">storage_paths</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">storage_paths</span><span class="p">[</span><span class="n">current_extractor_params</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]]):</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">current_extractor_params</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">storage_paths</span> <span class="ow">and</span>
+                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">storage_paths</span><span class="p">[</span><span class="n">current_extractor_params</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]])):</span>
+
                         <span class="c1"># Load features from disk</span>
                         <span class="n">data</span> <span class="o">=</span> <span class="n">FeatureContainer</span><span class="p">(</span>
                             <span class="n">filename</span><span class="o">=</span><span class="n">storage_paths</span><span class="p">[</span><span class="n">current_extractor_params</span><span class="p">[</span><span class="s1">&#39;dependency_method&#39;</span><span class="p">]]</span>
@@ -1354,14 +1535,15 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        data : numpy.ndarray</span>
-<span class="sd">            Audio data</span>
+<span class="sd">            Audio data.</span>
 <span class="sd">        params : dict</span>
-<span class="sd">            Parameters</span>
+<span class="sd">            Parameters.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list of numpy.ndarrays</span>
-<span class="sd">            List of feature matrices, feature matrix per audio channel</span>
+<span class="sd">        list of numpy.ndarray</span>
+<span class="sd">            List of feature matrices, feature matrix per audio channel.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_window_function</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;win_length_samples&#39;</span><span class="p">),</span>
@@ -1411,7 +1593,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list of numpy.ndarrays</span>
+<span class="sd">        list of numpy.ndarray</span>
 <span class="sd">            List of feature matrices, feature matrix per audio channel</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1463,7 +1645,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list of numpy.ndarrays</span>
+<span class="sd">        list of numpy.ndarray</span>
 <span class="sd">            List of feature matrices, feature matrix per audio channel</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1489,7 +1671,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list of numpy.ndarrays</span>
+<span class="sd">        list of numpy.ndarray</span>
 <span class="sd">            List of feature matrices, feature matrix per audio channel</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1692,7 +1874,13 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 
-<div class="viewcode-block" id="FeatureStacker"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.html#dcase_framework.features.FeatureStacker">[docs]</a><span class="k">class</span> <span class="nc">FeatureStacker</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">FeatureProcessingUnitMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Feature processing chain unit mixin&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="FeatureStacker"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.html#dcase_framework.features.FeatureStacker">[docs]</a><span class="k">class</span> <span class="nc">FeatureStacker</span><span class="p">(</span><span class="n">FeatureProcessingUnitMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Feature stacker&quot;&quot;&quot;</span>
     <span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
 
@@ -1719,6 +1907,11 @@
             <span class="s1">&#39;recipe&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span><span class="p">,</span>
             <span class="s1">&#39;feature_hop&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span>
         <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;recipe&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;feature_hop&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FeatureStacker.normalizer"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.normalizer.html#dcase_framework.features.FeatureStacker.normalizer">[docs]</a>    <span class="k">def</span> <span class="nf">normalizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalizer_list</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Stack normalization factors based on stack map</span>
@@ -1769,17 +1962,25 @@
             <span class="k">if</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">:</span>
                 <span class="n">channel</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;channel&#39;</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;full&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;full&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;full&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;full&#39;</span><span class="p">])):</span>
+
                 <span class="c1"># We have Full matrix</span>
                 <span class="n">stacked_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">])</span>
                 <span class="n">stacked_std</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">][</span><span class="s1">&#39;std&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">])</span>
 
-            <span class="k">elif</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;vector&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;selection&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]:</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span>
+                  <span class="s1">&#39;vector&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                  <span class="s1">&#39;selection&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]):</span>
+
                 <span class="c1"># We have selector vector</span>
                 <span class="n">stacked_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">][:,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;vector&#39;</span><span class="p">]])</span>
                 <span class="n">stacked_std</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">][</span><span class="s1">&#39;std&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">][:,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;vector&#39;</span><span class="p">]])</span>
 
-            <span class="k">elif</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;start&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;end&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]:</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span>
+                  <span class="s1">&#39;start&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                  <span class="s1">&#39;end&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]):</span>
+
                 <span class="c1"># we have start and end index</span>
                 <span class="n">stacked_mean</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">][:,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;start&#39;</span><span class="p">]:</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;end&#39;</span><span class="p">]])</span>
                 <span class="n">stacked_std</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalizer_list</span><span class="p">[</span><span class="n">method</span><span class="p">][</span><span class="s1">&#39;std&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">][:,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;start&#39;</span><span class="p">]:</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;end&#39;</span><span class="p">]])</span>
@@ -1838,14 +2039,24 @@
             <span class="k">if</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">:</span>
                 <span class="n">channel</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;channel&#39;</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;full&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;full&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">or</span>
+               <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;full&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;full&#39;</span><span class="p">])):</span>
+
                 <span class="c1"># We have Full matrix</span>
                 <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span> <span class="p">:])</span>
-            <span class="k">elif</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;vector&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;selection&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]:</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span>
+                  <span class="s1">&#39;vector&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                  <span class="s1">&#39;selection&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;selection&#39;</span><span class="p">]):</span>
+
                 <span class="n">index</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;vector&#39;</span><span class="p">])</span>
                 <span class="c1"># We have selector vector</span>
                 <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span> <span class="n">index</span><span class="p">])</span>
-            <span class="k">elif</span> <span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span> <span class="s1">&#39;start&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="s1">&#39;end&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]:</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="s1">&#39;vector-index&#39;</span> <span class="ow">in</span> <span class="n">feature</span> <span class="ow">and</span>
+                  <span class="s1">&#39;start&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                  <span class="s1">&#39;end&#39;</span> <span class="ow">in</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">]):</span>
+
                 <span class="c1"># we have start and end index</span>
                 <span class="n">feature_matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][::</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_hop</span><span class="p">,</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;start&#39;</span><span class="p">]:</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;vector-index&#39;</span><span class="p">][</span><span class="s1">&#39;end&#39;</span><span class="p">]])</span>
 
@@ -1864,12 +2075,12 @@
 
         <span class="k">return</span> <span class="n">FeatureContainer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">feature_matrix</span><span class="p">)],</span> <span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FeatureStacker.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureStacker.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureStacker.process.html#dcase_framework.features.FeatureStacker.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Feature vector creation</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        feature_repository : FeatureRepository</span>
+<span class="sd">        feature_data : FeatureRepository</span>
 <span class="sd">            Feature repository with needed features</span>
 
 <span class="sd">        Returns</span>
@@ -1878,10 +2089,10 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_vector</span><span class="p">(</span><span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_repository</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_vector</span><span class="p">(</span><span class="n">feature_repository</span><span class="o">=</span><span class="n">feature_data</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="FeatureNormalizer"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureNormalizer.html#dcase_framework.features.FeatureNormalizer">[docs]</a><span class="k">class</span> <span class="nc">FeatureNormalizer</span><span class="p">(</span><span class="n">DataFile</span><span class="p">,</span> <span class="n">ContainerMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureNormalizer"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureNormalizer.html#dcase_framework.features.FeatureNormalizer">[docs]</a><span class="k">class</span> <span class="nc">FeatureNormalizer</span><span class="p">(</span><span class="n">DataFile</span><span class="p">,</span> <span class="n">ContainerMixin</span><span class="p">,</span> <span class="n">FeatureProcessingUnitMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Feature normalizer</span>
 
 <span class="sd">    Accumulates feature statistics</span>
@@ -1965,8 +2176,15 @@
             <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">],</span>
         <span class="p">}</span>
 
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">S1</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;S1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">S2</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;S2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">std</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span>
+
 <div class="viewcode-block" id="FeatureNormalizer.accumulate"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureNormalizer.accumulate.html#dcase_framework.features.FeatureNormalizer.accumulate">[docs]</a>    <span class="k">def</span> <span class="nf">accumulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_container</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Accumalate statistics</span>
+        <span class="sd">&quot;&quot;&quot;Accumulate statistics</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -2052,12 +2270,12 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_container</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">feature_container</span> <span class="o">-</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">][</span><span class="n">channel</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="FeatureNormalizer.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureNormalizer.process.html#dcase_framework.features.FeatureNormalizer.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_container</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureNormalizer.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureNormalizer.process.html#dcase_framework.features.FeatureNormalizer.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Normalize feature matrix with internal statistics of the class</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        feature_container : numpy.ndarray [shape=(frames, number of feature values)]</span>
+<span class="sd">        feature_data : FeatureContainer or numpy.ndarray [shape=(frames, number of feature values)]</span>
 <span class="sd">            Feature matrix to be normalized</span>
 
 <span class="sd">        Returns</span>
@@ -2067,10 +2285,10 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">feature_container</span><span class="o">=</span><span class="n">feature_container</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">feature_container</span><span class="o">=</span><span class="n">feature_data</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="FeatureAggregator"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureAggregator.html#dcase_framework.features.FeatureAggregator">[docs]</a><span class="k">class</span> <span class="nc">FeatureAggregator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="FeatureAggregator"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureAggregator.html#dcase_framework.features.FeatureAggregator">[docs]</a><span class="k">class</span> <span class="nc">FeatureAggregator</span><span class="p">(</span><span class="n">FeatureProcessingUnitMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Feature aggregator&quot;&quot;&quot;</span>
     <span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
 
@@ -2081,7 +2299,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        recipe : list of dicts or list of strs</span>
+<span class="sd">        recipe : list of dict or list of str</span>
 <span class="sd">            Aggregation recipe, supported methods [mean, std, cov, kurtosis, skew, flatten].</span>
 <span class="sd">        win_length_frames : int</span>
 <span class="sd">            Window length in feature frames</span>
@@ -2102,12 +2320,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">win_length_frames</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;win_length_frames&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_frames</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hop_length_frames&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FeatureAggregator.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureAggregator.process.html#dcase_framework.features.FeatureAggregator.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_container</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return only needed data for pickle</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;recipe&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span><span class="p">,</span>
+            <span class="s1">&#39;win_length_frames&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">win_length_frames</span><span class="p">,</span>
+            <span class="s1">&#39;hop_length_frames&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_frames</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;recipe&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win_length_frames</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;win_length_frames&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_frames</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;hop_length_frames&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="FeatureAggregator.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureAggregator.process.html#dcase_framework.features.FeatureAggregator.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Process features</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        feature_container : FeatureContainer</span>
+<span class="sd">        feature_data : FeatureContainer</span>
 <span class="sd">            Features to be aggregated</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2118,9 +2349,9 @@
         <span class="c1"># Not the most efficient way as numpy stride_tricks would produce</span>
         <span class="c1"># faster code, however, opted for cleaner presentation this time.</span>
         <span class="n">feature_data_per_channel</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">channels</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">channels</span><span class="p">):</span>
             <span class="n">aggregated_features</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_frames</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_frames</span><span class="p">):</span>
                 <span class="c1"># Get start and end of the window, keep frame at the middle (approximately)</span>
                 <span class="n">start_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">win_length_frames</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))</span>
                 <span class="n">end_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">win_length_frames</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
@@ -2130,9 +2361,9 @@
                 <span class="n">frame_id</span><span class="p">[</span><span class="n">frame_id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
                 <span class="c1"># If end of the feature matrix, pad with last frame</span>
-                <span class="n">frame_id</span><span class="p">[</span><span class="n">frame_id</span> <span class="o">&gt;</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">frame_id</span><span class="p">[</span><span class="n">frame_id</span> <span class="o">&gt;</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 
-                <span class="n">current_frame</span> <span class="o">=</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][</span><span class="n">frame_id</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="n">current_frame</span> <span class="o">=</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][</span><span class="n">frame_id</span><span class="p">,</span> <span class="p">:]</span>
                 <span class="n">aggregated_frame</span> <span class="o">=</span> <span class="p">[]</span>
 
                 <span class="k">if</span> <span class="s1">&#39;mean&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span><span class="p">:</span>
@@ -2167,8 +2398,8 @@
             <span class="s1">&#39;datetime&#39;</span><span class="p">:</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">gmtime</span><span class="p">()),</span>
         <span class="p">}</span>
 
-        <span class="k">if</span> <span class="s1">&#39;audio_file&#39;</span> <span class="ow">in</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">meta</span><span class="p">:</span>
-            <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;audio_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_container</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;audio_file&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;audio_file&#39;</span> <span class="ow">in</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">meta</span><span class="p">:</span>
+            <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;audio_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_data</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;audio_file&#39;</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">FeatureContainer</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">feature_data_per_channel</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="n">meta</span><span class="p">)</span></div></div>
 
@@ -2186,18 +2417,42 @@
 <span class="sd">            Hop length in seconds</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FeatureMasker.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureMasker.process.html#dcase_framework.features.FeatureMasker.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">,</span> <span class="n">mask_events</span><span class="p">,</span> <span class="n">hop_length_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Process feature repository</span>
+        <span class="c1"># Initialize mask events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_events</span> <span class="o">=</span> <span class="n">MetaDataContainer</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return only needed data for pickle</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;hop_length_seconds&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_events</span> <span class="o">=</span> <span class="n">MetaDataContainer</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask_events</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set masking events</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        feature_repository : FeatureRepository</span>
 <span class="sd">        mask_events : list of MetaItems or MetaDataContainer</span>
 <span class="sd">            Event list used for masking</span>
-<span class="sd">        hop_length_seconds : float</span>
-<span class="sd">            Hop length in seconds, if none given one given for constructor used</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_events</span> <span class="o">=</span> <span class="n">mask_events</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">masking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">,</span> <span class="n">mask_event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Masking feature repository with given events</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        feature_data : FeatureRepository</span>
+<span class="sd">        mask_events : list of MetaItems or MetaDataContainer</span>
+<span class="sd">            Event list used for masking</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2205,22 +2460,37 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">hop_length_seconds</span><span class="p">:</span>
-            <span class="n">hop_length_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">feature_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="n">removal_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">feature_data</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">mask_event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_events</span><span class="p">:</span>
+                <span class="n">onset_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">mask_event</span><span class="o">.</span><span class="n">event_onset</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span><span class="p">))</span>
+                <span class="n">offset_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">mask_event</span><span class="o">.</span><span class="n">event_offset</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_length_seconds</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">offset_frame</span> <span class="o">&gt;</span> <span class="n">feature_data</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">offset_frame</span> <span class="o">=</span> <span class="n">feature_data</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">removal_mask</span><span class="p">[</span><span class="n">onset_frame</span><span class="p">:</span><span class="n">offset_frame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">mask_events</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">feature_repository</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="n">removal_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">mask_event</span> <span class="ow">in</span> <span class="n">mask_events</span><span class="p">:</span>
-                    <span class="n">onset_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">mask_event</span><span class="o">.</span><span class="n">event_onset</span> <span class="o">/</span> <span class="n">hop_length_seconds</span><span class="p">))</span>
-                    <span class="n">offset_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">mask_event</span><span class="o">.</span><span class="n">event_offset</span> <span class="o">/</span> <span class="n">hop_length_seconds</span><span class="p">))</span>
-                    <span class="k">if</span> <span class="n">offset_frame</span> <span class="o">&gt;</span> <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                        <span class="n">offset_frame</span> <span class="o">=</span> <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">removal_mask</span><span class="p">[</span><span class="n">onset_frame</span><span class="p">:</span><span class="n">offset_frame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">channels</span><span class="p">):</span>
-                    <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_repository</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][</span><span class="n">removal_mask</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">channels</span><span class="p">):</span>
+                <span class="n">feature_data</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_data</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">feat</span><span class="p">[</span><span class="n">channel</span><span class="p">][</span><span class="n">removal_mask</span><span class="p">,</span> <span class="p">:]</span>
 
-        <span class="k">return</span> <span class="n">feature_repository</span></div></div>
+        <span class="k">return</span> <span class="n">feature_data</span>
+
+<div class="viewcode-block" id="FeatureMasker.process"><a class="viewcode-back" href="../../generated/dcase_framework.features.FeatureMasker.process.html#dcase_framework.features.FeatureMasker.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Process feature repository</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        feature_data : FeatureRepository</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        FeatureRepository</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_events</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">masking</span><span class="p">(</span><span class="n">feature_data</span><span class="o">=</span><span class="n">feature_data</span><span class="p">,</span> <span class="n">mask_event</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_events</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">feature_data</span></div></div>
 
 </pre></div>
 

@@ -32,10 +32,13 @@ def test():
             'event_offset': 50.0,
         }
     ])
-    feature_repository = FeatureRepository().load(filename_list={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
-                                                                 'mfcc2': os.path.join('material', 'test.mfcc.cpickle')})
+    feature_repository = FeatureRepository().load(
+        filename_dict={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
+                       'mfcc2': os.path.join('material', 'test.mfcc.cpickle')}
+    )
     original_length = feature_repository['mfcc1'].shape[0]
-    feature_masker.process(feature_repository=feature_repository, mask_events=mask_events)
+    feature_masker.set_mask(mask_events=mask_events)
+    feature_masker.process(feature_data=feature_repository)
 
     nose.tools.eq_(feature_repository['mfcc1'].shape[0], original_length-40)
 
@@ -51,10 +54,12 @@ def test():
            'event_offset': 150.0,
         },
     ])
-    feature_repository = FeatureRepository().load(filename_list={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
-                                                                 'mfcc2': os.path.join('material',
-                                                                                       'test.mfcc.cpickle')})
+    feature_repository = FeatureRepository().load(
+        filename_dict={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
+                       'mfcc2': os.path.join('material', 'test.mfcc.cpickle')}
+    )
     original_length = feature_repository['mfcc1'].shape[0]
-    feature_masker.process(feature_repository=feature_repository, mask_events=mask_events)
+    feature_masker.set_mask(mask_events=mask_events)
+    feature_masker.process(feature_data=feature_repository)
 
     nose.tools.eq_(feature_repository['mfcc1'].shape[0], original_length - 40 - 30)

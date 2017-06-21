@@ -1,0 +1,6 @@
+dcase_framework.learners.SceneClassifierKerasSequential.predict
+===============================================================
+
+.. currentmodule:: dcase_framework.learners
+
+.. automethod:: SceneClassifierKerasSequential.predict

@@ -130,8 +130,8 @@ import sed_eval
 import platform
 import pkg_resources
 import warnings
+import collections
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 from .containers import DottedDict
 from .files import ParameterFile
@@ -141,16 +141,17 @@ from .datasets import *
 from .utils import filelist_exists, Timer
 from .decorators import before_and_after_function_wrapper
 from .learners import *
+from .recognizers import SceneRecognizer, EventRecognizer
 from .metadata import MetaDataContainer, MetaDataItem
 from .ui import FancyLogger
 from .utils import get_class_inheritors, posix_path, check_pkg_resources
 from .parameters import ParameterContainer
 from .files import ParameterFile
+from .keras_utils import BaseDataGenerator
+from .data import DataProcessor, ProcessingChain
 
 
 class AppCore(object):
-
-    valid_dataset_group = 'acoustic scene'
 
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -158,24 +159,25 @@ class AppCore(object):
         Parameters
         ----------
         name : str
-            Application name
+            Application name.
             Default value "Application"
         system_desc : str
-            System description
+            System description.
             Default value "None"
         system_parameter_set_id : str
-            System parameter set id
+            System parameter set id.
             Default value "None"
         setup_label : str
-            Application setup label
+            Application setup label.
             Default value "System"
         params : ParameterContainer
             Parameter container containing all parameters needed by application.
         dataset : str or class
-            Dataset, if none given dataset name is taken from parameters "dataset->parameters->name"
+            Dataset, if none given dataset name is taken from parameters "dataset->parameters->name".
             Default value "none"
         dataset_evaluation_mode : str
-            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters "dataset->parameter->evaluation_mode"
+            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters
+            "dataset->parameter->evaluation_mode".
             Default value "none"
         show_progress_in_console : bool
             Show progress in console.
@@ -190,7 +192,8 @@ class AppCore(object):
             Instance of logging
             Default value "none"
         Datasets : dict of Dataset classes
-            Dict of datasets available for application. Dict key is name of the dataset and value link to class inherited from Dataset base class. Given dict is used to update internal dict.
+            Dict of datasets available for application. Dict key is name of the dataset and value link to class
+            inherited from Dataset base class. Given dict is used to update internal dict.
             Default value "none"
         FeatureExtractor : class inherited from FeatureExtractor
             Feature extractor class. Use this to override default class.
@@ -210,8 +213,24 @@ class AppCore(object):
         FeatureAggregator : class inherited from FeatureAggregator
             Feature aggregate class. Use this to override default class.
             Default value "FeatureAggregator"
+        DataProcessor : class inherited from DataProcessor
+            DataProcessor class. Use this to override default class.
+            Default value "DataProcessor"
+        DataSequencer : class inherited from DataSequencer
+            DataSequencer class. Use this to override default class.
+            Default value "DataSequencer"
+        ProcessingChain : class inherited from ProcessingChain
+            DataSequencer class. Use this to override default class.
+            Default value "ProcessingChain"
         Learners: dict of Learner classes
-            Dict of learners available for application. Dict key is method the class implements and value link to class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+            Dict of learners available for application. Dict key is method the class implements and value link to
+            class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+        SceneRecognizer : class inherited from SceneRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "SceneRecognizer"
+        EventRecognizer : class inherited from EventRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "EventRecognizer"
         ui : class inherited from FancyLogger
             Output formatter class. Use this to override default class.
             Default value "FancyLogger"
@@ -234,6 +253,7 @@ class AppCore(object):
         for dataset_item in get_class_inheritors(Dataset):
             self.Datasets[dataset_item.__name__] = dataset_item
 
+        # Append user specified classes
         if kwargs.get('Datasets'):
             self.Datasets.update(kwargs.get('Datasets'))
 
@@ -245,7 +265,14 @@ class AppCore(object):
         self.FeatureStacker = kwargs.get('FeatureStacker', FeatureStacker)
         self.FeatureAggregator = kwargs.get('FeatureAggregator', FeatureAggregator)
 
-        # Fetch all learners
+        self.DataProcessor = kwargs.get('DataProcessor', DataProcessor)
+        self.DataSequencer = kwargs.get('DataSequencer', DataSequencer)
+        self.ProcessingChain = kwargs.get('ProcessingChain', ProcessingChain)
+
+        self.SceneRecognizer = kwargs.get('SceneRecognizer', SceneRecognizer)
+        self.EventRecognizer = kwargs.get('EventRecognizer', EventRecognizer)
+
+        # Fetch all Learners
         self.Learners = {}
         learner_list = get_class_inheritors(LearnerContainer)
         for learner_item in learner_list:
@@ -253,8 +280,21 @@ class AppCore(object):
             if learner.method:
                 self.Learners[learner.method] = learner_item
 
+        # Append user specified Learners
         if kwargs.get('Learners'):
             self.Learners.update(kwargs.get('Learners'))
+
+        # Fetch all DataGenerators
+        self.DataGenerators = {}
+        data_generator_list = get_class_inheritors(BaseDataGenerator)
+        for data_generator_item in data_generator_list:
+            generator = data_generator_item()
+            if generator.method:
+                self.DataGenerators[generator.method] = data_generator_item
+
+        # Append user specified DataGenerators
+        if kwargs.get('DataGenerators'):
+            self.DataGenerators.update(kwargs.get('DataGenerators'))
 
         # Parameters
         self.params = kwargs.get('params')
@@ -273,8 +313,11 @@ class AppCore(object):
         # Set current dataset
         self.dataset = self._get_dataset(dataset=kwargs.get('dataset'))
 
+        # Application meta data
         self.name = kwargs.get('name', 'Application')
         self.system_desc = kwargs.get('system_desc')
+
+        # Application setup
         self.system_parameter_set_id = kwargs.get('system_parameter_set_id')
         self.setup_label = kwargs.get('setup_label', 'System')
         if kwargs.get('dataset_evaluation_mode'):
@@ -857,18 +900,19 @@ class AcousticSceneClassificationAppCore(AppCore):
         Parameters
         ----------
         name : str
-            Application name
+            Application name.
             Default value "Application"
         setup_label : str
-            Application setup label
+            Application setup label.
             Default value "System"
         params : ParameterContainer
             Parameter container containing all parameters needed by application.
         dataset : str or class
-            Dataset, if none given dataset name is taken from parameters "dataset->parameters->name"
+            Dataset, if none given dataset name is taken from parameters "dataset->parameters->name".
             Default value "none"
         dataset_evaluation_mode : str
-            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters "dataset->parameter->evaluation_mode"
+            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters.
+            "dataset->parameter->evaluation_mode"
             Default value "none"
         show_progress_in_console : bool
             Show progress in console.
@@ -880,7 +924,8 @@ class AcousticSceneClassificationAppCore(AppCore):
             Instance of logging
             Default value "none"
         Datasets : dict of Dataset classes
-            Dict of datasets available for application. Dict key is name of the dataset and value link to class inherited from Dataset base class. Given dict is used to update internal dict.
+            Dict of datasets available for application. Dict key is name of the dataset and value link to class
+            inherited from Dataset base class. Given dict is used to update internal dict.
             Default value "none"
         FeatureExtractor : class inherited from FeatureExtractor
             Feature extractor class. Use this to override default class.
@@ -900,8 +945,24 @@ class AcousticSceneClassificationAppCore(AppCore):
         FeatureAggregator : class inherited from FeatureAggregator
             Feature aggregate class. Use this to override default class.
             Default value "FeatureAggregator"
+        DataProcessor : class inherited from DataProcessor
+            DataProcessor class. Use this to override default class.
+            Default value "DataProcessor"
+        DataSequencer : class inherited from DataSequencer
+            DataSequencer class. Use this to override default class.
+            Default value "DataSequencer"
+        ProcessingChain : class inherited from ProcessingChain
+            DataSequencer class. Use this to override default class.
+            Default value "ProcessingChain"
         Learners: dict of Learner classes
-            Dict of learners available for application. Dict key is method the class implements and value link to class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+            Dict of learners available for application. Dict key is method the class implements and value link to
+            class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+        SceneRecognizer : class inherited from SceneRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "SceneRecognizer"
+        EventRecognizer : class inherited from EventRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "EventRecognizer"
         ui : class inherited from FancyLogger
             Output formatter class. Use this to override default class.
             Default value "FancyLogger"
@@ -1110,13 +1171,15 @@ class AcousticSceneClassificationAppCore(AppCore):
         if not overwrite:
             overwrite = self.params.get_path('general.overwrite', False)
 
-        fold_progress = tqdm(self._get_active_folds(),
-                             desc='           {0:<15s}'.format('Fold '),
-                             file=sys.stdout,
-                             leave=False,
-                             miniters=1,
-                             disable=self.disable_progress_bar,
-                             ascii=self.use_ascii_progress_bar)
+        fold_progress = tqdm(
+            self._get_active_folds(),
+            desc='           {0:<15s}'.format('Fold '),
+            file=sys.stdout,
+            leave=False,
+            miniters=1,
+            disable=self.disable_progress_bar,
+            ascii=self.use_ascii_progress_bar
+        )
 
         for fold in fold_progress:
             if self.log_system_progress:
@@ -1126,26 +1189,24 @@ class AcousticSceneClassificationAppCore(AppCore):
 
             current_model_file = self._get_model_filename(fold=fold, path=self.params.get_path('path.learner'))
             if not os.path.isfile(current_model_file) or overwrite:
-                # Feature stacker
-                feature_stacker = self.FeatureStacker(
-                    recipe=self.params.get_path('feature_extractor.recipe'),
-                    feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
-                )
+                feature_processing_chain = self.ProcessingChain()
 
+                # Feature masker
                 feature_masker = None
                 if self.params.get_path('learner.audio_error_handling'):
                     feature_masker = self.FeatureMasker(
                         hop_length_seconds=self.params.get_path('feature_extractor.hop_length_seconds')
                     )
+                    feature_processing_chain.append(feature_masker)
 
-                feature_aggregator = None
-                if self.params.get_path('feature_aggregator.enable'):
-                    feature_aggregator = self.FeatureAggregator(
-                        recipe=self.params.get_path('feature_aggregator.aggregation_recipe'),
-                        win_length_frames=self.params.get_path('feature_aggregator.win_length_frames'),
-                        hop_length_frames=self.params.get_path('feature_aggregator.hop_length_frames')
-                    )
+                # Feature stacker
+                feature_stacker = self.FeatureStacker(
+                    recipe=self.params.get_path('feature_stacker.stacking_recipe'),
+                    feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
+                )
+                feature_processing_chain.append(feature_stacker)
 
+                # Feature normalizer
                 feature_normalizer = None
                 if self.params.get_path('feature_normalizer.enable'):
                     # Load normalizers
@@ -1173,11 +1234,49 @@ class AcousticSceneClassificationAppCore(AppCore):
                     feature_normalizer = self.FeatureNormalizer(feature_stacker.normalizer(
                         normalizer_list=normalizer_list)
                     )
+                    feature_processing_chain.append(feature_normalizer)
+
+                # Feature aggregator
+                feature_aggregator = None
+                if self.params.get_path('feature_aggregator.enable'):
+                    feature_aggregator = self.FeatureAggregator(
+                        recipe=self.params.get_path('feature_aggregator.aggregation_recipe'),
+                        win_length_frames=self.params.get_path('feature_aggregator.win_length_frames'),
+                        hop_length_frames=self.params.get_path('feature_aggregator.hop_length_frames')
+                    )
+                    feature_processing_chain.append(feature_aggregator)
+
+                # Data processing chain
+                data_processing_chain = self.ProcessingChain()
+                if self.params.get_path('learner.parameters.input_sequencer.enable'):
+                    data_sequencer = self.DataSequencer(
+                        frames=self.params.get_path('learner.parameters.input_sequencer.frames'),
+                        hop=self.params.get_path('learner.parameters.input_sequencer.hop'),
+                        padding=self.params.get_path('learner.parameters.input_sequencer.padding'),
+                        shift_step=self.params.get_path(
+                            'learner.parameters.temporal_shifter.step') if self.params.get_path(
+                            'learner.parameters.temporal_shifter.enable') else None,
+                        shift_border=self.params.get_path(
+                            'learner.parameters.temporal_shifter.border') if self.params.get_path(
+                            'learner.parameters.temporal_shifter.enable') else None,
+                        shift_max=self.params.get_path(
+                            'learner.parameters.temporal_shifter.max') if self.params.get_path(
+                            'learner.parameters.temporal_shifter.enable') else None,
+                    )
+                    data_processing_chain.append(data_sequencer)
+
+                # Data processor
+                data_processor = self.DataProcessor(
+                    feature_processing_chain=feature_processing_chain,
+                    data_processing_chain=data_processing_chain,
+                )
 
                 # Collect training examples
                 train_meta = self.dataset.train(fold)
                 data = {}
+                data_filelist = {}
                 annotations = {}
+
                 item_progress = tqdm(train_meta.file_list[::self.params.get_path('learner.file_hop', 1)],
                                      desc="           {0: >15s}".format('Collect data '),
                                      file=sys.stdout,
@@ -1189,67 +1288,69 @@ class AcousticSceneClassificationAppCore(AppCore):
 
                 for item_id, audio_filename in enumerate(item_progress):
                     if self.log_system_progress:
-                        self.logger.info('  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
-                            title='Collect data ',
-                            item_id=item_id,
-                            total=len(item_progress),
-                            item=os.path.split(audio_filename)[-1])
+                        self.logger.info(
+                            '  {title:<15s} [{item_id:3s}/{total:3s}] {item:<20s}'.format(
+                                title='Collect data ',
+                                item_id='{:d}'.format(item_id),
+                                total='{:d}'.format(len(item_progress)),
+                                item=os.path.split(audio_filename)[-1])
                         )
 
                     item_progress.set_postfix(file=os.path.splitext(os.path.split(audio_filename)[-1])[0])
                     item_progress.update()
 
                     # Load features
-                    feature_filenames = self._get_feature_filename(audio_file=audio_filename,
-                                                                   path=self.params.get_path('path.feature_extractor'))
-                    feature_repository = FeatureRepository()
-                    for method, feature_filename in iteritems(feature_filenames):
-                        if os.path.isfile(feature_filename):
-                            feature_repository[method] = self.FeatureContainer().load(filename=feature_filename)
-                        else:
-                            message = '{name}: Features not found [{file}]'.format(
-                                name=self.__class__.__name__,
-                                file=item['file']
-                            )
-
-                            self.logger.exception(message)
-                            raise IOError(message)
-
-                    # Mask annotated audio errors
-                    if feature_masker:
-                        feature_repository = feature_masker.process(
-                            feature_repository=feature_repository,
-                            mask_events=self.dataset.file_error_meta(item['file'])
-                        )
-
-                    # Stack features
-                    feature_container = feature_stacker.process(
-                        feature_repository=feature_repository
+                    feature_filenames = self._get_feature_filename(
+                        audio_file=audio_filename,
+                        path=self.params.get_path('path.feature_extractor')
                     )
 
-                    # Normalize features
-                    if feature_normalizer:
-                        feature_container = feature_normalizer.process(feature_container=feature_container)
+                    if not self.params.get_path('learner.parameters.generator.enable'):
+                        # If generator is not used, load features now.
 
-                    # Aggregate features
-                    if feature_aggregator:
-                        feature_container = feature_aggregator.process(feature_container=feature_container)
+                        # Do only feature processing here. Leave data processing for learner.
+                        if self.params.get_path('learner.audio_error_handling'):
+                            data_processor.call_method(
+                                method_name='set_mask',
+                                parameters={
+                                    'mask_events': self.dataset.file_error_meta(audio_filename)
+                                }
+                            )
 
-                    data[audio_filename] = feature_container
+                        feature_data, feature_length = data_processor.load(
+                            feature_filename_dict=feature_filenames,
+                            process_features=True,
+                            process_data=False
+                        )
+                        data[audio_filename] = FeatureContainer(features=[feature_data])
+
+                    # Inject audio_filename to the features filenames for the raw data generator
+                    feature_filenames['_audio_filename'] = audio_filename
+                    data_filelist[audio_filename] = feature_filenames
+
                     annotations[audio_filename] = train_meta.filter(filename=audio_filename)[0]
 
-                learner = self._get_learner(method=self.params.get_path('learner.method'),
-                                            class_labels=self.dataset.scene_labels,
-                                            feature_masker=feature_masker,
-                                            feature_normalizer=feature_normalizer,
-                                            feature_stacker=feature_stacker,
-                                            feature_aggregator=feature_aggregator,
-                                            params=self.params.get_path('learner'),
-                                            filename=current_model_file,
-                                            disable_progress_bar=self.disable_progress_bar,
-                                            log_progress=self.log_system_progress)
+                learner = self._get_learner(
+                    method=self.params.get_path('learner.method'),
+                    class_labels=self.dataset.scene_labels,
+                    data_processor=data_processor,
+                    feature_processing_chain=feature_processing_chain,
+                    feature_masker=feature_masker,
+                    feature_normalizer=feature_normalizer,
+                    feature_stacker=feature_stacker,
+                    feature_aggregator=feature_aggregator,
+                    params=self.params.get_path('learner'),
+                    filename=current_model_file,
+                    disable_progress_bar=self.disable_progress_bar,
+                    log_progress=self.log_system_progress,
+                    data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
+                )
 
-                learner.learn(data=data, annotations=annotations)
+                learner.learn(
+                    data=data,
+                    annotations=annotations,
+                    data_filenames=data_filelist
+                )
                 learner.save()
 
             if self.params.get_path('learner.show_model_information'):
@@ -1257,7 +1358,10 @@ class AcousticSceneClassificationAppCore(AppCore):
                 model_filename = self._get_model_filename(fold=fold, path=self.params.get_path('path.learner'))
 
                 if os.path.isfile(model_filename):
-                    model_container = self._get_learner(method=self.params.get_path('learner.method')).load(filename=model_filename)
+                    model_container = self._get_learner(
+                        method=self.params.get_path('learner.method')
+                    ).load(filename=model_filename)
+
                 else:
                     message = '{name}: Model file not found [{file}]'.format(
                         name=self.__class__.__name__,
@@ -1267,8 +1371,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                     self.logger.exception(message)
                     raise IOError(message)
 
-
                 if 'learning_history' in model_container:
+                    import matplotlib.pyplot as plt
                     fig = plt.figure()
                     ax = fig.add_subplot(111)
                     ax1 = fig.add_subplot(211)
@@ -1350,11 +1454,16 @@ class AcousticSceneClassificationAppCore(AppCore):
                 results = MetaDataContainer(filename=current_result_file)
 
                 # Load class model container
-                model_filename = self._get_model_filename(fold=fold, path=self.params.get_path('path.learner'))
+                model_filename = self._get_model_filename(
+                    fold=fold,
+                    path=self.params.get_path('path.learner')
+                )
 
                 if os.path.isfile(model_filename):
                     model_container = self._get_learner(method=self.params.get_path('learner.method')).load(
-                        filename=model_filename)
+                        filename=model_filename
+                    )
+
                 else:
                     message = '{name}: Model file not found [{file}]'.format(
                         name=self.__class__.__name__,
@@ -1387,10 +1496,10 @@ class AcousticSceneClassificationAppCore(AppCore):
                         path=self.params.get_path('path.feature_extractor')
                     )
 
-                    feature_repository = FeatureRepository()
+                    feature_list = {}
                     for method, feature_filename in iteritems(feature_filenames):
                         if os.path.isfile(feature_filename):
-                            feature_repository[method] = self.FeatureContainer().load(filename=feature_filename)
+                            feature_list[method] = FeatureContainer().load(filename=feature_filename)
                         else:
                             message = '{name}: Features not found [{file}]'.format(
                                 name=self.__class__.__name__,
@@ -1399,33 +1508,50 @@ class AcousticSceneClassificationAppCore(AppCore):
 
                             self.logger.exception(message)
                             raise IOError(message)
+                    if hasattr(model_container, 'data_processor'):
+                        # Leave feature and data processing to DataProcessor stored inside the model
+                        feature_data = feature_list
 
-                    if self.params.get_path('recognizer.audio_error_handling'):
-                        if model_container.feature_masker:
-                            feature_repository = model_container.feature_masker.process(
-                                feature_repository=feature_repository,
-                                mask_events=self.dataset.file_error_meta(item['file'])
-                            )
-                        else:
-                            feature_repository = self.FeatureMasker(hop_length_seconds=self.params.get_path(
-                                'feature_extractor.hop_length_seconds')).process(
-                                feature_repository=feature_repository,
-                                mask_events=self.dataset.file_error_meta(item['file'])
-                            )
+                    else:
+                        # Backward compatibility mode
 
-                    # Stack features
-                    feature_data = model_container.feature_stacker.process(feature_repository=feature_repository)
+                        # Feature masking
+                        if self.params.get_path('recognizer.audio_error_handling'):
+                            if model_container.feature_masker:
+                                model_container.feature_masker.set_mask(self.dataset.file_error_meta(item['file']))
+                                feature_repository = model_container.feature_masker.process(
+                                    feature_data=feature_repository
+                                )
+                            else:
+                                feature_repository = self.FeatureMasker(
+                                    hop_length_seconds=self.params.get_path('feature_extractor.hop_length_seconds')
+                                ).set_mask(self.dataset.file_error_meta(item['file'])).process(
+                                    feature_data=feature_repository
+                                )
 
-                    # Normalize features
-                    if model_container.feature_normalizer:
-                        feature_data = model_container.feature_normalizer.process(feature_container=feature_data)
+                        # Feature stacking
+                        feature_data = model_container.feature_stacker.process(
+                            feature_data=feature_list
+                        )
 
-                    # Aggregate features
-                    if model_container.feature_aggregator:
-                        feature_data = model_container.feature_aggregator.process(feature_container=feature_data)
+                        # Normalize features
+                        if model_container.feature_normalizer:
+                            feature_data = model_container.feature_normalizer.normalize(feature_data)
 
-                    current_result = model_container.predict(feature_data=feature_data,
-                                                             recognizer_params=self.params.get_path('recognizer'))
+                        # Aggregate features
+                        if model_container.feature_aggregator:
+                            feature_data = model_container.feature_aggregator.process(feature_data)
+
+                    # Frame probabilities
+                    frame_probabilities = model_container.predict(feature_data=feature_data)
+
+                    # Scene recognizer
+                    current_result = self.SceneRecognizer(
+                        params=self.params.get_path('recognizer'),
+                        class_labels=model_container.class_labels,
+                    ).process(
+                        frame_probabilities=frame_probabilities
+                    )
 
                     # Store the result
                     results.append(MetaDataItem({
@@ -1471,7 +1597,8 @@ class AcousticSceneClassificationAppCore(AppCore):
                 scene_metric_fold = sed_eval.scene.SceneClassificationMetrics(scene_labels=self.dataset.scene_labels)
 
                 estimated_scene_list = MetaDataContainer(
-                    filename=self._get_result_filename(fold=fold, path=self.params.get_path('path.recognizer'))
+                    filename=self._get_result_filename(fold=fold, path=self.params.get_path('path.recognizer')
+                    )
                 ).load()
 
                 reference_scene_list = self.dataset.eval(fold=fold)
@@ -1561,10 +1688,10 @@ class SoundEventAppCore(AppCore):
         Parameters
         ----------
         name : str
-            Application name
+            Application name.
             Default value "Application"
         setup_label : str
-            Application setup label
+            Application setup label.
             Default value "System"
         params : ParameterContainer
             Parameter container containing all parameters needed by application.
@@ -1572,7 +1699,8 @@ class SoundEventAppCore(AppCore):
             Dataset, if none given dataset name is taken from parameters "dataset->parameters->name"
             Default value "none"
         dataset_evaluation_mode : str
-            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters "dataset->parameter->evaluation_mode"
+            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters
+            "dataset->parameter->evaluation_mode".
             Default value "none"
         show_progress_in_console : bool
             Show progress in console.
@@ -1584,7 +1712,8 @@ class SoundEventAppCore(AppCore):
             Instance of logging
             Default value "none"
         Datasets : dict of Dataset classes
-            Dict of datasets available for application. Dict key is name of the dataset and value link to class inherited from Dataset base class. Given dict is used to update internal dict.
+            Dict of datasets available for application. Dict key is name of the dataset and value link to class
+            inherited from Dataset base class. Given dict is used to update internal dict.
             Default value "none"
         FeatureExtractor : class inherited from FeatureExtractor
             Feature extractor class. Use this to override default class.
@@ -1604,8 +1733,24 @@ class SoundEventAppCore(AppCore):
         FeatureAggregator : class inherited from FeatureAggregator
             Feature aggregate class. Use this to override default class.
             Default value "FeatureAggregator"
+        DataProcessor : class inherited from DataProcessor
+            DataProcessor class. Use this to override default class.
+            Default value "DataProcessor"
+        DataSequencer : class inherited from DataSequencer
+            DataSequencer class. Use this to override default class.
+            Default value "DataSequencer"
+        ProcessingChain : class inherited from ProcessingChain
+            DataSequencer class. Use this to override default class.
+            Default value "ProcessingChain"
         Learners: dict of Learner classes
-            Dict of learners available for application. Dict key is method the class implements and value link to class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+            Dict of learners available for application. Dict key is method the class implements and value link to
+            class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+        SceneRecognizer : class inherited from SceneRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "SceneRecognizer"
+        EventRecognizer : class inherited from EventRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "EventRecognizer"
         ui : class inherited from FancyLogger
             Output formatter class. Use this to override default class.
             Default value "FancyLogger"
@@ -1721,7 +1866,9 @@ class SoundEventAppCore(AppCore):
         if not overwrite:
             overwrite = self.params.get_path('general.overwrite', False)
 
-        if self.params.get_path('feature_normalizer.enable', False) and self.params.get_path('feature_normalizer.method', 'global') == 'global':
+        if (self.params.get_path('feature_normalizer.enable', False) and
+           self.params.get_path('feature_normalizer.method', 'global') == 'global'):
+
             if self.params.get_path('feature_normalizer.scene_handling') == 'scene-dependent':
 
                 fold_progress = tqdm(self._get_active_folds(),
@@ -1855,19 +2002,23 @@ class SoundEventAppCore(AppCore):
             overwrite = self.params.get_path('general.overwrite', False)
 
         if self.params.get_path('learner.scene_handling') == 'scene-dependent':
-            fold_progress = tqdm(self._get_active_folds(),
-                                 desc='           {0:<15s}'.format('Fold '),
-                                 file=sys.stdout,
-                                 leave=False,
-                                 miniters=1,
-                                 disable=self.disable_progress_bar,
-                                 ascii=self.use_ascii_progress_bar)
+            fold_progress = tqdm(
+                self._get_active_folds(),
+                desc='           {0:<15s}'.format('Fold '),
+                file=sys.stdout,
+                leave=False,
+                miniters=1,
+                disable=self.disable_progress_bar,
+                ascii=self.use_ascii_progress_bar
+            )
 
             for fold in fold_progress:
                 if self.log_system_progress:
-                    self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(title='Fold',
-                                                                                  fold=fold,
-                                                                                  total=len(fold_progress)))
+                    self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(
+                        title='Fold',
+                        fold=fold,
+                        total=len(fold_progress))
+                    )
 
                 scene_labels = self.dataset.scene_labels
                 # Select only active scenes
@@ -1878,13 +2029,16 @@ class SoundEventAppCore(AppCore):
                         )
                     )
 
-                scene_progress = tqdm(scene_labels,
-                                      desc="           {0: >15s}".format('Scene '),
-                                      file=sys.stdout,
-                                      leave=False,
-                                      miniters=1,
-                                      disable=self.disable_progress_bar,
-                                      ascii=self.use_ascii_progress_bar)
+                scene_progress = tqdm(
+                    scene_labels,
+                    desc="           {0: >15s}".format('Scene '),
+                    file=sys.stdout,
+                    leave=False,
+                    miniters=1,
+                    disable=self.disable_progress_bar,
+                    ascii=self.use_ascii_progress_bar
+                )
+
                 for scene_label in scene_progress:
                     current_model_file = self._get_model_filename(
                         fold=fold,
@@ -1893,20 +2047,16 @@ class SoundEventAppCore(AppCore):
                     )
 
                     if not os.path.isfile(current_model_file) or overwrite:
+                        feature_processing_chain = self.ProcessingChain()
+
                         # Feature stacker
                         feature_stacker = FeatureStacker(
-                            recipe=self.params.get_path('feature_extractor.recipe'),
+                            recipe=self.params.get_path('feature_stacker.stacking_recipe'),
                             feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
                         )
+                        feature_processing_chain.append(feature_stacker)
 
-                        feature_aggregator = None
-                        if self.params.get_path('feature_aggregator.enable'):
-                            feature_aggregator = FeatureAggregator(
-                                recipe=self.params.get_path('feature_aggregator.aggregation_recipe'),
-                                win_length_frames=self.params.get_path('feature_aggregator.win_length_frames'),
-                                hop_length_frames=self.params.get_path('feature_aggregator.hop_length_frames')
-                            )
-
+                        # Feature normalizer
                         feature_normalizer = None
                         if self.params.get_path('feature_normalizer.enable'):
                             # Load normalizers
@@ -1919,7 +2069,10 @@ class SoundEventAppCore(AppCore):
                             normalizer_list = {}
                             for method, feature_normalizer_filename in iteritems(feature_normalizer_filenames):
                                 if os.path.isfile(feature_normalizer_filename):
-                                    normalizer_list[method] = FeatureNormalizer().load(filename=feature_normalizer_filename)
+                                    normalizer_list[method] = FeatureNormalizer().load(
+                                        filename=feature_normalizer_filename
+                                    )
+
                                 else:
                                     message = '{name}: Feature normalizer not found [{file}]'.format(
                                         name=self.__class__.__name__,
@@ -1929,11 +2082,44 @@ class SoundEventAppCore(AppCore):
                                     self.logger.exception(message)
                                     raise IOError(message)
 
-                            feature_normalizer = self.FeatureNormalizer(feature_stacker.normalizer(normalizer_list=normalizer_list))
+                            feature_normalizer = self.FeatureNormalizer(feature_stacker.normalizer(
+                                normalizer_list=normalizer_list)
+                            )
+                            feature_processing_chain.append(feature_normalizer)
+
+                        # Feature aggregator
+                        feature_aggregator = None
+                        if self.params.get_path('feature_aggregator.enable'):
+                            feature_aggregator = FeatureAggregator(
+                                recipe=self.params.get_path('feature_aggregator.aggregation_recipe'),
+                                win_length_frames=self.params.get_path('feature_aggregator.win_length_frames'),
+                                hop_length_frames=self.params.get_path('feature_aggregator.hop_length_frames')
+                            )
+                            feature_processing_chain.append(feature_aggregator)
+
+                        # Data processing chain
+                        data_processing_chain = self.ProcessingChain()
+                        if self.params.get_path('learner.parameters.input_sequencer.enable'):
+                            data_sequencer = self.DataSequencer(
+                                frames=self.params.get_path('learner.parameters.input_sequencer.frames'),
+                                hop=self.params.get_path('learner.parameters.input_sequencer.hop'),
+                                padding=self.params.get_path('learner.parameters.input_sequencer.padding'),
+                                shift_step=self.params.get_path('learner.parameters.temporal_shifter.step') if self.params.get_path('learner.parameters.temporal_shifter.enable') else None,
+                                shift_border=self.params.get_path('learner.parameters.temporal_shifter.border') if self.params.get_path('learner.parameters.temporal_shifter.enable') else None,
+                                shift_max=self.params.get_path('learner.parameters.temporal_shifter.max') if self.params.get_path('learner.parameters.temporal_shifter.enable') else None,
+                            )
+                            data_processing_chain.append(data_sequencer)
+
+                        # Data processor
+                        data_processor = self.DataProcessor(
+                            feature_processing_chain=feature_processing_chain,
+                            data_processing_chain=data_processing_chain,
+                        )
 
                         # Collect training examples
                         train_meta = self.dataset.train(fold, scene_label=scene_label)
                         data = {}
+                        data_filelist = {}
                         annotations = {}
 
                         item_progress = tqdm(train_meta.file_list[::self.params.get_path('learner.file_hop', 1)],
@@ -1947,62 +2133,64 @@ class SoundEventAppCore(AppCore):
                         for item_id, audio_filename in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
-                                    '  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
+                                    '  {title:<15s} [{item_id:3s}/{total:3s}] {item:<20s}'.format(
                                         title='Collect data ',
-                                        item_id=item_id,
-                                        total=len(item_progress),
+                                        item_id='{:d}'.format(item_id),
+                                        total='{:d}'.format(len(item_progress)),
                                         item=os.path.split(audio_filename)[-1])
                                     )
 
                             item_progress.set_postfix(file=os.path.splitext(os.path.split(audio_filename)[-1])[0])
                             item_progress.update()
 
-                            # Load features
+                            # Get feature filenames
                             feature_filenames = self._get_feature_filename(
                                 audio_file=audio_filename,
                                 path=self.params.get_path('path.feature_extractor')
                             )
 
-                            feature_list = {}
-                            for method, feature_filename in iteritems(feature_filenames):
-                                if os.path.isfile(feature_filename):
-                                    feature_list[method] = FeatureContainer().load(filename=feature_filename)
-                                else:
-                                    message = '{name}: Features not found [{file}]'.format(
-                                        name=self.__class__.__name__,
-                                        file=feature_filename
-                                    )
+                            if not self.params.get_path('learner.parameters.generator.enable'):
+                                # If generator is not used, load features now.
+                                # Do only feature processing here. Leave data processing for learner.
 
-                                    self.logger.exception(message)
-                                    raise IOError(message)
+                                feature_data, feature_length = data_processor.load(
+                                    feature_filename_dict=feature_filenames,
+                                    process_features=True,
+                                    process_data=False
+                                )
+                                data[audio_filename] = FeatureContainer(features=[feature_data])
 
-                            # Stack features
-                            feature_data = feature_stacker.process(
-                                feature_repository=feature_list
-                            )
+                            # Inject audio_filename to the features filenames for the raw data generator
+                            feature_filenames['_audio_filename'] = audio_filename
+                            data_filelist[audio_filename] = feature_filenames
 
-                            # Normalize features
-                            if feature_normalizer:
-                                feature_data = feature_normalizer.normalize(feature_data)
-
-                            # Aggregate features
-                            if feature_aggregator:
-                                feature_data = feature_aggregator.process(feature_container=feature_data)
-
-                            data[audio_filename] = feature_data
                             annotations[audio_filename] = train_meta.filter(filename=audio_filename)
 
-                        fc = self._get_learner(method=self.params.get_path('learner.method'),
-                                               class_labels=self.dataset.event_labels(scene_label=scene_label),
-                                               feature_normalizer=feature_normalizer,
-                                               feature_stacker=feature_stacker,
-                                               feature_aggregator=feature_aggregator,
-                                               params=self.params.get_path('learner'),
-                                               filename=current_model_file,
-                                               disable_progress_bar=self.disable_progress_bar,
-                                               log_progress=self.log_system_progress)
-                        fc.learn(data=data, annotations=annotations)
-                        fc.save()
+                        if self.log_system_progress:
+                            self.logger.info(' ')
+
+                        learner = self._get_learner(
+                            method=self.params.get_path('learner.method'),
+                            class_labels=self.dataset.event_labels(scene_label=scene_label),
+                            data_processor=data_processor,
+                            feature_processing_chain=feature_processing_chain,
+                            feature_normalizer=feature_normalizer,
+                            feature_stacker=feature_stacker,
+                            feature_aggregator=feature_aggregator,
+                            params=self.params.get_path('learner'),
+                            filename=current_model_file,
+                            disable_progress_bar=self.disable_progress_bar,
+                            log_progress=self.log_system_progress,
+                            data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
+                        )
+
+                        learner.learn(
+                            data=data,
+                            annotations=annotations,
+                            data_filenames=data_filelist
+                        )
+
+                        learner.save()
 
         elif self.params.get_path('learner.scene_handling') == 'scene-independent':
             message = '{name}: Scene handling mode not implemented yet [{mode}]'.format(
@@ -2151,29 +2339,37 @@ class SoundEventAppCore(AppCore):
                                     self.logger.exception(message)
                                     raise IOError(message)
 
-                            feature_data = model_container.feature_stacker.process(
-                                feature_repository=feature_list
-                            )
+                            if hasattr(model_container, 'data_processor'):
+                                # Leave feature and data processing to DataProcessor stored inside the model
+                                feature_data = feature_list
 
-                            # Normalize features
-                            if model_container.feature_normalizer:
-                                feature_data = model_container.feature_normalizer.normalize(feature_data)
-
-                            # Aggregate features
-                            if model_container.feature_aggregator:
-                                feature_data = model_container.feature_aggregator.process(feature_data)
-
-                            current_result = model_container.predict(
-                                feature_data=feature_data,
-                                recognizer_params=self.params.get_path('recognizer')
-                            )
-
-                            if self.params.get_path('recognizer.event_post_processing.enable'):
-                                # Event list post-processing
-                                current_result = current_result.process_events(
-                                    minimum_event_length=self.params.get_path('recognizer.event_post_processing.minimum_event_length_seconds'),
-                                    minimum_event_gap=self.params.get_path('recognizer.event_post_processing.minimum_event_gap_seconds')
+                            else:
+                                # Backward compatibility mode
+                                feature_data = model_container.feature_stacker.process(
+                                    feature_data=feature_list
                                 )
+
+                                # Normalize features
+                                if model_container.feature_normalizer:
+                                    feature_data = model_container.feature_normalizer.normalize(feature_data)
+
+                                # Aggregate features
+                                if model_container.feature_aggregator:
+                                    feature_data = model_container.feature_aggregator.process(feature_data)
+
+                            # Frame probabilities
+                            frame_probabilities = model_container.predict(
+                                feature_data=feature_data,
+                            )
+
+                            # Event recognizer
+                            current_result = self.EventRecognizer(
+                                hop_length_seconds=model_container.params.get_path('hop_length_seconds'),
+                                params=self.params.get_path('recognizer'),
+                                class_labels=model_container.class_labels
+                            ).process(
+                                frame_probabilities=frame_probabilities
+                            )
 
                             for event in current_result:
                                 event.file = self.dataset.absolute_to_relative(audio_filename)
@@ -2663,7 +2859,9 @@ class BinarySoundEventAppCore(SoundEventAppCore):
         if not overwrite:
             overwrite = self.params.get_path('general.overwrite', False)
 
-        if self.params.get_path('feature_normalizer.enable', False) and self.params.get_path('feature_normalizer.method', 'global') == 'global':
+        if (self.params.get_path('feature_normalizer.enable', False) and
+           self.params.get_path('feature_normalizer.method', 'global') == 'global'):
+
             if self.params.get_path('feature_normalizer.event_handling') == 'event-dependent':
 
                 fold_progress = tqdm(self._get_active_folds(),
@@ -2797,52 +2995,57 @@ class BinarySoundEventAppCore(SoundEventAppCore):
             overwrite = self.params.get_path('general.overwrite', False)
 
         if self.params.get_path('learner.event_handling') == 'event-dependent':
-            fold_progress = tqdm(self._get_active_folds(),
-                                 desc='           {0:<15s}'.format('Fold '),
-                                 file=sys.stdout,
-                                 leave=False,
-                                 miniters=1,
-                                 disable=self.disable_progress_bar,
-                                 ascii=self.use_ascii_progress_bar)
+            fold_progress = tqdm(
+                self._get_active_folds(),
+                desc='           {0:<15s}'.format('Fold '),
+                file=sys.stdout,
+                leave=False,
+                miniters=1,
+                disable=self.disable_progress_bar,
+                ascii=self.use_ascii_progress_bar
+            )
 
             for fold in fold_progress:
                 if self.log_system_progress:
-                    self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(title='Fold',
-                                                                                  fold=fold,
-                                                                                  total=len(fold_progress)))
+                    self.logger.info('  {title:<15s} [{fold:d}/{total:d}]'.format(
+                        title='Fold',
+                        fold=fold,
+                        total=len(fold_progress))
+                    )
 
                 event_labels = self.dataset.event_labels
                 # Select only active events
                 if self.params.get_path('learner.active_events'):
                     event_labels = list(set(event_labels).intersection(self.params.get_path('learner.active_events')))
 
-                event_progress = tqdm(event_labels,
-                                      desc="           {0: >15s}".format('Event '),
-                                      file=sys.stdout,
-                                      leave=False,
-                                      miniters=1,
-                                      disable=self.disable_progress_bar,
-                                      ascii=self.use_ascii_progress_bar)
+                event_progress = tqdm(
+                    event_labels,
+                    desc="           {0: >15s}".format('Event '),
+                    file=sys.stdout,
+                    leave=False,
+                    miniters=1,
+                    disable=self.disable_progress_bar,
+                    ascii=self.use_ascii_progress_bar
+                )
 
                 for event_label in event_progress:
-                    current_model_file = self._get_model_filename(fold=fold,
-                                                                  path=self.params.get_path('path.learner'),
-                                                                  event_label=event_label)
+                    current_model_file = self._get_model_filename(
+                        fold=fold,
+                        path=self.params.get_path('path.learner'),
+                        event_label=event_label
+                    )
+
                     if not os.path.isfile(current_model_file) or overwrite:
+                        feature_processing_chain = self.ProcessingChain()
+
                         # Feature stacker
                         feature_stacker = FeatureStacker(
-                            recipe=self.params.get_path('feature_extractor.recipe'),
+                            recipe=self.params.get_path('feature_stacker.stacking_recipe'),
                             feature_hop=self.params.get_path('feature_stacker.feature_hop', 1)
                         )
+                        feature_processing_chain.append(feature_stacker)
 
-                        feature_aggregator = None
-                        if self.params.get_path('feature_aggregator.enable'):
-                            feature_aggregator = FeatureAggregator(
-                                recipe=self.params.get_path('feature_aggregator.aggregation_recipe'),
-                                win_length_frames=self.params.get_path('feature_aggregator.win_length_frames'),
-                                hop_length_frames=self.params.get_path('feature_aggregator.hop_length_frames')
-                            )
-
+                        # Feature normalizer
                         feature_normalizer = None
                         if self.params.get_path('feature_normalizer.enable'):
                             # Load normalizers
@@ -2871,10 +3074,41 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             feature_normalizer = self.FeatureNormalizer(feature_stacker.normalizer(
                                 normalizer_list=normalizer_list)
                             )
+                            feature_processing_chain.append(feature_normalizer)
+
+                        # Feature aggregator
+                        feature_aggregator = None
+                        if self.params.get_path('feature_aggregator.enable'):
+                            feature_aggregator = FeatureAggregator(
+                                recipe=self.params.get_path('feature_aggregator.aggregation_recipe'),
+                                win_length_frames=self.params.get_path('feature_aggregator.win_length_frames'),
+                                hop_length_frames=self.params.get_path('feature_aggregator.hop_length_frames')
+                            )
+                            feature_processing_chain.append(feature_aggregator)
+
+                        # Data processing chain
+                        data_processing_chain = self.ProcessingChain()
+                        if self.params.get_path('learner.parameters.input_sequencer.enable'):
+                            data_sequencer = self.DataSequencer(
+                                frames=self.params.get_path('learner.parameters.input_sequencer.frames'),
+                                hop=self.params.get_path('learner.parameters.input_sequencer.hop'),
+                                padding=self.params.get_path('learner.parameters.input_sequencer.padding'),
+                                shift_step=self.params.get_path('learner.parameters.temporal_shifter.step') if self.params.get_path('learner.parameters.temporal_shifter.enable') else None,
+                                shift_border=self.params.get_path('learner.parameters.temporal_shifter.border') if self.params.get_path('learner.parameters.temporal_shifter.enable') else None,
+                                shift_max=self.params.get_path('learner.parameters.temporal_shifter.max') if self.params.get_path('learner.parameters.temporal_shifter.enable') else None,
+                            )
+                            data_processing_chain.append(data_sequencer)
+
+                        # Data processor
+                        data_processor = self.DataProcessor(
+                            feature_processing_chain=feature_processing_chain,
+                            data_processing_chain=data_processing_chain,
+                        )
 
                         # Collect training examples
                         train_meta = self.dataset.train(fold, event_label=event_label)
                         data = {}
+                        data_filelist = {}
                         annotations = {}
 
                         item_progress = tqdm(train_meta.file_list[::self.params.get_path('learner.file_hop', 1)],
@@ -2885,65 +3119,68 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                              disable=self.disable_progress_bar,
                                              ascii=self.use_ascii_progress_bar)
 
+                        # Collect learning examples
                         for item_id, audio_filename in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
-                                    '  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
+                                    '  {title:<15s} [{item_id:3s}/{total:3s}] {item:<20s}'.format(
                                         title='Collect data ',
-                                        item_id=item_id,
-                                        total=len(item_progress),
+                                        item_id='{:d}'.format(item_id),
+                                        total='{:d}'.format(len(item_progress)),
                                         item=os.path.split(audio_filename)[-1])
                                     )
 
                             item_progress.set_postfix(file=os.path.splitext(os.path.split(audio_filename)[-1])[0])
                             item_progress.update()
 
-                            # Load features
+                            # Get feature filenames
                             feature_filenames = self._get_feature_filename(
                                 audio_file=audio_filename,
                                 path=self.params.get_path('path.feature_extractor')
                             )
 
-                            feature_list = {}
-                            for method, feature_filename in iteritems(feature_filenames):
-                                if os.path.isfile(feature_filename):
-                                    feature_list[method] = FeatureContainer().load(filename=feature_filename)
-                                else:
-                                    message = '{name}: Features not found [{file}]'.format(
-                                        name=self.__class__.__name__,
-                                        file=feature_filename
-                                    )
+                            if not self.params.get_path('learner.parameters.generator.enable'):
+                                # If generator is not used, load features now.
+                                # Do only feature processing here. Leave data processing for learner.
+                                feature_data, feature_length = data_processor.load(
+                                    feature_filename_dict=feature_filenames,
+                                    process_features=True,
+                                    process_data=False
+                                )
+                                data[audio_filename] = FeatureContainer(features=[feature_data])
 
-                                    self.logger.exception(message)
-                                    raise IOError(message)
+                            # Inject audio_filename to the features filenames for the raw data generator
+                            feature_filenames['_audio_filename'] = audio_filename
+                            data_filelist[audio_filename] = feature_filenames
 
-                            # Stack features
-                            feature_data = feature_stacker.process(
-                                feature_repository=feature_list
-                            )
-
-                            # Normalize features
-                            if feature_normalizer:
-                                feature_data = feature_normalizer.normalize(feature_data)
-
-                            # Aggregate features
-                            if feature_aggregator:
-                                feature_data = feature_aggregator.process(feature_container=feature_data)
-
-                            data[audio_filename] = feature_data
                             annotations[audio_filename] = train_meta.filter(filename=audio_filename)
 
-                        fc = self._get_learner(method=self.params.get_path('learner.method'),
-                                               class_labels=[event_label],
-                                               feature_normalizer=feature_normalizer,
-                                               feature_stacker=feature_stacker,
-                                               feature_aggregator=feature_aggregator,
-                                               params=self.params.get_path('learner'),
-                                               filename=current_model_file,
-                                               disable_progress_bar=self.disable_progress_bar,
-                                               log_progress=self.log_system_progress)
-                        fc.learn(data=data, annotations=annotations)
-                        fc.save()
+                        if self.log_system_progress:
+                            self.logger.info(' ')
+
+                        # Learner
+                        learner = self._get_learner(
+                            method=self.params.get_path('learner.method'),
+                            class_labels=[event_label],
+                            data_processor=data_processor,
+                            feature_processing_chain=feature_processing_chain,
+                            feature_normalizer=feature_normalizer,
+                            feature_stacker=feature_stacker,
+                            feature_aggregator=feature_aggregator,
+                            params=self.params.get_path('learner'),
+                            filename=current_model_file,
+                            disable_progress_bar=self.disable_progress_bar,
+                            log_progress=self.log_system_progress,
+                            data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
+                        )
+                        learner.learn(
+                            annotations=annotations,
+                            data=data,
+                            data_filenames=data_filelist
+                        )
+
+                        # Save model
+                        learner.save()
 
                     if self.params.get_path('learner.show_model_information'):
                         # Load class model container
@@ -2966,6 +3203,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             raise IOError(message)
 
                         if 'learning_history' in model_container:
+                            import matplotlib.pyplot as plt
                             fig = plt.figure()
                             ax = fig.add_subplot(111)
                             ax1 = fig.add_subplot(211)
@@ -3129,17 +3367,16 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                              desc="           {0: >15s}".format('Testing '),
                                              file=sys.stdout,
                                              leave=False,
-                                             #bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
                                              disable=self.disable_progress_bar,
                                              ascii=self.use_ascii_progress_bar)
 
                         for item_id, item in enumerate(item_progress):
                             if self.log_system_progress:
                                 self.logger.info(
-                                    '  {title:<15s} [{item_id:d}/{total:d}] {item:<20s}'.format(
+                                    '  {title:<15s} [{item_id:3s}/{total:3s}] {item:<20s}'.format(
                                         title='Testing',
-                                        item_id=item_id,
-                                        total=len(item_progress),
+                                        item_id='{:d}'.format(item_id),
+                                        total='{:d}'.format(len(item_progress)),
                                         item=os.path.split(item['file'])[-1])
                                     )
 
@@ -3162,29 +3399,37 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                     self.logger.exception(message)
                                     raise IOError(message)
 
-                            feature_data = model_container.feature_stacker.process(
-                                feature_repository=feature_list
-                            )
+                            if hasattr(model_container, 'data_processor'):
+                                # Leave feature and data processing to DataProcessor stored inside the model
+                                feature_data = feature_list
 
-                            # Normalize features
-                            if model_container.feature_normalizer:
-                                feature_data = model_container.feature_normalizer.normalize(feature_data)
-
-                            # Aggregate features
-                            if model_container.feature_aggregator:
-                                feature_data = model_container.feature_aggregator.process(feature_data)
-
-                            current_result = model_container.predict(
-                                feature_data=feature_data,
-                                recognizer_params=self.params.get_path('recognizer')
-                            )
-
-                            if self.params.get_path('recognizer.event_post_processing.enable'):
-                                # Event list post-processing
-                                current_result = current_result.process_events(
-                                    minimum_event_length=self.params.get_path('recognizer.event_post_processing.minimum_event_length_seconds'),
-                                    minimum_event_gap=self.params.get_path('recognizer.event_post_processing.minimum_event_gap_seconds')
+                            else:
+                                # Backward compatibility mode
+                                feature_data = model_container.feature_stacker.process(
+                                    feature_data=feature_list
                                 )
+
+                                # Normalize features
+                                if model_container.feature_normalizer:
+                                    feature_data = model_container.feature_normalizer.normalize(feature_data)
+
+                                # Aggregate features
+                                if model_container.feature_aggregator:
+                                    feature_data = model_container.feature_aggregator.process(feature_data)
+
+                            # Frame probabilities
+                            frame_probabilities = model_container.predict(
+                                feature_data=feature_data,
+                            )
+
+                            # Event recognizer
+                            current_result = self.EventRecognizer(
+                                hop_length_seconds=model_container.params.get_path('hop_length_seconds'),
+                                params=self.params.get_path('recognizer'),
+                                class_labels=model_container.class_labels
+                            ).process(
+                                frame_probabilities=frame_probabilities
+                            )
 
                             if current_result:
                                 for event in current_result:
@@ -3296,8 +3541,11 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                     overall_metrics_per_event[event_label]['segment_based_metrics'] = segment_based_metric.results()
                     overall_metrics_per_event[event_label]['event_based_metrics'] = event_based_metric.results()
                     if self.params.get_path('evaluator.show_details', False):
-                        output += "  Event [{event}], Evaluation over {folds:d} folds\n".format(event=event_label,
-                                                                                                folds=self.dataset.fold_count)
+                        output += "  Event [{event}], Evaluation over {folds:d} folds\n".format(
+                            event=event_label,
+                            folds=self.dataset.fold_count
+                        )
+
                         output += " \n"
 
                         output += "  Event-based metrics \n"

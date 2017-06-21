@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.BaseDataGenerator.data_size
+=======================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. autoattribute:: BaseDataGenerator.data_size

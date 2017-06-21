@@ -29,7 +29,7 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 0
+        seed: 9
         keras:
           backend: theano
           backend_parameters:
@@ -51,13 +51,12 @@ sets:
           batch_size: 256
           shuffle: true
           callbacks:
-            - type: EarlyStopping
+            - type: Stopper
               parameters:
-                monitor: val_categorical_accuracy
-                min_delta: 0.001
+                monitor: val_binary_accuracy
+                initial_delay: 100
+                min_delta: 0
                 patience: 10
-                verbose: 0
-                mode: max
 
         model:
           config:
@@ -87,13 +86,13 @@ sets:
                 kernel_initializer: uniform
                 activation: sigmoid
 
-          loss: categorical_crossentropy
+          loss: binary_crossentropy
 
           optimizer:
             type: Adam
 
           metrics:
-            - categorical_accuracy
+            - binary_accuracy
 
     recognizer:
       frame_accumulation:
@@ -141,7 +140,7 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 1
+        seed: 9
         keras:
           backend: theano
           backend_parameters:
@@ -162,13 +161,12 @@ sets:
           batch_size: 256
           shuffle: true
           callbacks:
-            - type: EarlyStopping
+            - type: Stopper
               parameters:
-                monitor: val_categorical_accuracy
-                min_delta: 0.001
+                monitor: val_binary_accuracy
+                initial_delay: 100
+                min_delta: 0
                 patience: 10
-                verbose: 0
-                mode: max
 
         model:
           config:
@@ -198,13 +196,13 @@ sets:
                 kernel_initializer: uniform
                 activation: sigmoid
 
-          loss: categorical_crossentropy
+          loss: binary_crossentropy
 
           optimizer:
             type: Adam
 
           metrics:
-            - categorical_accuracy
+            - binary_accuracy
 
     recognizer:
       frame_accumulation:
@@ -516,7 +514,7 @@ defaults:
       init_params: wmc
 
     mlp:
-      seed: 1
+      seed: 0
 
       keras:
         backend: theano
@@ -569,13 +567,13 @@ defaults:
               kernel_initializer: uniform
               activation: sigmoid
 
-        loss: categorical_crossentropy
+        loss: binary_crossentropy
 
         optimizer:
           type: Adam
 
         metrics:
-          - categorical_accuracy
+          - binary_accuracy
 
   # ==========================================================
   # Recognizer

@@ -74,7 +74,7 @@ def test_load():
     nose.tools.eq_(feature_container.shape[1], 10)
 
     # Test #3
-    feature_repository = FeatureContainer().load(filename_list={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
+    feature_repository = FeatureContainer().load(filename_dict={'mfcc1': os.path.join('material', 'test.mfcc.cpickle'),
                                                                 'mfcc2': os.path.join('material', 'test.mfcc.cpickle')})
 
     nose.tools.assert_list_equal(sorted(list(feature_repository.keys())), ['mfcc1', 'mfcc2'])

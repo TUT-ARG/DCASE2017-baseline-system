@@ -18,7 +18,7 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 0
+        seed: 5
         keras:
           backend: theano
           backend_parameters:
@@ -34,20 +34,19 @@ sets:
           enable: true
           setup_source: generated_event_file_balanced
           validation_amount: 0.10
-          seed: 123
+          seed: 5
 
         training:
           epochs: 200
           batch_size: 256
           shuffle: true
           callbacks:
-            - type: EarlyStopping
+            - type: Stopper
               parameters:
                 monitor: val_binary_accuracy
-                min_delta: 0.001
+                initial_delay: 100
+                min_delta: 0
                 patience: 10
-                verbose: 0
-                mode: auto
 
         model:
           config:
@@ -118,7 +117,7 @@ sets:
 
     learner_method_parameters:
       mlp:
-        seed: 0
+        seed: 5
         keras:
           backend: theano
           backend_parameters:
@@ -133,20 +132,19 @@ sets:
           enable: true
           setup_source: generated_event_file_balanced
           validation_amount: 0.10
-          seed: 123
+          seed: 5
 
         training:
           epochs: 200
           batch_size: 256
           shuffle: true
           callbacks:
-            - type: EarlyStopping
+            - type: Stopper
               parameters:
                 monitor: val_binary_accuracy
-                min_delta: 0.001
+                initial_delay: 100
+                min_delta: 0
                 patience: 10
-                verbose: 0
-                mode: auto
 
         model:
           config:
@@ -178,8 +176,6 @@ sets:
 
           optimizer:
             type: Adam
-            parameters:
-              lr: 0.01
 
           loss: binary_crossentropy
 

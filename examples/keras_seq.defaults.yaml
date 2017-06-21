@@ -1,0 +1,1027 @@
+active_set: miniCNN
+
+sets:
+  - set_id: miniCNN
+    description: Minimal CNN based example using data generator and keras sequential learner
+    general:
+      active_events:
+        - babycry
+
+    feature_stacker:
+      stacking_recipe: mel
+
+    feature_aggregator:
+      enable: false
+
+    learner:
+      method: keras_seq
+      file_hop: 2
+
+    learner_method_parameters:
+      keras_seq:
+        seed: 5
+        keras:
+          backend: theano
+          backend_parameters:
+            floatX: float32
+            device: gpu
+            fastmath: true
+            optimizer: fast_run
+            openmp: true
+            threads: 4
+            CNR: true
+
+        input_sequencer:
+          enable: true
+          frames: 1400
+          hop: 1400
+          padding: false
+
+        temporal_shifter:
+          enable: true
+          border: roll
+          step: 10
+          max: 100
+
+        generator:
+          enable: true
+          method: feature
+          max_q_size: 1
+          workers: 1
+          parameters:
+            buffer_size: 100
+
+        validation:
+          enable: true
+          setup_source: generated_event_file_balanced
+          validation_amount: 0.10
+          seed: 5
+
+        training:
+          epochs: 200
+          batch_size: 16
+          shuffle: true
+
+          epoch_processing:
+            enable: true
+            external_metrics:
+              enable: true
+              evaluation_interval: 1
+              metrics:
+                - label: evtER
+                  evaluator: sed_eval.event_based
+                  name: overall.error_rate.error_rate
+                  parameters:
+                    evaluate_onset: true
+                    evaluate_offset: false
+                    t_collar: 0.5
+                    percentage_of_length: 0.5
+
+                - label: evtF1
+                  evaluator: sed_eval.event_based
+                  name: overall.f_measure.f_measure
+                  parameters:
+                    evaluate_onset: true
+                    evaluate_offset: false
+                    t_collar: 0.5
+                    percentage_of_length: 0.5
+
+          callbacks:
+#            - type: Plotter
+#              parameters:
+#                interactive: true
+#                save: true
+#                output_format: pdf
+#                focus_span: 10
+#                plotting_rate: 5
+
+            - type: Stopper
+              parameters:
+                monitor: evtER
+                initial_delay: 100
+                min_delta: 0
+                patience: 10
+
+            - type: Stasher
+              parameters:
+                monitor: evtER
+                initial_delay: 20
+
+        model:
+          constants:
+            CONVOLUTION_FILTER: 8
+            CONVOLUTION_INIT: he_normal
+            CONVOLUTION_BORDER_MODE: same
+            CONVOLUTION_TIME: 5
+            CONVOLUTION_FREQ: 5
+            CONVOLUTION_ACTIVATION: relu
+            CONVOLUTION_POOL_TIME: 1
+            CONVOLUTION_DROPOUT: 0.25
+
+          config:
+            # CONV 1
+            - class_name: Conv2D
+              config:
+                input_shape:
+                  - 1
+                  - INPUT_SEQUENCE_LENGTH
+                  - FEATURE_VECTOR_LENGTH
+
+                filters: CONVOLUTION_FILTER
+                kernel_size:
+                  - CONVOLUTION_TIME
+                  - CONVOLUTION_FREQ
+                padding: CONVOLUTION_BORDER_MODE
+                kernel_initializer: CONVOLUTION_INIT
+                data_format: channels_first
+            - class_name: BatchNormalization
+              config:
+                axis: 1
+            - class_name: Activation
+              config:
+                activation: CONVOLUTION_ACTIVATION
+            - class_name: Dropout
+              config:
+                rate: CONVOLUTION_DROPOUT
+            - class_name: MaxPooling2D
+              config:
+                data_format: channels_first
+                pool_size:
+                  - CONVOLUTION_POOL_TIME
+                  - 5
+
+            # CONV 2
+            - class_name: Conv2D
+              config:
+                filters: CONVOLUTION_FILTER
+                kernel_size:
+                  - CONVOLUTION_TIME
+                  - CONVOLUTION_FREQ
+                padding: CONVOLUTION_BORDER_MODE
+                kernel_initializer: CONVOLUTION_INIT
+                data_format: channels_first
+            - class_name: BatchNormalization
+              config:
+                axis: 1
+            - class_name: Activation
+              config:
+                activation: CONVOLUTION_ACTIVATION
+            - class_name: Dropout
+              config:
+                rate: CONVOLUTION_DROPOUT
+            - class_name: MaxPooling2D
+              config:
+                data_format: channels_first
+                pool_size:
+                  - CONVOLUTION_POOL_TIME
+                  - 4
+
+            # CONV 3
+            - class_name: Conv2D
+              config:
+                filters: CONVOLUTION_FILTER
+                kernel_size:
+                  - CONVOLUTION_TIME
+                  - CONVOLUTION_FREQ
+                padding: CONVOLUTION_BORDER_MODE
+                kernel_initializer: CONVOLUTION_INIT
+                data_format: channels_first
+            - class_name: BatchNormalization
+              config:
+                axis: 1
+            - class_name: Activation
+              config:
+                activation: CONVOLUTION_ACTIVATION
+            - class_name: Dropout
+              config:
+                rate: CONVOLUTION_DROPOUT
+            - class_name: MaxPooling2D
+              config:
+                data_format: channels_first
+                pool_size:
+                  - CONVOLUTION_POOL_TIME
+                  - 2
+
+            # Permute
+            - class_name: Permute
+              config:
+                dims:
+                  - 2
+                  - 1
+                  - 3
+
+            # Reshape
+            - class_name: Reshape
+              config:
+                target_shape:
+                  - INPUT_SEQUENCE_LENGTH
+                  - CONVOLUTION_FILTER
+
+            # OUTPUT
+            - class_name: Dense
+              wrapper: TimeDistributed
+              config:
+                units: CLASS_COUNT
+                activation: sigmoid
+                kernel_initializer: he_normal
+
+          loss: binary_crossentropy
+
+          optimizer:
+            type: Adam
+
+          metrics:
+            - binary_accuracy
+
+    recognizer:
+      frame_accumulation:
+        enable: false
+
+      frame_binarization:
+        enable: true
+        threshold: 0.5
+
+      event_activity_processing:
+        enable: false
+
+      event_post_processing:
+        enable: true
+        minimum_event_length_seconds: 0.1         # seconds
+        minimum_event_gap_second: 0.1             # seconds
+
+  - set_id: miniMLP
+    description: Minimal MLP based example using data generator and keras sequential learner
+    general:
+      active_events:
+        - babycry
+
+    feature_stacker:
+      stacking_recipe: mel
+
+    feature_aggregator:
+      enable: true
+      aggregation_recipe: flatten
+      win_length_seconds: 0.1
+      hop_length_seconds: 0.02
+
+    learner:
+      method: keras_seq
+      file_hop: 4
+
+    learner_method_parameters:
+      keras_seq:
+        seed: 5
+        keras:
+          backend: theano
+          backend_parameters:
+            floatX: float64
+            device: cpu
+            fastmath: false
+            optimizer: None
+            openmp: false
+            threads: 1
+            CNR: true
+
+        input_sequencer:
+          enable: false
+
+        temporal_shifter:
+          enable: false
+
+        generator:
+          enable: true
+          method: feature
+          max_q_size: 1
+          workers: 1
+          parameters:
+            buffer_size: 100
+
+        validation:
+          enable: true
+          setup_source: generated_event_file_balanced
+          validation_amount: 0.10
+          seed: 5
+
+        training:
+          epochs: 200
+          batch_size: 256
+          shuffle: true
+
+          epoch_processing:
+            enable: true
+
+            external_metrics:
+              enable: true
+              evaluation_interval: 1
+              metrics:
+                - label: evtER
+                  evaluator: sed_eval.event_based
+                  name: overall.error_rate.error_rate
+                  parameters:
+                    evaluate_onset: true
+                    evaluate_offset: false
+                    t_collar: 0.5
+                    percentage_of_length: 0.5
+
+                - label: evtF1
+                  evaluator: sed_eval.event_based
+                  name: overall.f_measure.f_measure
+                  parameters:
+                    evaluate_onset: true
+                    evaluate_offset: false
+                    t_collar: 0.5
+                    percentage_of_length: 0.5
+
+          callbacks:
+#            - type: Plotter
+#              parameters:
+#                interactive: true
+#                save: true
+#                output_format: pdf
+#                focus_span: 10
+#                plotting_rate: 30
+
+            - type: Stopper
+              parameters:
+                monitor: evtER
+                initial_delay: 100
+                min_delta: 0
+                patience: 10
+
+            - type: Stasher
+              parameters:
+                monitor: evtER
+                initial_delay: 20
+
+        model:
+          constants:
+            LAYER_SIZE: 50
+            LAYER_INIT: uniform
+            LAYER_ACTIVATION: relu
+            DROPOUT: 0.2
+
+          config:
+            - class_name: Dense
+              config:
+                units: LAYER_SIZE
+                kernel_initializer: LAYER_INIT
+                activation: LAYER_ACTIVATION
+
+            - class_name: Dropout
+              config:
+                rate: DROPOUT
+
+            - class_name: Dense
+              config:
+                units: LAYER_SIZE
+                kernel_initializer: LAYER_INIT
+                activation: LAYER_ACTIVATION
+
+            - class_name: Dropout
+              config:
+                rate: DROPOUT
+
+            - class_name: Dense
+              config:
+                units: CLASS_COUNT
+                kernel_initializer: LAYER_INIT
+                activation: sigmoid
+
+          loss: binary_crossentropy
+
+          optimizer:
+            type: Adam
+
+          metrics:
+            - binary_accuracy
+
+    recognizer:
+      frame_accumulation:
+        enable: false
+
+      frame_binarization:
+        enable: true
+        threshold: 0.5
+
+      event_activity_processing:
+        enable: true
+        type: median_filtering
+        window_length_seconds: 0.54
+
+      event_post_processing:
+        enable: false
+
+  - set_id: dcase2017
+    description: DCASE2017 baseline (CPU) using DCASE2017 task 2 development dataset
+
+    feature_stacker:
+      stacking_recipe: mel
+
+    feature_aggregator:
+      enable: true
+      aggregation_recipe: flatten
+      win_length_seconds: 0.1
+      hop_length_seconds: 0.02
+
+    learner:
+      method: mlp
+
+    learner_method_parameters:
+      mlp:
+        seed: 5
+        keras:
+          backend: theano
+          backend_parameters:
+            floatX: float64
+            device: cpu
+            fastmath: false
+            optimizer: None
+            openmp: false
+            threads: 1
+            CNR: true
+
+        validation:
+          enable: true
+          setup_source: generated_event_file_balanced
+          validation_amount: 0.10
+          seed: 5
+
+        training:
+          epochs: 200
+          batch_size: 256
+          shuffle: true
+          callbacks:
+            - type: Stopper
+              parameters:
+                monitor: val_binary_accuracy
+                initial_delay: 100
+                min_delta: 0
+                patience: 10
+
+        model:
+          config:
+            - class_name: Dense
+              config:
+                units: 50
+                kernel_initializer: uniform
+                activation: relu
+
+            - class_name: Dropout
+              config:
+                rate: 0.2
+
+            - class_name: Dense
+              config:
+                units: 50
+                kernel_initializer: uniform
+                activation: relu
+
+            - class_name: Dropout
+              config:
+                rate: 0.2
+
+            - class_name: Dense
+              config:
+                units: CLASS_COUNT
+                kernel_initializer: uniform
+                activation: sigmoid
+
+          loss: binary_crossentropy
+
+          optimizer:
+            type: Adam
+
+          metrics:
+            - binary_accuracy
+
+    recognizer:
+      frame_accumulation:
+        enable: false
+
+      frame_binarization:
+        enable: true
+        threshold: 0.5
+
+      event_activity_processing:
+        enable: true
+        type: median_filtering
+        window_length_seconds: 0.54
+
+      event_post_processing:
+        enable: false
+
+  - set_id: dcase2017_gpu
+    description: DCASE2017 baseline (GPU) using DCASE2017 task 2 development dataset
+
+    feature_stacker:
+      stacking_recipe: mel
+
+    feature_aggregator:
+      enable: true
+      aggregation_recipe: flatten
+      win_length_seconds: 0.1
+      hop_length_seconds: 0.02
+
+    learner:
+      method: mlp
+
+    learner_method_parameters:
+      mlp:
+        seed: 5
+        keras:
+          backend: theano
+          backend_parameters:
+            floatX: float32
+            device: gpu
+            fastmath: true
+            optimizer: FAST_RUN
+            openmp: true
+            threads: 4
+
+        validation:
+          enable: true
+          setup_source: generated_event_file_balanced
+          validation_amount: 0.10
+          seed: 5
+
+        training:
+          epochs: 200
+          batch_size: 256
+          shuffle: true
+          callbacks:
+            - type: Stopper
+              parameters:
+                monitor: val_binary_accuracy
+                initial_delay: 100
+                min_delta: 0
+                patience: 10
+
+        model:
+          config:
+            - class_name: Dense
+              config:
+                units: 50
+                kernel_initializer: uniform
+                activation: relu
+
+            - class_name: Dropout
+              config:
+                rate: 0.2
+
+            - class_name: Dense
+              config:
+                units: 50
+                kernel_initializer: uniform
+                activation: relu
+
+            - class_name: Dropout
+              config:
+                rate: 0.2
+
+            - class_name: Dense
+              config:
+                units: CLASS_COUNT
+                kernel_initializer: uniform
+                activation: sigmoid
+
+          optimizer:
+            type: Adam
+
+          loss: binary_crossentropy
+
+        metrics:
+          - binary_accuracy
+
+    recognizer:
+      frame_accumulation:
+        enable: false
+
+      frame_binarization:
+        enable: true
+        threshold: 0.5
+
+      event_activity_processing:
+        enable: true
+        type: median_filtering
+        window_length_seconds: 0.54
+
+      event_post_processing:
+        enable: false
+        minimum_event_length_seconds: 0.1
+        minimum_event_gap_second: 0.1
+
+  - set_id: gmm
+    description: GMM based system using DCASE2017 task 2 development dataset
+
+    feature_stacker:
+      stacking_recipe: mfcc=1-19;mfcc_delta;mfcc_acceleration
+
+    feature_normalizer:
+      enable: true
+
+    feature_aggregator:
+      enable: false
+
+    learner:
+      method: gmm
+
+    learner_method_parameters:
+      gmm:
+        n_components: 16
+
+    recognizer:
+      frame_accumulation:
+        enable: true
+        type: sliding_sum
+        window_length_seconds: 0.5
+
+      frame_binarization:
+        enable: true
+        threshold: 200
+
+      event_post_processing:
+        enable: false
+
+  - set_id: minimal
+    description: Minimal system to test that everything works
+    dataset:
+      method: development
+    dataset_method_parameters:
+      development:
+        name: TUTRareSoundEvents_2017_DevelopmentSet
+        fold_list: [1]
+        evaluation_mode: folds
+    feature_stacker:
+      stacking_recipe: mfcc=1-19
+    learner:
+      method: gmm
+    learner_method_parameters:
+      gmm:
+        n_components: 1
+
+    recognizer:
+      frame_accumulation:
+        enable: true
+        type: sliding_sum
+        window_length_seconds: 0.5
+      frame_binarization:
+        enable: true
+        threshold: 200
+      event_post_processing:
+        enable: false
+
+
+defaults:
+  # ==========================================================
+  # Flow
+  # ==========================================================
+  flow:
+    initialize: false
+    extract_features: false
+    feature_normalizer: false
+    train_system: true
+    test_system: true
+    evaluate_system: true
+
+  # ==========================================================
+  # General
+  # ==========================================================
+  general:
+    overwrite: false                    # Overwrite previously stored data
+
+    challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
+
+    print_system_progress: true         #
+    use_ascii_progress_bar: false       #
+
+    log_system_parameters: false        #
+    log_system_progress: false          #
+
+    event_handling: event-dependent     # [event-dependent, event-independent]
+
+  # ==========================================================
+  # Paths
+  # ==========================================================
+  path:
+    data: ../applications/data/
+
+    system_base: system/keras_seq/
+    feature_extractor: feature_extractor/
+    feature_normalizer: feature_normalizer/
+    learner: learner/
+    recognizer: recognizer/
+    evaluator: evaluator/
+
+    recognizer_challenge_output: challenge_submission/task2/
+    logs: logs/
+
+  # ==========================================================
+  # Logging
+  # ==========================================================
+  logging:
+    enable: true                        #
+    colored: true                       # Colored console logging
+
+    parameters:
+      version: 1
+      disable_existing_loggers: false
+      formatters:
+        simple:
+          format: "[%(levelname).1s] %(message)s"
+        normal:
+          format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
+        extended:
+          format: "[%(asctime)s] [%(name)s]\t [%(levelname)-8s]\t %(message)s \t(%(filename)s:%(lineno)s)"
+
+      handlers:
+        console:
+          class: logging.StreamHandler
+          level: DEBUG
+          formatter: simple
+          stream: ext://sys.stdout
+
+        info_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: INFO                                           # Max logging level to save
+          formatter: normal                                     # [simple, normal, extended]
+          filename: task2.info.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+        debug_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: DEBUG                                          # Max logging level to save
+          formatter: normal                                     # [simple, normal, extended]
+          filename: task2.debug.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+        error_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: ERROR                                          # Max logging level to save
+          formatter: extended                                   # [simple, normal, extended]
+          filename: task2.errors.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+      loggers:
+        my_module:
+          level: ERROR
+          handlers: [console]
+          propagate: no
+
+      root:
+        level: INFO
+        handlers: [console, error_file_handler, info_file_handler, debug_file_handler]
+
+  # ==========================================================
+  # Dataset
+  # ==========================================================
+  dataset:
+    method: development
+
+  dataset_method_parameters:
+    development:
+      name: TUTRareSoundEvents_2017_DevelopmentSet
+      fold_list: [1]
+      evaluation_mode: folds
+      synth_parameters:
+        seed: 42
+        train:
+          mixture:
+              fs: 44100
+              bitdepth: 24
+              length_seconds: 30.0
+              anticlipping_factor: 0.2
+          event_presence_prob: 0.5
+          mixtures_per_class: 500
+          ebr_list: [-6, 0, 6]
+        test:
+          mixture:
+              fs: 44100
+              bitdepth: 24
+              length_seconds: 30.0
+              anticlipping_factor: 0.2
+          event_presence_prob: 0.5
+          mixtures_per_class: 500
+          ebr_list: [-6, 0, 6]
+
+    challenge_train:
+      name: TUTRareSoundEvents_2017_DevelopmentSet
+      evaluation_mode: full
+
+    challenge_test:
+      name: TUTRareSoundEvents_2017_EvaluationSet
+      evaluation_mode: full
+
+  # ==========================================================
+  # Feature extractor
+  # ==========================================================
+  feature_extractor:
+    fs: 44100                               # Sampling frequency
+    win_length_seconds: 0.04                # Window length
+    hop_length_seconds: 0.02                # Hop length
+
+  feature_extractor_method_parameters:
+    mel:                                    # Mel band energy
+      mono: true                            # [true, false]
+      window: hamming_asymmetric            # [hann_asymmetric, hamming_asymmetric]
+      spectrogram_type: magnitude           # [magnitude, power]
+      n_mels: 40                            # Number of mel bands used
+      normalize_mel_bands: false            # [true, false]
+      n_fft: 2048                           # FFT length
+      fmin: 0                               # Minimum frequency when constructing mel bands
+      fmax: 22050                           # Maximum frequency when constructing mel band
+      htk: false                            # Switch for HTK-styled mel-frequency equation
+      log: true                             # Logarithmic
+
+    mfcc:                                   # Mel-frequency cepstral coefficients
+      mono: true                            # [true, false]
+      window: hamming_asymmetric            # [hann_asymmetric, hamming_asymmetric]
+      spectrogram_type: magnitude           # [magnitude, power]
+      n_mfcc: 20                            # Number of MFCC coefficients
+      n_mels: 40                            # Number of mel bands used
+      n_fft: 2048                           # FFT length
+      fmin: 0                               # Minimum frequency when constructing mel bands
+      fmax: 22050                           # Maximum frequency when constructing mel band
+      htk: false                            # Switch for HTK-styled mel-frequency equation
+
+    mfcc_delta:                             # MFCC delta coefficients
+      width: 9                              #
+
+    mfcc_acceleration:                      # MFCC acceleration coefficients
+      width: 9                              #
+
+
+  # ==========================================================
+  # Feature stacker
+  # ==========================================================
+  feature_stacker:
+    # ==========================================================
+    # Valid feature vector recipe formats:
+    #  - [extractor (string)]                                                       => full vector
+    #  - [extractor (string)]=[start index (int)]-[end index (int)]                 => default channel 0 and vector [start:end]
+    #  - [extractor (string)]=[channel (int)]:[start index (int)]-[end index (int)] => specified channel and vector [start:end]
+    #  - [extractor (string)]=1,2,3,4,5                                             => vector [1,2,3,4,4]
+    #  - [extractor (string)]=0                                                     => specified channel and full vector
+    # Multiple vector can be concatenate together with ";" delimiter
+    # ==========================================================
+    stacking_recipe: mel
+
+  # ==========================================================
+  # Feature normalizer
+  # ==========================================================
+  feature_normalizer:
+    enable: true
+    type: global                                        # [global]
+
+  # ==========================================================
+  # Feature aggregator
+  # ==========================================================
+  feature_aggregator:
+    enable: true
+    aggregation_recipe: flatten                        # [mean, std,cov, kurtosis, skew, flatten]
+    win_length_seconds: 0.1
+    hop_length_seconds: 0.02
+
+  # ==========================================================
+  # Learner
+  # ==========================================================
+  learner:
+    method: mlp                             #
+
+    show_model_information: false           # Show extra model information after model is ready
+
+  learner_method_parameters:
+    gmm:
+      n_components: 16                      # Number of Gaussian components
+      covariance_type: diag                 # [diag|tied|full|spherical]
+      tol: 0.001
+      reg_covar: 0
+      max_iter: 40
+      n_init: 1
+      init_params: kmeans
+      random_state: 0
+
+    gmm_deprecated:
+      n_components: 16                       # Number of Gaussian components
+      covariance_type: diag                 # [diag|full] Diagonal or full covariance matrix
+      random_state: 0
+      tol: 0.001
+      min_covar: 0.001
+      n_iter: 40
+      n_init: 1
+      params: wmc
+      init_params: wmc
+
+    mlp:
+      seed: 0
+
+      keras:
+        backend: theano
+        backend_parameters:
+          floatX: float64
+          device: cpu
+          fastmath: false
+          optimizer: None
+          openmp: false
+          threads: 1
+          CNR: true
+
+      validation:
+        enable: true
+        setup_source: generated_event_file_balanced     # [generated_event_file_balanced]
+        validation_amount: 0.10                         # [0.0-1.0]
+        seed: 123
+
+      training:
+        epochs: 100
+        batch_size: 256
+        shuffle: true
+
+      model:
+        # class_nam can be any standard Keras layer, e.g. Dense, Activation, Dropout
+        # Magic parameter values: FEATURE_VECTOR_LENGTH, CLASS_COUNT
+        config:
+          - class_name: Dense
+            config:
+              units: 50
+              kernel_initializer: uniform
+              activation: relu
+
+          - class_name: Dropout
+            config:
+              rate: 0.2
+
+          - class_name: Dense
+            config:
+              units: 50
+              kernel_initializer: uniform
+              activation: relu
+
+          - class_name: Dropout
+            config:
+              rate: 0.2
+
+          - class_name: Dense
+            config:
+              units: CLASS_COUNT
+              kernel_initializer: uniform
+              activation: sigmoid
+
+        loss: binary_crossentropy
+
+        optimizer:
+          type: Adam
+
+        metrics:
+          - binary_accuracy
+
+  # ==========================================================
+  # Recognizer
+  # ==========================================================
+  recognizer:
+    enable: true
+
+    frame_accumulation:
+      enable: false
+      type: sliding_sum                         # [sliding_sum, sliding_mean, sliding_median]
+      window_length_seconds: 1.0                # seconds
+
+    frame_binarization:
+      enable: true
+      type: global_threshold                    # [frame_max, global_threshold]
+      threshold: 0.5                            #
+
+    event_activity_processing:
+       enable: true
+       type: median_filtering                   # [median_filtering]
+       window_length_seconds: 0.54              # seconds
+
+    event_post_processing:
+      enable: true
+      minimum_event_length_seconds: 0.1         # seconds
+      minimum_event_gap_second: 0.1             # seconds
+
+
+  # ==========================================================
+  # Evaluator
+  # ==========================================================
+  evaluator:
+    enable: true
+    show_details: false
+
+    saving:
+      enable: true                              # To save evaluation results into yaml-file
+
+      # ==========================================================
+      # Filename template, fields:
+      # - {parameter_set}
+      # - {parameter_hash}
+      # - {dataset_name}
+      # ==========================================================
+      filename: eval_[{parameter_hash}].yaml
+

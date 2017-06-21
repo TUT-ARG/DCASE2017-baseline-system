@@ -54,6 +54,17 @@ through item key. When internal buffer is filled, oldest item is replaced.
     DataBuffer.get
     DataBuffer.clear
 
+ProcessingChain
+^^^^^^^^^^^^^^^
+
+Data processing chain class, inherited from list.
+
+.. autosummary::
+    :toctree: generated/
+
+    ProcessingChain
+    ProcessingChain.process
+    ProcessingChain.call_method
 
 """
 
@@ -213,7 +224,7 @@ class DataSequencer(DataProcessingUnitMixin):
         shift_step : int
             Sequence start temporal shifting amount, is added once method increase_shifting is called
             Default value 0
-        shift_border : string, {'roll', 'push'}
+        shift_border : string, {'roll', 'shift'}
             Sequence border handling when doing temporal shifting.
             Default value 'roll'
         shift_max : int
@@ -238,7 +249,7 @@ class DataSequencer(DataProcessingUnitMixin):
         if self.shift_border is None:
             self.shift_border = 'roll'
 
-        if self.shift_border not in ['push', 'roll']:
+        if self.shift_border not in ['roll', 'shift']:
             message = '{name}: Unknown temporal shifting border handling [{border_mode}]'.format(
                 name=self.__class__.__name__,
                 border_mode=self.shift_border
@@ -289,14 +300,15 @@ class DataSequencer(DataProcessingUnitMixin):
         data_length = data.shape[0]
         X = []
 
-        if self.shift_border == 'push':
+        if self.shift_border == 'shift':
             segment_indexes = numpy.arange(self.shift, data_length, self.hop_size)
 
         elif self.shift_border == 'roll':
             segment_indexes = numpy.arange(0, data_length, self.hop_size)
 
-            # Roll data
-            data = numpy.roll(data, shift=self.shift, axis=0)
+            if self.shift:
+                # Roll data
+                data = numpy.roll(data, shift=self.shift, axis=0)
 
         if self.padding:
             if len(segment_indexes) == 0:
@@ -304,7 +316,7 @@ class DataSequencer(DataProcessingUnitMixin):
                 segment_indexes = numpy.array([0])
         else:
             # Remove segments which are not full
-            segment_indexes = segment_indexes[segment_indexes+self.hop_size < data_length]
+            segment_indexes = segment_indexes[(segment_indexes+self.hop_size-1) < data_length]
 
         for segment_start_frame in segment_indexes:
             segment_end_frame = segment_start_frame + self.hop_size
@@ -363,10 +375,10 @@ class DataProcessor(object):
 
         Parameters
         ----------
-        feature_processing_chain : ProcessingChain or list of FeatureProcessingUnitMixin
+        feature_processing_chain : ProcessingChain
             List of processing functions
 
-        data_processing_chain : ProcessingChain or list of DataProcessingUnitMixin
+        data_processing_chain : ProcessingChain
             List of data processing functions
 
         """
@@ -388,12 +400,12 @@ class DataProcessor(object):
         self.data_processing_chain = d['data_processing_chain']
         self.logger = logging.getLogger(__name__)
 
-    def load(self, feature_filename_list, process_features=True, process_data=True, mask_events=None):
+    def load(self, feature_filename_dict, process_features=True, process_data=True):
         """Load feature item
 
         Parameters
         ----------
-        feature_filename_list : dict of filenames
+        feature_filename_dict : dict of filenames
             Dict with feature extraction methods as keys and value corresponding feature file
         process_features : bool
             Apply feature processing chain.
@@ -401,9 +413,6 @@ class DataProcessor(object):
         process_data : bool
             Apply data processing chain.
             Default value True
-        mask_events : list of MetaItems or MetaDataContainer
-            Event list used for masking.
-            Default value None
         Returns
         -------
         Processed feature data
@@ -411,17 +420,16 @@ class DataProcessor(object):
         """
 
         # Load item
-        feature_data = FeatureRepository(filename_list=feature_filename_list)
+        feature_data = FeatureRepository(filename_dict=feature_filename_dict)
 
         # Process item
         return self.process(
             feature_data=feature_data,
             process_features=process_features,
-            process_data=process_data,
-            feature_mask_events=mask_events,
+            process_data=process_data
         )
 
-    def process(self, feature_data, process_features=True, process_data=True, feature_mask_events=None):
+    def process(self, feature_data, process_features=True, process_data=True):
         """Process feature data
 
         Parameters
@@ -434,9 +442,6 @@ class DataProcessor(object):
         process_data : bool
             Apply data processing chain.
             Default value True
-        feature_mask_events : list of MetaItems or MetaDataContainer
-            Event list used for masking.
-            Default value None
 
         Returns
         -------
@@ -449,7 +454,7 @@ class DataProcessor(object):
 
         # Go through the feature processing chain
         if process_features:
-            feature_data = self.process_features(feature_data=feature_data, mask_events=feature_mask_events)
+            feature_data = self.process_features(feature_data=feature_data)
 
         # Save feature matrix length before doing data processing chain
         feature_vector_count = feature_data.shape[0]
@@ -460,16 +465,13 @@ class DataProcessor(object):
         else:
             return feature_data.feat[0], feature_vector_count
 
-    def process_features(self, feature_data, mask_events=None):
+    def process_features(self, feature_data):
         """Process feature data
 
         Parameters
         ----------
         feature_data : FeatureContainer
             Feature data.
-        mask_events : list of MetaItems or MetaDataContainer
-            Event list used for masking.
-            Default value None
 
         Returns
         -------
@@ -481,16 +483,8 @@ class DataProcessor(object):
         if hasattr(feature_data, 'feat'):
             feature_data = feature_data.feat[0]
 
-        # Go through the feature processing chain
-        for processing_step in self.feature_processing_chain:
-
-            # Set mask events if needed
-            if processing_step is not None and mask_events is not None and hasattr(processing_step, 'set_mask'):
-                processing_step.set_mask(mask_events)
-
-            # Do processing
-            if processing_step is not None and hasattr(processing_step, 'process'):
-                feature_data = processing_step.process(feature_data)
+        # Do processing
+        feature_data = self.feature_processing_chain.process(feature_data)
 
         return feature_data
 
@@ -534,9 +528,7 @@ class DataProcessor(object):
 
         # Go through the data processing chain
         if self.data_processing_chain:
-            for processing_step in self.data_processing_chain:
-                if processing_step is not None and hasattr(processing_step, 'process'):
-                    data = processing_step.process(data)
+            data = self.data_processing_chain.process(data)
 
             if not metadata:
                 data = numpy.expand_dims(data, axis=1)
@@ -559,16 +551,57 @@ class DataProcessor(object):
 
         """
 
-        parameters = parameters or {}
+        self.feature_processing_chain.call_method(
+            method_name=method_name,
+            parameters=parameters
+        )
 
-        for item in self.feature_processing_chain:
-            if hasattr(item, method_name):
-                getattr(item, method_name)(**parameters)
-
-        for item in self.data_processing_chain:
-            if hasattr(item, method_name):
-                getattr(item, method_name)(**parameters)
+        self.data_processing_chain.call_method(
+            method_name=method_name,
+            parameters=parameters
+        )
 
 
 class ProcessingChain(list):
-    pass
+    def process(self, data):
+        """Process the data with processing chain
+
+        Parameters
+        ----------
+        data : FeatureContainer or numpy.ndarray
+            Data
+
+        Returns
+        -------
+        data : numpy.ndarray
+            Processed data
+
+        """
+
+        for step in self:
+            if step is not None and hasattr(step, 'process'):
+                data = step.process(data)
+
+        return data
+
+    def call_method(self, method_name, parameters=None):
+        """Call class method in the processing chain items
+
+        Processing chain is gone through and given method is
+        called to processing items having such method.
+
+        Parameters
+        ----------
+        method_name : str
+            Method name to call
+        parameters : dict
+            Parameters for the method
+            Default value {}
+
+        """
+
+        parameters = parameters or {}
+
+        for item in self:
+            if hasattr(item, method_name):
+                getattr(item, method_name)(**parameters)

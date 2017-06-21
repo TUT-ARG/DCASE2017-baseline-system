@@ -1,0 +1,29 @@
+dcase_framework.recognizers.EventRecognizer
+===========================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. autoclass:: EventRecognizer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventRecognizer.__init__
+      ~EventRecognizer.collapse_probabilities
+      ~EventRecognizer.collapse_probabilities_windowed
+      ~EventRecognizer.find_contiguous_regions
+      ~EventRecognizer.process
+      ~EventRecognizer.process_activity
+      ~EventRecognizer.process_matrix
+      ~EventRecognizer.process_ratio
+   
+   
+
+   
+   
+   

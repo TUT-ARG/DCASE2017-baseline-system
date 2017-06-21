@@ -16,7 +16,7 @@ dcase_framework.datasets.AcousticSceneDataset
       ~AcousticSceneDataset.__init__
       ~AcousticSceneDataset.absolute_to_relative
       ~AcousticSceneDataset.check_filelist
-      ~AcousticSceneDataset.download_packages
+      ~AcousticSceneDataset.download
       ~AcousticSceneDataset.error_meta_count
       ~AcousticSceneDataset.eval
       ~AcousticSceneDataset.event_labels

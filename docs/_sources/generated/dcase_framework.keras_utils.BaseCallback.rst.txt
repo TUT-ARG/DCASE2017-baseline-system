@@ -1,0 +1,33 @@
+dcase_framework.keras_utils.BaseCallback
+========================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. autoclass:: BaseCallback
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BaseCallback.__init__
+      ~BaseCallback.add_external_metric
+      ~BaseCallback.on_batch_begin
+      ~BaseCallback.on_batch_end
+      ~BaseCallback.on_epoch_begin
+      ~BaseCallback.on_epoch_end
+      ~BaseCallback.on_train_begin
+      ~BaseCallback.on_train_end
+      ~BaseCallback.set_external_metric_value
+      ~BaseCallback.set_model
+      ~BaseCallback.set_params
+      ~BaseCallback.update
+   
+   
+
+   
+   
+   

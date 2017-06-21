@@ -1,0 +1,28 @@
+dcase_framework.data.DataProcessor
+==================================
+
+.. currentmodule:: dcase_framework.data
+
+.. autoclass:: DataProcessor
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DataProcessor.__init__
+      ~DataProcessor.call_method
+      ~DataProcessor.load
+      ~DataProcessor.process
+      ~DataProcessor.process_activity_data
+      ~DataProcessor.process_data
+      ~DataProcessor.process_features
+   
+   
+
+   
+   
+   

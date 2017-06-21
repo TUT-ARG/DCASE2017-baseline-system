@@ -1,0 +1,26 @@
+dcase_framework.recognizers.BaseRecognizer
+==========================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. autoclass:: BaseRecognizer
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BaseRecognizer.__init__
+      ~BaseRecognizer.collapse_probabilities
+      ~BaseRecognizer.collapse_probabilities_windowed
+      ~BaseRecognizer.find_contiguous_regions
+      ~BaseRecognizer.process_activity
+   
+   
+
+   
+   
+   

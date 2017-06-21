@@ -49,7 +49,7 @@ RUN conda install -y six
 RUN pip install keras==2.0.2
 RUN pip install theano==0.9.0
 RUN pip install librosa==0.5.0
-RUN pip install sed_eval==0.1.2
+RUN pip install sed_eval==0.1.6
 
 RUN pip install coloredlogs msgpack-python pydot-ng pyyaml soundfile matplotlib tqdm h5py
 

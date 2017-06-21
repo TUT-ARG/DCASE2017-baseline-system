@@ -1,0 +1,6 @@
+dcase_framework.recognizers.EventRecognizer.process
+===================================================
+
+.. currentmodule:: dcase_framework.recognizers
+
+.. automethod:: EventRecognizer.process

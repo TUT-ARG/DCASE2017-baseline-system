@@ -1,0 +1,6 @@
+dcase_framework.keras_utils.KerasMixin.get_processing_interval
+==============================================================
+
+.. currentmodule:: dcase_framework.keras_utils
+
+.. automethod:: KerasMixin.get_processing_interval

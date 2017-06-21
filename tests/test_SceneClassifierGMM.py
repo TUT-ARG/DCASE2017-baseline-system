@@ -8,6 +8,7 @@ import os
 from dcase_framework.features import FeatureContainer, FeatureExtractor
 from dcase_framework.metadata import MetaDataItem
 from dcase_framework.learners import SceneClassifierGMM
+from dcase_framework.recognizers import SceneRecognizer
 import tempfile
 
 
@@ -142,18 +143,16 @@ def test_predict():
             'type': 'maximum',
         }
     }
-    result = sc.predict(
-        feature_data=feature_container,
-        recognizer_params=recognizer_params
+    # Frame probabilities
+    frame_probabilities = sc.predict(feature_data=feature_container)
+
+    # Scene recognizer
+    result = SceneRecognizer(
+        params=recognizer_params,
+        class_labels=['scene1', 'scene2'],
+    ).process(
+        frame_probabilities=frame_probabilities
     )
 
     # Test result
     nose.tools.eq_(result, 'scene1')
-
-    # Test errors
-    recognizer_params['frame_accumulation']['type'] = 'test'
-    nose.tools.assert_raises(AssertionError, sc.predict, feature_container, recognizer_params)
-
-    recognizer_params['frame_accumulation']['type'] = 'sum'
-    recognizer_params['decision_making']['type'] = 'test'
-    nose.tools.assert_raises(AssertionError, sc.predict, feature_container, recognizer_params)

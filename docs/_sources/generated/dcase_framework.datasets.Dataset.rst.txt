@@ -16,7 +16,7 @@ dcase_framework.datasets.Dataset
       ~Dataset.__init__
       ~Dataset.absolute_to_relative
       ~Dataset.check_filelist
-      ~Dataset.download_packages
+      ~Dataset.download
       ~Dataset.error_meta_count
       ~Dataset.eval
       ~Dataset.event_labels

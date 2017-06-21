@@ -1,0 +1,6 @@
+dcase_framework.data.DataSequencer.increase_shifting
+====================================================
+
+.. currentmodule:: dcase_framework.data
+
+.. automethod:: DataSequencer.increase_shifting

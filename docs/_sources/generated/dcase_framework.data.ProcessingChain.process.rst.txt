@@ -1,0 +1,6 @@
+dcase_framework.data.ProcessingChain.process
+============================================
+
+.. currentmodule:: dcase_framework.data
+
+.. automethod:: ProcessingChain.process

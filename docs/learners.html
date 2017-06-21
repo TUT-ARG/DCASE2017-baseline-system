@@ -38,7 +38,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="DCASE2017 Baseline 1.0 documentation" href="index.html"/>
-        <link rel="next" title="dcase_framework.learners.SceneClassifier" href="generated/dcase_framework.learners.SceneClassifier.html"/>
+        <link rel="next" title="dcase_framework.learners.SceneClassifierGMM" href="generated/dcase_framework.learners.SceneClassifierGMM.html"/>
         <link rel="prev" title="dcase_framework.features.FeatureMasker.process" href="generated/dcase_framework.features.FeatureMasker.process.html"/> 
 
   
@@ -342,6 +342,7 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.train.html">dcase_framework.datasets.SoundEventDataset.train</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.SoundEventDataset.test.html">dcase_framework.datasets.SoundEventDataset.test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet.html">dcase_framework.datasets.TUTSoundEvents_2016_DevelopmentSet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet.html">dcase_framework.datasets.TUTSoundEvents_2016_EvaluationSet</a></li>
 </ul>
@@ -355,6 +356,7 @@
 <li class="toctree-l1"><a class="reference internal" href="metadata.html">Meta data</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="metadata.html#metadataitem">MetaDataItem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.html">dcase_framework.metadata.MetaDataItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.id.html">dcase_framework.metadata.MetaDataItem.id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.file.html">dcase_framework.metadata.MetaDataItem.file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.scene_label.html">dcase_framework.metadata.MetaDataItem.scene_label</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.metadata.MetaDataItem.event_label.html">dcase_framework.metadata.MetaDataItem.event_label</a></li>
@@ -458,23 +460,46 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Learners</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#sceneclassifier">SceneClassifier</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifier.html">dcase_framework.learners.SceneClassifier</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sceneclassifiergmm">SceneClassifierGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html">dcase_framework.learners.SceneClassifierGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html">dcase_framework.learners.SceneClassifierGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html">dcase_framework.learners.SceneClassifierGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sceneclassifiermlp">SceneClassifierMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html">dcase_framework.learners.SceneClassifierMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html">dcase_framework.learners.SceneClassifierMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html">dcase_framework.learners.SceneClassifierMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sceneclassifierkerassequential">SceneClassifierKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.html">dcase_framework.learners.SceneClassifierKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html">dcase_framework.learners.SceneClassifierKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html">dcase_framework.learners.SceneClassifierKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#eventdetector">EventDetector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetector.html">dcase_framework.learners.EventDetector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
-<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eventdetectorgmm">EventDetectorGMM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html">dcase_framework.learners.EventDetectorGMM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html">dcase_framework.learners.EventDetectorGMM.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html">dcase_framework.learners.EventDetectorGMM.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#eventdetectormlp">EventDetectorMLP</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html">dcase_framework.learners.EventDetectorMLP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html">dcase_framework.learners.EventDetectorMLP.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html">dcase_framework.learners.EventDetectorMLP.predict</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#eventdetectorkerassequential">EventDetectorKerasSequential</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.html">dcase_framework.learners.EventDetectorKerasSequential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html">dcase_framework.learners.EventDetectorKerasSequential.learn</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html">dcase_framework.learners.EventDetectorKerasSequential.predict</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#learnercontainer-base-class">LearnerContainer - Base class</a><ul>
@@ -489,6 +514,103 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.model.html">dcase_framework.learners.LearnerContainer.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.set_seed.html">dcase_framework.learners.LearnerContainer.set_seed</a></li>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.learners.LearnerContainer.learner_params.html">dcase_framework.learners.LearnerContainer.learner_params</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recognizers.html">Recognizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#baserecognizer">BaseRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.html">dcase_framework.recognizers.BaseRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed.html">dcase_framework.recognizers.BaseRecognizer.collapse_probabilities_windowed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions.html">dcase_framework.recognizers.BaseRecognizer.find_contiguous_regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.BaseRecognizer.process_activity.html">dcase_framework.recognizers.BaseRecognizer.process_activity</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#scenerecognizer">SceneRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.SceneRecognizer.html">dcase_framework.recognizers.SceneRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.SceneRecognizer.process.html">dcase_framework.recognizers.SceneRecognizer.process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recognizers.html#eventrecognizer">EventRecognizer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.EventRecognizer.html">dcase_framework.recognizers.EventRecognizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.EventRecognizer.process.html">dcase_framework.recognizers.EventRecognizer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.recognizers.EventRecognizer.process_ratio.html">dcase_framework.recognizers.EventRecognizer.process_ratio</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.html#datasequencer">DataSequencer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.html">dcase_framework.data.DataSequencer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.process.html">dcase_framework.data.DataSequencer.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataSequencer.increase_shifting.html">dcase_framework.data.DataSequencer.increase_shifting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#dataprocessor">DataProcessor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.html">dcase_framework.data.DataProcessor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.load.html">dcase_framework.data.DataProcessor.load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process.html">dcase_framework.data.DataProcessor.process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_features.html">dcase_framework.data.DataProcessor.process_features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_activity_data.html">dcase_framework.data.DataProcessor.process_activity_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.process_data.html">dcase_framework.data.DataProcessor.process_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataProcessor.call_method.html">dcase_framework.data.DataProcessor.call_method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#databuffer">DataBuffer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.html">dcase_framework.data.DataBuffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.count.html">dcase_framework.data.DataBuffer.count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.full.html">dcase_framework.data.DataBuffer.full</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.key_exists.html">dcase_framework.data.DataBuffer.key_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.set.html">dcase_framework.data.DataBuffer.set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.get.html">dcase_framework.data.DataBuffer.get</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.data.DataBuffer.clear.html">dcase_framework.data.DataBuffer.clear</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="keras_utils.html">Keras utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#kerasmixin">KerasMixin</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_model.html">dcase_framework.keras_utils.KerasMixin.create_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_callback_list.html">dcase_framework.keras_utils.KerasMixin.create_callback_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators.html">dcase_framework.keras_utils.KerasMixin.create_external_metric_evaluators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.keras_model_exists.html">dcase_framework.keras_utils.KerasMixin.keras_model_exists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.log_model_summary.html">dcase_framework.keras_utils.KerasMixin.log_model_summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.plot_model.html">dcase_framework.keras_utils.KerasMixin.plot_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.KerasMixin.get_processing_interval.html">dcase_framework.keras_utils.KerasMixin.get_processing_interval</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#basecallback">BaseCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseCallback.html">dcase_framework.keras_utils.BaseCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#progressloggercallback">ProgressLoggerCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.ProgressLoggerCallback.html">dcase_framework.keras_utils.ProgressLoggerCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#progressplottercallback">ProgressPlotterCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.ProgressPlotterCallback.html">dcase_framework.keras_utils.ProgressPlotterCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#stoppercallback">StopperCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.StopperCallback.html">dcase_framework.keras_utils.StopperCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#stashercallback">StasherCallback</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.StasherCallback.html">dcase_framework.keras_utils.StasherCallback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#basedatagenerator">BaseDataGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.html">dcase_framework.keras_utils.BaseDataGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.input_size.html">dcase_framework.keras_utils.BaseDataGenerator.input_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.data_size.html">dcase_framework.keras_utils.BaseDataGenerator.data_size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.steps_count.html">dcase_framework.keras_utils.BaseDataGenerator.steps_count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.BaseDataGenerator.info.html">dcase_framework.keras_utils.BaseDataGenerator.info</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="keras_utils.html#featuregenerator">FeatureGenerator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.FeatureGenerator.html">dcase_framework.keras_utils.FeatureGenerator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.keras_utils.FeatureGenerator.generator.html">dcase_framework.keras_utils.FeatureGenerator.generator</a></li>
 </ul>
 </li>
 </ul>
@@ -529,6 +651,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#suppressstdoutandstderr">SuppressStdoutAndStderr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SuppressStdoutAndStderr.html">dcase_framework.utils.SuppressStdoutAndStderr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#simplemathstringevaluator">SimpleMathStringEvaluator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SimpleMathStringEvaluator.html">dcase_framework.utils.SimpleMathStringEvaluator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/dcase_framework.utils.SimpleMathStringEvaluator.eval.html">dcase_framework.utils.SimpleMathStringEvaluator.eval</a></li>
 </ul>
 </li>
 </ul>
@@ -580,35 +707,72 @@
 <p>Classes for machine learning</p>
 <div class="section" id="sceneclassifier">
 <h2>SceneClassifier<a class="headerlink" href="#sceneclassifier" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sceneclassifiergmm">
+<h3>SceneClassifierGMM<a class="headerlink" href="#sceneclassifiergmm" title="Permalink to this headline">¶</a></h3>
+<p>Scene classifier with GMM. This learner is using <code class="docutils literal"><span class="pre">sklearn.mixture.GaussianMixture</span></code> implementation. See
+<a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html/">documentation</a>.</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifier.html#dcase_framework.learners.SceneClassifier" title="dcase_framework.learners.SceneClassifier"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifier</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Scene classifier (Frame classifier / Multiclass - Singlelabel)</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM" title="dcase_framework.learners.SceneClassifierGMM"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierGMM</span></code></a>(*args,&nbsp;**kwargs)</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM" title="dcase_framework.learners.SceneClassifierGMM"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierGMM</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Scene classifier with GMM</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html#dcase_framework.learners.SceneClassifierGMM.learn" title="dcase_framework.learners.SceneClassifierGMM.learn"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierGMM.learn</span></code></a>(data,&nbsp;annotations)</td>
-<td>Learn based on data ana annotations</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.learn.html#dcase_framework.learners.SceneClassifierGMM.learn" title="dcase_framework.learners.SceneClassifierGMM.learn"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierGMM.learn</span></code></a>(data,&nbsp;annotations)</td>
+<td>Learn based on data and annotations</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html#dcase_framework.learners.SceneClassifierGMM.predict" title="dcase_framework.learners.SceneClassifierGMM.predict"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierGMM.predict</span></code></a>(feature_data[,&nbsp;...])</td>
-<td>Predict scene label for given feature matrix</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierGMM.predict.html#dcase_framework.learners.SceneClassifierGMM.predict" title="dcase_framework.learners.SceneClassifierGMM.predict"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierGMM.predict</span></code></a>(feature_data)</td>
+<td>Predict frame probabilities for given feature matrix</td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sceneclassifiermlp">
+<h3>SceneClassifierMLP<a class="headerlink" href="#sceneclassifiermlp" title="Permalink to this headline">¶</a></h3>
+<p>Scene classifier with MLP. This learner is a simple MLP based learner using Keras neural network implementation
+and sequential API. See <a class="reference external" href="https://keras.io/">documentation</a>.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.html#dcase_framework.learners.SceneClassifierMLP" title="dcase_framework.learners.SceneClassifierMLP"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierMLP</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td>Scene classifier with MLP</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.learn.html#dcase_framework.learners.SceneClassifierMLP.learn" title="dcase_framework.learners.SceneClassifierMLP.learn"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierMLP.learn</span></code></a>(data,&nbsp;annotations)</td>
-<td>Learn based on data ana annotations</td>
+<td>Learn based on data and annotations</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html#dcase_framework.learners.SceneClassifierMLP.predict" title="dcase_framework.learners.SceneClassifierMLP.predict"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierMLP.predict</span></code></a>(feature_data[,&nbsp;...])</td>
-<td>Predict scene label for given feature matrix</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierMLP.predict.html#dcase_framework.learners.SceneClassifierMLP.predict" title="dcase_framework.learners.SceneClassifierMLP.predict"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierMLP.predict</span></code></a>(feature_data)</td>
+<td>Predict frame probabilities for given feature matrix</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="sceneclassifierkerassequential">
+<h3>SceneClassifierKerasSequential<a class="headerlink" href="#sceneclassifierkerassequential" title="Permalink to this headline">¶</a></h3>
+<p>Scene classifier with Keras sequential API (see <a class="reference external" href="https://keras.io/">documentation</a>). This learner can be used for
+more advanced network structures than SceneClassifierMLP.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.html#dcase_framework.learners.SceneClassifierKerasSequential" title="dcase_framework.learners.SceneClassifierKerasSequential"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierKerasSequential</span></code></a>(*args,&nbsp;**kwargs)</td>
+<td>Sequential Keras model for Acoustic scene classification</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.learn.html#dcase_framework.learners.SceneClassifierKerasSequential.learn" title="dcase_framework.learners.SceneClassifierKerasSequential.learn"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierKerasSequential.learn</span></code></a>(data,&nbsp;...)</td>
+<td>Learn based on data and annotations</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.SceneClassifierKerasSequential.predict.html#dcase_framework.learners.SceneClassifierKerasSequential.predict" title="dcase_framework.learners.SceneClassifierKerasSequential.predict"><code class="xref py py-obj docutils literal"><span class="pre">SceneClassifierKerasSequential.predict</span></code></a>(...)</td>
+<td>Predict frame probabilities for given feature matrix</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section" id="eventdetector">
 <h2>EventDetector<a class="headerlink" href="#eventdetector" title="Permalink to this headline">¶</a></h2>
@@ -619,28 +783,70 @@
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetector.html#dcase_framework.learners.EventDetector" title="dcase_framework.learners.EventDetector"><code class="xref py py-obj docutils literal"><span class="pre">EventDetector</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td>Event detector (Frame classifier / Multiclass - Multilabel)</td>
+<td>Event detector (Frame classifier / Multi-class - Multi-label)</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html#dcase_framework.learners.EventDetectorGMM" title="dcase_framework.learners.EventDetectorGMM"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorGMM</span></code></a>(*args,&nbsp;**kwargs)</td>
+</tbody>
+</table>
+<div class="section" id="eventdetectorgmm">
+<h3>EventDetectorGMM<a class="headerlink" href="#eventdetectorgmm" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.html#dcase_framework.learners.EventDetectorGMM" title="dcase_framework.learners.EventDetectorGMM"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorGMM</span></code></a>(*args,&nbsp;**kwargs)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html#dcase_framework.learners.EventDetectorGMM.learn" title="dcase_framework.learners.EventDetectorGMM.learn"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorGMM.learn</span></code></a>(data,&nbsp;annotations)</td>
-<td>Learn based on data ana annotations</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.learn.html#dcase_framework.learners.EventDetectorGMM.learn" title="dcase_framework.learners.EventDetectorGMM.learn"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorGMM.learn</span></code></a>(data,&nbsp;annotations[,&nbsp;...])</td>
+<td>Learn based on data and annotations</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html#dcase_framework.learners.EventDetectorGMM.predict" title="dcase_framework.learners.EventDetectorGMM.predict"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorGMM.predict</span></code></a>(feature_data[,&nbsp;...])</td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html#dcase_framework.learners.EventDetectorMLP" title="dcase_framework.learners.EventDetectorMLP"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorMLP</span></code></a>(*args,&nbsp;**kwargs)</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html#dcase_framework.learners.EventDetectorMLP.learn" title="dcase_framework.learners.EventDetectorMLP.learn"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorMLP.learn</span></code></a>(data,&nbsp;annotations)</td>
-<td>Learn based on data ana annotations</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html#dcase_framework.learners.EventDetectorMLP.predict" title="dcase_framework.learners.EventDetectorMLP.predict"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorMLP.predict</span></code></a>(feature_data[,&nbsp;...])</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorGMM.predict.html#dcase_framework.learners.EventDetectorGMM.predict" title="dcase_framework.learners.EventDetectorGMM.predict"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorGMM.predict</span></code></a>(feature_data)</td>
 <td></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="eventdetectormlp">
+<h3>EventDetectorMLP<a class="headerlink" href="#eventdetectormlp" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.html#dcase_framework.learners.EventDetectorMLP" title="dcase_framework.learners.EventDetectorMLP"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorMLP</span></code></a>(*args,&nbsp;**kwargs)</td>
+<td>Simple MLP Based sequential Keras model for Sound Event Detection</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.learn.html#dcase_framework.learners.EventDetectorMLP.learn" title="dcase_framework.learners.EventDetectorMLP.learn"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorMLP.learn</span></code></a>(data,&nbsp;annotations[,&nbsp;...])</td>
+<td>Learn based on data and annotations</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorMLP.predict.html#dcase_framework.learners.EventDetectorMLP.predict" title="dcase_framework.learners.EventDetectorMLP.predict"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorMLP.predict</span></code></a>(feature_data)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="eventdetectorkerassequential">
+<h3>EventDetectorKerasSequential<a class="headerlink" href="#eventdetectorkerassequential" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.html#dcase_framework.learners.EventDetectorKerasSequential" title="dcase_framework.learners.EventDetectorKerasSequential"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorKerasSequential</span></code></a>(*args,&nbsp;**kwargs)</td>
+<td>Sequential Keras model for Sound Event Detection</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.learn.html#dcase_framework.learners.EventDetectorKerasSequential.learn" title="dcase_framework.learners.EventDetectorKerasSequential.learn"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorKerasSequential.learn</span></code></a>(annotations)</td>
+<td>Learn based on data and annotations</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/dcase_framework.learners.EventDetectorKerasSequential.predict.html#dcase_framework.learners.EventDetectorKerasSequential.predict" title="dcase_framework.learners.EventDetectorKerasSequential.predict"><code class="xref py py-obj docutils literal"><span class="pre">EventDetectorKerasSequential.predict</span></code></a>(...)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section" id="learnercontainer-base-class">
 <h2>LearnerContainer - Base class<a class="headerlink" href="#learnercontainer-base-class" title="Permalink to this headline">¶</a></h2>
@@ -695,7 +901,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="generated/dcase_framework.learners.SceneClassifier.html" class="btn btn-neutral float-right" title="dcase_framework.learners.SceneClassifier" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="generated/dcase_framework.learners.SceneClassifierGMM.html" class="btn btn-neutral float-right" title="dcase_framework.learners.SceneClassifierGMM" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="generated/dcase_framework.features.FeatureMasker.process.html" class="btn btn-neutral" title="dcase_framework.features.FeatureMasker.process" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

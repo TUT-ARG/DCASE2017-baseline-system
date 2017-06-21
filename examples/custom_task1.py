@@ -23,6 +23,7 @@ from dcase_framework.metadata import MetaDataContainer, MetaDataItem
 __version_info__ = ('1', '0', '0')
 __version__ = '.'.join(__version_info__)
 
+
 class DCASE2013_Scene_EvaluationSet(AcousticSceneDataset):
     """DCASE 2013 Acoustic scene classification, evaluation dataset
 
@@ -233,7 +234,7 @@ class SceneClassifierSVM(SceneClassifier):
         super(SceneClassifierSVM, self).__init__(*args, **kwargs)
         self.method = 'svm'
 
-    def learn(self, data, annotations):
+    def learn(self, data, annotations, data_filenames=None):
         """Learn based on data ana annotations
 
         Parameters
