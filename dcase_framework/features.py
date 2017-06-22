@@ -998,7 +998,7 @@ class FeatureExtractor(object):
         elif 'dependency_parameters' in params and 'mono' in params['dependency_parameters']:
             mono = params['dependency_parameters']['mono']
 
-        fs = False
+        fs = None
         if 'fs' in params:
             fs = params.get('fs')
         elif 'dependency_parameters' in params and 'fs' in params['dependency_parameters']:
