@@ -825,7 +825,8 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                     ParameterContainer(parameters).save(filename=os.path.join(current_path[0], parameter_filename))
                 else:
                     for path_id, path in enumerate(current_path):
-                        ParameterContainer(parameters[path_id]).save(filename=os.path.join(path, parameter_filename))
+                        if parameters[path_id]:
+                            ParameterContainer(parameters[path_id]).save(filename=os.path.join(path, parameter_filename))
 
     def _save_path_parameters_all(self):
         for path_label, structure in iteritems(self.path_structure):
@@ -841,7 +842,8 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                     ParameterContainer(parameters).save(filename=os.path.join(current_path[0], 'parameters.yaml'))
                 else:
                     for path_id, path in enumerate(current_path):
-                        ParameterContainer(parameters[path_id]).save(filename=os.path.join(path, 'parameters.yaml'))
+                        if parameters[path_id]:
+                            ParameterContainer(parameters[path_id]).save(filename=os.path.join(path, 'parameters.yaml'))
 
     def _add_hash_to_main_parameters(self):
         for field, params in iteritems(self):
@@ -853,7 +855,8 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         for field in self:
             if field.endswith('_method_parameters'):
                 for key, params in iteritems(self[field]):
-                    params['_hash'] = self.get_hash(data=params)
+                    if params:
+                        params['_hash'] = self.get_hash(data=params)
 
     def _add_main_hash(self):
         data = {}
@@ -1001,6 +1004,11 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             self['feature_normalizer']['active_events'] = self.get_path('general.active_events')
 
     def _process_feature_extractor_method_parameters(self):
+        # Change None feature parameter sections into empty dicts
+        for method in list(self['feature_extractor_method_parameters'].keys()):
+            if self['feature_extractor_method_parameters'][method] is None:
+                self['feature_extractor_method_parameters'][method] = {}
+
         for method, data in iteritems(self['feature_extractor_method_parameters']):
             data['method'] = method
 
