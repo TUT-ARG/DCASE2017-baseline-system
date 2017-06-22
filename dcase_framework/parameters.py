@@ -652,7 +652,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
                         )
 
                     else:
-                        message = '{name}: Invalid method for recipe field, {field}->recipe={method}'.format(
+                        message = '{name}: Cannot find any parameters for the method in the recipe field, {field}->recipe={method}'.format(
                             name=self.__class__.__name__,
                             field=section,
                             method=item[self.magic_field['method']]
