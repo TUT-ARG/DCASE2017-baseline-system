@@ -627,6 +627,30 @@ class KerasMixin(object):
                         self.logger.exception(message)
                         raise AssertionError(message)
 
+                    # Check evaluator API
+                    if (not hasattr(evaluator, 'reset') or
+                       not hasattr(evaluator, 'evaluate') or
+                       not hasattr(evaluator, 'results')):
+                        if current_metric_evaluator.startswith('sed_eval'):
+                            message = '{name}: wrong version of sed_eval for [{current_metric_evaluator}::{current_metric_name}], update sed_eval to latest version'.format(
+                                name=self.__class__.__name__,
+                                current_metric_evaluator=current_metric_evaluator,
+                                current_metric_name=current_metric_name
+                            )
+
+                            self.logger.exception(message)
+                            raise ValueError(message)
+
+                        else:
+                            message = '{name}: Evaluator has invalid API [{current_metric_evaluator}::{current_metric_name}]'.format(
+                                name=self.__class__.__name__,
+                                current_metric_evaluator=current_metric_evaluator,
+                                current_metric_name=current_metric_name
+                            )
+
+                            self.logger.exception(message)
+                            raise ValueError(message)
+
                     # Form unique name for metric, to allow multiple similar metrics with different parameters
                     metric_id = get_parameter_hash(metric)
 
