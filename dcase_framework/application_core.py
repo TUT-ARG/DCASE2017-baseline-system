@@ -1477,7 +1477,6 @@ class AcousticSceneClassificationAppCore(AppCore):
                                      desc="           {0: >15s}".format('Testing '),
                                      file=sys.stdout,
                                      leave=False,
-                                     bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} ',
                                      disable=self.disable_progress_bar,
                                      ascii=self.use_ascii_progress_bar
                                      )
@@ -1597,8 +1596,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 scene_metric_fold = sed_eval.scene.SceneClassificationMetrics(scene_labels=self.dataset.scene_labels)
 
                 estimated_scene_list = MetaDataContainer(
-                    filename=self._get_result_filename(fold=fold, path=self.params.get_path('path.recognizer')
-                    )
+                    filename=self._get_result_filename(fold=fold, path=self.params.get_path('path.recognizer'))
                 ).load()
 
                 reference_scene_list = self.dataset.eval(fold=fold)
