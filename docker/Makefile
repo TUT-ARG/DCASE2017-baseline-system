@@ -21,6 +21,15 @@ task2: build
 task3: build
 	docker run -it -v $(SRC):/DCASE2017-baseline-system $(DOCKER_NAME) /bin/bash -c "python applications/task3.py -s dcase2017,gmm -o; python applications/task3.py -show_eval"
 
+task1_challenge: build
+	docker run -it -v $(SRC):/DCASE2017-baseline-system $(DOCKER_NAME) /bin/bash -c "python applications/task1.py -s dcase2017 -m challenge -o"
+
+task2_challenge: build
+	docker run -it -v $(SRC):/DCASE2017-baseline-system $(DOCKER_NAME) /bin/bash -c "python applications/task2.py -s dcase2017 -m challenge -o"
+
+task3_challenge: build
+	docker run -it -v $(SRC):/DCASE2017-baseline-system $(DOCKER_NAME) /bin/bash -c "python applications/task3.py -s dcase2017 -m challenge -o"
+
 test1: build
 	docker run -it -v $(SRC):/DCASE2017-baseline-system $(DOCKER_NAME) /bin/bash -c "python applications/task1.py -s minimal; python applications/task1.py -show_eval"
 
