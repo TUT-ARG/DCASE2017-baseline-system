@@ -744,7 +744,7 @@ class KerasMixin(object):
 
         # Show BLAS info
         if self.show_extra_debug:
-            if numpy.__config__.blas_opt_info:
+            if numpy.__config__.blas_opt_info and 'libraries' in numpy.__config__.blas_opt_info:
                 blas_libraries = numpy.__config__.blas_opt_info['libraries']
                 if blas_libraries[0].startswith('openblas'):
                     self.logger.debug('    BLAS library\t[OpenBLAS]\t\t({info})'.format(
