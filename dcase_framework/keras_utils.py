@@ -681,7 +681,11 @@ class KerasMixin(object):
 
     def _after_load(self, to_return=None):
         with SuppressStdoutAndStderr():
-            from keras.models import Sequential, load_model
+            # Setup Keras if not yet set up. This is needed as keras has tensorflow as default backend, and this will
+            # give error if it is not installed and theano is not set up as backend.
+            self._setup_keras()
+
+            from keras.models import load_model
 
         keras_model_filename = os.path.splitext(self.filename)[0] + '.model.hdf5'
 
@@ -708,155 +712,157 @@ class KerasMixin(object):
         """Setup keras backend and parameters
         """
 
-        # Get BLAS library associated to numpy
-        if numpy.__config__.blas_opt_info and 'libraries' in numpy.__config__.blas_opt_info:
-            blas_libraries = numpy.__config__.blas_opt_info['libraries']
-        else:
-            blas_libraries = ['']
-
-        blas_extra_info = []
-        # Set backend and parameters before importing keras
-        if self.show_extra_debug:
-            self.logger.debug('  Keras')
-            self.logger.debug('    Backend \t[{backend}]'.format(
-                backend=self.learner_params.get_path('keras.backend', 'theano'))
-            )
-
-        # Threading
-        if self.learner_params.get_path('keras.backend_parameters.threads'):
-            thread_count = self.learner_params.get_path('keras.backend_parameters.threads', 1)
-            os.environ['GOTO_NUM_THREADS'] = str(thread_count)
-            os.environ['OMP_NUM_THREADS'] = str(thread_count)
-            os.environ['MKL_NUM_THREADS'] = str(thread_count)
-            blas_extra_info.append('Threads[{threads}]'.format(threads=thread_count))
-
-            if thread_count > 1:
-                os.environ['OMP_DYNAMIC'] = 'False'
-                os.environ['MKL_DYNAMIC'] = 'False'
-            else:
-                os.environ['OMP_DYNAMIC'] = 'True'
-                os.environ['MKL_DYNAMIC'] = 'True'
-
-        # Conditional Numerical Reproducibility (CNR) for MKL BLAS library
-        if self.learner_params.get_path('keras.backend_parameters.CNR', True) and blas_libraries[0].startswith('mkl'):
-            os.environ['MKL_CBWR'] = 'COMPATIBLE'
-            blas_extra_info.append('MKL_CBWR[{mode}]'.format(mode='COMPATIBLE'))
-
-        # Show BLAS info
-        if self.show_extra_debug:
+        if not hasattr(self, 'keras_setup_done') or not self.keras_setup_done:
+            # Get BLAS library associated to numpy
             if numpy.__config__.blas_opt_info and 'libraries' in numpy.__config__.blas_opt_info:
                 blas_libraries = numpy.__config__.blas_opt_info['libraries']
-                if blas_libraries[0].startswith('openblas'):
-                    self.logger.debug('    BLAS library\t[OpenBLAS]\t\t({info})'.format(
-                        info=', '.join(blas_extra_info))
-                    )
+            else:
+                blas_libraries = ['']
 
-                elif blas_libraries[0].startswith('blas'):
-                    self.logger.debug(
-                        '  BLAS library\t[BLAS/Atlas]\t\t({info})'.format(
-                            info=', '.join(blas_extra_info))
-                    )
-
-                elif blas_libraries[0].startswith('mkl'):
-                    self.logger.debug('    BLAS library\t[MKL]\t\t({info})'.format(
-                        info=', '.join(blas_extra_info))
-                    )
-
-        # Select Keras backend
-        os.environ["KERAS_BACKEND"] = self.learner_params.get_path('keras.backend', 'theano')
-
-        if self.learner_params.get_path('keras.backend', 'theano') == 'theano':
-            # Theano setup
+            blas_extra_info = []
+            # Set backend and parameters before importing keras
             if self.show_extra_debug:
-                self.logger.debug('  Theano')
-            # Default flags
-            flags = [
-                # 'ldflags=',
-                'warn.round=False',
-            ]
-
-            # Set device
-            if self.learner_params.get_path('keras.backend_parameters.device'):
-                flags.append('device=' + self.learner_params.get_path('keras.backend_parameters.device', 'cpu'))
-
-                if self.show_extra_debug:
-                    self.logger.debug('    Device \t\t[{device}]'.format(
-                        device=self.learner_params.get_path('keras.backend_parameters.device', 'cpu'))
-                    )
-
-            # Set floatX
-            if self.learner_params.get_path('keras.backend_parameters.floatX'):
-                flags.append('floatX=' + self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
-
-                if self.show_extra_debug:
-                    self.logger.debug('    floatX \t\t[{float}]'.format(
-                        float=self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
-                    )
-
-            # Set optimizer
-            if self.learner_params.get_path('keras.backend_parameters.optimizer') is not None:
-                if self.learner_params.get_path('keras.backend_parameters.optimizer') in ['fast_run', 'merge',
-                                                                                          'fast_compile', 'None']:
-                    flags.append('optimizer=' + self.learner_params.get_path('keras.backend_parameters.optimizer'))
-
-            if self.show_extra_debug:
-                self.logger.debug('    Optimizer \t[{optimizer}]'.format(
-                    optimizer=self.learner_params.get_path('keras.backend_parameters.optimizer', 'None'))
+                self.logger.debug('  Keras')
+                self.logger.debug('    Backend \t[{backend}]'.format(
+                    backend=self.learner_params.get_path('keras.backend', 'theano'))
                 )
 
-            # Set fastmath for GPU mode only
-            if self.learner_params.get_path('keras.backend_parameters.fastmath') and self.learner_params.get_path(
-                    'keras.backend_parameters.device', 'cpu') != 'cpu':
-                if self.learner_params.get_path('keras.backend_parameters.fastmath', False):
-                    flags.append('nvcc.fastmath=True')
+            # Threading
+            if self.learner_params.get_path('keras.backend_parameters.threads'):
+                thread_count = self.learner_params.get_path('keras.backend_parameters.threads', 1)
+                os.environ['GOTO_NUM_THREADS'] = str(thread_count)
+                os.environ['OMP_NUM_THREADS'] = str(thread_count)
+                os.environ['MKL_NUM_THREADS'] = str(thread_count)
+                blas_extra_info.append('Threads[{threads}]'.format(threads=thread_count))
+
+                if thread_count > 1:
+                    os.environ['OMP_DYNAMIC'] = 'False'
+                    os.environ['MKL_DYNAMIC'] = 'False'
                 else:
-                    flags.append('nvcc.fastmath=False')
+                    os.environ['OMP_DYNAMIC'] = 'True'
+                    os.environ['MKL_DYNAMIC'] = 'True'
 
-                if self.show_extra_debug:
-                    self.logger.debug('    NVCC fastmath \t[{flag}]'.format(
-                        flag=str(self.learner_params.get_path('keras.backend_parameters.fastmath', False)))
-                    )
+            # Conditional Numerical Reproducibility (CNR) for MKL BLAS library
+            if self.learner_params.get_path('keras.backend_parameters.CNR', True) and blas_libraries[0].startswith('mkl'):
+                os.environ['MKL_CBWR'] = 'COMPATIBLE'
+                blas_extra_info.append('MKL_CBWR[{mode}]'.format(mode='COMPATIBLE'))
 
-            # Set OpenMP
-            if self.learner_params.get_path('keras.backend_parameters.openmp') is not None:
-                if self.learner_params.get_path('keras.backend_parameters.openmp', False):
-                    flags.append('openmp=True')
-                else:
-                    flags.append('openmp=False')
-
-                if self.show_extra_debug:
-                    self.logger.debug('    OpenMP\t\t[{flag}]'.format(
-                        flag=str(self.learner_params.get_path('keras.backend_parameters.openmp', False)))
-                    )
-
-            # Set environmental variable for Theano
-            os.environ["THEANO_FLAGS"] = ','.join(flags)
-
-        elif self.learner_params.get_path('keras.backend', 'tensorflow') == 'tensorflow':
-            # Tensorflow setup
+            # Show BLAS info
             if self.show_extra_debug:
-                self.logger.debug('  Tensorflow')
-            # Set device
-            if self.learner_params.get_path('keras.backend_parameters.device', 'cpu'):
+                if numpy.__config__.blas_opt_info and 'libraries' in numpy.__config__.blas_opt_info:
+                    blas_libraries = numpy.__config__.blas_opt_info['libraries']
+                    if blas_libraries[0].startswith('openblas'):
+                        self.logger.debug('    BLAS library\t[OpenBLAS]\t\t({info})'.format(
+                            info=', '.join(blas_extra_info))
+                        )
 
-                # In case of CPU disable visible GPU.
-                if self.learner_params.get_path('keras.backend_parameters.device', 'cpu') == 'cpu':
-                    os.environ["CUDA_VISIBLE_DEVICES"] = ''
+                    elif blas_libraries[0].startswith('blas'):
+                        self.logger.debug(
+                            '  BLAS library\t[BLAS/Atlas]\t\t({info})'.format(
+                                info=', '.join(blas_extra_info))
+                        )
+
+                    elif blas_libraries[0].startswith('mkl'):
+                        self.logger.debug('    BLAS library\t[MKL]\t\t({info})'.format(
+                            info=', '.join(blas_extra_info))
+                        )
+
+            # Select Keras backend
+            os.environ["KERAS_BACKEND"] = self.learner_params.get_path('keras.backend', 'theano')
+
+            if self.learner_params.get_path('keras.backend', 'theano') == 'theano':
+                # Theano setup
+                if self.show_extra_debug:
+                    self.logger.debug('  Theano')
+                # Default flags
+                flags = [
+                    # 'ldflags=',
+                    'warn.round=False',
+                ]
+
+                # Set device
+                if self.learner_params.get_path('keras.backend_parameters.device'):
+                    flags.append('device=' + self.learner_params.get_path('keras.backend_parameters.device', 'cpu'))
+
+                    if self.show_extra_debug:
+                        self.logger.debug('    Device \t\t[{device}]'.format(
+                            device=self.learner_params.get_path('keras.backend_parameters.device', 'cpu'))
+                        )
+
+                # Set floatX
+                if self.learner_params.get_path('keras.backend_parameters.floatX'):
+                    flags.append('floatX=' + self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
+
+                    if self.show_extra_debug:
+                        self.logger.debug('    floatX \t\t[{float}]'.format(
+                            float=self.learner_params.get_path('keras.backend_parameters.floatX', 'float32'))
+                        )
+
+                # Set optimizer
+                if self.learner_params.get_path('keras.backend_parameters.optimizer') is not None:
+                    if self.learner_params.get_path('keras.backend_parameters.optimizer') in ['fast_run', 'merge',
+                                                                                              'fast_compile', 'None']:
+                        flags.append('optimizer=' + self.learner_params.get_path('keras.backend_parameters.optimizer'))
 
                 if self.show_extra_debug:
-                    self.logger.debug('    Device \t\t[{device}]'.format(
-                        device=self.learner_params.get_path('keras.backend_parameters.device', 'cpu')))
+                    self.logger.debug('    Optimizer \t[{optimizer}]'.format(
+                        optimizer=self.learner_params.get_path('keras.backend_parameters.optimizer', 'None'))
+                    )
 
-        else:
-            message = '{name}: Keras backend not supported [backend].'.format(
-                name=self.__class__.__name__,
-                backend=self.learner_params.get_path('keras.backend')
-            )
-            self.logger.exception(message)
-            raise AssertionError(message)
-        if self.show_extra_debug:
-            self.logger.debug('  ')
+                # Set fastmath for GPU mode only
+                if self.learner_params.get_path('keras.backend_parameters.fastmath') and self.learner_params.get_path(
+                        'keras.backend_parameters.device', 'cpu') != 'cpu':
+                    if self.learner_params.get_path('keras.backend_parameters.fastmath', False):
+                        flags.append('nvcc.fastmath=True')
+                    else:
+                        flags.append('nvcc.fastmath=False')
 
+                    if self.show_extra_debug:
+                        self.logger.debug('    NVCC fastmath \t[{flag}]'.format(
+                            flag=str(self.learner_params.get_path('keras.backend_parameters.fastmath', False)))
+                        )
+
+                # Set OpenMP
+                if self.learner_params.get_path('keras.backend_parameters.openmp') is not None:
+                    if self.learner_params.get_path('keras.backend_parameters.openmp', False):
+                        flags.append('openmp=True')
+                    else:
+                        flags.append('openmp=False')
+
+                    if self.show_extra_debug:
+                        self.logger.debug('    OpenMP\t\t[{flag}]'.format(
+                            flag=str(self.learner_params.get_path('keras.backend_parameters.openmp', False)))
+                        )
+
+                # Set environmental variable for Theano
+                os.environ["THEANO_FLAGS"] = ','.join(flags)
+
+            elif self.learner_params.get_path('keras.backend', 'tensorflow') == 'tensorflow':
+                # Tensorflow setup
+                if self.show_extra_debug:
+                    self.logger.debug('  Tensorflow')
+                # Set device
+                if self.learner_params.get_path('keras.backend_parameters.device', 'cpu'):
+
+                    # In case of CPU disable visible GPU.
+                    if self.learner_params.get_path('keras.backend_parameters.device', 'cpu') == 'cpu':
+                        os.environ["CUDA_VISIBLE_DEVICES"] = ''
+
+                    if self.show_extra_debug:
+                        self.logger.debug('    Device \t\t[{device}]'.format(
+                            device=self.learner_params.get_path('keras.backend_parameters.device', 'cpu')))
+
+            else:
+                message = '{name}: Keras backend not supported [backend].'.format(
+                    name=self.__class__.__name__,
+                    backend=self.learner_params.get_path('keras.backend')
+                )
+                self.logger.exception(message)
+                raise AssertionError(message)
+            if self.show_extra_debug:
+                self.logger.debug('  ')
+
+        self.keras_setup_done = True
 
 class BaseCallback(object):
     """Base class for Callbacks
