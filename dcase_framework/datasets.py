@@ -126,7 +126,7 @@ from six import iteritems
 
 from .utils import get_parameter_hash, get_class_inheritors
 from .decorators import before_and_after_function_wrapper
-from .files import TextFile, ParameterFile, ParameterListFile, AudioFile
+from .files import TextFile, ParameterFile, ParameterListFile, AudioFile, DictFile
 from .containers import DottedDict
 from .metadata import MetaDataContainer, MetaDataItem
 
@@ -1435,9 +1435,8 @@ class TUTAcousticScenes_2017_DevelopmentSet(AcousticSceneDataset):
                     if item['file'] not in meta_data:
                         raw_path, raw_filename = os.path.split(item['file'])
                         relative_path = self.absolute_to_relative(raw_path)
-                        location_id = raw_filename.split('_')[0]
                         item['file'] = os.path.join(relative_path, raw_filename)
-                        item['identifier'] = location_id
+                        item['identifier'] = raw_filename.split('_')[0]
                         meta_data[item['file']] = item
 
             self.meta_container.update(meta_data.values())
@@ -1525,22 +1524,37 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
         """
 
         if not self.meta_container.exists():
-            meta_data = collections.OrderedDict()
-            for fold in range(1, self.crossvalidation_folds):
-                # Read train files in
-                fold_data = MetaDataContainer(
-                    filename=os.path.join(self.evaluation_setup_path, 'fold' + str(fold) + '_test.txt')).load()
+            if os.path.isfile(os.path.join(self.evaluation_setup_path, 'evaluate.txt')):
+                meta_data = collections.OrderedDict()
 
-                for item in fold_data:
+                # Read files in
+                data = MetaDataContainer(
+                    filename=os.path.join(self.evaluation_setup_path, 'evaluate.txt')
+                ).load()
+
+                # Load filename mapping
+                map_filename = os.path.join(self.evaluation_setup_path, 'map.txt')
+                filename_map = {}
+                if os.path.exists(map_filename):
+                    with open(map_filename, 'rt') as f:
+                        for row in csv.reader(f, delimiter='\t'):
+                            filename_map[row[1]] = row[0]
+
+                for item in data:
                     if item['file'] not in meta_data:
                         raw_path, raw_filename = os.path.split(item['file'])
                         relative_path = self.absolute_to_relative(raw_path)
-                        location_id = raw_filename.split('_')[0]
                         item['file'] = os.path.join(relative_path, raw_filename)
+
+                        # Recover location identifier from ordinal filename
+                        if item['file'] in filename_map:
+                            item['identifier'] = os.path.split(filename_map[item['file']])[1].split('_')[0]
+
                         meta_data[item['file']] = item
 
-            self.meta_container.update(meta_data.values())
-            self.meta_container.save()
+                self.meta_container.update(meta_data.values())
+                self.meta_container.save()
+
         else:
             self.meta_container.load()
 
@@ -1548,7 +1562,33 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
         return []
 
     def test(self, fold=0):
-        return []
+        """List of testing items.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+
+        Returns
+        -------
+        list : list of dicts
+            List containing all meta data assigned to testing set for given fold.
+
+        """
+
+        if fold not in self.crossvalidation_data_test:
+            self.crossvalidation_data_test[fold] = []
+            if fold > 0:
+                with open(os.path.join(self.evaluation_setup_path, 'fold' + str(fold) + '_test.txt'), 'rt') as f:
+                    for row in csv.reader(f, delimiter='\t'):
+                        self.crossvalidation_data_test[fold].append({'file': self.relative_to_absolute_path(row[0])})
+            else:
+                with open(os.path.join(self.evaluation_setup_path, 'test.txt'), 'rt') as f:
+                    for row in csv.reader(f, delimiter='\t'):
+                        self.crossvalidation_data_test[fold].append({'file': self.relative_to_absolute_path(row[0])})
+
+        return self.crossvalidation_data_test[fold]
 
 
 class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
@@ -1561,6 +1601,8 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
     def __init__(self, *args, **kwargs):
         kwargs['storage_name'] = kwargs.get('storage_name', 'TUT-rare-sound-events-2017-development')
         kwargs['filelisthash_exclude_dirs'] = kwargs.get('filelisthash_exclude_dirs', ['generated_data'])
+
+        self.dcase_compatibility = kwargs.get('dcase_compatibility', True)
 
         self.synth_parameters = DottedDict({
             'train': {
@@ -1588,6 +1630,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 'ebr_list': [-6, 0, 6],
             }
         })
+
         # Override synth parameters
         if kwargs.get('synth_parameters'):
             self.synth_parameters.merge(kwargs.get('synth_parameters'))
@@ -1672,7 +1715,17 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_events.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_events.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
-            }
+            },
+            {
+                'remote_package': 'https://raw.githubusercontent.com/TUT-ARG/TUT_Rare_sound_events_mixture_synthesizer/master/affected_files.txt',
+                'local_package': os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer', 'affected_files.txt'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'https://raw.githubusercontent.com/TUT-ARG/TUT_Rare_sound_events_mixture_synthesizer/master/dcase2017_task2_patcher.py',
+                'local_package': os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer', 'dcase2017_task2_patcher.py'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
         ]
 
     @property
@@ -2075,6 +2128,21 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
             self.meta_container.update(meta_data)
             self.meta_container.save()
 
+        if self.dcase_compatibility:
+            # Run dataset patcher if it have not been run before
+            if not os.path.exists(self.meta_container.filename+'_old_dontuse'):
+                # Create init so we can call functions
+                if os.path.exists(os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer', '__init__.py')):
+                    open(os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer', '__init__.py'), 'a').close()
+
+                # Patch dataset
+                sys.path.append(os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer'))
+                from dcase2017_task2_patcher import main as patcher
+                patcher(path_to_dataset=self.local_path)
+
+                # Load modified meta information
+                self.meta_container.load()
+
     def _generate_mixture_recipes(self, params, subset, class_label, mixture_recipes_filename, background_meta,
                                   event_meta, background_audio_path, event_audio_path, r):
 
@@ -2355,7 +2423,7 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
         # Initialize baseclass
         super(TUTRareSoundEvents_2017_EvaluationSet, self).__init__(*args, **kwargs)
 
-        self.reference_data_present = True
+        self.reference_data_present = False
 
         self.dataset_group = 'sound event'
         self.dataset_meta = {
@@ -2409,36 +2477,14 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
 
         """
 
-        if not self.meta_container.exists():
-            meta_data = MetaDataContainer()
+        if not self.meta_container.exists() and self.reference_data_present:
+            message = '{name}: Meta file not found [{filename}]'.format(
+                name=self.__class__.__name__,
+                filename=self.meta_container.filename
+            )
 
-            for event_label_ in self.event_labels:
-                event_list_filename = os.path.join(
-                    self.local_path,
-                    'meta',
-                    'event_list_evaltest_' + event_label_ + '.csv'
-                )
-
-                if os.path.isfile(event_list_filename):
-                    # Load train files
-                    current_meta = MetaDataContainer(filename=event_list_filename).load()
-                    # Fix path
-                    for item in current_meta:
-                        item['file'] = os.path.join('audio', item['file'])
-
-                    meta_data += current_meta
-
-                else:
-                    current_meta = MetaDataContainer()
-                    for filename in self.audio_files:
-                        raw_path, raw_filename = os.path.split(filename)
-                        relative_path = self.absolute_to_relative(raw_path)
-                        base_filename, file_extension = os.path.splitext(raw_filename)
-                        if event_label_ in base_filename:
-                            current_meta.append(MetaDataItem({'file': os.path.join(relative_path, raw_filename)}))
-
-            self.meta_container.update(meta_data)
-            self.meta_container.save()
+            self.logger.exception(message)
+            raise IOError(message)
 
     def train(self, fold=0, event_label=None):
         return []
@@ -2469,30 +2515,12 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
                     self.crossvalidation_data_test[fold][event_label_] = MetaDataContainer()
 
                 if fold == 0:
-                    event_list_filename = os.path.join(
-                        self.local_path,
-                        'meta',
-                        'event_list_evaltest_' + event_label_ + '.csv'
-                    )
-
-                    if os.path.isfile(event_list_filename):
-                        # Load train files
-                        self.crossvalidation_data_test[0][event_label_] = MetaDataContainer(
-                            filename=event_list_filename).load()
-
-                        # Fix file paths
-                        for item in self.crossvalidation_data_test[fold][event_label_]:
-                            item['file'] = os.path.join('audio', item['file'])
-                    else:
-                        # Recover files from audio files
-                        meta = MetaDataContainer()
-                        for item in self.meta:
-                            if event_label_ in item.file:
-                                meta.append(item)
-
-                # Change file paths to absolute
-                for item in self.crossvalidation_data_test[fold][event_label_]:
-                    item['file'] = self.relative_to_absolute_path(item['file'])
+                    for filename in self.audio_files:
+                        raw_path, raw_filename = os.path.split(filename)
+                        relative_path = self.absolute_to_relative(raw_path)
+                        base_filename, file_extension = os.path.splitext(raw_filename)
+                        if event_label_ in base_filename:
+                            self.crossvalidation_data_test[fold][event_label_].append(MetaDataItem({'file': os.path.join(relative_path, raw_filename)}))
 
         if event_label:
             return self.crossvalidation_data_test[fold][event_label]
