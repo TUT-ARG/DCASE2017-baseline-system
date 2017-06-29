@@ -529,7 +529,6 @@ class SceneClassifier(LearnerContainer):
         raise AssertionError(message)
 
 
-
 class SceneClassifierGMM(SceneClassifier):
     """Scene classifier with GMM
 
@@ -1143,6 +1142,7 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         self['learning_history'] = hist.history
 
     def _frame_probabilities(self, feature_data):
+
         return self.model.predict(x=feature_data).T
 
 
