@@ -1339,6 +1339,30 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
                         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
+                    <span class="c1"># Check evaluator API</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">)</span> <span class="ow">or</span>
+                       <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="s1">&#39;evaluate&#39;</span><span class="p">)</span> <span class="ow">or</span>
+                       <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">)):</span>
+                        <span class="k">if</span> <span class="n">current_metric_evaluator</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;sed_eval&#39;</span><span class="p">):</span>
+                            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: wrong version of sed_eval for [</span><span class="si">{current_metric_evaluator}</span><span class="s1">::</span><span class="si">{current_metric_name}</span><span class="s1">], update sed_eval to latest version&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">current_metric_evaluator</span><span class="o">=</span><span class="n">current_metric_evaluator</span><span class="p">,</span>
+                                <span class="n">current_metric_name</span><span class="o">=</span><span class="n">current_metric_name</span>
+                            <span class="p">)</span>
+
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Evaluator has invalid API [</span><span class="si">{current_metric_evaluator}</span><span class="s1">::</span><span class="si">{current_metric_name}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                <span class="n">current_metric_evaluator</span><span class="o">=</span><span class="n">current_metric_evaluator</span><span class="p">,</span>
+                                <span class="n">current_metric_name</span><span class="o">=</span><span class="n">current_metric_name</span>
+                            <span class="p">)</span>
+
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
                     <span class="c1"># Form unique name for metric, to allow multiple similar metrics with different parameters</span>
                     <span class="n">metric_id</span> <span class="o">=</span> <span class="n">get_parameter_hash</span><span class="p">(</span><span class="n">metric</span><span class="p">)</span>
 
@@ -1369,7 +1393,11 @@
 
     <span class="k">def</span> <span class="nf">_after_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_return</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">with</span> <span class="n">SuppressStdoutAndStderr</span><span class="p">():</span>
-            <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">load_model</span>
+            <span class="c1"># Setup Keras if not yet set up. This is needed as keras has tensorflow as default backend, and this will</span>
+            <span class="c1"># give error if it is not installed and theano is not set up as backend.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setup_keras</span><span class="p">()</span>
+
+            <span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">load_model</span>
 
         <span class="n">keras_model_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.model.hdf5&#39;</span>
 
@@ -1396,155 +1424,157 @@
         <span class="sd">&quot;&quot;&quot;Setup keras backend and parameters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># Get BLAS library associated to numpy</span>
-        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span> <span class="ow">and</span> <span class="s1">&#39;libraries&#39;</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">:</span>
-            <span class="n">blas_libraries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">[</span><span class="s1">&#39;libraries&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">blas_libraries</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
-
-        <span class="n">blas_extra_info</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># Set backend and parameters before importing keras</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Keras&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Backend </span><span class="se">\t</span><span class="s1">[</span><span class="si">{backend}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">))</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Threading</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.threads&#39;</span><span class="p">):</span>
-            <span class="n">thread_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.threads&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;GOTO_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
-            <span class="n">blas_extra_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Threads[</span><span class="si">{threads}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">threads</span><span class="o">=</span><span class="n">thread_count</span><span class="p">))</span>
-
-            <span class="k">if</span> <span class="n">thread_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;False&#39;</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;False&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;True&#39;</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;True&#39;</span>
-
-        <span class="c1"># Conditional Numerical Reproducibility (CNR) for MKL BLAS library</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.CNR&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mkl&#39;</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_CBWR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;COMPATIBLE&#39;</span>
-            <span class="n">blas_extra_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;MKL_CBWR[</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;COMPATIBLE&#39;</span><span class="p">))</span>
-
-        <span class="c1"># Show BLAS info</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;keras_setup_done&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">keras_setup_done</span><span class="p">:</span>
+            <span class="c1"># Get BLAS library associated to numpy</span>
+            <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span> <span class="ow">and</span> <span class="s1">&#39;libraries&#39;</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">:</span>
                 <span class="n">blas_libraries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">[</span><span class="s1">&#39;libraries&#39;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;openblas&#39;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    BLAS library</span><span class="se">\t</span><span class="s1">[OpenBLAS]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">))</span>
-                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">blas_libraries</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
 
-                <span class="k">elif</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;blas&#39;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                        <span class="s1">&#39;  BLAS library</span><span class="se">\t</span><span class="s1">[BLAS/Atlas]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">))</span>
-                    <span class="p">)</span>
-
-                <span class="k">elif</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mkl&#39;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    BLAS library</span><span class="se">\t</span><span class="s1">[MKL]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">))</span>
-                    <span class="p">)</span>
-
-        <span class="c1"># Select Keras backend</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KERAS_BACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;theano&#39;</span><span class="p">:</span>
-            <span class="c1"># Theano setup</span>
+            <span class="n">blas_extra_info</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># Set backend and parameters before importing keras</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Theano&#39;</span><span class="p">)</span>
-            <span class="c1"># Default flags</span>
-            <span class="n">flags</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="c1"># &#39;ldflags=&#39;,</span>
-                <span class="s1">&#39;warn.round=False&#39;</span><span class="p">,</span>
-            <span class="p">]</span>
-
-            <span class="c1"># Set device</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">):</span>
-                <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;device=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
-
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Device </span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{device}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
-                    <span class="p">)</span>
-
-            <span class="c1"># Set floatX</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">):</span>
-                <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;floatX=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">,</span> <span class="s1">&#39;float32&#39;</span><span class="p">))</span>
-
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    floatX </span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{float}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="nb">float</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">,</span> <span class="s1">&#39;float32&#39;</span><span class="p">))</span>
-                    <span class="p">)</span>
-
-            <span class="c1"># Set optimizer</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fast_run&#39;</span><span class="p">,</span> <span class="s1">&#39;merge&#39;</span><span class="p">,</span>
-                                                                                          <span class="s1">&#39;fast_compile&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">]:</span>
-                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;optimizer=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">))</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Optimizer </span><span class="se">\t</span><span class="s1">[</span><span class="si">{optimizer}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Keras&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Backend </span><span class="se">\t</span><span class="s1">[</span><span class="si">{backend}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">))</span>
                 <span class="p">)</span>
 
-            <span class="c1"># Set fastmath for GPU mode only</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span>
-                    <span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;nvcc.fastmath=True&#39;</span><span class="p">)</span>
+            <span class="c1"># Threading</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.threads&#39;</span><span class="p">):</span>
+                <span class="n">thread_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.threads&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;GOTO_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">thread_count</span><span class="p">)</span>
+                <span class="n">blas_extra_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Threads[</span><span class="si">{threads}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">threads</span><span class="o">=</span><span class="n">thread_count</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">thread_count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;False&#39;</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;False&#39;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;nvcc.fastmath=False&#39;</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;True&#39;</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_DYNAMIC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;True&#39;</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    NVCC fastmath </span><span class="se">\t</span><span class="s1">[</span><span class="si">{flag}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">flag</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)))</span>
-                    <span class="p">)</span>
+            <span class="c1"># Conditional Numerical Reproducibility (CNR) for MKL BLAS library</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.CNR&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mkl&#39;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MKL_CBWR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;COMPATIBLE&#39;</span>
+                <span class="n">blas_extra_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;MKL_CBWR[</span><span class="si">{mode}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;COMPATIBLE&#39;</span><span class="p">))</span>
 
-            <span class="c1"># Set OpenMP</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;openmp=True&#39;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;openmp=False&#39;</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    OpenMP</span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{flag}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">flag</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)))</span>
-                    <span class="p">)</span>
-
-            <span class="c1"># Set environmental variable for Theano</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;THEANO_FLAGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;tensorflow&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;tensorflow&#39;</span><span class="p">:</span>
-            <span class="c1"># Tensorflow setup</span>
+            <span class="c1"># Show BLAS info</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Tensorflow&#39;</span><span class="p">)</span>
-            <span class="c1"># Set device</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span> <span class="ow">and</span> <span class="s1">&#39;libraries&#39;</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">:</span>
+                    <span class="n">blas_libraries</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">__config__</span><span class="o">.</span><span class="n">blas_opt_info</span><span class="p">[</span><span class="s1">&#39;libraries&#39;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;openblas&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    BLAS library</span><span class="se">\t</span><span class="s1">[OpenBLAS]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">))</span>
+                        <span class="p">)</span>
 
-                <span class="c1"># In case of CPU disable visible GPU.</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">elif</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;blas&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                            <span class="s1">&#39;  BLAS library</span><span class="se">\t</span><span class="s1">[BLAS/Atlas]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">))</span>
+                        <span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="n">blas_libraries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mkl&#39;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    BLAS library</span><span class="se">\t</span><span class="s1">[MKL]</span><span class="se">\t\t</span><span class="s1">(</span><span class="si">{info}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">info</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blas_extra_info</span><span class="p">))</span>
+                        <span class="p">)</span>
+
+            <span class="c1"># Select Keras backend</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;KERAS_BACKEND&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;theano&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;theano&#39;</span><span class="p">:</span>
+                <span class="c1"># Theano setup</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Theano&#39;</span><span class="p">)</span>
+                <span class="c1"># Default flags</span>
+                <span class="n">flags</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="c1"># &#39;ldflags=&#39;,</span>
+                    <span class="s1">&#39;warn.round=False&#39;</span><span class="p">,</span>
+                <span class="p">]</span>
+
+                <span class="c1"># Set device</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">):</span>
+                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;device=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Device </span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{device}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">))</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># Set floatX</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">):</span>
+                    <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;floatX=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">,</span> <span class="s1">&#39;float32&#39;</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    floatX </span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{float}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="nb">float</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.floatX&#39;</span><span class="p">,</span> <span class="s1">&#39;float32&#39;</span><span class="p">))</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># Set optimizer</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;fast_run&#39;</span><span class="p">,</span> <span class="s1">&#39;merge&#39;</span><span class="p">,</span>
+                                                                                              <span class="s1">&#39;fast_compile&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">]:</span>
+                        <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;optimizer=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Device </span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{device}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Optimizer </span><span class="se">\t</span><span class="s1">[</span><span class="si">{optimizer}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.optimizer&#39;</span><span class="p">,</span> <span class="s1">&#39;None&#39;</span><span class="p">))</span>
+                    <span class="p">)</span>
 
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Keras backend not supported [backend].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
+                <span class="c1"># Set fastmath for GPU mode only</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span>
+                        <span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;nvcc.fastmath=True&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;nvcc.fastmath=False&#39;</span><span class="p">)</span>
 
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    NVCC fastmath </span><span class="se">\t</span><span class="s1">[</span><span class="si">{flag}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">flag</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.fastmath&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)))</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># Set OpenMP</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;openmp=True&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;openmp=False&#39;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    OpenMP</span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{flag}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">flag</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.openmp&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)))</span>
+                        <span class="p">)</span>
+
+                <span class="c1"># Set environmental variable for Theano</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;THEANO_FLAGS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">,</span> <span class="s1">&#39;tensorflow&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;tensorflow&#39;</span><span class="p">:</span>
+                <span class="c1"># Tensorflow setup</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  Tensorflow&#39;</span><span class="p">)</span>
+                <span class="c1"># Set device</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
+
+                    <span class="c1"># In case of CPU disable visible GPU.</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;cpu&#39;</span><span class="p">:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;    Device </span><span class="se">\t\t</span><span class="s1">[</span><span class="si">{device}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend_parameters.device&#39;</span><span class="p">,</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">: Keras backend not supported [backend].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">backend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learner_params</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;keras.backend&#39;</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_extra_debug</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">keras_setup_done</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="BaseCallback"><a class="viewcode-back" href="../../generated/dcase_framework.keras_utils.BaseCallback.html#dcase_framework.keras_utils.BaseCallback">[docs]</a><span class="k">class</span> <span class="nc">BaseCallback</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for Callbacks</span>
@@ -1621,6 +1651,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">less</span></div>
+
 
 <div class="viewcode-block" id="ProgressLoggerCallback"><a class="viewcode-back" href="../../generated/dcase_framework.keras_utils.ProgressLoggerCallback.html#dcase_framework.keras_utils.ProgressLoggerCallback">[docs]</a><span class="k">class</span> <span class="nc">ProgressLoggerCallback</span><span class="p">(</span><span class="n">BaseCallback</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Keras callback to store metrics with tqdm progress bar or logging interface. Implements Keras Callback API.</span>

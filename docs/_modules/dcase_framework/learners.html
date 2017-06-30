@@ -1241,7 +1241,6 @@
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
-
 <div class="viewcode-block" id="SceneClassifierGMM"><a class="viewcode-back" href="../../generated/dcase_framework.learners.SceneClassifierGMM.html#dcase_framework.learners.SceneClassifierGMM">[docs]</a><span class="k">class</span> <span class="nc">SceneClassifierGMM</span><span class="p">(</span><span class="n">SceneClassifier</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Scene classifier with GMM</span>
 
@@ -1855,6 +1854,7 @@
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;learning_history&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">history</span></div>
 
     <span class="k">def</span> <span class="nf">_frame_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_data</span><span class="p">):</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">feature_data</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
 
 
