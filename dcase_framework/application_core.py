@@ -3275,7 +3275,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
             raise ValueError(message)
 
     @before_and_after_function_wrapper
-    def system_testing(self, overwrite=None):
+    def system_testing(self, overwrite=None, single_file_per_fold=False):
         """System testing stage
 
         If extracted features are not found from disk, they are extracted but not saved.
@@ -3284,6 +3284,10 @@ class BinarySoundEventAppCore(SoundEventAppCore):
         ----------
         overwrite : bool
             overwrite existing models
+            (Default value=False)
+
+        single_file_per_fold : bool
+            Produce single output file, otherwise produce one result file per target event.
             (Default value=False)
 
         Raises
@@ -3331,17 +3335,27 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                       miniters=1,
                                       disable=self.disable_progress_bar,
                                       ascii=self.use_ascii_progress_bar)
-
-                for event_label in event_progress:
+                #from IPython import embed
+                #embed()
+                if single_file_per_fold:
                     current_result_file = self._get_result_filename(
                         fold=fold,
-                        path=self.params.get_path('path.recognizer'),
-                        event_label=event_label
+                        path=self.params.get_path('path.recognizer')
                     )
-
                     if not os.path.isfile(current_result_file) or overwrite:
                         results = MetaDataContainer(filename=current_result_file)
 
+                for event_label in event_progress:
+                    if not single_file_per_fold:
+                        current_result_file = self._get_result_filename(
+                            fold=fold,
+                            path=self.params.get_path('path.recognizer'),
+                            event_label=event_label
+                        )
+                        if not os.path.isfile(current_result_file) or overwrite:
+                            results = MetaDataContainer(filename=current_result_file)
+
+                    if not os.path.isfile(current_result_file) or overwrite:
                         # Load class model container
                         model_filename = self._get_model_filename(
                             fold=fold,
@@ -3436,8 +3450,13 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             else:
                                 results.append(MetaDataItem({'file': self.dataset.absolute_to_relative(item['file'])}))
 
-                        # Save testing results
-                        results.save()
+                        if not single_file_per_fold:
+                            # Save testing results
+                            results.save()
+
+                if single_file_per_fold:
+                    # Save testing results
+                    results.save()
 
         elif self.params.get_path('recognizer.event_handling') == 'event-independent':
             message = '{name}: Event handling mode not implemented yet [{mode}]'.format(
@@ -3458,13 +3477,16 @@ class BinarySoundEventAppCore(SoundEventAppCore):
             raise ValueError(message)
 
     @before_and_after_function_wrapper
-    def system_evaluation(self):
+    def system_evaluation(self, single_file_per_fold=False):
         """System evaluation stage.
 
         Testing outputs are collected and evaluated.
 
         Parameters
         ----------
+        single_file_per_fold : bool
+            Expect single result file, otherwise expect one result file per target event.
+            (Default value=False)
 
         Returns
         -------
@@ -3507,11 +3529,27 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                     )
 
                     for fold in self._get_active_folds():
-                        result_filename = self._get_result_filename(fold=fold,
-                                                                    event_label=event_label,
-                                                                    path=self.params.get_path('path.recognizer'))
+                        if single_file_per_fold:
+                            # All results are store in single file (dcase submission format),
+                            # collect target event-wise results.
+                            # This requires that target event label is in the filename.
 
-                        results = MetaDataContainer().load(filename=result_filename)
+                            result_filename = self._get_result_filename(fold=fold,
+                                                                        path=self.params.get_path('path.recognizer'))
+                            results_all = MetaDataContainer().load(filename=result_filename)
+                            results = MetaDataContainer()
+                            for item in results_all:
+                                if event_label in item.file:
+                                    results.append(item)
+
+                        else:
+                            # Results are store in target event-wise manner
+                            result_filename = self._get_result_filename(fold=fold,
+                                                                        event_label=event_label,
+                                                                        path=self.params.get_path('path.recognizer'))
+
+                            results = MetaDataContainer().load(filename=result_filename)
+
                         for file_id, item in enumerate(self.dataset.test(fold, event_label=event_label)):
                             # Select only row which are from current file and contains only detected event
                             current_file_results = []

@@ -302,7 +302,7 @@ def main(argv):
                 if params['general']['challenge_submission_mode']:
                     params['general']['overwrite'] = True
 
-                challenge_app.system_testing()
+                challenge_app.system_testing(single_file_per_fold=True)
 
                 if params['general']['challenge_submission_mode']:
                     challenge_app.ui.line(" ")
@@ -311,7 +311,7 @@ def main(argv):
 
             # System evaluation if not in challenge submission mode
             if params['flow']['evaluate_system']:
-                challenge_app.system_evaluation()
+                challenge_app.system_evaluation(single_file_per_fold=True)
 
     return 0
 
