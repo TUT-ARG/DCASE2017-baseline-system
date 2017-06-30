@@ -121,6 +121,7 @@ import csv
 import numpy
 import hashlib
 import yaml
+import shutil
 from tqdm import tqdm
 from six import iteritems
 
@@ -828,7 +829,10 @@ class Dataset(object):
                                 progress.update()
                                 if not os.path.isfile(os.path.join(self.local_path, member.filename)):
                                     try:
-                                        z.extract(member, self.local_path)
+                                        if 'zip_password' in item:
+                                            z.extract(member=member, path=self.local_path, pwd=item['zip_password'])
+                                        else:
+                                            z.extract(member=member, path=self.local_path)
                                     except KeyboardInterrupt:
                                         # Delete latest file, since most likely it was not extracted fully
                                         os.remove(os.path.join(self.local_path, member.filename))
@@ -1594,7 +1598,7 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
 class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
     """TUT Acoustic scenes 2017 development dataset
 
-    This dataset is used in DCASE2017 - Task 1, Acoustic scene classification
+    This dataset is used in DCASE2017 - Task 2, Rare sound event detection
 
     """
 
@@ -2412,7 +2416,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
     """TUT Acoustic scenes 2017 evaluation dataset
 
-    This dataset is used in DCASE2017 - Task 1, Acoustic scene classification
+    This dataset is used in DCASE2017 - Task 2, Rare sound event detection
 
     """
 
@@ -2444,7 +2448,34 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
                 'local_package': None,
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.1.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.1.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.2.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.2.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.3.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.3.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.4.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.4.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.5.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.5.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+
         ]
+
 
     @property
     def event_labels(self, scene_label=None):
@@ -2691,7 +2722,7 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
         kwargs['storage_name'] = kwargs.get('storage_name', 'TUT-sound-events-2017-evaluation')
         super(TUTSoundEvents_2017_EvaluationSet, self).__init__(*args, **kwargs)
 
-        self.reference_data_present = True
+        self.reference_data_present = False
 
         self.dataset_group = 'sound event'
         self.dataset_meta = {
@@ -2717,6 +2748,21 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
                 'local_package': None,
                 'local_audio_path': os.path.join(self.local_path, 'audio', 'street'),
             },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-sound-events-2017-evaluation/TUT-sound-events-2017-evaluation.doc.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-evaluation.doc.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-sound-events-2017-evaluation/TUT-sound-events-2017-evaluation.meta.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-evaluation.meta.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-sound-events-2017-evaluation/TUT-sound-events-2017-evaluation.audio.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-evaluation.audio.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
         ]
 
     @property
@@ -2738,27 +2784,28 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
 
         """
 
-        if not self.meta_container.exists():
-            meta_data = MetaDataContainer()
-            for filename in self.audio_files:
-                raw_path, raw_filename = os.path.split(filename)
-                relative_path = self.absolute_to_relative(raw_path)
-                scene_label = relative_path.replace('audio', '')[1:]
-                base_filename, file_extension = os.path.splitext(raw_filename)
-                annotation_filename = os.path.join(self.local_path, relative_path.replace('audio', 'meta'),
-                                                   base_filename + '.ann')
-                data = MetaDataContainer(filename=annotation_filename).load()
-                for item in data:
-                    item['file'] = os.path.join(relative_path, raw_filename)
-                    item['scene_label'] = scene_label
-                    item['identifier'] = os.path.splitext(raw_filename)[0]
-                    item['source_label'] = 'mixture'
+        if self.reference_data_present:
+            if not self.meta_container.exists():
+                meta_data = MetaDataContainer()
+                for filename in self.audio_files:
+                    raw_path, raw_filename = os.path.split(filename)
+                    relative_path = self.absolute_to_relative(raw_path)
+                    scene_label = relative_path.replace('audio', '')[1:]
+                    base_filename, file_extension = os.path.splitext(raw_filename)
+                    annotation_filename = os.path.join(self.local_path, relative_path.replace('audio', 'meta'),
+                                                       base_filename + '.ann')
+                    data = MetaDataContainer(filename=annotation_filename).load()
+                    for item in data:
+                        item['file'] = os.path.join(relative_path, raw_filename)
+                        item['scene_label'] = scene_label
+                        item['identifier'] = os.path.splitext(raw_filename)[0]
+                        item['source_label'] = 'mixture'
 
-                meta_data += data
-            meta_data.save(filename=self.meta_container.filename)
+                    meta_data += data
+                meta_data.save(filename=self.meta_container.filename)
 
-        else:
-            self.meta_container.load()
+            else:
+                self.meta_container.load()
 
     def train(self, fold=0, scene_label=None):
         return []
@@ -2802,7 +2849,7 @@ class DCASE2017_Task4tagging_DevelopmentSet(SoundEventDataset):
 
         self.dataset_group = 'audio tagging'
         self.dataset_meta = {
-            'authors': 'Benjamin Elizalde, Emmanuel Vincent, Bhiksha Raj',
+            'authors': 'Benjamin Elizalde, Rohan Badlani, Ankit Shah, Emmanuel Vincent, Bhiksha Raj',
             'name_remote': 'Task 4 Large-scale weakly supervised sound event detection for smart cars',
             'url': 'https://github.com/ankitshah009/Task-4-Large-scale-weakly-supervised-sound-event-detection-for-smart-cars',
             'audio_source': 'Field recording',
@@ -3132,6 +3179,83 @@ class DCASE2017_Task4tagging_DevelopmentSet(SoundEventDataset):
         else:
             self.meta_container.load()
 
+
+class DCASE2017_Task4tagging_EvaluationSet(DCASE2017_Task4tagging_DevelopmentSet):
+    """DCASE 2017 Large-scale weakly supervised sound event detection for smart cars
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs['storage_name'] = kwargs.get('storage_name', 'DCASE2017-task4-evaluation')
+        super(DCASE2017_Task4tagging_DevelopmentSet, self).__init__(*args, **kwargs)
+
+        self.reference_data_present = False
+
+        self.dataset_group = 'audio tagging'
+        self.dataset_meta = {
+            'authors': 'Benjamin Elizalde, Rohan Badlani, Ankit Shah, Emmanuel Vincent, Bhiksha Raj',
+            'name_remote': 'Task 4 Large-scale weakly supervised sound event detection for smart cars',
+            'url': 'https://github.com/ankitshah009/Task-4-Large-scale-weakly-supervised-sound-event-detection-for-smart-cars',
+            'audio_source': 'Field recording',
+            'audio_type': 'Natural',
+            'recording_device_model': None,
+            'microphone_model': None,
+        }
+
+        self.crossvalidation_folds = 1
+        self.default_audio_extension = 'wav'
+
+        self.package_list = [
+            {
+                'remote_package': 'https://dl.dropboxusercontent.com/s/bbgqfd47cudwe9y/DCASE_2017_evaluation_set_audio_files.zip',
+                'local_package': os.path.join(self.local_path, 'DCASE_2017_evaluation_set_audio_files.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'zip_password': 'DCASE_2017_evaluation_set',
+            }
+        ]
+
+    def _after_extract(self, to_return=None):
+        if not os.path.exists(os.path.join(self.local_path, 'audio')):
+            os.makedirs(os.path.join(self.local_path, 'audio'))
+
+        # Get audio files at the root directory
+        audio_files = []
+        l = os.listdir(self.local_path)
+        for f in l:
+            file_name, file_extension = os.path.splitext(f)
+            if file_extension[1:] in self.audio_extensions:
+                if os.path.abspath(os.path.join(self.local_path, f)) not in audio_files:
+                    audio_files.append(os.path.abspath(os.path.join(self.local_path, f)))
+
+        # Move files to audio directory
+        for src_file in audio_files:
+            target_file = os.path.join(os.path.split(src_file)[0], 'audio', os.path.split(src_file)[1])
+            shutil.move(src=src_file, dst=target_file)
+
+    def train(self, fold=0, scene_label=None):
+        return []
+
+    def test(self, fold=0, scene_label=None):
+        if fold not in self.crossvalidation_data_test:
+            self.crossvalidation_data_test[fold] = {}
+            for scene_label_ in self.scene_labels:
+                if scene_label_ not in self.crossvalidation_data_test[fold]:
+                    self.crossvalidation_data_test[fold][scene_label_] = MetaDataContainer()
+
+                if fold == 0:
+                    for filename in self.audio_files:
+                        raw_path, raw_filename = os.path.split(filename)
+                        relative_path = self.absolute_to_relative(raw_path)
+                        self.crossvalidation_data_test[fold][scene_label_].append(MetaDataItem({'file': os.path.join(relative_path, raw_filename)}))
+
+        if scene_label:
+            return self.crossvalidation_data_test[fold][scene_label]
+        else:
+            data = MetaDataContainer()
+            for scene_label_ in self.scene_labels:
+                data += self.crossvalidation_data_test[fold][scene_label_]
+
+            return data
 
 # =====================================================
 # DCASE 2016
