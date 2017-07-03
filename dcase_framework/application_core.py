@@ -3534,8 +3534,11 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             # collect target event-wise results.
                             # This requires that target event label is in the filename.
 
-                            result_filename = self._get_result_filename(fold=fold,
-                                                                        path=self.params.get_path('path.recognizer'))
+                            result_filename = self._get_result_filename(
+                                fold=fold,
+                                path=self.params.get_path('path.recognizer')
+                            )
+
                             results_all = MetaDataContainer().load(filename=result_filename)
                             results = MetaDataContainer()
                             for item in results_all:
@@ -3544,23 +3547,28 @@ class BinarySoundEventAppCore(SoundEventAppCore):
 
                         else:
                             # Results are store in target event-wise manner
-                            result_filename = self._get_result_filename(fold=fold,
-                                                                        event_label=event_label,
-                                                                        path=self.params.get_path('path.recognizer'))
+                            result_filename = self._get_result_filename(
+                                fold=fold,
+                                event_label=event_label,
+                                path=self.params.get_path('path.recognizer')
+                            )
 
                             results = MetaDataContainer().load(filename=result_filename)
 
-                        for file_id, item in enumerate(self.dataset.test(fold, event_label=event_label)):
+                        for file_id, audio_filename in enumerate(self.dataset.test(fold, event_label=event_label).file_list):
+
                             # Select only row which are from current file and contains only detected event
                             current_file_results = []
                             for result_item in results.filter(
-                                    filename=posix_path(self.dataset.absolute_to_relative(item['file']))
+                                    filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
                                 if 'event_label' in result_item and result_item.event_label:
                                     current_file_results.append(result_item)
 
                             meta = []
-                            for meta_item in self.dataset.file_meta(self.dataset.absolute_to_relative(item['file'])):
+                            for meta_item in self.dataset.file_meta(
+                                    filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
+                            ):
                                 if 'event_label' in meta_item and meta_item.event_label:
                                     meta.append(meta_item)
 
