@@ -1602,7 +1602,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 reference_scene_list = self.dataset.eval(fold=fold)
 
                 for item in reference_scene_list:
-                    item['file'] = self.dataset.absolute_to_relative(item['file'])
+                    item['file'] = posix_path(self.dataset.absolute_to_relative(item['file']))
 
                 scene_metric.evaluate(reference_scene_list=reference_scene_list,
                                       estimated_scene_list=estimated_scene_list)
