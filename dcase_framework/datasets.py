@@ -2803,6 +2803,7 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
 
                     meta_data += data
                 meta_data.save(filename=self.meta_container.filename)
+                self.meta_container.load()
 
             else:
                 self.meta_container.load()
@@ -3209,7 +3210,7 @@ class DCASE2017_Task4tagging_EvaluationSet(DCASE2017_Task4tagging_DevelopmentSet
             {
                 'remote_package': 'https://dl.dropboxusercontent.com/s/bbgqfd47cudwe9y/DCASE_2017_evaluation_set_audio_files.zip',
                 'local_package': os.path.join(self.local_path, 'DCASE_2017_evaluation_set_audio_files.zip'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path),
                 'zip_password': 'DCASE_2017_evaluation_set',
             }
         ]
@@ -3227,10 +3228,30 @@ class DCASE2017_Task4tagging_EvaluationSet(DCASE2017_Task4tagging_DevelopmentSet
                 if os.path.abspath(os.path.join(self.local_path, f)) not in audio_files:
                     audio_files.append(os.path.abspath(os.path.join(self.local_path, f)))
 
-        # Move files to audio directory
-        for src_file in audio_files:
-            target_file = os.path.join(os.path.split(src_file)[0], 'audio', os.path.split(src_file)[1])
-            shutil.move(src=src_file, dst=target_file)
+        reference_data_file = os.path.join(self.local_path, 'groundtruth_strong_label_evaluation_set.csv')
+        if not self.meta_container.exists() and os.path.exists(reference_data_file):
+            # Reference data is prensent and but meta data is empty
+            meta_data = MetaDataContainer()
+            ref_data = MetaDataContainer().load(filename=reference_data_file)
+            for item in ref_data:
+                # Modify audio file path
+                item['file'] = os.path.join('Y' + os.path.splitext(item['file'])[0] + '.' + self.default_audio_extension)
+
+                # Set scene label
+                item['scene_label'] = 'youtube'
+
+                # Only collect items which exists
+                if os.path.isfile(os.path.join(self.local_path, item['file'])):
+                    meta_data.append(item)
+            # Save meta data
+            meta_data.save(filename=self.meta_container.filename)
+
+            # Load new meta data
+            self.meta_container.load()
+
+        else:
+            # Load meta data if present
+            self.meta_container.load()
 
     def train(self, fold=0, scene_label=None):
         return []
