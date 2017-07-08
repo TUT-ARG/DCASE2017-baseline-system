@@ -1080,7 +1080,7 @@ class Dataset(object):
 
         """
 
-        return self.error_meta.filter(file=self.absolute_to_relative(filename))
+        return self.error_meta.filter(filename=self.absolute_to_relative(filename))
 
     def relative_to_absolute_path(self, path):
         """Converts relative path into absolute path.
