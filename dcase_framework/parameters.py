@@ -1059,7 +1059,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
     def _process_learner_method_parameters(self):
         for method, data in iteritems(self['learner_method_parameters']):
             data = DottedDict(data)
-            if data.get_path('training.epoch_processing.enable'):
+            if data.get_path('training.epoch_processing.enable') and not data.get_path('training.epoch_processing.recognizer'):
                 data['training']['epoch_processing']['recognizer'] = self.get_path('recognizer')
 
     def _process_recognizer(self):
