@@ -1661,6 +1661,19 @@ class AcousticSceneClassificationAppCore(AppCore):
                 acc=results['overall']['accuracy'] * 100)
             output += fold_values + '\n'
 
+            fold_values = ''
+            if len(results_fold) > 1:
+                for fold in self._get_active_folds():
+                    fold_values += " {:5.1f} %  |".format(results_fold[fold - 1]['class_wise_average']['accuracy']['accuracy'] * 100)
+
+            output += "     {label:20s} | {ref:4s} : {sys:4s} | {acc:5.1f} %  |  |".format(
+                label='Average class acc.',
+                ref=' ',
+                sys=' ',
+                acc=results['class_wise_average']['accuracy']['accuracy'] * 100)
+
+            output += fold_values + '\n'
+
             if self.params.get_path('evaluator.saving.enable'):
                 filename = self.params.get_path('evaluator.saving.filename').format(
                     dataset_name=self.dataset.storage_name,
