@@ -552,7 +552,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
 
             # 3. Inject dependencies
             for section in section_list:
-                if self[section] and self.magic_field['parameters'] in self[section]:
+                if isinstance(self[section], dict) and self[section] and self.magic_field['parameters'] in self[section]:
                     for key, item in iteritems(self[section][self.magic_field['parameters']]):
                         if (section in self.method_dependencies and
                             key in self.method_dependencies[section] and self.method_dependencies[section][key]):
@@ -968,7 +968,7 @@ class ParameterContainer(ParameterFile, ContainerMixin):
 
     def _convert_main_level_to_dotted(self):
         for key, item in iteritems(self):
-            if self.magic_field['parameters'] in item:
+            if isinstance(item, dict) and self.magic_field['parameters'] in item:
                 item[self.magic_field['parameters']] = DottedDict(item[self.magic_field['parameters']])
             if isinstance(item, dict):
                 self[key] = DottedDict(item)
