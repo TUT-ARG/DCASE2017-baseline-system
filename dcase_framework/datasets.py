@@ -1511,7 +1511,42 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
                 'remote_package': None,
                 'local_package': None,
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
-            }
+            },
+            {
+                'remote_package': None,
+                'local_package': None,
+                'local_audio_path': os.path.join(self.local_path, 'audio', 'street'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.doc.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.doc.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.meta.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.meta.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.1.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.1.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.2.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.2.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.3.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.3.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.4.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.4.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
         ]
 
     def _after_extract(self, to_return=None):
@@ -1719,17 +1754,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_events.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_events.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
-            },
-            {
-                'remote_package': 'https://raw.githubusercontent.com/TUT-ARG/TUT_Rare_sound_events_mixture_synthesizer/master/affected_files.txt',
-                'local_package': os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer', 'affected_files.txt'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
-            },
-            {
-                'remote_package': 'https://raw.githubusercontent.com/TUT-ARG/TUT_Rare_sound_events_mixture_synthesizer/master/dcase2017_task2_patcher.py',
-                'local_package': os.path.join(self.local_path, 'TUT_Rare_sound_events_mixture_synthesizer', 'dcase2017_task2_patcher.py'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
-            },
+            }
         ]
 
     @property
