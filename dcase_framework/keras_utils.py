@@ -864,6 +864,7 @@ class KerasMixin(object):
 
         self.keras_setup_done = True
 
+
 class BaseCallback(object):
     """Base class for Callbacks
     """
