@@ -3274,8 +3274,8 @@ class DCASE2017_Task4tagging_EvaluationSet(DCASE2017_Task4tagging_DevelopmentSet
             # Load new meta data
             self.meta_container.load()
 
-        else:
-            # Load meta data if present
+        # Load meta data if present
+        if self.meta_container.exists():
             self.meta_container.load()
 
     def train(self, fold=0, scene_label=None):
