@@ -3271,9 +3271,6 @@ class DCASE2017_Task4tagging_EvaluationSet(DCASE2017_Task4tagging_DevelopmentSet
             # Save meta data
             meta_data.save(filename=self.meta_container.filename)
 
-            # Load new meta data
-            self.meta_container.load()
-
         # Load meta data if present
         if self.meta_container.exists():
             self.meta_container.load()
