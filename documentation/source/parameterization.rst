@@ -638,10 +638,11 @@ This learner is using Keras neural network implementation. See `documentation <h
 |                                |              |   for Task2.                                                                 |
 |                                |              | - ``generated_scene_location_event_balanced``, balanced based on             |
 |                                |              |   scene, location and events. Used for Task3.                                |
+|                                |              | - ``dataset``, validation set specified by dataset in use.                   |
 |                                |              |                                                                              |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
 | validation_amount              | float        | Percentage of training data selected for validation. Use value               |
-|                                |              | between 0.0-1.0.                                                             |
+|                                |              | between 0.0-1.0. Valid only if validation setup is generated.                |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
 | seed                           | int          | Validation set generation seed. If Null, learner seed will be used.          |
 +--------------------------------+--------------+------------------------------------------------------------------------------+
