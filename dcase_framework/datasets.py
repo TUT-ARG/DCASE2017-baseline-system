@@ -1266,7 +1266,7 @@ class SoundEventDataset(Dataset):
         labels.sort()
         return labels
 
-    def train(self, fold=0, scene_label=None):
+    def train(self, fold=0, scene_label=None, event_label=None):
         """List of training items.
 
         Parameters
@@ -1312,7 +1312,7 @@ class SoundEventDataset(Dataset):
 
             return data
 
-    def test(self, fold=0, scene_label=None):
+    def test(self, fold=0, scene_label=None, event_label=None):
         """List of testing items.
 
         Parameters
@@ -1360,7 +1360,7 @@ class SoundEventDataset(Dataset):
 
             return data
 
-    def eval(self, fold=0, scene_label=None):
+    def eval(self, fold=0, scene_label=None, event_label=None):
         """List of evaluation items.
 
         Parameters
@@ -1408,7 +1408,7 @@ class SoundEventDataset(Dataset):
 
             return data
 
-    def train_files(self, fold=0, scene_label=None):
+    def train_files(self, fold=0, scene_label=None, event_label=None):
         """List of training files.
 
         Parameters
@@ -1419,6 +1419,9 @@ class SoundEventDataset(Dataset):
         scene_label : str
             Scene label
             (Default value "None")
+        event_label : str
+            Event label
+            (Default value "None")
 
         Returns
         -------
@@ -1427,9 +1430,9 @@ class SoundEventDataset(Dataset):
 
         """
 
-        return self.train(fold=fold, scene_label=scene_label).file_list
+        return self.train(fold=fold, scene_label=scene_label, event_label=event_label).file_list
 
-    def test_files(self, fold=0, scene_label=None):
+    def test_files(self, fold=0, scene_label=None, event_label=None):
         """List of testing files.
 
         Parameters
@@ -1440,6 +1443,9 @@ class SoundEventDataset(Dataset):
         scene_label : str
             Scene label
             (Default value "None")
+        event_label : str
+            Event label
+            (Default value "None")
 
         Returns
         -------
@@ -1448,9 +1454,9 @@ class SoundEventDataset(Dataset):
 
         """
 
-        return self.test(fold=fold, scene_label=scene_label).file_list
+        return self.test(fold=fold, scene_label=scene_label, event_label=event_label).file_list
 
-    def eval_files(self, fold=0, scene_label=None):
+    def eval_files(self, fold=0, scene_label=None, event_label=None):
         """List of evaluation files.
 
         Parameters
@@ -1461,6 +1467,9 @@ class SoundEventDataset(Dataset):
         scene_label : str
             Scene label
             (Default value "None")
+        event_label : str
+            Event label
+            (Default value "None")
 
         Returns
         -------
@@ -1469,9 +1478,9 @@ class SoundEventDataset(Dataset):
 
         """
 
-        return self.eval(fold=fold, scene_label=scene_label).file_list
+        return self.eval(fold=fold, scene_label=scene_label, event_label=event_label).file_list
 
-    def validation_files(self, fold=0, scene_label=None):
+    def validation_files(self, fold=0, scene_label=None, event_label=None):
         """List of validation files if they are specified by the dataset. Validation files are always subset of training files.
 
         Parameters
@@ -1481,6 +1490,9 @@ class SoundEventDataset(Dataset):
             (Default value=0)
         scene_label : str
             Scene label
+            (Default value "None")
+        event_label : str
+            Event label
             (Default value "None")
 
         Returns
@@ -1991,7 +2003,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
         labels.sort()
         return labels
 
-    def train(self, fold=0, event_label=None):
+    def train(self, fold=0, scene_label=None, event_label=None):
         """List of training items.
 
         Parameters
@@ -2080,7 +2092,7 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
             return data
 
-    def test(self, fold=0, event_label=None):
+    def test(self, fold=0, scene_label=None, event_label=None):
         """List of testing items.
 
         Parameters
@@ -2717,7 +2729,6 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
 
         ]
 
-
     @property
     def event_labels(self, scene_label=None):
         """List of unique event labels in the meta data.
@@ -2758,10 +2769,10 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
             self.logger.exception(message)
             raise IOError(message)
 
-    def train(self, fold=0, event_label=None):
+    def train(self, fold=0, scene_label=None, event_label=None):
         return []
 
-    def test(self, fold=0, event_label=None):
+    def test(self, fold=0, scene_label=None, event_label=None):
         """List of testing items.
 
         Parameters
