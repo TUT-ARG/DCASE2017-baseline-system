@@ -1272,7 +1272,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 )
 
                 # Collect training examples
-                train_meta = self.dataset.train(fold)
+                train_meta = self.dataset.train(fold=fold)
                 data = {}
                 data_filelist = {}
                 annotations = {}
@@ -1330,6 +1330,7 @@ class AcousticSceneClassificationAppCore(AppCore):
 
                     annotations[audio_filename] = train_meta.filter(filename=audio_filename)[0]
 
+                # Get learner
                 learner = self._get_learner(
                     method=self.params.get_path('learner.method'),
                     class_labels=self.dataset.scene_labels,
@@ -1346,11 +1347,17 @@ class AcousticSceneClassificationAppCore(AppCore):
                     data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
                 )
 
+                # Get validation files from dataset
+                validation_files = self.dataset.validation_files(fold=fold)
+
+                # Start learning
                 learner.learn(
                     data=data,
                     annotations=annotations,
-                    data_filenames=data_filelist
+                    data_filenames=data_filelist,
+                    validation_files=validation_files
                 )
+
                 learner.save()
 
             if self.params.get_path('learner.show_model_information'):
@@ -2128,7 +2135,7 @@ class SoundEventAppCore(AppCore):
                         )
 
                         # Collect training examples
-                        train_meta = self.dataset.train(fold, scene_label=scene_label)
+                        train_meta = self.dataset.train(fold=fold, scene_label=scene_label)
                         data = {}
                         data_filelist = {}
                         annotations = {}
@@ -2180,6 +2187,7 @@ class SoundEventAppCore(AppCore):
                         if self.log_system_progress:
                             self.logger.info(' ')
 
+                        # Get learner
                         learner = self._get_learner(
                             method=self.params.get_path('learner.method'),
                             class_labels=self.dataset.event_labels(scene_label=scene_label),
@@ -2195,10 +2203,15 @@ class SoundEventAppCore(AppCore):
                             data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
                         )
 
+                        # Get validation files from dataset
+                        validation_files = self.dataset.validation_files(fold=fold, scene_label=scene_label)
+
+                        # Start learning
                         learner.learn(
                             data=data,
                             annotations=annotations,
-                            data_filenames=data_filelist
+                            data_filenames=data_filelist,
+                            validation_files=validation_files
                         )
 
                         learner.save()
@@ -2434,6 +2447,7 @@ class SoundEventAppCore(AppCore):
                 overall_metrics_per_scene = {}
 
                 scene_labels = self.dataset.scene_labels
+
                 # Select only active scenes
                 if self.params.get_path('evaluator.active_scenes'):
                     scene_labels = list(
@@ -2469,14 +2483,14 @@ class SoundEventAppCore(AppCore):
                         for file_id, audio_filename in enumerate(self.dataset.test(fold, scene_label=scene_label).file_list):
 
                             # Select only row which are from current file and contains only detected event
-                            current_file_results = []
+                            current_file_results = MetaDataContainer()
                             for result_item in results.filter(
                                     filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
                                 if 'event_label' in result_item and result_item.event_label:
                                     current_file_results.append(result_item)
 
-                            meta = []
+                            meta = MetaDataContainer()
                             for meta_item in self.dataset.file_meta(
                                     filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
@@ -3169,7 +3183,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                         if self.log_system_progress:
                             self.logger.info(' ')
 
-                        # Learner
+                        # Get learner
                         learner = self._get_learner(
                             method=self.params.get_path('learner.method'),
                             class_labels=[event_label],
@@ -3184,10 +3198,16 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             log_progress=self.log_system_progress,
                             data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
                         )
+
+                        # Get validation files from dataset
+                        validation_files = self.dataset.validation_files(fold, event_label=event_label)
+
+                        # Start learning
                         learner.learn(
-                            annotations=annotations,
                             data=data,
-                            data_filenames=data_filelist
+                            annotations=annotations,
+                            data_filenames=data_filelist,
+                            validation_files=validation_files
                         )
 
                         # Save model
