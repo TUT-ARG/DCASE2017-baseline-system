@@ -51,6 +51,10 @@ Usage examples:
     Dataset.train
     Dataset.test
     Dataset.eval
+    Dataset.train_files
+    Dataset.test_files
+    Dataset.eval_files
+    Dataset.validation_files
     Dataset.folds
     Dataset.file_meta
     Dataset.file_error_meta
@@ -1027,6 +1031,78 @@ class Dataset(object):
 
         return self.crossvalidation_data_eval[fold]
 
+    def train_files(self, fold=0):
+        """List of training files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to training set for given fold.
+
+        """
+
+        return self.train(fold=fold).file_list
+
+    def test_files(self, fold=0):
+        """List of testing files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to testing set for given fold.
+
+        """
+
+        return self.test(fold=fold).file_list
+
+    def eval_files(self, fold=0):
+        """List of evaluation files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to testing set for given fold.
+
+        """
+
+        return self.eval(fold=fold).file_list
+
+    def validation_files(self, fold=0):
+        """List of validation files if they are specified by the dataset. Validation files are always subset of training files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to training set for given fold.
+            (Default value=[])
+
+        """
+        return []
+
     def folds(self, mode='folds'):
         """List of fold ids
 
@@ -1186,6 +1262,7 @@ class SoundEventDataset(Dataset):
             labels = self.meta_container.filter(scene_label=scene_label).unique_event_labels
         else:
             labels = self.meta_container.unique_event_labels
+
         labels.sort()
         return labels
 
@@ -1199,7 +1276,7 @@ class SoundEventDataset(Dataset):
             (Default value=0)
         scene_label : str
             Scene label
-            Default value "None"
+            (Default value "None")
 
         Returns
         -------
@@ -1227,6 +1304,7 @@ class SoundEventDataset(Dataset):
 
         if scene_label:
             return self.crossvalidation_data_train[fold][scene_label]
+
         else:
             data = MetaDataContainer()
             for scene_label_ in self.scene_labels:
@@ -1244,7 +1322,7 @@ class SoundEventDataset(Dataset):
             (Default value=0)
         scene_label : str
             Scene label
-            Default value "None"
+            (Default value "None")
 
         Returns
         -------
@@ -1274,12 +1352,145 @@ class SoundEventDataset(Dataset):
 
         if scene_label:
             return self.crossvalidation_data_test[fold][scene_label]
+
         else:
             data = MetaDataContainer()
             for scene_label_ in self.scene_labels:
                 data += self.crossvalidation_data_test[fold][scene_label_]
 
             return data
+
+    def eval(self, fold=0, scene_label=None):
+        """List of evaluation items.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+        scene_label : str
+            Scene label
+            (Default value "None")
+
+        Returns
+        -------
+        list : list of dicts
+            List containing all meta data assigned to testing set for given fold.
+
+        """
+
+        if fold not in self.crossvalidation_data_eval:
+            self.crossvalidation_data_eval[fold] = []
+            for scene_label_ in self.scene_labels:
+                if scene_label_ not in self.crossvalidation_data_eval[fold]:
+                    self.crossvalidation_data_eval[fold][scene_label_] = MetaDataContainer()
+                if fold > 0:
+                    self.crossvalidation_data_eval[fold][scene_label_] = MetaDataContainer(
+                        filename=self._get_evaluation_setup_filename(
+                            setup_part='test', fold=fold, scene_label=scene_label_)
+                    ).load()
+
+                else:
+                    self.crossvalidation_data_eval[0][scene_label_] = self.meta_container.filter(
+                        scene_label=scene_label_
+                    )
+
+                for item in self.crossvalidation_data_eval[fold][scene_label_]:
+                    item['file'] = self.relative_to_absolute_path(item['file'])
+
+        if scene_label:
+            return self.crossvalidation_data_eval[fold][scene_label]
+
+        else:
+            data = MetaDataContainer()
+            for scene_label_ in self.scene_labels:
+                data += self.crossvalidation_data_eval[fold][scene_label_]
+
+            return data
+
+    def train_files(self, fold=0, scene_label=None):
+        """List of training files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+        scene_label : str
+            Scene label
+            (Default value "None")
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to training set for given fold.
+
+        """
+
+        return self.train(fold=fold, scene_label=scene_label).file_list
+
+    def test_files(self, fold=0, scene_label=None):
+        """List of testing files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+        scene_label : str
+            Scene label
+            (Default value "None")
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to testing set for given fold.
+
+        """
+
+        return self.test(fold=fold, scene_label=scene_label).file_list
+
+    def eval_files(self, fold=0, scene_label=None):
+        """List of evaluation files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+        scene_label : str
+            Scene label
+            (Default value "None")
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to testing set for given fold.
+
+        """
+
+        return self.eval(fold=fold, scene_label=scene_label).file_list
+
+    def validation_files(self, fold=0, scene_label=None):
+        """List of validation files if they are specified by the dataset. Validation files are always subset of training files.
+
+        Parameters
+        ----------
+        fold : int > 0 [scalar]
+            Fold id, if zero all meta data is returned.
+            (Default value=0)
+        scene_label : str
+            Scene label
+            (Default value "None")
+
+        Returns
+        -------
+        list : list of filenames
+            List containing all files assigned to training set for given fold.
+            Default value=[]
+        """
+
+        return []
 
 
 class SyntheticSoundEventDataset(SoundEventDataset):
@@ -1303,7 +1514,12 @@ class SyntheticSoundEventDataset(SoundEventDataset):
 
     @before_and_after_function_wrapper
     def synthesize(self):
-        pass
+        message = '{name}: Implement synthesize method.'.format(
+            name=self.__class__.__name__
+        )
+
+        self.logger.exception(message)
+        raise AssertionError(message)
 
 
 class AudioTaggingDataset(Dataset):
@@ -3859,3 +4075,5 @@ class TUTSoundEvents_2016_EvaluationSet(SoundEventDataset):
                 for item in self.crossvalidation_data_test[fold][scene_label_]:
                     data.append(item)
             return data
+
+
