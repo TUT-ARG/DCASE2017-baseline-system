@@ -4077,3 +4077,129 @@ class TUTSoundEvents_2016_EvaluationSet(SoundEventDataset):
             return data
 
 
+class TUT_SED_Synthetic_2016(SoundEventDataset):
+    """TUT SED Synthetic 2016
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        kwargs['storage_name'] = kwargs.get('storage_name', 'TUT-SED-synthetic-2016')
+        super(TUT_SED_Synthetic_2016, self).__init__(*args, **kwargs)
+
+        self.dataset_group = 'sound event'
+        self.dataset_meta = {
+            'authors': 'Emre Cakir',
+            'name_remote': 'TUT-SED Synthetic 2016',
+            'url': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/tut-sed-synthetic-2016',
+            'audio_source': 'Field recording',
+            'audio_type': 'Synthetic',
+            'recording_device_model': 'Unknown',
+            'microphone_model': 'Unknown',
+        }
+
+        self.crossvalidation_folds = 1
+
+        self.package_list = [
+            {
+                'remote_package': None,
+                'local_package': None,
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/datasets/TUT-SED-synthetic-2016/TUT-SED-synthetic-2016.audio.1.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-SED-synthetic-2016.audio.1.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/datasets/TUT-SED-synthetic-2016/TUT-SED-synthetic-2016.audio.2.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-SED-synthetic-2016.audio.2.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/datasets/TUT-SED-synthetic-2016/TUT-SED-synthetic-2016.audio.3.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-SED-synthetic-2016.audio.3.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/datasets/TUT-SED-synthetic-2016/TUT-SED-synthetic-2016.audio.4.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-SED-synthetic-2016.audio.4.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/datasets/TUT-SED-synthetic-2016/TUT-SED-synthetic-2016.audio.5.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-SED-synthetic-2016.audio.5.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+            {
+                'remote_package': 'http://www.cs.tut.fi/sgn/arg/taslp2017-crnn-sed/datasets/TUT-SED-synthetic-2016/TUT-SED-synthetic-2016.meta.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-SED-synthetic-2016.meta.zip'),
+                'local_audio_path': os.path.join(self.local_path, 'audio'),
+            },
+        ]
+
+    def _after_extract(self, to_return=None):
+        """After dataset packages are downloaded and extracted, meta-files are checked.
+
+        Parameters
+        ----------
+        nothing
+
+        Returns
+        -------
+        nothing
+
+        """
+
+        if not self.meta_container.exists():
+            meta_data = MetaDataContainer()
+            for filename in self.audio_files:
+                raw_path, raw_filename = os.path.split(filename)
+
+                relative_path = self.absolute_to_relative(raw_path)
+                base_filename, file_extension = os.path.splitext(raw_filename)
+                annotation_filename = os.path.join(
+                    self.local_path,
+                    relative_path.replace('audio', 'meta'),
+                    base_filename.replace('-mix-', '-annot-') + '.txt'
+                )
+
+                data = MetaDataContainer(filename=annotation_filename).load()
+                for item in data:
+                    item['file'] = os.path.join(relative_path, raw_filename)
+                    item['scene_label'] = 'synthetic'
+                    item['source_label'] = 'mixture'
+
+                meta_data += data
+
+            self.meta_container.update(meta_data)
+            self.meta_container.save()
+        else:
+            self.meta_container.load()
+
+    def _get_evaluation_setup_filename(self, setup_part='train', fold=None, scene_label=None, file_extension='txt'):
+        parts = []
+        if scene_label:
+            parts.append(scene_label)
+
+        if fold:
+            parts.append('fold' + str(fold))
+
+        if setup_part == 'train':
+            return os.path.join(self.evaluation_setup_path, 'train+validate' + '.' + file_extension)
+        elif setup_part == 'test':
+            return os.path.join(self.evaluation_setup_path, 'test' + '.' + file_extension)
+        elif setup_part == 'validate':
+            return os.path.join(self.evaluation_setup_path, 'validate' + '.' + file_extension)
+        elif setup_part == 'evaluate':
+            return os.path.join(self.evaluation_setup_path, 'evaluate' + '.' + file_extension)
+
+    def validation_files(self, fold=0, scene_label=None):
+        validation_files = MetaDataContainer(
+            filename=self._get_evaluation_setup_filename(setup_part='validate', fold=fold)
+        ).load().file_list
+
+        for index, filename in enumerate(validation_files):
+            validation_files[index] = self.relative_to_absolute_path(filename)
+
+        return validation_files
+
