@@ -63,7 +63,7 @@ import logging
 import logging.config
 import yaml
 import pkg_resources
-
+from .containers import DottedDict
 
 def get_parameter_hash(params):
     """Get unique hash string (md5) for given parameter dict
@@ -226,6 +226,7 @@ def setup_logging(parameter_container=None,
         else:
             logging.basicConfig(level=default_level)
     else:
+        parameter_container = DottedDict(parameter_container)
         logging.config.dictConfig(parameter_container.get('parameters'))
         if (parameter_container.get('colored', False) and
            'console' in parameter_container.get_path('parameters.handlers')):
