@@ -194,7 +194,7 @@ import logging
 import soundfile
 import copy
 from .decorators import before_and_after_function_wrapper
-from .containers import DottedDict
+from .containers import DottedDict, ContainerMixin
 
 
 class FileMixin(object):
@@ -310,7 +310,7 @@ class FileMixin(object):
             return False
 
 
-class DictFile(dict, FileMixin):
+class DictFile(dict, FileMixin, ContainerMixin):
     """File class inherited from dict, valid file formats [yaml, json, cpickle, marshal, msgpack, txt]"""
     valid_formats = ['yaml', 'json', 'cpickle', 'marshal', 'msgpack', 'txt']
 
@@ -994,4 +994,5 @@ class FeatureFile(DictFile):
 class RepositoryFile(DictFile):
     """File class for repository files, Inherited from DictFile, valid file formats [cpickle]"""
     valid_formats = ['cpickle']
+
 
