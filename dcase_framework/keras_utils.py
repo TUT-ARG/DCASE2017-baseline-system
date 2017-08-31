@@ -1030,10 +1030,6 @@ class ProgressLoggerCallback(BaseCallback):
         self.header_show = False
         self.last_update_epoch = 0
 
-        if kwargs.get('count_mode', 'samples') == 'samples':
-            self.use_steps = False
-        elif kwargs.get('count_mode', 'samples') == 'steps':
-            self.use_steps = True
         self.target = None
 
     def on_train_begin(self, logs=None):
@@ -1132,9 +1128,10 @@ class ProgressLoggerCallback(BaseCallback):
 
     def on_epoch_begin(self, epoch, logs=None):
         self.epoch = epoch + 1
-        if self.use_steps:
+
+        if 'steps' in self.params:
             self.target = self.params['steps']
-        else:
+        elif 'samples' in self.params:
             self.target = self.params['samples']
 
         self.seen = 0
