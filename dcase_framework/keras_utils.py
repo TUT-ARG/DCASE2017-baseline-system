@@ -1138,7 +1138,7 @@ class ProgressLoggerCallback(BaseCallback):
         self.timer.start()
 
     def on_batch_begin(self, batch, logs=None):
-        if self.seen < self.target:
+        if self.target and self.seen < self.target:
             self.log_values = []
 
     def on_batch_end(self, batch, logs=None):
