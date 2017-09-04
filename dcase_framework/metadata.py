@@ -1010,7 +1010,7 @@ class MetaDataContainer(ListFile):
             raise IOError('{0}: File not found [{1}]'.format(self.__class__.__name__, self.filename))
 
         data = []
-        with open(self.filename, 'rt') as f:
+        with open(self.filename, 'rtU') as f:
             for row in csv.reader(f, delimiter=self._delimiter):
                 if row:
                     row_format = []

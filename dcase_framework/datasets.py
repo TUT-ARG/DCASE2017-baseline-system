@@ -4087,7 +4087,6 @@ class TUTSoundEvents_2016_EvaluationSet(SoundEventDataset):
                     data.append(item)
             return data
 
-
 class TUT_SED_Synthetic_2016(SoundEventDataset):
     """TUT SED Synthetic 2016
 
