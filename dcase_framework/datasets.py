@@ -1526,12 +1526,7 @@ class SyntheticSoundEventDataset(SoundEventDataset):
 
     @before_and_after_function_wrapper
     def synthesize(self):
-        message = '{name}: Implement synthesize method.'.format(
-            name=self.__class__.__name__
-        )
-
-        self.logger.exception(message)
-        raise AssertionError(message)
+        pass
 
 
 class AudioTaggingDataset(Dataset):
@@ -4087,6 +4082,218 @@ class TUTSoundEvents_2016_EvaluationSet(SoundEventDataset):
                     data.append(item)
             return data
 
+
+class CHiMEHome_DomesticAudioTag_DevelopmentSet(AudioTaggingDataset):
+    def __init__(self, *args, **kwargs):
+        kwargs['storage_name'] = kwargs.get('storage_name', 'CHiMeHome-audiotag-development')
+        super(CHiMEHome_DomesticAudioTag_DevelopmentSet, self).__init__(*args, **kwargs)
+
+        self.dataset_group = 'audio tagging'
+        self.dataset_meta = {
+            'authors': 'Peter Foster, Siddharth Sigtia, Sacha Krstulovic, Jon Barker, and Mark Plumbley',
+            'name_remote': 'The CHiME-Home dataset is a collection of annotated domestic environment audio recordings',
+            'url': None,
+            'audio_source': 'Field recording',
+            'audio_type': 'Natural',
+            'recording_device_model': 'Unknown',
+            'microphone_model': 'Unknown',
+        }
+
+        self.crossvalidation_folds = 5
+        self.sample_mode = '.16kHz'
+
+        self.package_list = [
+            {
+                'remote_package': 'https://archive.org/download/chime-home/chime_home.tar.gz',
+                'local_package': os.path.join(self.local_path, 'chime_home.tar.gz'),
+                'local_audio_path': os.path.join(self.local_path, 'chime_home', 'chunks'),
+            },
+        ]
+
+    @property
+    def audio_files(self):
+        """Get all audio files in the dataset, use only files from CHime-Home-refined set.
+
+        Parameters
+        ----------
+        nothing
+
+        Returns
+        -------
+        files : list
+            audio files
+
+        """
+
+        if self.files is None:
+            self.files = []
+            for item in self.package_list:
+                path = item['local_audio_path']
+                if path:
+                    l = os.listdir(path)
+                    for f in l:
+                        file_name, file_extension = os.path.splitext(f)
+                        if file_extension[1:] in self.audio_extensions and file_name.endswith(self.sample_mode):
+                            if os.path.abspath(os.path.join(path, f)) not in self.files:
+                                self.files.append(os.path.abspath(os.path.join(path, f)))
+            self.files.sort()
+        return self.files
+
+    def read_chunk_meta(self, meta_filename):
+        if os.path.isfile(meta_filename):
+            meta_file_handle = open(meta_filename, 'rt')
+            try:
+                meta_file_reader = csv.reader(meta_file_handle, delimiter=',')
+                data = {}
+                for meta_file_row in meta_file_reader:
+                    data[meta_file_row[0]] = meta_file_row[1]
+            finally:
+                meta_file_handle.close()
+            return data
+
+    def read_file_list(self, filename):
+        files = []
+        meta_data_handle = open(os.path.join(self.local_path, 'chime_home', filename))
+        try:
+            meta_file_reader = csv.reader(meta_data_handle, delimiter=',')
+            for meta_file_row in meta_file_reader:
+                files.append(meta_file_row[1])
+        finally:
+            meta_data_handle.close()
+        return files
+
+    def tagcode_to_taglabel(self, tag):
+        map = {'c': 'child speech',
+               'm': 'adult male speech',
+               'f': 'adult female speech',
+               'v': 'video game/tv',
+               'p': 'percussive sound',
+               'b': 'broadband noise',
+               'o': 'other',
+               'S': 'silence/background',
+               'U': 'unidentifiable'
+               }
+        if tag in map:
+            return map[tag]
+        else:
+            return None
+
+    def _after_extract(self, to_return=None):
+        """After dataset packages are downloaded and extracted, meta-files are checked.
+
+        Legacy dataset meta files are converted to be compatible with current scheme.
+
+        Parameters
+        ----------
+        nothing
+
+        Returns
+        -------
+        nothing
+
+        """
+
+        if not self.meta_container.exists():
+            scene_label = 'home'
+
+            files = self.read_file_list('development_chunks_refined.csv') + self.read_file_list('evaluation_chunks_refined.csv')
+            meta = []
+            for filename in self.audio_files:
+                raw_path, raw_filename = os.path.split(filename)
+                relative_path = self.absolute_to_relative(raw_path)
+
+                base_filename, file_extension = os.path.splitext(raw_filename)
+                annotation_filename = os.path.join(raw_path, base_filename.replace(self.sample_mode, '') + '.csv')
+                meta_data = self.read_chunk_meta(annotation_filename)
+                tags = []
+                for i, tag in enumerate(meta_data['majorityvote']):
+                    if tag is 'b':
+                        print(filename)
+
+                    if tag is not 'S' and tag is not 'U':
+                        tags.append(self.tagcode_to_taglabel(tag))
+
+                meta.append(
+                    MetaDataItem({
+                        'file': os.path.join(relative_path, raw_filename),
+                        'scene_label': scene_label,
+                        'tags': ';'.join(tags)+';',
+                    })
+                )
+            self.meta_container.update(meta)
+            self.meta_container.save()
+        else:
+            self.meta_container.load()
+
+        all_folds_found = True
+        for fold in xrange(1, self.crossvalidation_folds):
+            train_filename = os.path.join(self.evaluation_setup_path,
+                                          self._get_evaluation_setup_filename(setup_part='train', fold=fold))
+            test_filename = os.path.join(self.evaluation_setup_path,
+                                         self._get_evaluation_setup_filename(setup_part='test', fold=fold))
+
+            if not os.path.isfile(train_filename):
+                all_folds_found = False
+            if not os.path.isfile(test_filename):
+                all_folds_found = False
+
+        if not all_folds_found:
+            if not os.path.isdir(self.evaluation_setup_path):
+                os.makedirs(self.evaluation_setup_path)
+
+            dcase_crossval = {
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+            }
+            with open(os.path.join(self.local_path, 'chime_home', 'development_chunks_refined_crossval_dcase2016.csv'), 'rt') as f:
+                for row in csv.reader(f, delimiter=','):
+                    dcase_crossval[int(row[2])+1].append(
+                        self.relative_to_absolute_path(
+                            os.path.join('chime_home', 'chunks', row[1] + self.sample_mode + '.wav')
+                        )
+                    )
+
+            for fold in range(1, self.crossvalidation_folds+1):
+                # Collect training and testing files
+                train_files = []
+                for f in range(1, self.crossvalidation_folds+1):
+                    if f is not fold:
+                        train_files += dcase_crossval[f]
+                test_files = dcase_crossval[fold]
+
+                # Create meta containers and save them
+
+                # Train
+                train_filename = os.path.join(self.evaluation_setup_path,
+                                              self._get_evaluation_setup_filename(setup_part='train', fold=fold))
+
+                train_meta = MetaDataContainer(filename=train_filename)
+                for filename in train_files:
+                    train_meta.append(self.file_meta(filename)[0])
+                train_meta.save()
+
+                # Test
+                test_filename = os.path.join(self.evaluation_setup_path,
+                                             self._get_evaluation_setup_filename(setup_part='test', fold=fold))
+                test_meta = MetaDataContainer(filename=test_filename)
+                for filename in test_files:
+                    test_meta.append(MetaDataItem({'file': self.absolute_to_relative(filename)}))
+                test_meta.save()
+
+                # Evaluate
+                eval_filename = os.path.join(self.evaluation_setup_path,
+                                             self._get_evaluation_setup_filename(setup_part='evaluate', fold=fold))
+                eval_meta = MetaDataContainer(filename=eval_filename)
+                for filename in test_files:
+                    eval_meta.append(self.file_meta(filename)[0])
+                eval_meta.save()
+
+# =====================================================
+# Others
+# =====================================================
 class TUT_SED_Synthetic_2016(SoundEventDataset):
     """TUT SED Synthetic 2016
 
