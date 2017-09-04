@@ -686,7 +686,7 @@ class SceneClassifierGMM(SceneClassifier):
         super(SceneClassifierGMM, self).__init__(*args, **kwargs)
         self.method = 'gmm'
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -703,6 +703,13 @@ class SceneClassifierGMM(SceneClassifier):
         self
 
         """
+
+        if self.learner_params.get_path('validation.enable', False):
+            message = '{name}: Validation is not implemented for this learner.'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
 
         from sklearn.mixture import GaussianMixture
 
@@ -769,7 +776,7 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
         super(SceneClassifierGMMdeprecated, self).__init__(*args, **kwargs)
         self.method = 'gmm_deprecated'
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -786,6 +793,13 @@ class SceneClassifierGMMdeprecated(SceneClassifier):
         self
 
         """
+
+        if self.learner_params.get_path('validation.enable', False):
+            message = '{name}: Validation is not implemented for this learner.'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
 
         warnings.filterwarnings("ignore")
         warnings.simplefilter("ignore", DeprecationWarning)
@@ -1021,7 +1035,7 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
         super(SceneClassifierMLP, self).__init__(*args, **kwargs)
         self.method = 'mlp'
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, validation_files=[], **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -1032,6 +1046,8 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
             Meta data
         data_filenames : dict of filenames
             Filenames of stored data
+        validation_files: list of filenames
+            Predefined validation files, use parameter 'validation.setup_source=dataset' to use them.
 
         Returns
         -------
@@ -1041,13 +1057,37 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
 
         training_files = sorted(list(annotations.keys()))  # Collect training files
         if self.learner_params.get_path('validation.enable', False):
-            validation_files = self._generate_validation(
-                annotations=annotations,
-                validation_type=self.learner_params.get_path('validation.setup_source'),
-                valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
-                seed=self.learner_params.get_path('validation.seed')
-            )
+            if self.learner_params.get_path('validation.setup_source').startswith('generated'):
+                validation_files = self._generate_validation(
+                    annotations=annotations,
+                    validation_type=self.learner_params.get_path('validation.setup_source'),
+                    valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
+                    seed=self.learner_params.get_path('validation.seed')
+                )
+
+            elif self.learner_params.get_path('validation.setup_source') == 'dataset':
+                if validation_files:
+                    validation_files = sorted(list(set(validation_files).intersection(training_files)))
+
+                else:
+                    message = '{name}: No validation_files set'.format(
+                        name=self.__class__.__name__
+                    )
+
+                    self.logger.exception(message)
+                    raise ValueError(message)
+
+            else:
+                message = '{name}: Unknown validation.setup_source [{mode}]'.format(
+                    name=self.__class__.__name__,
+                    mode=self.learner_params.get_path('validation.setup_source')
+                )
+
+                self.logger.exception(message)
+                raise ValueError(message)
+
             training_files = sorted(list(set(training_files) - set(validation_files)))
+
         else:
             validation_files = []
 
@@ -1078,6 +1118,7 @@ class SceneClassifierMLP(SceneClassifier, KerasMixin):
             validation = (X_validation, Y_validation)
             if self.show_extra_debug:
                 self.logger.debug('  Validation items \t[{validation:d}]'.format(validation=len(X_validation)))
+
         else:
             validation = None
 
@@ -1196,7 +1237,7 @@ class SceneClassifierKerasSequential(SceneClassifierMLP):
     def data_processor_training(self, value):
         self['data_processor_training'] = value
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, validation_files=[], **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -1207,6 +1248,8 @@ class SceneClassifierKerasSequential(SceneClassifierMLP):
             Meta data
         data_filenames : dict of filenames
             Filenames of stored data
+        validation_files: list of filenames
+            Predefined validation files, use parameter 'validation.setup_source=dataset' to use them.
 
         Returns
         -------
@@ -1230,12 +1273,34 @@ class SceneClassifierKerasSequential(SceneClassifierMLP):
 
         # Validation files
         if self.learner_params.get_path('validation.enable', False):
-            validation_files = self._generate_validation(
-                annotations=annotations,
-                validation_type=self.learner_params.get_path('validation.setup_source'),
-                valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
-                seed=self.learner_params.get_path('validation.seed')
-            )
+            if self.learner_params.get_path('validation.setup_source').startswith('generated'):
+                validation_files = self._generate_validation(
+                    annotations=annotations,
+                    validation_type=self.learner_params.get_path('validation.setup_source'),
+                    valid_percentage=self.learner_params.get_path('validation.validation_amount', 0.20),
+                    seed=self.learner_params.get_path('validation.seed')
+                )
+
+            elif self.learner_params.get_path('validation.setup_source') == 'dataset':
+                if validation_files:
+                    validation_files = sorted(list(set(validation_files).intersection(training_files)))
+
+                else:
+                    message = '{name}: No validation_files set'.format(
+                        name=self.__class__.__name__
+                    )
+
+                    self.logger.exception(message)
+                    raise ValueError(message)
+
+            else:
+                message = '{name}: Unknown validation.setup_source [{mode}]'.format(
+                    name=self.__class__.__name__,
+                    mode=self.learner_params.get_path('validation.setup_source')
+                )
+
+                self.logger.exception(message)
+                raise ValueError(message)
 
             training_files = sorted(list(set(training_files) - set(validation_files)))
         else:
@@ -1905,7 +1970,7 @@ class EventDetector(LearnerContainer):
 
         return sorted(validation_files)
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, **kwargs):
         message = '{name}: Implement learn function.'.format(
             name=self.__class__.__name__
         )
@@ -1938,7 +2003,7 @@ class EventDetectorGMM(EventDetector):
         super(EventDetectorGMM, self).__init__(*args, **kwargs)
         self.method = 'gmm'
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -1960,6 +2025,14 @@ class EventDetectorGMM(EventDetector):
 
         if not self.params.get_path('hop_length_seconds'):
             message = '{name}: No hop length set.'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
+            raise ValueError(message)
+
+        if self.learner_params.get_path('validation.enable', False):
+            message = '{name}: Validation is not implemented for this learner.'.format(
                 name=self.__class__.__name__
             )
 
@@ -2062,7 +2135,7 @@ class EventDetectorGMMdeprecated(EventDetector):
         super(EventDetectorGMMdeprecated, self).__init__(*args, **kwargs)
         self.method = 'gmm_deprecated'
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -2086,6 +2159,14 @@ class EventDetectorGMMdeprecated(EventDetector):
 
         if not self.params.get_path('hop_length_seconds'):
             message = '{name}: No hop length set.'.format(
+                name=self.__class__.__name__
+            )
+
+            self.logger.exception(message)
+            raise ValueError(message)
+
+        if self.learner_params.get_path('validation.enable', False):
+            message = '{name}: Validation is not implemented for this learner.'.format(
                 name=self.__class__.__name__
             )
 
@@ -2231,7 +2312,7 @@ class EventDetectorMLP(EventDetector, KerasMixin):
         super(EventDetectorMLP, self).__init__(*args, **kwargs)
         self.method = 'mlp'
 
-    def learn(self, data, annotations, data_filenames=None):
+    def learn(self, data, annotations, data_filenames=None, validation_files=[], **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -2242,8 +2323,9 @@ class EventDetectorMLP(EventDetector, KerasMixin):
             Meta data
         data_filenames : dict of filenames
             Filenames of stored data
+        validation_files: list of filenames
+            Predefined validation files, use parameter 'validation.setup_source=dataset' to use them.
 
-        Returns
         -------
         self
 
@@ -2262,7 +2344,29 @@ class EventDetectorMLP(EventDetector, KerasMixin):
                     seed=self.learner_params.get_path('validation.seed'),
                 )
 
+            elif self.learner_params.get_path('validation.setup_source') == 'dataset':
+                if validation_files:
+                    validation_files = sorted(list(set(validation_files).intersection(training_files)))
+
+                else:
+                    message = '{name}: No validation_files set'.format(
+                        name=self.__class__.__name__
+                    )
+
+                    self.logger.exception(message)
+                    raise ValueError(message)
+
+            else:
+                message = '{name}: Unknown validation.setup_source [{mode}]'.format(
+                    name=self.__class__.__name__,
+                    mode=self.learner_params.get_path('validation.setup_source')
+                )
+
+                self.logger.exception(message)
+                raise ValueError(message)
+
             training_files = sorted(list(set(training_files) - set(validation_files)))
+
         else:
             validation_files = []
 
@@ -2438,7 +2542,7 @@ class EventDetectorKerasSequential(EventDetectorMLP):
     def data_processor_training(self, value):
         self['data_processor_training'] = value
 
-    def learn(self, annotations, data=None, data_filenames=None):
+    def learn(self, annotations, data=None, data_filenames=None, validation_files=[], **kwargs):
         """Learn based on data and annotations
 
         Parameters
@@ -2449,6 +2553,8 @@ class EventDetectorKerasSequential(EventDetectorMLP):
             Meta data
         data_filenames : dict of filenames
             Filenames of stored data
+        validation_files: list of filenames
+            Predefined validation files, use parameter 'validation.setup_source=dataset' to use them.
 
         Returns
         -------
@@ -2481,7 +2587,29 @@ class EventDetectorKerasSequential(EventDetectorMLP):
                     seed=self.learner_params.get_path('validation.seed')
                 )
 
+            elif self.learner_params.get_path('validation.setup_source') == 'dataset':
+                if validation_files:
+                    validation_files = sorted(list(set(validation_files).intersection(training_files)))
+
+                else:
+                    message = '{name}: No validation_files set'.format(
+                        name=self.__class__.__name__
+                    )
+
+                    self.logger.exception(message)
+                    raise ValueError(message)
+
+            else:
+                message = '{name}: Unknown validation.setup_source [{mode}]'.format(
+                    name=self.__class__.__name__,
+                    mode=self.learner_params.get_path('validation.setup_source')
+                )
+
+                self.logger.exception(message)
+                raise ValueError(message)
+
             training_files = sorted(list(set(training_files) - set(validation_files)))
+
         else:
             validation_files = []
 
@@ -2537,6 +2665,7 @@ class EventDetectorKerasSequential(EventDetectorMLP):
 
                 else:
                     validation_data_generator = None
+
             else:
                 message = '{name}: Generator method not implemented [{method}]'.format(
                     name=self.__class__.__name__,

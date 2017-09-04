@@ -1272,7 +1272,7 @@ class AcousticSceneClassificationAppCore(AppCore):
                 )
 
                 # Collect training examples
-                train_meta = self.dataset.train(fold)
+                train_meta = self.dataset.train(fold=fold)
                 data = {}
                 data_filelist = {}
                 annotations = {}
@@ -1330,6 +1330,7 @@ class AcousticSceneClassificationAppCore(AppCore):
 
                     annotations[audio_filename] = train_meta.filter(filename=audio_filename)[0]
 
+                # Get learner
                 learner = self._get_learner(
                     method=self.params.get_path('learner.method'),
                     class_labels=self.dataset.scene_labels,
@@ -1346,11 +1347,17 @@ class AcousticSceneClassificationAppCore(AppCore):
                     data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
                 )
 
+                # Get validation files from dataset
+                validation_files = self.dataset.validation_files(fold=fold)
+
+                # Start learning
                 learner.learn(
                     data=data,
                     annotations=annotations,
-                    data_filenames=data_filelist
+                    data_filenames=data_filelist,
+                    validation_files=validation_files
                 )
+
                 learner.save()
 
             if self.params.get_path('learner.show_model_information'):
@@ -2128,7 +2135,7 @@ class SoundEventAppCore(AppCore):
                         )
 
                         # Collect training examples
-                        train_meta = self.dataset.train(fold, scene_label=scene_label)
+                        train_meta = self.dataset.train(fold=fold, scene_label=scene_label)
                         data = {}
                         data_filelist = {}
                         annotations = {}
@@ -2180,6 +2187,7 @@ class SoundEventAppCore(AppCore):
                         if self.log_system_progress:
                             self.logger.info(' ')
 
+                        # Get learner
                         learner = self._get_learner(
                             method=self.params.get_path('learner.method'),
                             class_labels=self.dataset.event_labels(scene_label=scene_label),
@@ -2195,10 +2203,15 @@ class SoundEventAppCore(AppCore):
                             data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
                         )
 
+                        # Get validation files from dataset
+                        validation_files = self.dataset.validation_files(fold=fold, scene_label=scene_label)
+
+                        # Start learning
                         learner.learn(
                             data=data,
                             annotations=annotations,
-                            data_filenames=data_filelist
+                            data_filenames=data_filelist,
+                            validation_files=validation_files
                         )
 
                         learner.save()
@@ -2434,6 +2447,7 @@ class SoundEventAppCore(AppCore):
                 overall_metrics_per_scene = {}
 
                 scene_labels = self.dataset.scene_labels
+
                 # Select only active scenes
                 if self.params.get_path('evaluator.active_scenes'):
                     scene_labels = list(
@@ -2469,14 +2483,14 @@ class SoundEventAppCore(AppCore):
                         for file_id, audio_filename in enumerate(self.dataset.test(fold, scene_label=scene_label).file_list):
 
                             # Select only row which are from current file and contains only detected event
-                            current_file_results = []
+                            current_file_results = MetaDataContainer()
                             for result_item in results.filter(
                                     filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
                                 if 'event_label' in result_item and result_item.event_label:
                                     current_file_results.append(result_item)
 
-                            meta = []
+                            meta = MetaDataContainer()
                             for meta_item in self.dataset.file_meta(
                                     filename=posix_path(self.dataset.absolute_to_relative(audio_filename))
                             ):
@@ -3169,7 +3183,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                         if self.log_system_progress:
                             self.logger.info(' ')
 
-                        # Learner
+                        # Get learner
                         learner = self._get_learner(
                             method=self.params.get_path('learner.method'),
                             class_labels=[event_label],
@@ -3184,10 +3198,16 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                             log_progress=self.log_system_progress,
                             data_generators=self.DataGenerators if self.params.get_path('learner.parameters.generator.enable') else None,
                         )
+
+                        # Get validation files from dataset
+                        validation_files = self.dataset.validation_files(fold, event_label=event_label)
+
+                        # Start learning
                         learner.learn(
-                            annotations=annotations,
                             data=data,
-                            data_filenames=data_filelist
+                            annotations=annotations,
+                            data_filenames=data_filelist,
+                            validation_files=validation_files
                         )
 
                         # Save model
@@ -3830,3 +3850,111 @@ class BinarySoundEventAppCore(SoundEventAppCore):
             return os.path.join(path, 'results' + '_' + str(event_label) + '.' + extension)
         else:
             return os.path.join(path, 'results_fold' + str(fold) + '_' + str(event_label) + '.' + extension)
+
+
+class AudioTaggingAppCore(AppCore):
+    def __init__(self, *args, **kwargs):
+        """Constructor
+
+        Parameters
+        ----------
+        name : str
+            Application name.
+            Default value "Application"
+        setup_label : str
+            Application setup label.
+            Default value "System"
+        params : ParameterContainer
+            Parameter container containing all parameters needed by application.
+        dataset : str or class
+            Dataset, if none given dataset name is taken from parameters "dataset->parameters->name".
+            Default value "none"
+        dataset_evaluation_mode : str
+            Dataset evaluation mode, "full" or "folds". If none given, taken from parameters.
+            "dataset->parameter->evaluation_mode"
+            Default value "none"
+        show_progress_in_console : bool
+            Show progress in console.
+            Default value "True"
+        log_system_progress : bool
+            Log progress in console.
+            Default value "False"
+        logger : logging
+            Instance of logging
+            Default value "none"
+        Datasets : dict of Dataset classes
+            Dict of datasets available for application. Dict key is name of the dataset and value link to class
+            inherited from Dataset base class. Given dict is used to update internal dict.
+            Default value "none"
+        FeatureExtractor : class inherited from FeatureExtractor
+            Feature extractor class. Use this to override default class.
+            Default value "FeatureExtractor"
+        FeatureNormalizer : class inherited from FeatureNormalizer
+            Feature normalizer class. Use this to override default class.
+            Default value "FeatureNormalizer"
+        FeatureMasker : class inherited from FeatureMasker
+            Feature masker class. Use this to override default class.
+            Default value "FeatureMasker"
+        FeatureContainer : class inherited from FeatureContainer
+            Feature container class. Use this to override default class.
+            Default value "FeatureContainer"
+        FeatureStacker : class inherited from FeatureStacker
+            Feature stacker class. Use this to override default class.
+            Default value "FeatureStacker"
+        FeatureAggregator : class inherited from FeatureAggregator
+            Feature aggregate class. Use this to override default class.
+            Default value "FeatureAggregator"
+        DataProcessor : class inherited from DataProcessor
+            DataProcessor class. Use this to override default class.
+            Default value "DataProcessor"
+        DataSequencer : class inherited from DataSequencer
+            DataSequencer class. Use this to override default class.
+            Default value "DataSequencer"
+        ProcessingChain : class inherited from ProcessingChain
+            DataSequencer class. Use this to override default class.
+            Default value "ProcessingChain"
+        Learners: dict of Learner classes
+            Dict of learners available for application. Dict key is method the class implements and value link to
+            class inherited from LearnerContainer base class. Given dict is used to update internal dict.
+        SceneRecognizer : class inherited from SceneRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "SceneRecognizer"
+        EventRecognizer : class inherited from EventRecognizer
+            DataSequencer class. Use this to override default class.
+            Default value "EventRecognizer"
+        ui : class inherited from FancyLogger
+            Output formatter class. Use this to override default class.
+            Default value "FancyLogger"
+
+        Raises
+        ------
+        ValueError:
+            No valid ParameterContainer given.
+
+        """
+
+        super(AudioTaggingAppCore, self).__init__(*args, **kwargs)
+
+        # Fetch datasets
+        self.Datasets = {}
+
+        for dataset_item in get_class_inheritors(AudioTaggingDataset):
+            self.Datasets[dataset_item.__name__] = dataset_item
+
+        if kwargs.get('Datasets'):
+            self.Datasets.update(kwargs.get('Datasets'))
+
+        # Set current dataset
+        self.dataset = self._get_dataset(dataset=kwargs.get('dataset'))
+
+        # Fetch all learners
+        self.Learners = {}
+        learner_list = get_class_inheritors(SceneClassifier)
+        for learner_item in learner_list:
+            learner = learner_item()
+            if learner.method:
+                self.Learners[learner.method] = learner_item
+
+        if kwargs.get('Learners'):
+            self.Learners.update(kwargs.get('Learners'))
+
