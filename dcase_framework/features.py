@@ -863,7 +863,7 @@ class FeatureExtractor(object):
             if params.get('log'):
                 mel_spectrum = numpy.log(mel_spectrum + self.eps)
 
-                mel_spectrum = mel_spectrum.T
+            mel_spectrum = mel_spectrum.T
 
             feature_matrix.append(mel_spectrum)
 
