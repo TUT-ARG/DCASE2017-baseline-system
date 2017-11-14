@@ -834,15 +834,19 @@ class FeatureExtractor(object):
 
         """
 
-        window = self._window_function(N=params.get('win_length_samples'),
-                                       window_type=params.get('window'))
+        window = self._window_function(
+            N=params.get('win_length_samples'),
+            window_type=params.get('window')
+        )
 
-        mel_basis = librosa.filters.mel(sr=params.get('fs'),
-                                        n_fft=params.get('n_fft'),
-                                        n_mels=params.get('n_mels'),
-                                        fmin=params.get('fmin'),
-                                        fmax=params.get('fmax'),
-                                        htk=params.get('htk'))
+        mel_basis = librosa.filters.mel(
+            sr=params.get('fs'),
+            n_fft=params.get('n_fft'),
+            n_mels=params.get('n_mels'),
+            fmin=params.get('fmin'),
+            fmax=params.get('fmax'),
+            htk=params.get('htk')
+        )
 
         if params.get('normalize_mel_bands'):
             mel_basis /= numpy.max(mel_basis, axis=-1)[:, None]
@@ -886,15 +890,19 @@ class FeatureExtractor(object):
 
         """
 
-        window = self._window_function(N=params.get('win_length_samples'),
-                                       window_type=params.get('window'))
+        window = self._window_function(
+            N=params.get('win_length_samples'),
+            window_type=params.get('window')
+        )
 
-        mel_basis = librosa.filters.mel(sr=params.get('fs'),
-                                        n_fft=params.get('n_fft'),
-                                        n_mels=params.get('n_mels'),
-                                        fmin=params.get('fmin'),
-                                        fmax=params.get('fmax'),
-                                        htk=params.get('htk'))
+        mel_basis = librosa.filters.mel(
+            sr=params.get('fs'),
+            n_fft=params.get('n_fft'),
+            n_mels=params.get('n_mels'),
+            fmin=params.get('fmin'),
+            fmax=params.get('fmax'),
+            htk=params.get('htk')
+        )
 
         if params.get('normalize_mel_bands'):
             mel_basis /= numpy.max(mel_basis, axis=-1)[:, None]
@@ -941,7 +949,10 @@ class FeatureExtractor(object):
         feature_matrix = []
         for channel in range(0, len(data)):
             # Delta coefficients
-            delta = librosa.feature.delta(data[channel].T, width=params.get('width'))
+            delta = librosa.feature.delta(
+                data[channel].T,
+                width=params.get('width')
+            )
 
             feature_matrix.append(delta.T)
 
@@ -967,7 +978,11 @@ class FeatureExtractor(object):
         feature_matrix = []
         for channel in range(0, len(data)):
             # Acceleration coefficients (aka delta delta)
-            acceleration = librosa.feature.delta(data[channel].T, order=2, width=params.get('width'))
+            acceleration = librosa.feature.delta(
+                data[channel].T,
+                order=2,
+                width=params.get('width')
+            )
 
             feature_matrix.append(acceleration.T)
 
@@ -995,18 +1010,21 @@ class FeatureExtractor(object):
         mono = False
         if 'mono' in params:
             mono = params.get('mono')
+
         elif 'dependency_parameters' in params and 'mono' in params['dependency_parameters']:
             mono = params['dependency_parameters']['mono']
 
         fs = None
         if 'fs' in params:
             fs = params.get('fs')
+
         elif 'dependency_parameters' in params and 'fs' in params['dependency_parameters']:
             fs = params['dependency_parameters']['fs']
 
         normalize_audio = False
         if 'normalize_audio' in params:
             normalize_audio = params.get('normalize_audio')
+
         elif 'dependency_parameters' in params and 'normalize_audio' in params['dependency_parameters']:
             normalize_audio = params['dependency_parameters']['normalize_audio']
 
