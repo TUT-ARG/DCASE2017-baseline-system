@@ -236,9 +236,9 @@ class SceneRecognizer(BaseRecognizer):
     | enable                         | bool               | Enable frame probability accumulation.                     |
     +--------------------------------+--------------------+------------------------------------------------------------+
     | type                           | string             | Operator type used to accumulate.                          |
-    |                                | {sliding_sum |     |                                                            |
-    |                                | sliding_mean |     |                                                            |
-    |                                | sliding_median }   |                                                            |
+    |                                | {sum |             |                                                            |
+    |                                | mean |             |                                                            |
+    |                                | median }           |                                                            |
     +--------------------------------+--------------------+------------------------------------------------------------+
     | window_length_seconds          | float              | Window length in seconds for sliding accumulation.         |
     +--------------------------------+--------------------+------------------------------------------------------------+
@@ -372,7 +372,60 @@ class SceneRecognizer(BaseRecognizer):
 class EventRecognizer(BaseRecognizer):
     """Multi-class multi-label detection
 
+    **Parameters**
+
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | Field name                     | Value type         | Description                                                |
+    +================================+====================+============================================================+
+    | **frame_accumulation**, Defining frame probability accumulation.                                                 |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable frame probability accumulation.                     |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | type                           | string             | Operator type used to accumulate.                          |
+    |                                | {sliding_sum |     |                                                            |
+    |                                | sliding_mean |     |                                                            |
+    |                                | sliding_median }   |                                                            |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | window_length_seconds          | float              | Window length in seconds for sliding accumulation.         |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | **frame_binarization**, Defining frame probability binarization.                                                 |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable frame probability binarization.                     |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | type                           | string             | Type of binarization:                                      |
+    |                                | {frame_max |       |                                                            |
+    |                                | global_threshold } | - ``frame_max``, each frame is treated individually,       |
+    |                                |                    |   max of each frame is set to one, all others to zero.     |
+    |                                |                    | - ``global_threshold``, global threshold, all values over  |
+    |                                |                    |   the threshold are set to one.                            |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | threshold                      | float              | Threshold value. Set to null if not used.                  |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | **event_activity_processing**, Event activity processing per frame.                                              |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable activity processing.                                |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | type                           | string             | Type of decision:                                          |
+    |                                | {median_filtering} |                                                            |
+    |                                |                    | - ``median_filtering``, median filtering of decision       |
+    |                                |                    |    inside window.                                          |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | window_length_seconds          | float              | Length of sliding window in seconds for activity           |
+    |                                |                    | processing.                                                |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | **event_post_processing**, Event post processing per event.                                                      |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | enable                         | bool               | Enable event processing.                                   |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | minimum_event_length_seconds   | float              | Minimum allowed event length. Shorter events will be       |
+    |                                |                    | removed.                                                   |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+    | minimum_event_gap_second       | float              | Minimum allowed gap between events. Smaller gaps between   |
+    |                                |                    | events will cause events to be merged together.            |
+    +--------------------------------+--------------------+------------------------------------------------------------+
+
     """
+
     def __init__(self, *args, **kwargs):
         """Constructor
 
