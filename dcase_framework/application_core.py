@@ -3368,8 +3368,7 @@ class BinarySoundEventAppCore(SoundEventAppCore):
                                       miniters=1,
                                       disable=self.disable_progress_bar,
                                       ascii=self.use_ascii_progress_bar)
-                #from IPython import embed
-                #embed()
+
                 if single_file_per_fold:
                     current_result_file = self._get_result_filename(
                         fold=fold,

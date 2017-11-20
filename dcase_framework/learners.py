@@ -2246,7 +2246,7 @@ class EventDetectorGMMdeprecated(EventDetector):
 
 
 class EventDetectorMLP(EventDetector, KerasMixin):
-    """Simple MLP Based sequential Keras model for Sound Event Detection"""
+    """Simple MLP based sequential Keras model for Sound Event Detection"""
 
     def __init__(self, *args, **kwargs):
         self.default_parameters = DottedDict({
@@ -2688,6 +2688,7 @@ class EventDetectorKerasSequential(EventDetectorMLP):
                 files=training_files,
                 processor='training'
             )
+
             Y_training = self.prepare_activity(
                 activity_matrix_dict=activity_matrix_dict,
                 files=training_files,

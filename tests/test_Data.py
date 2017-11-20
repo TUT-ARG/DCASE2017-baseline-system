@@ -117,21 +117,18 @@ def test_data_sequencer():
     seq = ds.process(data)
     nose.tools.eq_(len(seq), 5)
 
-    numpy.testing.assert_array_equal(seq[0], numpy.array([[10, 10, 10], [0, 0, 0]]))
-    numpy.testing.assert_array_equal(seq[1], numpy.array([[1, 1, 1], [2, 2, 2]]))
-    numpy.testing.assert_array_equal(seq[2], numpy.array([[3, 3, 3], [4, 4, 4]]))
-    numpy.testing.assert_array_equal(seq[3], numpy.array([[5, 5, 5], [6, 6, 6]]))
-    numpy.testing.assert_array_equal(seq[4], numpy.array([[7, 7, 7], [8, 8, 8]]))
+    numpy.testing.assert_array_equal(seq[0], numpy.array([[1, 1, 1], [2, 2, 2]]))
+    numpy.testing.assert_array_equal(seq[1], numpy.array([[3, 3, 3], [4, 4, 4]]))
+    numpy.testing.assert_array_equal(seq[2], numpy.array([[5, 5, 5], [6, 6, 6]]))
+    numpy.testing.assert_array_equal(seq[3], numpy.array([[7, 7, 7], [8, 8, 8]]))
 
     ds.increase_shifting()
     seq = ds.process(data)
     nose.tools.eq_(len(seq), 5)
 
-    numpy.testing.assert_array_equal(seq[0], numpy.array([[9, 9, 9], [10, 10, 10]]))
-    numpy.testing.assert_array_equal(seq[1], numpy.array([[0, 0, 0], [1, 1, 1]]))
-    numpy.testing.assert_array_equal(seq[2], numpy.array([[2, 2, 2], [3, 3, 3]]))
-    numpy.testing.assert_array_equal(seq[3], numpy.array([[4, 4, 4], [5, 5, 5]]))
-    numpy.testing.assert_array_equal(seq[4], numpy.array([[6, 6, 6], [7, 7, 7]]))
+    numpy.testing.assert_array_equal(seq[0], numpy.array([[2, 2, 2], [3, 3, 3]]))
+    numpy.testing.assert_array_equal(seq[1], numpy.array([[4, 4, 4], [5, 5, 5]]))
+    numpy.testing.assert_array_equal(seq[2], numpy.array([[6, 6, 6], [7, 7, 7]]))
 
     # Non-perfect fitting without padding, and push shifting
     data = [numpy.arange(0, 11), numpy.arange(0, 11), numpy.arange(0, 11)]

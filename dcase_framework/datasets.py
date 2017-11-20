@@ -1714,7 +1714,6 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
     def __init__(self, *args, **kwargs):
         kwargs['storage_name'] = kwargs.get('storage_name', 'TUT-acoustic-scenes-2017-evaluation')
         super(TUTAcousticScenes_2017_EvaluationSet, self).__init__(*args, **kwargs)
-        self.reference_data_present = False
 
         self.dataset_group = 'acoustic scene'
         self.dataset_meta = {
@@ -1728,7 +1727,7 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
         }
 
         self.crossvalidation_folds = 1
-
+        source_url = 'https://zenodo.org/record/1040168/files/'
         self.package_list = [
             {
                 'remote_package': None,
@@ -1741,32 +1740,32 @@ class TUTAcousticScenes_2017_EvaluationSet(AcousticSceneDataset):
                 'local_audio_path': os.path.join(self.local_path, 'audio', 'street'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.doc.zip',
+                'remote_package': source_url + 'TUT-acoustic-scenes-2017-evaluation.doc.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.doc.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.meta.zip',
+                'remote_package': source_url + 'TUT-acoustic-scenes-2017-evaluation.meta.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.meta.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.1.zip',
+                'remote_package': source_url + 'TUT-acoustic-scenes-2017-evaluation.audio.1.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.1.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.2.zip',
+                'remote_package': source_url + 'TUT-acoustic-scenes-2017-evaluation.audio.2.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.2.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.3.zip',
+                'remote_package': source_url + 'TUT-acoustic-scenes-2017-evaluation.audio.3.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.3.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-acoustic-scenes-2017-evaluation/TUT-acoustic-scenes-2017-evaluation.audio.4.zip',
+                'remote_package': source_url + 'TUT-acoustic-scenes-2017-evaluation.audio.4.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-acoustic-scenes-2017-evaluation.audio.4.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
@@ -2969,8 +2968,6 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
         kwargs['storage_name'] = kwargs.get('storage_name', 'TUT-sound-events-2017-evaluation')
         super(TUTSoundEvents_2017_EvaluationSet, self).__init__(*args, **kwargs)
 
-        self.reference_data_present = False
-
         self.dataset_group = 'sound event'
         self.dataset_meta = {
             'authors': 'Annamaria Mesaros, Toni Heittola, and Tuomas Virtanen',
@@ -2983,7 +2980,7 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
         }
 
         self.crossvalidation_folds = 1
-
+        source_url = 'https://zenodo.org/record/1040179/files/'
         self.package_list = [
             {
                 'remote_package': None,
@@ -2996,17 +2993,17 @@ class TUTSoundEvents_2017_EvaluationSet(SoundEventDataset):
                 'local_audio_path': os.path.join(self.local_path, 'audio', 'street'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-sound-events-2017-evaluation/TUT-sound-events-2017-evaluation.doc.zip',
+                'remote_package': source_url + 'TUT-sound-events-2017-evaluation.doc.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-evaluation.doc.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-sound-events-2017-evaluation/TUT-sound-events-2017-evaluation.meta.zip',
+                'remote_package': source_url + 'TUT-sound-events-2017-evaluation.meta.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-evaluation.meta.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-sound-events-2017-evaluation/TUT-sound-events-2017-evaluation.audio.zip',
+                'remote_package': source_url + 'TUT-sound-events-2017-evaluation.audio.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-sound-events-2017-evaluation.audio.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
