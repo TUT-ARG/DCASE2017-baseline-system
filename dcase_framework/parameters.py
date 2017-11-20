@@ -773,17 +773,20 @@ class ParameterContainer(ParameterFile, ContainerMixin):
             for part in structure:
                 if '*' in part:
                     wild_card_found = True
-                    keys = self.get_path(data=self, dotted_path=part[:part.find('*')-1]).keys()
+                    path_ = self.get_path(data=self, dotted_path=part[:part.find('*') - 1])
+                    if path_:
+                        keys = path_.keys()
 
                 param_hash = self.get_path(data=self, dotted_path=part + '._hash')
-                if isinstance(param_hash, list):
-                    directory_name = []
-                    for h in param_hash:
-                        directory_name.append(part.split('.')[0]+'_'+h)
-                else:
-                    directory_name = self._get_directory_name(prefix=part.split('.')[0], param_hash=param_hash)
+                if param_hash is not None:
+                    if isinstance(param_hash, list):
+                        directory_name = []
+                        for h in param_hash:
+                            directory_name.append(part.split('.')[0]+'_'+h)
+                    else:
+                        directory_name = self._get_directory_name(prefix=part.split('.')[0], param_hash=param_hash)
 
-                path_parts.append(directory_name)
+                    path_parts.append(directory_name)
 
             paths = self._join_paths(path_parts)
 
@@ -806,27 +809,28 @@ class ParameterContainer(ParameterFile, ContainerMixin):
         path_parts = [os.path.join(base[0])]
         for part in structure:
             param_hash = self.get_path(data=self, dotted_path=part + '._hash')
-            if isinstance(param_hash, list):
-                directory_name = []
-                for h in param_hash:
-                    directory_name.append(part.split('.')[0] + '_' + h)
-            else:
-                directory_name = self._get_directory_name(prefix=part.split('.')[0], param_hash=param_hash)
+            if param_hash is not None:
+                if isinstance(param_hash, list):
+                    directory_name = []
+                    for h in param_hash:
+                        directory_name.append(part.split('.')[0] + '_' + h)
+                else:
+                    directory_name = self._get_directory_name(prefix=part.split('.')[0], param_hash=param_hash)
 
-            parameters = self.get_path(data=self, dotted_path=part)
-            path_parts.append(directory_name)
+                parameters = self.get_path(data=self, dotted_path=part)
+                path_parts.append(directory_name)
 
-            current_path = self._join_paths(path_parts)
+                current_path = self._join_paths(path_parts)
 
-            if isinstance(current_path, str):
-                ParameterContainer(parameters).save(filename=os.path.join(current_path[0], parameter_filename))
-            else:
-                if isinstance(parameters, dict):
+                if isinstance(current_path, str):
                     ParameterContainer(parameters).save(filename=os.path.join(current_path[0], parameter_filename))
                 else:
-                    for path_id, path in enumerate(current_path):
-                        if parameters[path_id]:
-                            ParameterContainer(parameters[path_id]).save(filename=os.path.join(path, parameter_filename))
+                    if isinstance(parameters, dict):
+                        ParameterContainer(parameters).save(filename=os.path.join(current_path[0], parameter_filename))
+                    else:
+                        for path_id, path in enumerate(current_path):
+                            if parameters[path_id]:
+                                ParameterContainer(parameters[path_id]).save(filename=os.path.join(path, parameter_filename))
 
     def _save_path_parameters_all(self):
         for path_label, structure in iteritems(self.path_structure):
