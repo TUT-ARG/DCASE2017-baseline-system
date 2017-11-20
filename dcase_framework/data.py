@@ -72,6 +72,7 @@ from __future__ import print_function, absolute_import
 from six import iteritems
 import logging
 import numpy
+import copy
 import collections
 from .features import FeatureRepository
 
@@ -295,6 +296,9 @@ class DataSequencer(DataProcessingUnitMixin):
 
         """
 
+        # Make copy of the data to prevent modifications to the original data
+        data = copy.deepcopy(data)
+
         # Not the most efficient way as numpy stride_tricks would produce
         # faster code, however, opted for cleaner presentation this time.
         data_length = data.shape[0]
@@ -308,7 +312,11 @@ class DataSequencer(DataProcessingUnitMixin):
 
             if self.shift:
                 # Roll data
-                data = numpy.roll(data, shift=self.shift, axis=0)
+                data = numpy.roll(
+                    data,
+                    shift=-self.shift,
+                    axis=0
+                )
 
         if self.padding:
             if len(segment_indexes) == 0:
@@ -316,10 +324,10 @@ class DataSequencer(DataProcessingUnitMixin):
                 segment_indexes = numpy.array([0])
         else:
             # Remove segments which are not full
-            segment_indexes = segment_indexes[(segment_indexes+self.hop_size-1) < data_length]
+            segment_indexes = segment_indexes[(segment_indexes+self.frames-1) < data_length]
 
         for segment_start_frame in segment_indexes:
-            segment_end_frame = segment_start_frame + self.hop_size
+            segment_end_frame = segment_start_frame + self.frames
 
             frame_ids = numpy.array(range(segment_start_frame, segment_end_frame))
 
