@@ -1064,6 +1064,7 @@
 <p id="n995" class="pln"><a href="#n995">995</a></p>
 <p id="n996" class="stm run hide_run"><a href="#n996">996</a></p>
 <p id="n997" class="pln"><a href="#n997">997</a></p>
+<p id="n998" class="pln"><a href="#n998">998</a></p>
 
             </td>
             <td class="text">
@@ -1263,7 +1264,7 @@
 <p id="t194" class="stm run hide_run"><span class="key">import</span> <span class="nam">soundfile</span><span class="strut">&nbsp;</span></p>
 <p id="t195" class="stm run hide_run"><span class="key">import</span> <span class="nam">copy</span><span class="strut">&nbsp;</span></p>
 <p id="t196" class="stm run hide_run"><span class="key">from</span> <span class="op">.</span><span class="nam">decorators</span> <span class="key">import</span> <span class="nam">before_and_after_function_wrapper</span><span class="strut">&nbsp;</span></p>
-<p id="t197" class="stm run hide_run"><span class="key">from</span> <span class="op">.</span><span class="nam">containers</span> <span class="key">import</span> <span class="nam">DottedDict</span><span class="strut">&nbsp;</span></p>
+<p id="t197" class="stm run hide_run"><span class="key">from</span> <span class="op">.</span><span class="nam">containers</span> <span class="key">import</span> <span class="nam">DottedDict</span><span class="op">,</span> <span class="nam">ContainerMixin</span><span class="strut">&nbsp;</span></p>
 <p id="t198" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t199" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t200" class="stm run hide_run"><span class="key">class</span> <span class="nam">FileMixin</span><span class="op">(</span><span class="nam">object</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
@@ -1379,7 +1380,7 @@
 <p id="t310" class="stm run hide_run">            <span class="key">return</span> <span class="nam">False</span><span class="strut">&nbsp;</span></p>
 <p id="t311" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t312" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t313" class="stm run hide_run"><span class="key">class</span> <span class="nam">DictFile</span><span class="op">(</span><span class="nam">dict</span><span class="op">,</span> <span class="nam">FileMixin</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t313" class="stm run hide_run"><span class="key">class</span> <span class="nam">DictFile</span><span class="op">(</span><span class="nam">dict</span><span class="op">,</span> <span class="nam">FileMixin</span><span class="op">,</span> <span class="nam">ContainerMixin</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t314" class="pln">    <span class="str">"""File class inherited from dict, valid file formats [yaml, json, cpickle, marshal, msgpack, txt]"""</span><span class="strut">&nbsp;</span></p>
 <p id="t315" class="stm run hide_run">    <span class="nam">valid_formats</span> <span class="op">=</span> <span class="op">[</span><span class="str">'yaml'</span><span class="op">,</span> <span class="str">'json'</span><span class="op">,</span> <span class="str">'cpickle'</span><span class="op">,</span> <span class="str">'marshal'</span><span class="op">,</span> <span class="str">'msgpack'</span><span class="op">,</span> <span class="str">'txt'</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t316" class="pln"><span class="strut">&nbsp;</span></p>
@@ -2064,6 +2065,7 @@
 <p id="t995" class="pln">    <span class="str">"""File class for repository files, Inherited from DictFile, valid file formats [cpickle]"""</span><span class="strut">&nbsp;</span></p>
 <p id="t996" class="stm run hide_run">    <span class="nam">valid_formats</span> <span class="op">=</span> <span class="op">[</span><span class="str">'cpickle'</span><span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t997" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t998" class="pln"><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -2074,7 +2076,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.3.4</a>,
-            created at 2017-06-12 23:55
+            created at 2017-11-20 21:55
         </p>
     </div>
 </div>
