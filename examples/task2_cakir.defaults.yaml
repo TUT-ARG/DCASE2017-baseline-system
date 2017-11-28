@@ -1,0 +1,447 @@
+active_set: crnn
+
+sets:
+  - set_id: crnn
+    description: CRNN parameters based on grid search for DCASE 2017 task 2 dataset
+
+  - set_id: crnn
+    learner_method_parameters:
+      multifunctionalDNN_seq:
+        conv_params:
+          nb_conv_filters: [96,96,96]
+          nb_conv_pool_freq: [5,4,2]
+        rnn_params:
+          nb_rnn_hidden_units: [96,96]
+
+  - set_id: cnn
+    learner_method_parameters:
+      multifunctionalDNN_seq:
+        conv_params:
+          nb_conv_filters: [96,96,96]
+          nb_conv_pool_freq: [5,4,2]
+        rnn_params:
+          nb_rnn_hidden_units: []
+        fnn_params:
+          nb_fnn_hidden_units: [96,96]
+
+  - set_id: rnn
+    learner_method_parameters:
+      multifunctionalDNN_seq:
+        conv_params:
+          nb_conv_filters: []
+          nb_conv_pool_freq: []
+        rnn_params:
+          nb_rnn_hidden_units: [96,96]
+
+  - set_id: fnn
+    learner_method_parameters:
+      multifunctionalDNN_seq:
+        conv_params:
+          nb_conv_filters: []
+          nb_conv_pool_freq: []
+        rnn_params:
+          nb_rnn_hidden_units: []
+        fnn_params:
+          nb_fnn_hidden_units: [96,96]
+
+defaults:
+  # ==========================================================
+  # Flow
+  # ==========================================================
+  flow:
+    initialize: true
+    extract_features: true
+    feature_normalizer: true
+    train_system: true
+    test_system: true
+    evaluate_system: true
+
+  # ==========================================================
+  # General
+  # ==========================================================
+  general:
+    overwrite: false                    # Overwrite previously stored data
+
+    challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
+
+    print_system_progress: true         #
+    use_ascii_progress_bar: true       #
+
+    log_system_parameters: false        #
+    log_system_progress: false          #
+
+    event_handling: event-dependent     # [event-dependent, event-independent]
+
+  # ==========================================================
+  # Paths
+  # ==========================================================
+  path:
+    data: /proj/asignal/DCASE2017/task_2/data/
+    system_base: /wrk/cakir/DONOTREMOVE/DCASE2017_task_2 #/proj/asignal/DCASE2017/task_2/system/
+    feature_extractor: feature_extractor/
+    feature_normalizer: feature_normalizer/
+    learner: learner/
+    recognizer: recognizer/
+    evaluator: evaluator/
+
+    recognizer_challenge_output: challenge_submission/task2/838/
+    logs: logs/
+
+  # ==========================================================
+  # Logging
+  # ==========================================================
+  logging:
+    enable: true                        #
+    colored: true                       # Colored console logging
+
+    parameters:
+      version: 1
+      disable_existing_loggers: false
+      formatters:
+        simple:
+          format: "[%(levelname).1s] %(message)s"
+        normal:
+          format: "%(asctime)s\t[%(name)-20s]\t[%(levelname)-8s]\t%(message)s"
+        extended:
+          format: "[%(asctime)s] [%(name)s]\t [%(levelname)-8s]\t %(message)s \t(%(filename)s:%(lineno)s)"
+
+      handlers:
+        console:
+          class: logging.StreamHandler
+          level: DEBUG
+          formatter: simple
+          stream: ext://sys.stdout
+
+        info_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: INFO                                           # Max logging level to save
+          formatter: normal                                     # [simple, normal, extended]
+          filename: task2.info.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+        debug_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: DEBUG                                          # Max logging level to save
+          formatter: normal                                     # [simple, normal, extended]
+          filename: task2.debug.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+        error_file_handler:
+          class: logging.handlers.RotatingFileHandler
+          level: ERROR                                          # Max logging level to save
+          formatter: extended                                   # [simple, normal, extended]
+          filename: task2.errors.log
+          maxBytes: 10485760                                    # 10MB
+          backupCount: 20
+          encoding: utf8
+
+      loggers:
+        my_module:
+          level: ERROR
+          handlers: [console]
+          propagate: no
+
+      root:
+        level: INFO
+        handlers: [console, error_file_handler, info_file_handler, debug_file_handler]
+
+  # ==========================================================
+  # Dataset
+  # ==========================================================
+  dataset:
+    method: development
+
+  dataset_method_parameters:
+    development:
+      name: TUTRareSoundEvents_2017_DevelopmentSet
+      fold_list: [1]
+      evaluation_mode: folds
+      synth_parameters:
+        seed: 42
+        train:
+          mixture:
+            fs: 44100
+            bitdepth: 24
+            length_seconds: 30.0
+            anticlipping_factor: 0.2
+          event_presence_prob: 0.99
+          mixtures_per_class: 1000
+          ebr_list: [-6, 0, 6]
+        test:
+          mixture:
+            fs: 44100
+            bitdepth: 24
+            length_seconds: 30.0
+            anticlipping_factor: 0.2
+          event_presence_prob: 0.5
+          mixtures_per_class: 500
+          ebr_list: [-6, 0, 6]
+
+    challenge_train:
+      name: TUTRareSoundEvents_2017_DevelopmentSet
+      evaluation_mode: full
+      synth_parameters:
+        seed: 42
+        train:
+          mixture:
+            fs: 44100
+            bitdepth: 24
+            length_seconds: 30.0
+            anticlipping_factor: 0.2
+          event_presence_prob: 0.99
+          mixtures_per_class: 500
+          ebr_list: [-6, 0, 6]
+
+    challenge_test:
+      name: TUTRareSoundEvents_2017_EvaluationSet
+      evaluation_mode: full
+
+  # ==========================================================
+  # Feature extractor
+  # ==========================================================
+  feature_extractor:
+    fs: 44100                               # Sampling frequency
+    win_length_seconds: 0.04                # Window length
+    hop_length_seconds: 0.02                # Hop length
+
+  feature_extractor_method_parameters:
+    mel:                                    # Mel band energy
+      mono: true                            # [true, false]
+      window: hamming_asymmetric            # [hann_asymmetric, hamming_asymmetric]
+      spectrogram_type: magnitude           # [magnitude, power]
+      n_mels: 40                            # Number of mel bands used
+      normalize_mel_bands: false            # [true, false]
+      n_fft: 2048                           # FFT length
+      fmin: 0                               # Minimum frequency when constructing mel bands
+      fmax: 22050                           # Maximum frequency when constructing mel band
+      htk: true                            # Switch for HTK-styled mel-frequency equation
+      log: true                             # Logarithmic
+
+  # ==========================================================
+  # Feature stacker
+  # ==========================================================
+  feature_stacker:
+    stacking_recipe: mel
+
+  # ==========================================================
+  # Feature normalizer
+  # ==========================================================
+  feature_normalizer:
+    enable: true
+    type: global                                        # [global]
+
+  # ==========================================================
+  # Feature aggregator
+  # ==========================================================
+  feature_aggregator:
+    enable: false
+
+  # ==========================================================
+  # Learner
+  # ==========================================================
+  learner:
+    method: multifunctionalDNN_seq                             #
+
+    show_model_information: false           # Show extra model information after model is ready
+
+  learner_method_parameters:
+    multifunctionalDNN_seq:
+      seed: 0
+      keras:
+        backend: theano
+        backend_parameters:
+          floatX: float32
+          device: cuda
+          fastmath: true
+          optimizer: fast_run
+          threads: 1
+          CNR: true
+
+      input_data:
+        subdivs        : 1501     # Number of timesteps in a sequence (or 'subdivisions')
+      output_data:
+        nb_classes: 1
+      general:
+        dropout_flag    : true    # dropout after conv_activation and fnn_activation
+        dropout_rate    : [0.25]  # list of dropout rates should be equal to #conv + fnn layers
+                                  # (if only one given, same for all)
+        last_maxout     : false   # use maxout layer as output layer
+        learning_rate   : 0.001
+        long_short_branch: false  # if true, creates two output branches: one frame level and one temporally max pooled.
+        loss            : binary_crossentropy
+        l1_weight_norm  : 0.
+        l2_weight_norm  : 0.
+        output_act      : sigmoid
+        optimizer       : adam
+        temporal_max_pool: false  # before the output layer, max pool the features from each frame to
+                                  # get a vector of features for the whole example.
+      fnn_params:
+        fnn_batchnorm_flag: false
+        fnn_hid_act     : relu
+        fnn_init        : he_normal
+        fnn_type        : Dense   # options: Dense, MaxoutDense. NOTE: if temporal input, this will be overwritten to
+                                  # TimeDistributed(Dense(...))
+        maxout_pool_size: 2
+        nb_fnn_hidden_units : []  # e.g. [32, 64] will add two sequential hidden layers with units 32 and 64.
+      conv_params:
+        batchnorm_flag  : true    # Batch normalization after conv operation and before conv activation
+        batchnorm_axis  : 1       # -1 for feature-wise, 1 for channel-wise, 2 for time-wise
+        conv_act        : relu
+        conv_border_mode: same
+        conv_init  : he_normal
+        conv_stride     : [1,1]
+        nb_conv_filters : [96,96,96]  # e.g. [32, 64] will add two sequential conv layers with filters 32 and 64.
+        nb_conv_freq     : [5]        # kernel size in freqs for CNN
+        nb_conv_time     : [5]        # kernel size in time for CNN
+        nb_conv_pool_freq: [5,4,2]    # length of the list should match nb_conv_filters
+        nb_conv_pool_time: [1]
+        pool_stride_freq : []
+        pool_stride_time : []
+        rnn_all_scan_flag: false  # if true, flattens the output of conv layer and repeats the vector for the
+                                  # length of temporal dim after conv layers.
+      rnn_params:
+        nb_rnn_hidden_units : [96]
+        rnn_dropout_U   : 0.25
+        rnn_dropout_W   : 0.25
+        rnn_hid_act     : tanh
+        rnn_projection_downsampling : false   # puts an fnn layer after every rnn layer
+        nb_rnn_proj_hidden_units : []
+        rnn_type        : GRU     # options: GRU, LSTM
+        statefulness_flag : false     # makes the RNN stateful (state memory is preserved between consecutive batches)
+
+      ###
+      # For more info on the parameters below, please see original DCASE2017-baseline-system code documentation.
+      # https://tut-arg.github.io/DCASE2017-baseline-system/index.html
+      ###
+
+      input_sequencer:
+        enable: true
+        frames: 1501
+        hop: 1501
+        padding: false
+
+      temporal_shifter:
+        enable: false
+        border: roll
+        step: 10
+        max: 100
+
+      generator:
+        enable: true
+        method: feature
+        max_q_size: 1
+        workers: 1
+        parameters:
+          buffer_size: 100 #in files
+
+      validation:
+        enable: true
+        setup_source: generated_event_file_balanced
+        validation_amount: 0.10
+        seed: 123
+
+      training:
+        epochs: 200
+        batch_size: 32
+        shuffle: true
+
+        epoch_processing:
+          enable: true
+          external_metrics:
+            enable: true
+            evaluation_interval: 1 #in epochs
+            metrics:
+              - label: evtER
+                evaluator: sed_eval.event_based
+                name: overall.error_rate.error_rate
+                parameters:
+                  evaluate_onset: true
+                  evaluate_offset: false
+                  t_collar: 0.5
+                  percentage_of_length: 0.5
+
+              - label: evtF1
+                evaluator: sed_eval.event_based
+                name: overall.f_measure.f_measure
+                parameters:
+                  evaluate_onset: true
+                  evaluate_offset: false
+                  t_collar: 0.5
+                  percentage_of_length: 0.5
+
+        callbacks:
+          #            - type: Plotter
+          #              parameters:
+          #                interactive: true
+          #                save: true
+          #                output_format: pdf
+          #                focus_span: 10
+          #                plotting_rate: 5
+
+          - type: Stopper
+            parameters:
+              monitor: evtER
+              initial_delay: 25
+              min_delta: 0
+              patience: 25
+
+          - type: Stasher
+            parameters:
+              monitor: evtER
+              initial_delay: 25
+
+
+      model:
+        metrics:
+          - binary_accuracy
+          - binary_crossentropy
+
+
+
+  # ==========================================================
+  # Recognizer
+  # ==========================================================
+  recognizer:
+    enable: true
+
+    frame_accumulation:
+      enable: false
+
+    frame_binarization:
+      enable: true
+      type: global_threshold                    # [frame_max, global_threshold]
+      threshold: 0.5
+
+    event_activity_processing:
+      enable: true
+      type: median_filtering
+      window_length_seconds: 0.54
+
+    event_post_processing:
+      enable: false
+      minimum_event_length_seconds: 0.1
+      minimum_event_gap_second: 0.1
+
+
+  # ==========================================================
+  # Evaluator
+  # ==========================================================
+  evaluator:
+    enable: true
+    show_details: true
+
+    saving:
+      enable: true                              # To save evaluation results into yaml-file
+
+      # ==========================================================
+      # Filename template, fields:
+      # - {parameter_set}
+      # - {parameter_hash}
+      # - {dataset_name}
+      # ==========================================================
+      filename: eval_[{parameter_hash}].yaml
+
