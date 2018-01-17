@@ -189,9 +189,9 @@ class MultifunctionalDeepLearningSequential(EventDetectorKerasSequential):
             if dropout_flag:
                 model = Dropout(dropout_rate[i])(model)
             model = MaxPooling2D(pool_size=(1, nb_conv_pool_freq[i]),
-                                 strides=(1, pool_stride_freq[i]), padding='valid')(model)
+                                 strides=(1, pool_stride_freq[i]), padding='valid', data_format='channels_first')(model)
             model = MaxPooling2D(pool_size=(nb_conv_pool_time[i], 1),
-                                 strides=(pool_stride_time[i], 1), padding='same')(model)
+                                 strides=(pool_stride_time[i], 1), padding='same', data_format='channels_first')(model)
 
             nb_channels = nb_conv_filters[i]  # number of filters become the number of channels for the next CNN layer.
             if conv_bord_mode == 'valid':  # 'valid' convolution decreases the CNN output length by nb_conv_x -1.
