@@ -14,7 +14,9 @@ dcase_framework.features.FeatureMasker
    .. autosummary::
    
       ~FeatureMasker.__init__
+      ~FeatureMasker.masking
       ~FeatureMasker.process
+      ~FeatureMasker.set_mask
    
    
 

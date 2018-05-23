@@ -23,6 +23,9 @@ dcase_framework.files.DataFile
       ~DataFile.get
       ~DataFile.get_dump_content
       ~DataFile.get_file_information
+      ~DataFile.get_hash
+      ~DataFile.get_hash_for_path
+      ~DataFile.get_path
       ~DataFile.has_key
       ~DataFile.items
       ~DataFile.iteritems
@@ -30,10 +33,14 @@ dcase_framework.files.DataFile
       ~DataFile.itervalues
       ~DataFile.keys
       ~DataFile.load
+      ~DataFile.log
+      ~DataFile.merge
       ~DataFile.pop
       ~DataFile.popitem
       ~DataFile.save
+      ~DataFile.set_path
       ~DataFile.setdefault
+      ~DataFile.show
       ~DataFile.update
       ~DataFile.values
       ~DataFile.viewitems

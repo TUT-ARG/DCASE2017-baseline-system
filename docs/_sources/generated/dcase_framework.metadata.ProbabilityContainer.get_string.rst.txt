@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityContainer.get_string
+========================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: ProbabilityContainer.get_string

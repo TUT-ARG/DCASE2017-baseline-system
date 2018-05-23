@@ -38,6 +38,7 @@ dcase_framework.features.FeatureRepository
       ~FeatureRepository.pop
       ~FeatureRepository.popitem
       ~FeatureRepository.save
+      ~FeatureRepository.set_path
       ~FeatureRepository.setdefault
       ~FeatureRepository.show
       ~FeatureRepository.update

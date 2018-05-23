@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityContainer.unique_labels
+===========================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: ProbabilityContainer.unique_labels

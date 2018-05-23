@@ -38,6 +38,7 @@ dcase_framework.features.FeatureContainer
       ~FeatureContainer.pop
       ~FeatureContainer.popitem
       ~FeatureContainer.save
+      ~FeatureContainer.set_path
       ~FeatureContainer.setdefault
       ~FeatureContainer.show
       ~FeatureContainer.update

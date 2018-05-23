@@ -1,6 +1,6 @@
-dcase_framework.keras_utils.KerasMixin.process_activity
+dcase_framework.keras_utils.KerasMixin.prepare_activity
 =======================================================
 
 .. currentmodule:: dcase_framework.keras_utils
 
-.. automethod:: KerasMixin.process_activity
+.. automethod:: KerasMixin.prepare_activity

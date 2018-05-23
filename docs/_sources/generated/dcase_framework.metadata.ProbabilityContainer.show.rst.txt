@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityContainer.show
+==================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: ProbabilityContainer.show

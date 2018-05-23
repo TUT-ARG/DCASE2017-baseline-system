@@ -41,6 +41,7 @@ dcase_framework.parameters.ParameterContainer
       ~ParameterContainer.process
       ~ParameterContainer.process_method_parameters
       ~ParameterContainer.save
+      ~ParameterContainer.set_path
       ~ParameterContainer.setdefault
       ~ParameterContainer.show
       ~ParameterContainer.update

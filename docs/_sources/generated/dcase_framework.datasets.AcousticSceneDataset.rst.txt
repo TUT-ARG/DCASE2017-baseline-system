@@ -16,9 +16,10 @@ dcase_framework.datasets.AcousticSceneDataset
       ~AcousticSceneDataset.__init__
       ~AcousticSceneDataset.absolute_to_relative
       ~AcousticSceneDataset.check_filelist
-      ~AcousticSceneDataset.download
+      ~AcousticSceneDataset.download_packages
       ~AcousticSceneDataset.error_meta_count
       ~AcousticSceneDataset.eval
+      ~AcousticSceneDataset.eval_files
       ~AcousticSceneDataset.event_labels
       ~AcousticSceneDataset.extract
       ~AcousticSceneDataset.file_error_meta
@@ -28,7 +29,10 @@ dcase_framework.datasets.AcousticSceneDataset
       ~AcousticSceneDataset.relative_to_absolute_path
       ~AcousticSceneDataset.show_info
       ~AcousticSceneDataset.test
+      ~AcousticSceneDataset.test_files
       ~AcousticSceneDataset.train
+      ~AcousticSceneDataset.train_files
+      ~AcousticSceneDataset.validation_files
    
    
 

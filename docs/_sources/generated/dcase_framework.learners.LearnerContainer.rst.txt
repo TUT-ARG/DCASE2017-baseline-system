@@ -38,6 +38,7 @@ dcase_framework.learners.LearnerContainer
       ~LearnerContainer.pop
       ~LearnerContainer.popitem
       ~LearnerContainer.save
+      ~LearnerContainer.set_path
       ~LearnerContainer.set_seed
       ~LearnerContainer.setdefault
       ~LearnerContainer.show

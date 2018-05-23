@@ -1,6 +1,0 @@
-dcase_framework.metadata.MetaDataContainer.max_event_offset
-===========================================================
-
-.. currentmodule:: dcase_framework.metadata
-
-.. autoattribute:: MetaDataContainer.max_event_offset

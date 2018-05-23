@@ -31,10 +31,4 @@ dcase_framework.application_core.AppCore
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~AppCore.valid_dataset_group
-   
    

@@ -15,6 +15,7 @@ dcase_framework.keras_utils.StopperCallback
    
       ~StopperCallback.__init__
       ~StopperCallback.add_external_metric
+      ~StopperCallback.get_operator
       ~StopperCallback.on_batch_begin
       ~StopperCallback.on_batch_end
       ~StopperCallback.on_epoch_begin

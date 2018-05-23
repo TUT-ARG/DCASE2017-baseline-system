@@ -47,8 +47,12 @@ dcase_framework.metadata.MetaDataItem
       ~MetaDataItem.event_offset
       ~MetaDataItem.event_onset
       ~MetaDataItem.file
+      ~MetaDataItem.id
       ~MetaDataItem.identifier
+      ~MetaDataItem.offset
+      ~MetaDataItem.onset
       ~MetaDataItem.scene_label
       ~MetaDataItem.source_label
+      ~MetaDataItem.tags
    
    

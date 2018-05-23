@@ -16,6 +16,8 @@ dcase_framework.learners.EventDetectorMLP
       ~EventDetectorMLP.__init__
       ~EventDetectorMLP.clear
       ~EventDetectorMLP.copy
+      ~EventDetectorMLP.create_callback_list
+      ~EventDetectorMLP.create_external_metric_evaluators
       ~EventDetectorMLP.create_model
       ~EventDetectorMLP.detect_file_format
       ~EventDetectorMLP.empty
@@ -27,11 +29,13 @@ dcase_framework.learners.EventDetectorMLP
       ~EventDetectorMLP.get_hash
       ~EventDetectorMLP.get_hash_for_path
       ~EventDetectorMLP.get_path
+      ~EventDetectorMLP.get_processing_interval
       ~EventDetectorMLP.has_key
       ~EventDetectorMLP.items
       ~EventDetectorMLP.iteritems
       ~EventDetectorMLP.iterkeys
       ~EventDetectorMLP.itervalues
+      ~EventDetectorMLP.keras_model_exists
       ~EventDetectorMLP.keys
       ~EventDetectorMLP.learn
       ~EventDetectorMLP.load
@@ -42,7 +46,10 @@ dcase_framework.learners.EventDetectorMLP
       ~EventDetectorMLP.pop
       ~EventDetectorMLP.popitem
       ~EventDetectorMLP.predict
+      ~EventDetectorMLP.prepare_activity
+      ~EventDetectorMLP.prepare_data
       ~EventDetectorMLP.save
+      ~EventDetectorMLP.set_path
       ~EventDetectorMLP.set_seed
       ~EventDetectorMLP.setdefault
       ~EventDetectorMLP.show

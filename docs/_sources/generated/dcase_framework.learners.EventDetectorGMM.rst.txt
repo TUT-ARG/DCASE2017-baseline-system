@@ -40,6 +40,7 @@ dcase_framework.learners.EventDetectorGMM
       ~EventDetectorGMM.popitem
       ~EventDetectorGMM.predict
       ~EventDetectorGMM.save
+      ~EventDetectorGMM.set_path
       ~EventDetectorGMM.set_seed
       ~EventDetectorGMM.setdefault
       ~EventDetectorGMM.show

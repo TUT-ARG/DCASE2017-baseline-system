@@ -42,6 +42,7 @@ dcase_framework.features.FeatureNormalizer
       ~FeatureNormalizer.popitem
       ~FeatureNormalizer.process
       ~FeatureNormalizer.save
+      ~FeatureNormalizer.set_path
       ~FeatureNormalizer.setdefault
       ~FeatureNormalizer.show
       ~FeatureNormalizer.update

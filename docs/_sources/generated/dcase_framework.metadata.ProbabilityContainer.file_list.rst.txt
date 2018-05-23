@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityContainer.file_list
+=======================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: ProbabilityContainer.file_list

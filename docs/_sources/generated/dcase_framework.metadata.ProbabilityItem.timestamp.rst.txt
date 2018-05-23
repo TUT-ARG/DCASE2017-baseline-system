@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityItem.timestamp
+==================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: ProbabilityItem.timestamp

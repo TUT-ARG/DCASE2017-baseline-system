@@ -17,6 +17,7 @@ dcase_framework.keras_utils.ProgressPlotterCallback
       ~ProgressPlotterCallback.add_external_metric
       ~ProgressPlotterCallback.close
       ~ProgressPlotterCallback.draw
+      ~ProgressPlotterCallback.get_operator
       ~ProgressPlotterCallback.on_batch_begin
       ~ProgressPlotterCallback.on_batch_end
       ~ProgressPlotterCallback.on_epoch_begin

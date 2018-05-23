@@ -89,6 +89,60 @@ See more about :ref:`reproducibility <reproducibility>`.
 *Results calculated with Python 2.7.13, Keras 2.0.2, and Theano 0.9.0*
 
 
+**TUT Acoustic Scenes 2017, Evaluation**
+
+*Average accuracy of file-wise classification.*
+
++------------------------+------------+
+|                        | Overall    |
++------------------------+------------+
+| System                 | Accuracy   |
++========================+============+
+| MLP based system,      | 61.0 %     |
+| **DCASE2017 baseline** |            |
++------------------------+------------+
+
+Scene class-wise results
+
++------------------------+------------+
+| Scene class            | MLP        |
++========================+============+
+| beach                  | 40.7       |
++------------------------+------------+
+| bus                    | 38.9       |
++------------------------+------------+
+| cafe/restaurant        | 43.5       |
++------------------------+------------+
+| car                    | 64.8       |
++------------------------+------------+
+| city center            | 79.6       |
++------------------------+------------+
+| forest path            | 85.2       |
++------------------------+------------+
+| grocery store          | 49.1       |
++------------------------+------------+
+| home                   | 79.9       |
++------------------------+------------+
+| library                | 30.6       |
++------------------------+------------+
+| metro station          | 93.5       |
++------------------------+------------+
+| office                 | 73.1       |
++------------------------+------------+
+| park                   | 32.4       |
++------------------------+------------+
+| residential area       | 77.8       |
++------------------------+------------+
+| train                  | 72.2       |
++------------------------+------------+
+| tram                   | 57.4       |
++------------------------+------------+
+| **Overall**            | 61.0       |
++------------------------+------------+
+
+
+`More detailed results on DCASE2017 Task 1 results page. <http://www.cs.tut.fi/sgn/arg/dcase2017/challenge/task-acoustic-scene-classification-results>`_
+
 .. _task2:
 
 |task2| Detection of rare sound events
@@ -152,6 +206,38 @@ More details on the metrics calculation can be found in:
 
 Annamaria Mesaros, Toni Heittola, and Tuomas Virtanen, "*Metrics for polyphonic sound event detection*", Applied Sciences, 6(6):162, 2016 [`HTML <http://www.mdpi.com/2076-3417/6/6/162>`_][`PDF <http://www.mdpi.com/2076-3417/6/6/162/pdf>`_]
 
+
+**TUT Rare Sound Events 2017, Evaluation**
+
+*Event-based metric*
+
++------------------------+------------+---------+
+|                        | Event-based metrics  |
++------------------------+------------+---------+
+| System                 | ER         | F-score |
++========================+============+=========+
+| MLP based system,      | 0.63       | 64.1 %  |
+| **DCASE2017 baseline** |            |         |
++------------------------+------------+---------+
+
+Event class-wise results
+
++------------------------+--------+----------+
+|                        | MLP               |
++------------------------+--------+----------+
+| Event class            | ER     | F-score  |
++========================+========+==========+
+| babycry                | 0.80   | 66.8     |
++------------------------+--------+----------+
+| glassbreak             | 0.38   | 79.1     |
++------------------------+--------+----------+
+| gunshot                | 0.73   | 46.5     |
++------------------------+--------+----------+
+| **Overall**            | 0.63   | 64.1     |
++------------------------+--------+----------+
+
+`More detailed results on DCASE2017 Task 2 results page. <http://www.cs.tut.fi/sgn/arg/dcase2017/challenge/task-rare-sound-event-detection-results>`_
+
 .. _task3:
 
 |task3| Sound event detection in real life audio
@@ -207,7 +293,6 @@ Event class-wise metrics
 | people walking         | 0.84   | 55.6     | 0.61   | 65.6     |
 +------------------------+--------+----------+--------+----------+
 
-
 To reproduce these results run::
 
     make -C docker/ task3
@@ -219,3 +304,39 @@ See more about :ref:`reproducibility <reproducibility>`.
 More details on the metrics calculation can be found in:
 
 Annamaria Mesaros, Toni Heittola, and Tuomas Virtanen, "*Metrics for polyphonic sound event detection*", Applied Sciences, 6(6):162, 2016 [`HTML <http://www.mdpi.com/2076-3417/6/6/162>`_][`PDF <http://www.mdpi.com/2076-3417/6/6/162/pdf>`_]
+
+
+**TUT Sound Events 2017, Evaluation**
+
+*Segment-based metric*
+
++------------------------+------------+----------+
+|                        | Segment-based metrics |
++------------------------+------------+----------+
+| System                 | ER         | F-score  |
++========================+============+==========+
+| MLP based system,      | 0.94       | 42.8 %   |
+| **DCASE2017 baseline** |            |          |
++------------------------+------------+----------+
+
+Event class-wise metrics
+
++------------------------+--------+----------+
+|                        | MLP               |
++------------------------+--------+----------+
+| Event class            | ER     | F-score  |
++========================+========+==========+
+| brakes squeaking       | 0.92   | 16.5     |
++------------------------+--------+----------+
+| car                    | 0.77   | 61.5     |
++------------------------+--------+----------+
+| children               | 2.67   | 0.0      |
++------------------------+--------+----------+
+| large vehicle          | 1.44   | 42.7     |
++------------------------+--------+----------+
+| people speaking        | 1.30   | 8.6      |
++------------------------+--------+----------+
+| people walking         | 1.44   | 33.5     |
++------------------------+--------+----------+
+
+`More detailed results on DCASE2017 Task 3 results page. <http://www.cs.tut.fi/sgn/arg/dcase2017/challenge/task-sound-event-detection-in-real-life-audio-results>`_

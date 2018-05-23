@@ -16,9 +16,10 @@ dcase_framework.datasets.SoundEventDataset
       ~SoundEventDataset.__init__
       ~SoundEventDataset.absolute_to_relative
       ~SoundEventDataset.check_filelist
-      ~SoundEventDataset.download
+      ~SoundEventDataset.download_packages
       ~SoundEventDataset.error_meta_count
       ~SoundEventDataset.eval
+      ~SoundEventDataset.eval_files
       ~SoundEventDataset.event_label_count
       ~SoundEventDataset.event_labels
       ~SoundEventDataset.extract
@@ -29,7 +30,10 @@ dcase_framework.datasets.SoundEventDataset
       ~SoundEventDataset.relative_to_absolute_path
       ~SoundEventDataset.show_info
       ~SoundEventDataset.test
+      ~SoundEventDataset.test_files
       ~SoundEventDataset.train
+      ~SoundEventDataset.train_files
+      ~SoundEventDataset.validation_files
    
    
 

@@ -16,9 +16,10 @@ dcase_framework.datasets.Dataset
       ~Dataset.__init__
       ~Dataset.absolute_to_relative
       ~Dataset.check_filelist
-      ~Dataset.download
+      ~Dataset.download_packages
       ~Dataset.error_meta_count
       ~Dataset.eval
+      ~Dataset.eval_files
       ~Dataset.event_labels
       ~Dataset.extract
       ~Dataset.file_error_meta
@@ -28,7 +29,10 @@ dcase_framework.datasets.Dataset
       ~Dataset.relative_to_absolute_path
       ~Dataset.show_info
       ~Dataset.test
+      ~Dataset.test_files
       ~Dataset.train
+      ~Dataset.train_files
+      ~Dataset.validation_files
    
    
 

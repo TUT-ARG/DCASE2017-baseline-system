@@ -23,6 +23,9 @@ dcase_framework.files.ParameterFile
       ~ParameterFile.get
       ~ParameterFile.get_dump_content
       ~ParameterFile.get_file_information
+      ~ParameterFile.get_hash
+      ~ParameterFile.get_hash_for_path
+      ~ParameterFile.get_path
       ~ParameterFile.has_key
       ~ParameterFile.items
       ~ParameterFile.iteritems
@@ -30,10 +33,14 @@ dcase_framework.files.ParameterFile
       ~ParameterFile.itervalues
       ~ParameterFile.keys
       ~ParameterFile.load
+      ~ParameterFile.log
+      ~ParameterFile.merge
       ~ParameterFile.pop
       ~ParameterFile.popitem
       ~ParameterFile.save
+      ~ParameterFile.set_path
       ~ParameterFile.setdefault
+      ~ParameterFile.show
       ~ParameterFile.update
       ~ParameterFile.values
       ~ParameterFile.viewitems

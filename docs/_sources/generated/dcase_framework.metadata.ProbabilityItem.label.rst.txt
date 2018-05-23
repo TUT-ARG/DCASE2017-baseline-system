@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityItem.label
+==============================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoattribute:: ProbabilityItem.label

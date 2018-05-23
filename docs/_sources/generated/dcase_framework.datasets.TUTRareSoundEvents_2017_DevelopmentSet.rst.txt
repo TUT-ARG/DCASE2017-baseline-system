@@ -16,9 +16,10 @@ dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet
       ~TUTRareSoundEvents_2017_DevelopmentSet.__init__
       ~TUTRareSoundEvents_2017_DevelopmentSet.absolute_to_relative
       ~TUTRareSoundEvents_2017_DevelopmentSet.check_filelist
-      ~TUTRareSoundEvents_2017_DevelopmentSet.download
+      ~TUTRareSoundEvents_2017_DevelopmentSet.download_packages
       ~TUTRareSoundEvents_2017_DevelopmentSet.error_meta_count
       ~TUTRareSoundEvents_2017_DevelopmentSet.eval
+      ~TUTRareSoundEvents_2017_DevelopmentSet.eval_files
       ~TUTRareSoundEvents_2017_DevelopmentSet.event_label_count
       ~TUTRareSoundEvents_2017_DevelopmentSet.extract
       ~TUTRareSoundEvents_2017_DevelopmentSet.file_error_meta
@@ -29,7 +30,10 @@ dcase_framework.datasets.TUTRareSoundEvents_2017_DevelopmentSet
       ~TUTRareSoundEvents_2017_DevelopmentSet.show_info
       ~TUTRareSoundEvents_2017_DevelopmentSet.synthesize
       ~TUTRareSoundEvents_2017_DevelopmentSet.test
+      ~TUTRareSoundEvents_2017_DevelopmentSet.test_files
       ~TUTRareSoundEvents_2017_DevelopmentSet.train
+      ~TUTRareSoundEvents_2017_DevelopmentSet.train_files
+      ~TUTRareSoundEvents_2017_DevelopmentSet.validation_files
    
    
 
