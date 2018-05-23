@@ -2689,6 +2689,8 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
 
         self.crossvalidation_folds = 1
 
+        source_url = 'https://zenodo.org/record/1160455/files/'
+
         self.package_list = [
             {
                 'remote_package': None,
@@ -2696,28 +2698,28 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.1.zip',
-                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.1.zip'),
+                'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.1.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.1.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.2.zip',
-                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.2.zip'),
+                'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.2.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.2.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.3.zip',
-                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.3.zip'),
+                'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.3.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.3.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.4.zip',
-                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.4.zip'),
+                'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.4.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.4.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-evaluation/TUT-rare-sound-events-2017-evaluation.5.zip',
-                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.5.zip'),
+                'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.5.zip',
+                'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.5.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
 
