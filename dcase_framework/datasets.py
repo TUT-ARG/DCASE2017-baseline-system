@@ -1916,6 +1916,8 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
 
         self.crossvalidation_folds = 1
 
+        source_url = 'https://zenodo.org/record/401395/files/'
+
         self.package_list = [
             {
                 'remote_package': None,
@@ -1923,57 +1925,57 @@ class TUTRareSoundEvents_2017_DevelopmentSet(SyntheticSoundEventDataset):
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.doc.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.doc.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.doc.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.code.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.code.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.code.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.1.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.1.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.1.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.2.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.2.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.2.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.3.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.3.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.3.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.4.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.4.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.4.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.5.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.5.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.5.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.6.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.6.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.6.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.7.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.7.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.7.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.8.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.8.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_bgs_and_cvsetup.8.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             },
             {
-                'remote_package': 'http://www.cs.tut.fi/sgn/arg/dcase2017/data/TUT-rare-sound-events-2017-development/TUT-rare-sound-events-2017-development.source_data_events.zip',
+                'remote_package': source_url+'TUT-rare-sound-events-2017-development.source_data_events.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-development.source_data_events.zip'),
                 'local_audio_path': os.path.join(self.local_path, 'audio'),
             }
