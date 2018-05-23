@@ -16,6 +16,7 @@ dcase_framework.keras_utils.ProgressLoggerCallback
       ~ProgressLoggerCallback.__init__
       ~ProgressLoggerCallback.add_external_metric
       ~ProgressLoggerCallback.close
+      ~ProgressLoggerCallback.get_operator
       ~ProgressLoggerCallback.on_batch_begin
       ~ProgressLoggerCallback.on_batch_end
       ~ProgressLoggerCallback.on_epoch_begin

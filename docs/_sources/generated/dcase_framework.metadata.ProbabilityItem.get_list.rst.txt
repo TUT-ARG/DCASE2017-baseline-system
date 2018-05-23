@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityItem.get_list
+=================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: ProbabilityItem.get_list

@@ -65,7 +65,7 @@ defaults:
     challenge_submission_mode: false    # Save results into path->challenge_results for challenge submission
 
     print_system_progress: true         #
-    use_ascii_progress_bar: true       #
+    use_ascii_progress_bar: true        #
 
     log_system_parameters: false        #
     log_system_progress: false          #
@@ -76,15 +76,15 @@ defaults:
   # Paths
   # ==========================================================
   path:
-    data: /proj/asignal/DCASE2017/task_2/data/
-    system_base: /wrk/cakir/DONOTREMOVE/DCASE2017_task_2 #/proj/asignal/DCASE2017/task_2/system/
+    data: ../applications/data/
+    system_base: ../applications/system/task2_cakir/
     feature_extractor: feature_extractor/
     feature_normalizer: feature_normalizer/
     learner: learner/
     recognizer: recognizer/
     evaluator: evaluator/
 
-    recognizer_challenge_output: challenge_submission/task2/838/
+    recognizer_challenge_output: challenge_submission/task2_cakir/
     logs: logs/
 
   # ==========================================================
@@ -218,7 +218,7 @@ defaults:
       n_fft: 2048                           # FFT length
       fmin: 0                               # Minimum frequency when constructing mel bands
       fmax: 22050                           # Maximum frequency when constructing mel band
-      htk: true                            # Switch for HTK-styled mel-frequency equation
+      htk: true                             # Switch for HTK-styled mel-frequency equation
       log: true                             # Logarithmic
 
   # ==========================================================
@@ -394,13 +394,10 @@ defaults:
               monitor: evtER
               initial_delay: 25
 
-
       model:
         metrics:
           - binary_accuracy
           - binary_crossentropy
-
-
 
   # ==========================================================
   # Recognizer
@@ -426,7 +423,6 @@ defaults:
       minimum_event_length_seconds: 0.1
       minimum_event_gap_second: 0.1
 
-
   # ==========================================================
   # Evaluator
   # ==========================================================
@@ -444,4 +440,3 @@ defaults:
       # - {dataset_name}
       # ==========================================================
       filename: eval_[{parameter_hash}].yaml
-

@@ -1,0 +1,6 @@
+dcase_framework.metadata.ProbabilityContainer.filter
+====================================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. automethod:: ProbabilityContainer.filter

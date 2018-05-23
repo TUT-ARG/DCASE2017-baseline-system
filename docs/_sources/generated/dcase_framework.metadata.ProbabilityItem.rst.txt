@@ -1,0 +1,52 @@
+dcase_framework.metadata.ProbabilityItem
+========================================
+
+.. currentmodule:: dcase_framework.metadata
+
+.. autoclass:: ProbabilityItem
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProbabilityItem.__init__
+      ~ProbabilityItem.clear
+      ~ProbabilityItem.copy
+      ~ProbabilityItem.fromkeys
+      ~ProbabilityItem.get
+      ~ProbabilityItem.get_header
+      ~ProbabilityItem.get_list
+      ~ProbabilityItem.has_key
+      ~ProbabilityItem.items
+      ~ProbabilityItem.iteritems
+      ~ProbabilityItem.iterkeys
+      ~ProbabilityItem.itervalues
+      ~ProbabilityItem.keys
+      ~ProbabilityItem.pop
+      ~ProbabilityItem.popitem
+      ~ProbabilityItem.setdefault
+      ~ProbabilityItem.update
+      ~ProbabilityItem.values
+      ~ProbabilityItem.viewitems
+      ~ProbabilityItem.viewkeys
+      ~ProbabilityItem.viewvalues
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProbabilityItem.file
+      ~ProbabilityItem.id
+      ~ProbabilityItem.label
+      ~ProbabilityItem.probability
+      ~ProbabilityItem.timestamp
+   
+   

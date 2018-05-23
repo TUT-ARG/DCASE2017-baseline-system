@@ -31,10 +31,4 @@ dcase_framework.application_core.SoundEventAppCore
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~SoundEventAppCore.valid_dataset_group
-   
    

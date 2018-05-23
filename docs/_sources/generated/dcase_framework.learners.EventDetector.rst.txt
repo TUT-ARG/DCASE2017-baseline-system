@@ -32,12 +32,14 @@ dcase_framework.learners.EventDetector
       ~EventDetector.iterkeys
       ~EventDetector.itervalues
       ~EventDetector.keys
+      ~EventDetector.learn
       ~EventDetector.load
       ~EventDetector.log
       ~EventDetector.merge
       ~EventDetector.pop
       ~EventDetector.popitem
       ~EventDetector.save
+      ~EventDetector.set_path
       ~EventDetector.set_seed
       ~EventDetector.setdefault
       ~EventDetector.show

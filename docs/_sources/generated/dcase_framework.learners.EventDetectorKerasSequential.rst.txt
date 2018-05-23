@@ -16,6 +16,8 @@ dcase_framework.learners.EventDetectorKerasSequential
       ~EventDetectorKerasSequential.__init__
       ~EventDetectorKerasSequential.clear
       ~EventDetectorKerasSequential.copy
+      ~EventDetectorKerasSequential.create_callback_list
+      ~EventDetectorKerasSequential.create_external_metric_evaluators
       ~EventDetectorKerasSequential.create_model
       ~EventDetectorKerasSequential.detect_file_format
       ~EventDetectorKerasSequential.empty
@@ -27,6 +29,7 @@ dcase_framework.learners.EventDetectorKerasSequential
       ~EventDetectorKerasSequential.get_hash
       ~EventDetectorKerasSequential.get_hash_for_path
       ~EventDetectorKerasSequential.get_path
+      ~EventDetectorKerasSequential.get_processing_interval
       ~EventDetectorKerasSequential.has_key
       ~EventDetectorKerasSequential.items
       ~EventDetectorKerasSequential.iteritems
@@ -43,8 +46,8 @@ dcase_framework.learners.EventDetectorKerasSequential
       ~EventDetectorKerasSequential.pop
       ~EventDetectorKerasSequential.popitem
       ~EventDetectorKerasSequential.predict
-      ~EventDetectorKerasSequential.process_activity
-      ~EventDetectorKerasSequential.process_data
+      ~EventDetectorKerasSequential.prepare_activity
+      ~EventDetectorKerasSequential.prepare_data
       ~EventDetectorKerasSequential.save
       ~EventDetectorKerasSequential.set_path
       ~EventDetectorKerasSequential.set_seed
@@ -65,10 +68,11 @@ dcase_framework.learners.EventDetectorKerasSequential
    .. autosummary::
    
       ~EventDetectorKerasSequential.class_labels
+      ~EventDetectorKerasSequential.data_processor
+      ~EventDetectorKerasSequential.data_processor_training
       ~EventDetectorKerasSequential.feature_aggregator
       ~EventDetectorKerasSequential.feature_masker
       ~EventDetectorKerasSequential.feature_normalizer
-      ~EventDetectorKerasSequential.feature_processing_chain
       ~EventDetectorKerasSequential.feature_stacker
       ~EventDetectorKerasSequential.learner_params
       ~EventDetectorKerasSequential.method

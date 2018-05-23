@@ -16,6 +16,8 @@ dcase_framework.learners.SceneClassifierMLP
       ~SceneClassifierMLP.__init__
       ~SceneClassifierMLP.clear
       ~SceneClassifierMLP.copy
+      ~SceneClassifierMLP.create_callback_list
+      ~SceneClassifierMLP.create_external_metric_evaluators
       ~SceneClassifierMLP.create_model
       ~SceneClassifierMLP.detect_file_format
       ~SceneClassifierMLP.empty
@@ -27,11 +29,13 @@ dcase_framework.learners.SceneClassifierMLP
       ~SceneClassifierMLP.get_hash
       ~SceneClassifierMLP.get_hash_for_path
       ~SceneClassifierMLP.get_path
+      ~SceneClassifierMLP.get_processing_interval
       ~SceneClassifierMLP.has_key
       ~SceneClassifierMLP.items
       ~SceneClassifierMLP.iteritems
       ~SceneClassifierMLP.iterkeys
       ~SceneClassifierMLP.itervalues
+      ~SceneClassifierMLP.keras_model_exists
       ~SceneClassifierMLP.keys
       ~SceneClassifierMLP.learn
       ~SceneClassifierMLP.load
@@ -42,7 +46,10 @@ dcase_framework.learners.SceneClassifierMLP
       ~SceneClassifierMLP.pop
       ~SceneClassifierMLP.popitem
       ~SceneClassifierMLP.predict
+      ~SceneClassifierMLP.prepare_activity
+      ~SceneClassifierMLP.prepare_data
       ~SceneClassifierMLP.save
+      ~SceneClassifierMLP.set_path
       ~SceneClassifierMLP.set_seed
       ~SceneClassifierMLP.setdefault
       ~SceneClassifierMLP.show

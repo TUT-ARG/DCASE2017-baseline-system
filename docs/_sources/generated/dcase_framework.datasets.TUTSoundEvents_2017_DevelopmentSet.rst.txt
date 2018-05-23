@@ -19,6 +19,7 @@ dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet
       ~TUTSoundEvents_2017_DevelopmentSet.download_packages
       ~TUTSoundEvents_2017_DevelopmentSet.error_meta_count
       ~TUTSoundEvents_2017_DevelopmentSet.eval
+      ~TUTSoundEvents_2017_DevelopmentSet.eval_files
       ~TUTSoundEvents_2017_DevelopmentSet.event_label_count
       ~TUTSoundEvents_2017_DevelopmentSet.event_labels
       ~TUTSoundEvents_2017_DevelopmentSet.extract
@@ -29,7 +30,10 @@ dcase_framework.datasets.TUTSoundEvents_2017_DevelopmentSet
       ~TUTSoundEvents_2017_DevelopmentSet.relative_to_absolute_path
       ~TUTSoundEvents_2017_DevelopmentSet.show_info
       ~TUTSoundEvents_2017_DevelopmentSet.test
+      ~TUTSoundEvents_2017_DevelopmentSet.test_files
       ~TUTSoundEvents_2017_DevelopmentSet.train
+      ~TUTSoundEvents_2017_DevelopmentSet.train_files
+      ~TUTSoundEvents_2017_DevelopmentSet.validation_files
    
    
 

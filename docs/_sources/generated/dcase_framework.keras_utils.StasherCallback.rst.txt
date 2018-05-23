@@ -16,6 +16,7 @@ dcase_framework.keras_utils.StasherCallback
       ~StasherCallback.__init__
       ~StasherCallback.add_external_metric
       ~StasherCallback.get_best
+      ~StasherCallback.get_operator
       ~StasherCallback.log
       ~StasherCallback.on_batch_begin
       ~StasherCallback.on_batch_end

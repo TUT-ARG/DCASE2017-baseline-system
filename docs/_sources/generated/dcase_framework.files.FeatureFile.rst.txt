@@ -23,6 +23,9 @@ dcase_framework.files.FeatureFile
       ~FeatureFile.get
       ~FeatureFile.get_dump_content
       ~FeatureFile.get_file_information
+      ~FeatureFile.get_hash
+      ~FeatureFile.get_hash_for_path
+      ~FeatureFile.get_path
       ~FeatureFile.has_key
       ~FeatureFile.items
       ~FeatureFile.iteritems
@@ -30,10 +33,14 @@ dcase_framework.files.FeatureFile
       ~FeatureFile.itervalues
       ~FeatureFile.keys
       ~FeatureFile.load
+      ~FeatureFile.log
+      ~FeatureFile.merge
       ~FeatureFile.pop
       ~FeatureFile.popitem
       ~FeatureFile.save
+      ~FeatureFile.set_path
       ~FeatureFile.setdefault
+      ~FeatureFile.show
       ~FeatureFile.update
       ~FeatureFile.values
       ~FeatureFile.viewitems

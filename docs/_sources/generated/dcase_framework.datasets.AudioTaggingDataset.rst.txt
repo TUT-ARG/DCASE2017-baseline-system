@@ -16,9 +16,10 @@ dcase_framework.datasets.AudioTaggingDataset
       ~AudioTaggingDataset.__init__
       ~AudioTaggingDataset.absolute_to_relative
       ~AudioTaggingDataset.check_filelist
-      ~AudioTaggingDataset.download
+      ~AudioTaggingDataset.download_packages
       ~AudioTaggingDataset.error_meta_count
       ~AudioTaggingDataset.eval
+      ~AudioTaggingDataset.eval_files
       ~AudioTaggingDataset.event_labels
       ~AudioTaggingDataset.extract
       ~AudioTaggingDataset.file_error_meta
@@ -28,7 +29,10 @@ dcase_framework.datasets.AudioTaggingDataset
       ~AudioTaggingDataset.relative_to_absolute_path
       ~AudioTaggingDataset.show_info
       ~AudioTaggingDataset.test
+      ~AudioTaggingDataset.test_files
       ~AudioTaggingDataset.train
+      ~AudioTaggingDataset.train_files
+      ~AudioTaggingDataset.validation_files
    
    
 

@@ -15,6 +15,7 @@ dcase_framework.keras_utils.FeatureGenerator
    
       ~FeatureGenerator.__init__
       ~FeatureGenerator.generator
+      ~FeatureGenerator.get_activity_matrix
       ~FeatureGenerator.info
       ~FeatureGenerator.on_epoch_end
       ~FeatureGenerator.on_epoch_start

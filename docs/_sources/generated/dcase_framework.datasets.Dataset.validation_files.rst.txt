@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.validation_files
+=================================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.validation_files

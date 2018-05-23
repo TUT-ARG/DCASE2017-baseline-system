@@ -31,10 +31,4 @@ dcase_framework.application_core.BinarySoundEventAppCore
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~BinarySoundEventAppCore.valid_dataset_group
-   
    

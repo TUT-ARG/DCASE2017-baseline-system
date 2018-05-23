@@ -15,8 +15,8 @@ KerasMixin
     KerasMixin.create_model
     KerasMixin.create_callback_list
     KerasMixin.create_external_metric_evaluators
-    KerasMixin.process_data
-    KerasMixin.process_activity
+    KerasMixin.prepare_data
+    KerasMixin.prepare_activity
     KerasMixin.keras_model_exists
     KerasMixin.log_model_summary
     KerasMixin.plot_model

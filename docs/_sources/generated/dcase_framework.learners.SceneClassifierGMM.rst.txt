@@ -40,6 +40,7 @@ dcase_framework.learners.SceneClassifierGMM
       ~SceneClassifierGMM.popitem
       ~SceneClassifierGMM.predict
       ~SceneClassifierGMM.save
+      ~SceneClassifierGMM.set_path
       ~SceneClassifierGMM.set_seed
       ~SceneClassifierGMM.setdefault
       ~SceneClassifierGMM.show

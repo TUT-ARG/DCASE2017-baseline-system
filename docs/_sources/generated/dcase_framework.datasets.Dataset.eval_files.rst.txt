@@ -1,0 +1,6 @@
+dcase_framework.datasets.Dataset.eval_files
+===========================================
+
+.. currentmodule:: dcase_framework.datasets
+
+.. automethod:: Dataset.eval_files

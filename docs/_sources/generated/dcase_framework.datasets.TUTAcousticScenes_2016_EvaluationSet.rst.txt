@@ -16,9 +16,10 @@ dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet
       ~TUTAcousticScenes_2016_EvaluationSet.__init__
       ~TUTAcousticScenes_2016_EvaluationSet.absolute_to_relative
       ~TUTAcousticScenes_2016_EvaluationSet.check_filelist
-      ~TUTAcousticScenes_2016_EvaluationSet.download
+      ~TUTAcousticScenes_2016_EvaluationSet.download_packages
       ~TUTAcousticScenes_2016_EvaluationSet.error_meta_count
       ~TUTAcousticScenes_2016_EvaluationSet.eval
+      ~TUTAcousticScenes_2016_EvaluationSet.eval_files
       ~TUTAcousticScenes_2016_EvaluationSet.event_labels
       ~TUTAcousticScenes_2016_EvaluationSet.extract
       ~TUTAcousticScenes_2016_EvaluationSet.file_error_meta
@@ -28,7 +29,10 @@ dcase_framework.datasets.TUTAcousticScenes_2016_EvaluationSet
       ~TUTAcousticScenes_2016_EvaluationSet.relative_to_absolute_path
       ~TUTAcousticScenes_2016_EvaluationSet.show_info
       ~TUTAcousticScenes_2016_EvaluationSet.test
+      ~TUTAcousticScenes_2016_EvaluationSet.test_files
       ~TUTAcousticScenes_2016_EvaluationSet.train
+      ~TUTAcousticScenes_2016_EvaluationSet.train_files
+      ~TUTAcousticScenes_2016_EvaluationSet.validation_files
    
    
 

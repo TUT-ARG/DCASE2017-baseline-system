@@ -46,8 +46,8 @@ dcase_framework.learners.SceneClassifierKerasSequential
       ~SceneClassifierKerasSequential.pop
       ~SceneClassifierKerasSequential.popitem
       ~SceneClassifierKerasSequential.predict
-      ~SceneClassifierKerasSequential.process_activity
-      ~SceneClassifierKerasSequential.process_data
+      ~SceneClassifierKerasSequential.prepare_activity
+      ~SceneClassifierKerasSequential.prepare_data
       ~SceneClassifierKerasSequential.save
       ~SceneClassifierKerasSequential.set_path
       ~SceneClassifierKerasSequential.set_seed

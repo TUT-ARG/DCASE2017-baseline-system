@@ -100,7 +100,7 @@ Supported input formats:
     MetaDataContainer.event_label_count
     MetaDataContainer.unique_scene_labels
     MetaDataContainer.unique_event_labels
-    MetaDataContainer.max_event_offset
+    MetaDataContainer.max_offset
     MetaDataContainer.load
     MetaDataContainer.save
     MetaDataContainer.event_stat_counts

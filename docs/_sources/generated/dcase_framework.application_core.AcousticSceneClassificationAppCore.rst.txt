@@ -31,10 +31,4 @@ dcase_framework.application_core.AcousticSceneClassificationAppCore
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-   
-      ~AcousticSceneClassificationAppCore.valid_dataset_group
-   
    
