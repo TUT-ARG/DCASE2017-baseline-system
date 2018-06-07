@@ -2697,34 +2697,33 @@ class TUTRareSoundEvents_2017_EvaluationSet(SyntheticSoundEventDataset):
             {
                 'remote_package': None,
                 'local_package': None,
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path, 'data', 'mixture_data', 'evaltest', 'bbb81504db15a03680a0044474633b67', 'audio'),
             },
             {
                 'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.1.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.1.zip'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path, 'data', 'mixture_data', 'evaltest', 'bbb81504db15a03680a0044474633b67', 'audio'),
             },
             {
                 'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.2.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.2.zip'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path, 'data', 'mixture_data', 'evaltest', 'bbb81504db15a03680a0044474633b67', 'audio'),
             },
             {
                 'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.3.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.3.zip'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path, 'data', 'mixture_data', 'evaltest', 'bbb81504db15a03680a0044474633b67', 'audio'),
             },
             {
                 'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.4.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.4.zip'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path, 'data', 'mixture_data', 'evaltest', 'bbb81504db15a03680a0044474633b67', 'audio'),
             },
             {
                 'remote_package': source_url + 'TUT-rare-sound-events-2017-evaluation.mixture_data.5.zip',
                 'local_package': os.path.join(self.local_path, 'TUT-rare-sound-events-2017-evaluation.mixture_data.5.zip'),
-                'local_audio_path': os.path.join(self.local_path, 'audio'),
+                'local_audio_path': os.path.join(self.local_path, 'data', 'mixture_data', 'evaltest', 'bbb81504db15a03680a0044474633b67', 'audio'),
             },
-
         ]
 
     @property
