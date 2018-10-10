@@ -129,7 +129,7 @@ Usage examples:
     normalizer.finalize()
 
     for feature_matrix in test_items:
-        feature_matrix_normalized = normalizer.normalizer(feature_matrix)
+        feature_matrix_normalized = normalizer.normalize(feature_matrix)
         # used the features
 
     # Example 2
@@ -137,7 +137,7 @@ Usage examples:
         norm.accumulate(feature_repository['mfcc'])
 
     for feature_matrix in test_items:
-        feature_matrix_normalized = normalizer.normalizer(feature_matrix)
+        feature_matrix_normalized = normalizer.normalize(feature_matrix)
         # used the features
 
 .. autosummary::
@@ -1413,7 +1413,7 @@ class FeatureNormalizer(DataFile, ContainerMixin, FeatureProcessingUnitMixin):
     >>> normalizer.finalize()
 
     >>> for feature_matrix in test_items:
-    >>>     feature_matrix_normalized = normalizer.normalizer(feature_matrix)
+    >>>     feature_matrix_normalized = normalizer.normalize(feature_matrix)
     >>>     # used the features
 
     """
